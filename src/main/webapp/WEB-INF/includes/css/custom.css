@@ -1,0 +1,65 @@
+/* *****************************************************************************
+ * Project:		nwcui
+ * Source:		custom.css
+ * Author:		Philip Russo
+ **************************************************************************** */
+
+/* This css should be overwritten by the project using this template */
+
+#dashboard_container {
+	background:		#f5f5f5;
+	border:			1px solid #e3e3e3;
+	border-radius: 	4px;
+	-webkit-box-shadow:	inset 0 1px 1px rgba(0,0,0,0.05);
+	box-shadow: 		inset 0 1px 1px rgba(0,0,0,0.05);
+}
+
+.dashboard div {
+    -webkit-transition:	width 0.3s ease, margin 0.3s ease;
+    -moz-transition: 	width 0.3s ease, margin 0.3s ease;
+    -o-transition: 		width 0.3s ease, margin 0.3s ease;
+    transition: 		width 0.3s ease, margin 0.3s ease;
+}
+
+.dashboard a:visited {
+	color:			#258;	
+}
+
+.col-xs-0 {
+    	display:			none; 
+}
+
+.navigation_panel {
+	background: 		#2A4266;
+	border-color: 		#223552 !important;
+}
+
+.navigation_panel_heading {
+	background-color: 	#2A4266 !important;
+	border-color: 		#223552 !important;
+	color: 			#fff !important;
+	text-align: 		right;
+	font-size: 		18px;
+	padding-right: 	25px;
+}
+
+.navigation_panel_body {
+	
+}
+
+.navigation_panel_item {
+	width: 			100%;
+	text-align: 		right;
+	margin-left: 		0px !important;
+}
+
+.navigation_panel_item a {
+	color: 			#ddd !important;
+}
+
+.navigation_panel_item a:hover {
+	color: 			#eee !important;
+	background-color: 	#48638D !important;	
+}
+
+

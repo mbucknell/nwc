@@ -1,0 +1,25 @@
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<!-- A base definition that declares pieces of every page that can be called in this	-->
+	<!-- application.  It follows the tiles declaration in the tiles.xml file. -->
+	<definition name="base" template="/WEB-INF/tiles/template.jsp">
+		<put-attribute name="meta" value="/WEB-INF/tiles/common/USGSHead.jsp" />
+		<put-attribute name="header" value="/WEB-INF/tiles/common/USGSHeader.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/tiles/common/USGSFooter.jsp" />
+		<put-attribute name="nav" value="/WEB-INF/tiles/common/nav.jsp" />
+	</definition>
+
+	<!-- Base Controller Request 												-->
+	<!-- 	the {2} will map the "http://localhost:8080/path" to the SomeController 	-->
+	<!-- 	as long as the SomeController explicitly declares this resource: 		-->
+	<!-- 																-->
+	<!-- 		@Controller												-->
+	<!-- 		public class SomeController { 								-->
+	<!-- 			@RequestMapping(value="/path", method=RequestMethod.GET)		-->
+	<!-- 			public ModelAndView pathHandler() {...}						-->
+	<definition name="*/*" extends="base">
+		<put-attribute name="body" value="/WEB-INF/tiles/{2}/body.jsp" />
+	</definition>
+</tiles-definitions>
