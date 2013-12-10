@@ -20,11 +20,10 @@
         };
     };
 
-stateDemoControllers.controller('WorkflowA', ['$scope', 
+stateDemoControllers.controller('WaterBudget', ['$scope', 
     function ($scope) {
-        $scope.name = "The \"A\" Workflow!";
-        $scope.description = "A wonderful workflow in which we make selections and demostrate the ability to store and restore state.";
-
+        $scope.name = "Water Budget";
+        $scope.description = "Retrieve water data comprising all components of a water budget.";
     }
 ]);
 
@@ -51,43 +50,15 @@ var StepController = function(config, customControllerFunction){
 
 
 
-stateDemoControllers.controller('ColorSelectionStep', ['$scope', 'StoredState', 'CommonState',
+stateDemoControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonState',
     StepController(
         {
-            name: 'My name is: color selection',
-            description: 'In this step, you can pick your favorite color'
+            name: 'HUC Selection',
+            description: 'Find your Hydrologic Unit of interest.'
         },
         function ($scope, StoredState) {
-            $scope.form = {};
-            $scope.$watch('form.favoriteColor', function(newValue, oldValue){
-               if( (newValue !== oldValue) && (StoredState.favoriteColor !== newValue) ){
-                   $scope.state.favoriteColor = newValue;
-               } 
-            });
-            $scope.$watch('state.favoriteColor', function(newValue, oldValue){
-                if($scope.form.favoriteColor !== newValue ){    
-                    $scope.form.favoriteColor = newValue;
-                }
-            });
-            $scope.colors = [
-                'yellow',
-                'blue'
-            ];
-            
+
             console.dir(StoredState);
-        }
-    )
-]);
-stateDemoControllers.controller('NumberSelectionStep', ['$scope', 'StoredState', 'CommonState',
-    StepController(
-        {
-            name: 'My name is: number selection',
-            description: 'In this step you can pick your very own favorite number'
-        },
-        function ($scope, StoredState, CommonState) {
-            $scope.CommonState = CommonState;
-            console.dir(StoredState);
-            
         }
     )
 ]);
