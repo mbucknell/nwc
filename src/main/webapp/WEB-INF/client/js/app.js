@@ -3,7 +3,9 @@ var nwcui = angular.module('nwcui', [
     'nwcui.controllers',
     'nwcui.sharedStateServices',
     'ui.router',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'az.directives',
+    'az.services'
 ]);
 
 nwcui.config(['$stateProvider', '$urlRouterProvider',

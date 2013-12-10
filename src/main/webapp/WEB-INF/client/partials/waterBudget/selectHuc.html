@@ -1,21 +1,14 @@
 <h4 ng-bind="name"></h4>
 <p ng-bind="description"></p>
-<script type="text/javascript" src="../../3rdparty/azimuthjs/src/module.js"></script>
-<script type="text/javascript" src="../../3rdparty/azimuthjs/src/directives/Layer.js"></script>
-<script type="text/javascript" src="../../3rdparty/azimuthjs/src/directives/LayerSource.js"></script>
-<script type="text/javascript" src="../../3rdparty/azimuthjs/src/directives/olMap.js"></script>
-<script type="text/javascript" src="../../3rdparty/azimuthjs/src/services/component/layers.js"></script>
-<script type="text/javascript" src="../../3rdparty/azimuthjs/src/services/component/map.js"></script>
 
 
-
-<div ol-map controls="zoom,navigation,layerSwitcher,attribution,mousePosition" control-opts="{navigation:{handleRightClicks:true}}">
-	<az-layer name="Street" lyr-type="tiles"></az-layer>
-	<az-layer name="Aerial" lyr-type="tiles" lyr-url="http://otile${s}.mqcdn.com/tiles/1.0.0/sat/${z}/${x}/${y}.png"></az-layer>
-	<az-layer name="Radar"  lyr-type="wms" lyr-url="http://gis.srh.noaa.gov/ArcGIS/services/Radar_warnings/MapServer/WMSServer"
-		layers="0,1" version="1.3.0" crs="EPSG:102100" transparent="true" opacity="0.75"></az-layer>
-	<az-layer name="Airports" lyr-type="geojson" lyr-url="examples/data/airports.json" projection="EPSG:4326"></az-layer>
-</div>
+        <div ol-map 
+             controls="zoom,navigation,layerSwitcher,attribution,mousePosition"
+             control-opts="{navigation:{handleRightClicks:true}}"
+             zoom="15" center="-0,51.48"
+             style="margin: 0; width: 500px; height: 500px;">
+            <az-layer name="streets" lyr-type="tiles"></az-layer>
+        </div>
 
 <nav>
     <a ui-sref="^.FinalStep">Next</a>
