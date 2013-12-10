@@ -2,6 +2,25 @@
 <p ng-bind="description"></p>
 
 <!-- todo: visualize a list of CommonState.ambiguousHuc attributes and permit a user to select between them -->
+<div class="table-responsive">
+	<table class="table table-striped table-hover">
+		<thead>
+			<tr>
+				<th>HUC12</th>
+				<th>HUC12 Name</th>
+				<th>Area (acres)</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="huc in hucs">
+				<td>{{huc.id}}</td>
+				<td>{{huc.name}}</td>
+				<td>{{huc.area}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
 
 <nav>
     <a ui-sref="^.SelectHuc">Back</a>

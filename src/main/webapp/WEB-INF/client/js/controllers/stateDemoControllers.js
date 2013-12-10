@@ -90,6 +90,8 @@ stateDemoControllers.controller('DisambiguateClick', ['$scope', 'StoredState', '
             ];
             //</mocking huc objects>
             
+            $scope.hucs = CommonState.ambiguousHucs;
+            
             //your list of huc objects is in CommonState.ambiguousHucs
             
             //@todo bind CommonState.ambiguousHucs and scope
