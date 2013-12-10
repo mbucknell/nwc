@@ -1,4 +1,4 @@
-/*global angular*/
+/*global clientular*/
 var nwcui = angular.module('nwcui', [
     'nwcui.controllers',
     'nwcui.sharedStateServices',
@@ -13,27 +13,27 @@ nwcui.config(['$stateProvider', '$urlRouterProvider',
         $stateProvider
                 .state('restore', {
                     url: '/state/restore/:stateId',
-                    templateUrl: 'partials/Restoring.html',
+                    templateUrl: '../../client/partials/Restoring.html',
                     controller: 'Restore'
                 })
                 .state('workflow', {
                     url: '/workflow',
-                    templateUrl: '../../partials/AllWorkflowShell.html',
+                    templateUrl: '../../client/partials/AllWorkflowShell.html',
                     abstract: true
                 })
                 .state('workflow.waterBudget', {
                     url: '/water-budget',
-                    templateUrl: '../../partials/waterBudget/waterBudgetTemplate.html',
+                    templateUrl: '../../client/partials/waterBudget/waterBudgetTemplate.html',
                     controller: 'WaterBudget'
                 })
                 .state('workflow.waterBudget.selectHuc', {
                     url: '/select-huc',
-                    templateUrl: '../../partials/waterBudget/selectHuc.html',
+                    templateUrl: '../../client/partials/waterBudget/selectHuc.html',
                     controller: 'SelectHuc'
                 })
-                .state('workflow.waterBudget.Final', {
+                .state('workflow.waterBudget.FinalStep', {
                     url: '/final',
-                    templateUrl: '../../partials/workflowA/FinalWaterBudget.html',
+                    templateUrl: '../../client/partials/waterBudget/FinalWaterBudget.html',
                     controller: 'FinalStep'
                 });
     }
