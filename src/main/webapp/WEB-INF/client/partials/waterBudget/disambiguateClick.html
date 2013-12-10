@@ -12,7 +12,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="huc in hucs">
+			<tr ng-repeat="huc in hucs" ng-click="setHuck(huc)" ui-sref="^.FinalStep">
 				<td>{{huc.id}}</td>
 				<td>{{huc.name}}</td>
 				<td>{{huc.area}}</td>
