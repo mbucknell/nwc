@@ -10,7 +10,7 @@ var nwcui = angular.module('nwcui', [
 
 nwcui.config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
-        $urlRouterProvider.otherwise('/workflow/workflowA/step1');
+        $urlRouterProvider.otherwise('/workflow/water-budget/select-huc');
 
         $stateProvider
                 .state('restore', {
@@ -32,6 +32,11 @@ nwcui.config(['$stateProvider', '$urlRouterProvider',
                     url: '/select-huc',
                     templateUrl: '../../client/partials/waterBudget/selectHuc.html',
                     controller: 'SelectHuc'
+                })
+                .state('workflow.waterBudget.disambiguateClick', {
+                    url: '/disambiguate-click',
+                    templateUrl: '../../client/partials/waterBudget/disambiguateClick.html',
+                    controller: 'DisambiguateClick'
                 })
                 .state('workflow.waterBudget.FinalStep', {
                     url: '/final',
