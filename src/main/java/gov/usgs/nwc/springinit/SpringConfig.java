@@ -66,6 +66,7 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
          */
         registry.addResourceHandler("/bootstrap/**").addResourceLocations("/WEB-INF/includes/3rdparty/bootstrap/").setCachePeriod(31556926);
         registry.addResourceHandler("/jquery/**").addResourceLocations("/WEB-INF/includes/3rdparty/jquery/").setCachePeriod(31556926);
+        registry.addResourceHandler("/3rdparty/**").addResourceLocations("/WEB-INF/includes/3rdparty/").setCachePeriod(31556926);
         
         /**
          * Our theme's (I separate them from the above so that I know exactly what is what and where)

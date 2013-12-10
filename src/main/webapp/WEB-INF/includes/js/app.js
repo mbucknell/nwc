@@ -21,25 +21,19 @@ nwcui.config(['$stateProvider', '$urlRouterProvider',
                     templateUrl: '../../partials/AllWorkflowShell.html',
                     abstract: true
                 })
-                .state('workflow.workflowA', {
-                    url: '/workflowA',
-                    templateUrl: '../../partials/workflowA/OneWorkflowShell.html',
-                    controller: 'WorkflowA',
-                    abstract: true
+                .state('workflow.waterBudget', {
+                    url: '/water-budget',
+                    templateUrl: '../../partials/waterBudget/waterBudgetTemplate.html',
+                    controller: 'WaterBudget'
                 })
-                .state('workflow.workflowA.ColorSelection', {
-                    url: '/step1',
-                    templateUrl: '../../partials/workflowA/Step1.html',
-                    controller: 'ColorSelectionStep'
+                .state('workflow.waterBudget.selectHuc', {
+                    url: '/select-huc',
+                    templateUrl: '../../partials/waterBudget/selectHuc.html',
+                    controller: 'SelectHuc'
                 })
-                .state('workflow.workflowA.NumberSelection', {
-                    url: '/step2',
-                    templateUrl: '../../partials/workflowA/Step2.html',
-                    controller: 'NumberSelectionStep'
-                })
-                .state('workflow.workflowA.Final', {
+                .state('workflow.waterBudget.Final', {
                     url: '/final',
-                    templateUrl: '../../partials/workflowA/FinalA.html',
+                    templateUrl: '../../partials/workflowA/FinalWaterBudget.html',
                     controller: 'FinalStep'
                 });
     }
