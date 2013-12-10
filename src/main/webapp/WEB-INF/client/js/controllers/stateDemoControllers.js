@@ -95,12 +95,7 @@ stateDemoControllers.controller('DisambiguateClick', ['$scope', 'StoredState', '
 			$scope.setHuck = function(huc) {
 				StoredState.huc = huc;
 			}
-            
-            //your list of huc objects is in CommonState.ambiguousHucs
-            
-            //@todo bind CommonState.ambiguousHucs and scope
-            
-            //@todo bind StoredState.hucId to scope's hucId            
+			
             console.dir(StoredState);
         }
     )
