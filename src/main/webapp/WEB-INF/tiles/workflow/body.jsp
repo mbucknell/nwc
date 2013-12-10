@@ -7,7 +7,7 @@
 <div id="main_page" class="container page_body_content">
 	<div class="row">
 		<div class="nwc-container col-xs-12">
-			<%@include file="/WEB-INF/includes/partials/angularRoot.jsp"%>
+			<%@include file="/WEB-INF/client/partials/angularRoot.jsp"%>
 		</div>
 	</div>
 </div>
