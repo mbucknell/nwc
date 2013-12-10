@@ -24,7 +24,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="dashboard_container" class="col-xs-9" style="min-width: 360px;  margin-left: 15px; padding: 10px; margin-bottom: -10px;">
+		<div class="nwc-container col-xs-9" style="min-width: 360px;  margin-left: 15px; padding: 10px; margin-bottom: -10px;">
 			<!-- Dynamically build the dashboard depending on the workflow list -->
 			<c:forEach var="workflow" items="${workflows}" varStatus="status">
 				<!-- Add a new row div if this is an even item -->
