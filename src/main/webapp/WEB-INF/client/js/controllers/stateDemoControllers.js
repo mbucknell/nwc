@@ -57,11 +57,51 @@ stateDemoControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonSt
             description: 'Find your Hydrologic Unit of interest.'
         },
         function ($scope, StoredState) {
-
+            
             console.dir(StoredState);
         }
     )
 ]);
+
+stateDemoControllers.controller('DisambiguateClick', ['$scope', 'StoredState', 'CommonState',
+    StepController(
+        {
+            name: 'HUC Disambiguation',
+            description: 'Your click fell near multiple HUCs. Select one from the list to continue.'
+        },
+        function ($scope, StoredState, CommonState) {
+            //<mocking huc objects>
+            CommonState.ambiguousHucs = [
+                {
+                    id: 42,
+                    name: 'Best HUC',
+                    area: 423556
+                },
+                {
+                    id: 2,
+                    name: 'Better HUC',
+                    area: 496
+                },
+                {
+                    id: 4,
+                    name: 'My very own long-named HUC',
+                    area: 1.9878
+                }
+            ];
+            //</mocking huc objects>
+            
+            $scope.hucs = CommonState.ambiguousHucs;
+            
+            //your list of huc objects is in CommonState.ambiguousHucs
+            
+            //@todo bind CommonState.ambiguousHucs and scope
+            
+            //@todo bind StoredState.hucId to scope's hucId            
+            console.dir(StoredState);
+        }
+    )
+]);
+
 stateDemoControllers.controller('FinalStep', ['$scope', 'StoredState', '$state',
     StepController(
         {

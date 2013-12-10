@@ -19,7 +19,7 @@
 				</div>
 			</div>
 			<div class="row site_body_content">
-				<div id="site_content" class="col-xs-12 site_body_content">
+				<div id="site_content" class="col-xs-12">
 					<tiles:insertAttribute name="body" />
 				</div>
 			</div>
