@@ -1,4 +1,4 @@
-/*global clientular*/
+/*global angular*/
 var nwcui = angular.module('nwcui', [
     'nwcui.controllers',
     'nwcui.sharedStateServices',
