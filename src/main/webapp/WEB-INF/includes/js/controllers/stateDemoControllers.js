@@ -110,7 +110,7 @@ stateDemoControllers.controller('Restore', [
     function($scope,    StoredState,    $state,     $timeout,   $http,      $modal){
         $scope.stateId = $state.params.stateId;
         var retrieveState = function(){
-            $http.get($scope.stateId + '.json')
+            $http.get('../../misc/' + $scope.stateId + '.json')
                     .success(function(data){
                         Object.merge(StoredState, data);
                         $state.go(StoredState._clientState.name, StoredState._clientState.params);

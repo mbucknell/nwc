@@ -59,6 +59,7 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/img/**").addResourceLocations("/WEB-INF/includes/img/").setCachePeriod(31556926);
         registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/includes/js/").setCachePeriod(31556926);
         registry.addResourceHandler("/partials/**").addResourceLocations("/WEB-INF/includes/partials/").setCachePeriod(31556926);
+        registry.addResourceHandler("/misc/**").addResourceLocations("/WEB-INF/includes/misc/").setCachePeriod(31556926);
         
         /**
          * External Resources (Twitter Bootstrap and JQuery)
