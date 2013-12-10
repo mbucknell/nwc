@@ -1,0 +1,8 @@
+<div ng-bind="name"></div>
+<p>This is the current shared state object:</p>
+<pre ng-bind="state | json"></pre>
+<button class="btn">Persist</button>
+<a class="btn" ui-sref="restore({stateId:1234})">Restore</a>
+<nav>
+    <a ui-sref="^.NumberSelection">Back</a>
+</nav>

@@ -6,7 +6,7 @@
 
 /* This css should be overwritten by the project using this template */
 
-#dashboard_container {
+.nwc-container {
 	background:		#f5f5f5;
 	border:			1px solid #e3e3e3;
 	border-radius: 	4px;
