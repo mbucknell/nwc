@@ -15,12 +15,12 @@ var registerWatchFactory = function(watchServiceName, dependencyArray){
     watchModule.factory(finalName, dependencyArray);
 };
 
-registerWatchFactory('hucId', ['$http',
-    function($http){
+registerWatchFactory('hucId', ['$http', 'CommonState',
+    function($http, CommonState){
         return {
             propertyToWatch: 'hucId',
             watchFunction: function (prop, oldValue, newValue){
-                alert('watchFired');
+                CommonState.newProp = 'blue';
                 var a = $http.get(newValue);
                 return newValue;
             }

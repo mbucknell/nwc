@@ -201,16 +201,18 @@ stateDemoControllers.controller('DisambiguateClick', ['$scope', 'StoredState', '
     )
 ]);
 
-stateDemoControllers.controller('FinalStep', ['$scope', 'StoredState', '$state',
+stateDemoControllers.controller('FinalStep', ['$scope', 'StoredState', '$state', 'CommonState',
     StepController(
         {
             name: 'Final Step',
             description: "You're all done!"
         },
-        function ($scope, StoredState, $state) {
+        function ($scope, StoredState, $state, CommonState) {
             StoredState._clientState.name = $state.current.name;
             StoredState._clientState.params = $state.params;
-            console.dir(StoredState);
+            
+            
+            console.dir(CommonState);
         }
     )
 ]);
