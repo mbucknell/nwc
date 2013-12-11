@@ -5,7 +5,7 @@
 <%@include file="/WEB-INF/base.jsp"%>
 
 <div id="main_page" class="page_body_content">
-	<div class="row dashboard" style="margin-right: 0px;">
+	<div id="full_dashboard" class="row dashboard navigation_toggle_a">
 		<div id="dashboard_nav" class="col-xs-3" style="min-width: 220px; margin-right: -15px;">
 			<div id="dashboard_nav_contents" class="navContents">
 				<div class="panel panel-default navigation_panel">
@@ -24,7 +24,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="nwc-container col-xs-9" style="min-width: 360px;  margin-left: 15px; padding: 10px; margin-bottom: -10px;">
+		<div id="dashboard_container" class="nwc-container col-xs-9" style="min-width: 360px;  margin-left: 15px; padding: 10px; margin-bottom: -10px;">
 			<!-- Dynamically build the dashboard depending on the workflow list -->
 			<c:forEach var="workflow" items="${workflows}" varStatus="status">
 				<!-- Add a new row div if this is an even item -->
@@ -68,6 +68,7 @@
 			
 			$('#dashboard_nav').toggleClass("col-xs-3 col-xs-0");
 			$('#dashboard_container').toggleClass("col-xs-9 col-xs-12");
+			$('#full_dashboard').toggleClass("navigation_toggle_a navigation_toggle_b");
 			$('#dashboard_nav *').children().toggleClass("col-xs-0");
 			$('#hideNav').toggleClass("glyphicon-chevron-left glyphicon-chevron-right");
 		});

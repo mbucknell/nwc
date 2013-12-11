@@ -189,11 +189,11 @@ stateDemoControllers.controller('DisambiguateClick', ['$scope', 'StoredState', '
             name: 'HUC Disambiguation',
             description: 'Your click fell near multiple HUCs. Select one from the list to continue.'
         },
-        function ($scope, StoredState, CommonState) {
-             
+        function ($scope, StoredState, CommonState) {             
             $scope.hucs = CommonState.ambiguousHucs;
+            
 			$scope.setHuck = function(huc) {
-				StoredState.huc = huc;
+				StoredState.hucId = huc.attributes.HUC_12;
 			}
 			
             console.dir(StoredState);

@@ -21,7 +21,7 @@
 <script type="text/javascript" src="../../3rdparty/azimuthjs/src/services/component/layers.js"></script>
 <script type="text/javascript" src="../../3rdparty/azimuthjs/src/services/component/map.js"></script>
 
-<scirpt
+
 <div class="angularRoot"  ng-app="nwcui">
     <div ui-view></div>
 </div>
