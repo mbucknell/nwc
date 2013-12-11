@@ -105,7 +105,7 @@ stateDemoControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonSt
                     };
 
             var hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
-                    'http://cida-wiwsc-wsdev.er.usgs.gov:8081/geoserver/' + 'gwc/service/wms',
+                    CONFIG.endpoint.geoserver + 'wms',
                     {
                             layers: 'NHDPlusHUCs:NationalWBDSnapshot',
                             transparent: true,
