@@ -1,6 +1,6 @@
 /*global angular*/
 (function(){
-var sharedStateServices = angular.module('nwcui.sharedStateServices', []);
+var sharedStateServices = angular.module('nwc.sharedStateServices', ['nwc.watch']);
 
 //enable sugarjs instance methods
 var storedState = Object.extended({
@@ -12,12 +12,6 @@ var storedState = Object.extended({
     }
 });
 
-//this factory provides access to the state that can be Stored to the server and shared between controllers
-sharedStateServices.factory('StoredState', 
-    function(){
-        return storedState;
-    }
-);
 
 //enable sugarjs instance methods
 var commonState = Object.extended();
@@ -29,6 +23,28 @@ var commonState = Object.extended();
 sharedStateServices.factory('CommonState', [
     function(){
         return commonState;
+    }
+]);
+var sharedStateWatchers = [];
+
+
+sharedStateServices.config(['storedStateWatchersProvider', function(sharedStateWatchersProvider){
+    var theWatchers = sharedStateWatchersProvider.$get[0]();
+        sharedStateWatchers.add(theWatchers);
+    sharedStateWatchers.push(function(){
+        angular.forEach(arguments, function(service){
+            storedState.watch(service.propertyToWatch, service.watchFunction);
+        });
+    });
+}]);
+
+sharedStateServices.factory('sharedStateWatch', sharedStateWatchers);
+
+
+//this factory provides access to the state that can be Stored to the server and shared between controllers
+sharedStateServices.factory('StoredState', ['sharedStateWatch',
+    function(sharedStateWatch){
+        return storedState;
     }
 ]);
 

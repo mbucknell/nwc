@@ -1,6 +1,6 @@
 /*global angular*/
 (function(){
-    var stateDemoControllers = angular.module('nwcui.controllers', []);
+    var stateDemoControllers = angular.module('nwc.controllers', []);
     /**
      * @param config
      *      @param config.name Human-facing workflow name
@@ -98,7 +98,7 @@ stateDemoControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonSt
                     Object.merge(EPSG900913Options, {numZoomLevels: 14})
                     ));
             var workflowLayerOptions = {
-                        opacity: 0.8,
+                        opacity: 0.6,
                         displayInLayerSwitcher: false,
                         visibility: true,
                         isBaseLayer : false
@@ -194,7 +194,7 @@ stateDemoControllers.controller('DisambiguateClick', ['$scope', 'StoredState', '
             
 			$scope.setHuck = function(huc) {
 				StoredState.hucId = huc.attributes.HUC_12;
-			}
+			};
 			
             console.dir(StoredState);
         }
