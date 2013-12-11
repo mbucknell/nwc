@@ -62,4 +62,26 @@
 	background-color: 	#48638D !important;	
 }
 
+.navigation_toggle_a {
+	margin-right:		0px;
+}
 
+.navigation_toggle_b {
+	margin-right:		15px;
+}
+
+.map_container {
+	padding: 			15px;
+}
+
+#hucSelectMap {
+	border: 			1px solid #a3a3a3;
+}
+
+.huc_table tbody tr:hover {
+	background-color:	#C8D0DD !important;
+}
+
+.huc_table tbody tr:nth-child(odd):hover td {
+	background-color:	#C8D0DD !important;
+}
