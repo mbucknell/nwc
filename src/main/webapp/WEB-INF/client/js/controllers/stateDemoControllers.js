@@ -105,7 +105,7 @@ stateDemoControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonSt
                     };
 
             var hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
-                    CONFIG.endpoint.geoserver,
+                    CONFIG.endpoint.geoserver + 'wms',
                     {
                             layers: 'NHDPlusHUCs:NationalWBDSnapshot',
                             transparent: true,
