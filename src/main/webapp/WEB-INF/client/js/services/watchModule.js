@@ -98,11 +98,6 @@
                                 }
                                 else {
                                     //check to see if a data window already exists. If so, destroy it.
-                                    var dataDisplayWindow = Ext.ComponentMgr.get('data-display-window');
-                                    if (dataDisplayWindow) {
-                                        console.debug('Removing previous data display window');
-                                        dataDisplayWindow.destroy();
-                                    }
                                     DataSeriesStore.updateHucSeries(labeledResponses);
                                 }
                             };

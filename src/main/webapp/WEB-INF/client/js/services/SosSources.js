@@ -43,7 +43,7 @@
                 observedProperty: observedProperty,
                 offering: offering
             });
-            return CONFIG.endpoint.threddsProxy + dataset + '/' + fileName + '?' + Object.toQueryString(sosParams);
+            return CONFIG.endpoint.thredds + dataset + '/' + fileName + '?' + $.param(sosParams);
         };
         /**
          * @param {String} offerring The offerring id as appears in SOS GetCapabilities

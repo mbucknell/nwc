@@ -25,7 +25,8 @@
                         window.CONFIG = {};
                         CONFIG.endpoint = {};
                         CONFIG.endpoint.geoserver = '<%= props.getProperty("nwc.endpoint.geoserver", "http://cida-wiwsc-wsdev.er.usgs.gov:8081/geoserver/")%>';
-
+                        CONFIG.endpoint.thredds = '<%= props.getProperty("nwc.endpoint.thredds", "http://cida-wiwsc-wsqa.er.usgs.gov:8081/thredds/sos/watersmart/sos/watersmart/")%>';
+                        
                     }());
                 </script>
                         
