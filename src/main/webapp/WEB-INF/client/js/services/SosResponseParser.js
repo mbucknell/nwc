@@ -60,11 +60,11 @@
                     var parseToken = function (token) {
                         value = parseFloat(token);
                         //if NaN of NaN-ish:
-                        if (isNaN(value) || self.parseSosResponse.emptyValues.any(value)) {
+                        if (isNaN(value) || self.emptyValues.any(value)) {
                             containsNaN = true;
 
                             //if the any value in a row is NaN, all values will be considered NaN
-                            var values = [];
+                            values = [];
 
                             //the number of NaNs to generate must be the same as the number
                             //of values in the row

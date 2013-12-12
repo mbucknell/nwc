@@ -42,23 +42,9 @@
                             });
 
                             var sosError = function () {
-                                //make arguments into a true array
-                                var allAjaxResponseArgsArray = Array.create(arguments);
-                                var allErrorAjaxResponseArgs = allAjaxResponseArgsArray.filter(function (response) {
-                                    var responseDoc = response[0],
-                                            status = response[1];
-
-                                    return (null === responseDoc) || ('success' !== status);
-                                });
-                                var errorReport = '<p>The following attempts to retrieve sensor observations failed:</p>';
-                                allErrorAjaxResponseArgs.each(function (errorAjaxResponseArgs) {
-                                    var jqXHR = errorAjaxResponseArgs[2];
-
-                                    errorReport += '<p>Resource id: "' + jqXHR.label + '"url: ' + jqXHR.url + '</p>';
-                                });
                                 //@todo - modal window this
                                 alert('error retrieving time series data');
-                                console.error(errorReport);
+                                console.dir(arguments);
                             };
 
                             var sosSuccess = function () {
@@ -97,8 +83,8 @@
                                     self.sosError.apply(self, allAjaxResponseArgs);
                                 }
                                 else {
-                                    //check to see if a data window already exists. If so, destroy it.
                                     DataSeriesStore.updateHucSeries(labeledResponses);
+                                    console.dir(DataSeriesStore);
                                 }
                             };
 
