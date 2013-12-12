@@ -24,16 +24,95 @@
     };
 
     registerWatchFactory('hucId',
-            ['$http', 'CommonState', 'ajaxUtils', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore',
-                function ($http, CommonState, ajaxUtils, SosSources, SosUrlBuilder, DataSeriesStore) {
+            ['$http', 'CommonState', 'ajaxUtils', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser',
+                function ($http, CommonState, ajaxUtils, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser) {
                     return {
                         propertyToWatch: 'hucId',
-                        watchFunction: function (prop, oldValue, newValue) {
+                        watchFunction: function (prop, oldHucValue, newHucValue) {
+                            var labeledAjaxCalls = [];
 
+                            //grab the sos sources that will be used to display the initial data 
+                            //series. ignore other data sources that the user can add later.
+                            var initialSosSourceKeys = ['eta', 'dayMet'];
+                            var initialSosSources = Object.select(SosSources, initialSosSourceKeys);
+                            angular.forEach(initialSosSources, function (source, sourceId) {
+                                var url = SosUrlBuilder.buildSosUrlFromSource(newHucValue, source);
+                                var labeledAjaxCall = ajaxUtils.makeLabeledAjaxCall(sourceId, url);
+                                labeledAjaxCalls.push(labeledAjaxCall);
+                            });
 
+                            var sosError = function () {
+                                //make arguments into a true array
+                                var allAjaxResponseArgsArray = Array.create(arguments);
+                                var allErrorAjaxResponseArgs = allAjaxResponseArgsArray.filter(function (response) {
+                                    var responseDoc = response[0],
+                                            status = response[1];
 
+                                    return (null === responseDoc) || ('success' !== status);
+                                });
+                                var errorReport = '<p>The following attempts to retrieve sensor observations failed:</p>';
+                                allErrorAjaxResponseArgs.each(function (errorAjaxResponseArgs) {
+                                    var jqXHR = errorAjaxResponseArgs[2];
 
-                            return newValue;
+                                    errorReport += '<p>Resource id: "' + jqXHR.label + '"url: ' + jqXHR.url + '</p>';
+                                });
+                                //@todo - modal window this
+                                alert('error retrieving time series data');
+                                console.error(errorReport);
+                            };
+
+                            var sosSuccess = function () {
+                                //all of the arguments normally passed to the individual callbacks of ajax calls
+                                var allAjaxResponseArgs = arguments;
+                                var self = this,
+                                        errorsFound = false,
+                                        labeledResponses = {},
+                                        labeledRawValues = {};
+                                $.each(allAjaxResponseArgs, function (index, ajaxResponseArgs) {
+                                    var response = ajaxResponseArgs[0];
+                                    if (null === response) {
+                                        errorsFound = true;
+                                        return false;//exit iteration
+                                    }
+                                    else {
+                                        //the jqXHR object is the 3rd arg of response
+                                        //the object has been augmented with a label property
+                                        //by makeLabeledAjaxCall
+                                        var jqXHR = ajaxResponseArgs[2],
+                                                label = jqXHR.label;
+                                        var rawValues = SosResponseParser.getValuesFromSosResponse(response);
+                                        var parsedValues = SosResponseParser.parseSosResponseValues(rawValues);
+                                        labeledRawValues[label] = rawValues;
+                                        var labeledResponse = {
+                                            metadata: {
+                                                seriesName: SosSources[label].observedProperty,
+                                                seriesUnits: SosSources[label].units
+                                            },
+                                            data: parsedValues
+                                        };
+                                        labeledResponses[label] = labeledResponse;
+                                    }
+                                });
+                                if (errorsFound) {
+                                    self.sosError.apply(self, allAjaxResponseArgs);
+                                }
+                                else {
+                                    //check to see if a data window already exists. If so, destroy it.
+                                    var dataDisplayWindow = Ext.ComponentMgr.get('data-display-window');
+                                    if (dataDisplayWindow) {
+                                        console.debug('Removing previous data display window');
+                                        dataDisplayWindow.destroy();
+                                    }
+                                    DataSeriesStore.updateHucSeries(labeledResponses);
+                                }
+                            };
+
+                            $.when.apply(self, labeledAjaxCalls).then(
+                                    sosSuccess,
+                                    sosError
+                                    );
+
+                            return newHucValue;
                         }
                     };
                 }

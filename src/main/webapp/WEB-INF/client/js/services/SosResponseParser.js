@@ -1,7 +1,7 @@
 /*global angular*/
 (function () {
     var sosResponseParserModule = angular.module('nwc.sosResponseParser', []);
-    var sosResponseParserService = sosResponseParserModule.service('sosResponseParser', [function(){
+    var sosResponseParserService = sosResponseParserModule.service('SosResponseParser', [function(){
             var self = this;
             self.emptyValues = [9.96921e+36, -999];//these values will be considered NaN's    
             /**

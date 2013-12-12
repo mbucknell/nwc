@@ -14,6 +14,7 @@
 <script type="text/javascript" src="../../client/js/services/util.js"></script>
 <script type="text/javascript" src="../../client/js/services/DataSeriesStore.js"></script>
 <script type="text/javascript" src="../../client/js/services/SosSources.js"></script>
+<script type="text/javascript" src="../../client/js/services/SosResponseParser.js"></script>
 <script type="text/javascript" src="../../client/js/services/watchModule.js"></script>
 <script type="text/javascript" src="../../client/js/services/sharedStateServices.js"></script>
 <script type="text/javascript" src="../../client/js/controllers/stateDemoControllers.js"></script>

@@ -5,6 +5,7 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.util',
     'nwc.dataSeriesStore',
     'nwc.sosSources',
+    'nwc.sosResponseParser',
     'nwc.controllers',
     'ui.router',
     'ui.bootstrap',
