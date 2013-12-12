@@ -1,18 +1,26 @@
 /*global angular*/
 (function(){
 var watchModule = angular.module('nwc.watch', []);
-var watchServiceNames = [];
+//using null-value map as a set (need fast membership checking later)
+var watchServiceNames = Object.extended();
 
 //this service provides a way to inject the names of all other stored state watch services into a controller
-watchModule.factory('storedStateWatchers', [function(){
-    return watchServiceNames;
-}]);
+watchModule.provider('storedStateWatchers', function(){
+    this.$get = function(){
+       return watchServiceNames.keys();
+    };
+});
 
 //call this function with the same arguments that you would module.factory()
 var registerWatchFactory = function(watchServiceName, dependencyArray){
     var finalName = 'nwc.watch.' + watchServiceName;
-    watchServiceNames.push(finalName);
-    watchModule.factory(finalName, dependencyArray);
+    if(watchServiceName.has(finalName)){
+        throw Error("Duplicate watch service name. You must register unique watch service names.");
+    }
+    else {
+        watchServiceNames[finalName] = null;
+        watchModule.factory(finalName, dependencyArray);
+    }
 };
 
 registerWatchFactory('hucId', ['$http', 'CommonState',
