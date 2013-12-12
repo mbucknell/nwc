@@ -11,6 +11,9 @@
 <script type="text/javascript" src="../../webjars/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.js"></script>
 <script type="text/javascript" src="../../webjars/sugar/1.3.8/sugar-full.development.js"></script>
 <script type="text/javascript" src="../../webjars/openlayers/2.13.1/OpenLayers.debug.js"></script>
+<script type="text/javascript" src="../../client/js/services/util.js"></script>
+<script type="text/javascript" src="../../client/js/services/DataSeriesStore.js"></script>
+<script type="text/javascript" src="../../client/js/services/SosSources.js"></script>
 <script type="text/javascript" src="../../client/js/services/watchModule.js"></script>
 <script type="text/javascript" src="../../client/js/services/sharedStateServices.js"></script>
 <script type="text/javascript" src="../../client/js/controllers/stateDemoControllers.js"></script>

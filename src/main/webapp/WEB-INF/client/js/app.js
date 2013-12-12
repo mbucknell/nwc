@@ -1,8 +1,10 @@
 /*global angular*/
 var nwcApp = angular.module('nwcApp', [
     'nwc.sharedStateServices',
-        'nwc.watch',
-
+    'nwc.watch',
+    'nwc.util',
+    'nwc.dataSeriesStore',
+    'nwc.sosSources',
     'nwc.controllers',
     'ui.router',
     'ui.bootstrap',

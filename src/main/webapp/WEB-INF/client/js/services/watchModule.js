@@ -1,6 +1,6 @@
 /*global angular*/
 (function(){
-var watchModule = angular.module('nwc.watch', []);
+var watchModule = angular.module('nwc.watch', ['nwc.util']);
 //using null-value map as a set (need fast membership checking later)
 var watchServiceNames = Object.extended();
 
@@ -23,8 +23,9 @@ var registerWatchFactory = function(watchServiceName, dependencyArray){
     }
 };
 
-registerWatchFactory('hucId', ['$http', 'CommonState',
-    function($http, CommonState){
+registerWatchFactory('hucId', 
+           ['$http', 'CommonState', 'ajaxUtils', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore',
+    function($http,   CommonState,   ajaxUtils,   SosSources,   SosUrlBuilder,   DataSeriesStore){
         return {
             propertyToWatch: 'hucId',
             watchFunction: function (prop, oldValue, newValue){
