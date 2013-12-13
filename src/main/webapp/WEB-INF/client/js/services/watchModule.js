@@ -24,8 +24,8 @@
     };
 
     registerWatchFactory('hucId',
-            ['$http', 'CommonState', 'ajaxUtils', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q',
-                function ($http, CommonState, ajaxUtils, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q) {
+            ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q',
+                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q) {
                     return {
                         propertyToWatch: 'hucId',
                         watchFunction: function (prop, oldHucValue, newHucValue) {
