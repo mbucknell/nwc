@@ -48,7 +48,16 @@ var StepController = function(config, customControllerFunction){
   };
 };
 
-
+stateDemoControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonState',
+    StepController(
+        {
+            name: 'Plot Water Budget Data',
+            description: 'Visualize the data for your HUC of interest.'
+        },
+        function ($scope, StoredState, CommonState) {
+            $scope.CommonState = CommonState;
+        })
+]);
 
 stateDemoControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonState',
     StepController(
@@ -160,7 +169,7 @@ stateDemoControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonSt
                 }
                 else if(1 === hucCount){
                     StoredState.hucId = actualFeatures[0].attributes.HUC_12;
-                    $('#goToFinalStep').click();
+                    $('#goToNonAmbiguousClick').click();
                 }
                 else{
                     CommonState.ambiguousHucs = actualFeatures;

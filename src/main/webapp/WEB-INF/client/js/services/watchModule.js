@@ -24,20 +24,19 @@
     };
 
     registerWatchFactory('hucId',
-            ['$http', 'CommonState', 'ajaxUtils', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser',
-                function ($http, CommonState, ajaxUtils, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser) {
+            ['$http', 'CommonState', 'ajaxUtils', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q',
+                function ($http, CommonState, ajaxUtils, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q) {
                     return {
                         propertyToWatch: 'hucId',
                         watchFunction: function (prop, oldHucValue, newHucValue) {
                             var labeledAjaxCalls = [];
-
                             //grab the sos sources that will be used to display the initial data 
                             //series. ignore other data sources that the user can add later.
                             var initialSosSourceKeys = ['eta', 'dayMet'];
                             var initialSosSources = Object.select(SosSources, initialSosSourceKeys);
                             angular.forEach(initialSosSources, function (source, sourceId) {
                                 var url = SosUrlBuilder.buildSosUrlFromSource(newHucValue, source);
-                                var labeledAjaxCall = ajaxUtils.makeLabeledAjaxCall(sourceId, url);
+                                var labeledAjaxCall = $http.get(url, {label: sourceId});
                                 labeledAjaxCalls.push(labeledAjaxCall);
                             });
 
@@ -46,16 +45,18 @@
                                 alert('error retrieving time series data');
                                 console.dir(arguments);
                             };
-
-                            var sosSuccess = function () {
-                                //all of the arguments normally passed to the individual callbacks of ajax calls
-                                var allAjaxResponseArgs = arguments;
+                            /**
+                             * 
+                             * @param {type} allAjaxResponseArgs all of the arguments normally passed to the individual callbacks of ajax calls
+                             * @returns {undefined}
+                             */
+                            var sosSuccess = function (allAjaxResponseArgs) {
                                 var self = this,
                                         errorsFound = false,
                                         labeledResponses = {},
                                         labeledRawValues = {};
                                 $.each(allAjaxResponseArgs, function (index, ajaxResponseArgs) {
-                                    var response = ajaxResponseArgs[0];
+                                    var response = ajaxResponseArgs.data;
                                     if (null === response) {
                                         errorsFound = true;
                                         return false;//exit iteration
@@ -64,8 +65,7 @@
                                         //the jqXHR object is the 3rd arg of response
                                         //the object has been augmented with a label property
                                         //by makeLabeledAjaxCall
-                                        var jqXHR = ajaxResponseArgs[2],
-                                                label = jqXHR.label;
+                                        var label = ajaxResponseArgs.config.label;
                                         var rawValues = SosResponseParser.getValuesFromSosResponse(response);
                                         var parsedValues = SosResponseParser.parseSosResponseValues(rawValues);
                                         labeledRawValues[label] = rawValues;
@@ -80,19 +80,16 @@
                                     }
                                 });
                                 if (errorsFound) {
-                                    self.sosError.apply(self, allAjaxResponseArgs);
+                                    sosError.apply(self, allAjaxResponseArgs);
                                 }
                                 else {
                                     DataSeriesStore.updateHucSeries(labeledResponses);
+                                    CommonState.DataSeriesStore.merge(DataSeriesStore);
                                     console.dir(DataSeriesStore);
                                 }
                             };
-
-                            $.when.apply(self, labeledAjaxCalls).then(
-                                    sosSuccess,
-                                    sosError
-                                    );
-
+                            $q.all(labeledAjaxCalls).then(sosSuccess, sosError);
+                            
                             return newHucValue;
                         }
                     };
