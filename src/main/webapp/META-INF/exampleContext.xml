@@ -8,4 +8,5 @@
     <Manager pathname="" />
 
     <Environment name="nwc.endpoint.geoserver" value="http[s]://supply.your.own.com/geoserver/" type="java.lang.String" override="true"/>
+    <Environment name="nwc.endpoint.thredds" value="http[s]://supply.your.own.com/thredds/" type="java.lang.String" override="true"/>
 </Context>

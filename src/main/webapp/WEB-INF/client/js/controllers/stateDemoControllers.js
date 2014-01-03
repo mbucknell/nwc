@@ -1,6 +1,6 @@
 /*global angular*/
 (function(){
-    var stateDemoControllers = angular.module('nwcui.controllers', []);
+    var stateDemoControllers = angular.module('nwc.controllers', []);
     /**
      * @param config
      *      @param config.name Human-facing workflow name
@@ -48,7 +48,27 @@ var StepController = function(config, customControllerFunction){
   };
 };
 
-
+stateDemoControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetPlot',
+    StepController(
+        {
+            name: 'Plot Water Budget Data',
+            description: 'Visualize the data for your HUC of interest.'
+        },
+        function ($scope, StoredState, CommonState, WaterBudgetPlot) {
+            var plotDivSelector = '#waterBudgetPlot';
+            var legendDivSelector = '#waterBudgetLegend';
+            //boolean property is cheaper to watch than deep object comparison
+            $scope.$watch('CommonState.newDataSeriesStore', function(newValue, oldValue){
+                if(newValue){
+                    CommonState.newDataSeriesStore = false;
+                    var values = CommonState.DataSeriesStore.monthly.data;
+                    var labels = CommonState.DataSeriesStore.monthly.metadata.seriesLabels;
+                    WaterBudgetPlot.setPlot(plotDivSelector, legendDivSelector, values, labels);
+                }
+            });
+            $scope.CommonState = CommonState;
+        })
+]);
 
 stateDemoControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonState',
     StepController(
@@ -98,7 +118,7 @@ stateDemoControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonSt
                     Object.merge(EPSG900913Options, {numZoomLevels: 14})
                     ));
             var workflowLayerOptions = {
-                        opacity: 0.8,
+                        opacity: 0.6,
                         displayInLayerSwitcher: false,
                         visibility: true,
                         isBaseLayer : false,
@@ -161,7 +181,7 @@ stateDemoControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonSt
                 }
                 else if(1 === hucCount){
                     StoredState.hucId = actualFeatures[0].attributes.HUC_12;
-                    $('#goToFinalStep').click();
+                    $('#goToNonAmbiguousClick').click();
                 }
                 else{
                     CommonState.ambiguousHucs = actualFeatures;
@@ -195,23 +215,25 @@ stateDemoControllers.controller('DisambiguateClick', ['$scope', 'StoredState', '
             
 			$scope.setHuck = function(huc) {
 				StoredState.hucId = huc.attributes.HUC_12;
-			}
+			};
 			
             console.dir(StoredState);
         }
     )
 ]);
 
-stateDemoControllers.controller('FinalStep', ['$scope', 'StoredState', '$state',
+stateDemoControllers.controller('FinalStep', ['$scope', 'StoredState', '$state', 'CommonState',
     StepController(
         {
             name: 'Final Step',
             description: "You're all done!"
         },
-        function ($scope, StoredState, $state) {
+        function ($scope, StoredState, $state, CommonState) {
             StoredState._clientState.name = $state.current.name;
             StoredState._clientState.params = $state.params;
-            console.dir(StoredState);
+            
+            
+            console.dir(CommonState);
         }
     )
 ]);

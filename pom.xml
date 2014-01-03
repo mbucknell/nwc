@@ -91,7 +91,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1.1</version>
 				<configuration>
-					<warName>nwc</warName>
+					<warName>${warName}</warName>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					
 					<!-- Copy configuration properties to WEBINF/classes -->
@@ -108,12 +108,13 @@
 			</plugin>
 		</plugins>
 		
-		<finalName>nwc</finalName>
+		<finalName>${warName}</finalName>
 	</build>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>3.2.2.RELEASE</spring.version>
+                <warName>nwc</warName>
 	</properties>
 
         <dependencies>
