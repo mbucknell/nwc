@@ -9,8 +9,7 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.controllers',
     'ui.router',
     'ui.bootstrap',
-    'az.directives',
-    'az.services'
+    'nwc.waterBudgetPlot'
 ]);
 
 nwcApp.config(['$stateProvider', '$urlRouterProvider',

@@ -85,7 +85,8 @@
                                 else {
                                     DataSeriesStore.updateHucSeries(labeledResponses);
                                     CommonState.DataSeriesStore.merge(DataSeriesStore);
-                                    console.dir(DataSeriesStore);
+                                    //boolean property is cheaper to watch than deep object comparison
+                                    CommonState.newDataSeriesStore = true;
                                 }
                             };
                             $q.all(labeledAjaxCalls).then(sosSuccess, sosError);

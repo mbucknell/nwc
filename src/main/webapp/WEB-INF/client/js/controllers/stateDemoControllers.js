@@ -48,13 +48,24 @@ var StepController = function(config, customControllerFunction){
   };
 };
 
-stateDemoControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonState',
+stateDemoControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetPlot',
     StepController(
         {
             name: 'Plot Water Budget Data',
             description: 'Visualize the data for your HUC of interest.'
         },
-        function ($scope, StoredState, CommonState) {
+        function ($scope, StoredState, CommonState, WaterBudgetPlot) {
+            var plotDivSelector = '#waterBudgetPlot';
+            var legendDivSelector = '#waterBudgetLegend';
+            //boolean property is cheaper to watch than deep object comparison
+            $scope.$watch('CommonState.newDataSeriesStore', function(newValue, oldValue){
+                if(newValue){
+                    CommonState.newDataSeriesStore = false;
+                    var values = CommonState.DataSeriesStore.monthly.data;
+                    var labels = CommonState.DataSeriesStore.monthly.metadata.seriesLabels;
+                    WaterBudgetPlot.setPlot(plotDivSelector, legendDivSelector, values, labels);
+                }
+            });
             $scope.CommonState = CommonState;
         })
 ]);

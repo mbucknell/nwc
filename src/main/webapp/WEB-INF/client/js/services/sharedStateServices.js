@@ -15,7 +15,9 @@ var storedState = Object.extended({
 
 //enable sugarjs instance methods
 var commonState = Object.extended({
-    DataSeriesStore: Object.extended()
+    DataSeriesStore: Object.extended(),
+    newDataSeriesStore: false
+    
 });
 
 //this factory provides access to the state that is NOT stored to the server, but that
