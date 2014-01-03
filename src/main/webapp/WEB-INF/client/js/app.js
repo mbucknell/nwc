@@ -1,14 +1,18 @@
 /*global angular*/
-var nwcui = angular.module('nwcui', [
-    'nwcui.controllers',
-    'nwcui.sharedStateServices',
+var nwcApp = angular.module('nwcApp', [
+    'nwc.sharedStateServices',
+    'nwc.watch',
+    'nwc.util',
+    'nwc.dataSeriesStore',
+    'nwc.sosSources',
+    'nwc.sosResponseParser',
+    'nwc.controllers',
     'ui.router',
     'ui.bootstrap',
-    'az.directives',
-    'az.services'
+    'nwc.waterBudgetPlot'
 ]);
 
-nwcui.config(['$stateProvider', '$urlRouterProvider',
+nwcApp.config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/workflow/water-budget/select-huc');
 
@@ -37,6 +41,11 @@ nwcui.config(['$stateProvider', '$urlRouterProvider',
                     url: '/disambiguate-click',
                     templateUrl: '../../client/partials/waterBudget/disambiguateClick.html',
                     controller: 'DisambiguateClick'
+                })
+                .state('workflow.waterBudget.plotData', {
+                    url: '/plot-data',
+                    templateUrl: '../../client/partials/waterBudget/plotData.html',
+                    controller: 'PlotData'
                 })
                 .state('workflow.waterBudget.FinalStep', {
                     url: '/final',
