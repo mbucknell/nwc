@@ -7,8 +7,8 @@
 <!--library dependencies -->
 <script type="text/javascript" src="../../webjars/angularjs/1.2.1/angular.js"></script>
 <script type="text/javascript" src="../../webjars/angular-ui-router/0.2.0/angular-ui-router.js"></script>
-<script type="text/javascript" src="../../webjars/angular-ui-bootstrap/0.6.0/ui-bootstrap.js"></script>
-<script type="text/javascript" src="../../webjars/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.js"></script>
+<script type="text/javascript" src="../../webjars/angular-ui-bootstrap/0.9.0/ui-bootstrap.js"></script>
+<script type="text/javascript" src="../../webjars/angular-ui-bootstrap/0.9.0/ui-bootstrap-tpls.js"></script>
 <script type="text/javascript" src="../../webjars/sugar/1.3.8/sugar-full.development.js"></script>
 <script type="text/javascript" src="../../webjars/openlayers/2.13.1/OpenLayers.debug.js"></script>
 <script type="text/javascript" src="../../3rdparty/dygraphs/dygraph-dev.js"></script>
@@ -22,7 +22,8 @@
 <script type="text/javascript" src="../../client/js/services/sharedStateServices.js"></script>
 <script type="text/javascript" src="../../client/js/services/waterBudgetPlot.js"></script>
 <!-- controllers -->
-<script type="text/javascript" src="../../client/js/controllers/stateDemoControllers.js"></script>
+<script type="text/javascript" src="../../client/js/controllers/controllerHelpers.js"></script>
+<script type="text/javascript" src="../../client/js/controllers/waterBudgetControllers.js"></script>
 <!-- main app-->
 <script type="text/javascript" src="../../client/js/app.js"></script>
 
