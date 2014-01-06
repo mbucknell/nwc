@@ -17,13 +17,23 @@ waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonS
         function ($scope, StoredState, CommonState, WaterBudgetPlot) {
             var plotDivSelector = '#waterBudgetPlot';
             var legendDivSelector = '#waterBudgetLegend';
+            $scope.plotType = StoredState.plotType || 'daily';
+            $scope.$watch('plotType', function(newValue, oldValue){
+               plotData(newValue);
+            });
+            /**
+             * {String} category the category of data to plot (daily or monthly)
+             */
+            var plotData = function(category){
+                var values = CommonState.DataSeriesStore[category].data;
+                var labels = CommonState.DataSeriesStore[category].metadata.seriesLabels;
+                WaterBudgetPlot.setPlot(plotDivSelector, legendDivSelector, values, labels);
+            };
             //boolean property is cheaper to watch than deep object comparison
             $scope.$watch('CommonState.newDataSeriesStore', function(newValue, oldValue){
                 if(newValue){
                     CommonState.newDataSeriesStore = false;
-                    var values = CommonState.DataSeriesStore.monthly.data;
-                    var labels = CommonState.DataSeriesStore.monthly.metadata.seriesLabels;
-                    WaterBudgetPlot.setPlot(plotDivSelector, legendDivSelector, values, labels);
+                    plotData($scope.plotType);
                 }
             });
             $scope.CommonState = CommonState;
