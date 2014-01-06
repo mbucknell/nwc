@@ -1,55 +1,15 @@
-/*global angular*/
+/*global angular,NWC,OpenLayers,$,CONFIG*/
 (function(){
-    var stateDemoControllers = angular.module('nwc.controllers', []);
-    /**
-     * @param config
-     *      @param config.name Human-facing workflow name
-     *      @param config.description Human-facing workflow description
-     *      @param {Function} customControllerFunction custom behavior
-     * @returns controller function to be used in a call to <module>.controller()
-     */
-    var WorkflowController = function(config, customControllerFunction){
-        if(!config || !config.name || !config.description){
-            throw new Error("Mandatory Step variables not Defined.");
+    var waterBudgetControllers = angular.module('nwc.controllers.waterBudget', []);
+    
+    waterBudgetControllers.controller('WaterBudget', ['$scope',
+        function ($scope) {
+            $scope.name = "Water Budget";
+            $scope.description = "Retrieve water data comprising all components of a water budget.";
         }
-        return function($scope, sharedState){
-            $scope.name = config.name;
-            $scope.description = config.description;
-
-            customControllerFunction.apply(arguments);
-        };
-    };
-
-stateDemoControllers.controller('WaterBudget', ['$scope', 
-    function ($scope) {
-        $scope.name = "Water Budget";
-        $scope.description = "Retrieve water data comprising all components of a water budget.";
-    }
-]);
-
-/**
- * 
- * @param config
- *  @param config.name the human-facing step name
- *  @param config.description the human-facing description
- * @param {Function} customControllerFunction
- * @returns controller function for use in a call to <module>.controller()
- */
-
-var StepController = function(config, customControllerFunction){
-    if(!config || !config.name || !config.description){
-        throw new Error("Mandatory Step variables not Defined.");
-    }
-    return function($scope, StoredState){
-      $scope.name = config.name;
-      $scope.description = config.description;
-      $scope.state = StoredState;
-      customControllerFunction.apply({}, arguments);
-  };
-};
-
-stateDemoControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetPlot',
-    StepController(
+    ]);
+waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetPlot',
+    NWC.ControllerHelpers.StepController(
         {
             name: 'Plot Water Budget Data',
             description: 'Visualize the data for your HUC of interest.'
@@ -70,8 +30,8 @@ stateDemoControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonSta
         })
 ]);
 
-stateDemoControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonState',
-    StepController(
+waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonState',
+    NWC.ControllerHelpers.StepController(
         {
             name: 'HUC Selection',
             description: 'Find your Hydrologic Unit of interest.'
@@ -80,7 +40,6 @@ stateDemoControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonSt
             $scope.StoredState = StoredState;
             $scope.CommonState = CommonState;
             
-            var config = {};
             var mapLayers = [];
             var WGS84_GOOGLE_MERCATOR = new OpenLayers.Projection("EPSG:900913");
              var EPSG900913Options = {
@@ -204,8 +163,8 @@ stateDemoControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonSt
     )
 ]);
 
-stateDemoControllers.controller('DisambiguateClick', ['$scope', 'StoredState', 'CommonState',
-    StepController(
+waterBudgetControllers.controller('DisambiguateClick', ['$scope', 'StoredState', 'CommonState',
+    NWC.ControllerHelpers.StepController(
         {
             name: 'HUC Disambiguation',
             description: 'Your click fell near multiple HUCs. Select one from the list to continue.'
@@ -222,8 +181,8 @@ stateDemoControllers.controller('DisambiguateClick', ['$scope', 'StoredState', '
     )
 ]);
 
-stateDemoControllers.controller('FinalStep', ['$scope', 'StoredState', '$state', 'CommonState',
-    StepController(
+waterBudgetControllers.controller('FinalStep', ['$scope', 'StoredState', '$state', 'CommonState',
+    NWC.ControllerHelpers.StepController(
         {
             name: 'Final Step',
             description: "You're all done!"
@@ -238,7 +197,7 @@ stateDemoControllers.controller('FinalStep', ['$scope', 'StoredState', '$state',
     )
 ]);
 
-stateDemoControllers.controller('Restore', [
+waterBudgetControllers.controller('Restore', [
             '$scope',  'StoredState',  '$state',   '$timeout', '$http',    '$modal',
     function($scope,    StoredState,    $state,     $timeout,   $http,      $modal){
         $scope.stateId = $state.params.stateId;
