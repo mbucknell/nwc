@@ -97,8 +97,8 @@
                 }
             ]);
     registerWatchFactory('county',
-            ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'SosResponseParser', '$q', 'Convert', 'DataSeries', 'WaterBudgetPlot',
-                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q, Convert, DataSeries, WaterBudgetPlot) {
+            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState',
+                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q, Convert, DataSeries, WaterBudgetPlot, StoredState) {
                     return {
                         propertyToWatch: 'county',
                         watchFunction: function (prop, oldCountyFeature, newCountyFeature) {
@@ -107,17 +107,17 @@
                             ;
                             var sosUrl = SosUrlBuilder.buildSosUrlFromSource(offeringId, SosSources.countyWaterUse);
 
-                            var waterUseFailure = function (data, status, jqXHR) {
+                            var waterUseFailure = function (response) {
                                 alert(
                                         'An error occurred while retrieving water use data from:\n' +
                                         this.url + '\n' +
                                         'See browser logs for details'
                                         );
-                                console.error('Error while accessing: ' + this.url + '\n' + data);
+                                console.error('Error while accessing: ' + this.url + '\n' + response.data);
                             };
 
-                            var waterUseSuccess = function (data, status, jqXHR) {
-
+                            var waterUseSuccess = function (response) {
+                                var data = response.data;
                                 if (null === data || //null data
                                         !data.documentElement || //not an xml document
                                         !data.documentElement.textContent || //malformed xmlDocument
@@ -147,13 +147,16 @@
                                     waterUseDataSeries.metadata.seriesLabels = waterUseValueLabelsOnly.concat(additionalSeriesLabels);
 
                                     DataSeriesStore.updateWaterUseSeries(waterUseDataSeries);
-                                    WaterBudgetPlot.setPlot()
+                                    var plotTimeDensity = StoredState.plotTimeDensity;
+                                    var values = DataSeriesStore[plotTimeDensity].data;
+                                    var labels = DataSeriesStore[plotTimeDensity].metadata.seriesLabels;
+                                    WaterBudgetPlot.updateSeries(values, labels);
                                 }
                             };
 
-                            $.when($.ajax(sosUrl)).then(waterUseSuccess, waterUseFailure);
+                            $http.get(sosUrl).then(waterUseSuccess, waterUseFailure);
 
-                            return newCountyValue;
+                            return newCountyFeature;
                         }
                     };
                 }
