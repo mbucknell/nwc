@@ -19,7 +19,9 @@ waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonS
             var legendDivSelector = '#waterBudgetLegend';
             $scope.plotType = StoredState.plotType || 'daily';
             $scope.$watch('plotType', function(newValue, oldValue){
-               plotData(newValue);
+                if(newValue !== oldValue){
+                    plotData(newValue);
+                }
             });
             /**
              * {String} category the category of data to plot (daily or monthly)
