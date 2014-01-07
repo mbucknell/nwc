@@ -9,7 +9,8 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.controllers.waterBudget',
     'ui.router',
     'ui.bootstrap',
-    'nwc.waterBudgetPlot'
+    'nwc.waterBudgetPlot',
+    'nwc.waterBudgetMap'
 ]);
 
 nwcApp.config(['$stateProvider', '$urlRouterProvider',
@@ -46,6 +47,11 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     url: '/plot-data',
                     templateUrl: '../../client/partials/waterBudget/plotData.html',
                     controller: 'PlotData'
+                })
+                .state('workflow.waterBudget.selectCounty', {
+                    url: '/plot-data',
+                    templateUrl: '../../client/partials/waterBudget/selectHuc.html',
+                    controller: 'SelectCounty'
                 })
                 .state('workflow.waterBudget.FinalStep', {
                     url: '/final',

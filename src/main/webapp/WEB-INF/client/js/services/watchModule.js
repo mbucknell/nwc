@@ -1,4 +1,4 @@
-/*global angular*/
+/*global angular,console*/
 (function () {
     var watchModule = angular.module('nwc.watch', ['nwc.util']);
 //using null-value map as a set (need fast membership checking later)
@@ -92,6 +92,68 @@
                             $q.all(labeledAjaxCalls).then(sosSuccess, sosError);
                             
                             return newHucValue;
+                        }
+                    };
+                }
+            ]);
+    registerWatchFactory('county',
+            ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'SosResponseParser', '$q', 'Convert', 'DataSeries', 'WaterBudgetPlot',
+                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q, Convert, DataSeries, WaterBudgetPlot) {
+                    return {
+                        propertyToWatch: 'county',
+                        watchFunction: function (prop, oldCountyFeature, newCountyFeature) {
+
+                            var offeringId = newCountyFeature.attributes.FIPS;
+                            ;
+                            var sosUrl = SosUrlBuilder.buildSosUrlFromSource(offeringId, SosSources.countyWaterUse);
+
+                            var waterUseFailure = function (data, status, jqXHR) {
+                                alert(
+                                        'An error occurred while retrieving water use data from:\n' +
+                                        this.url + '\n' +
+                                        'See browser logs for details'
+                                        );
+                                console.error('Error while accessing: ' + this.url + '\n' + data);
+                            };
+
+                            var waterUseSuccess = function (data, status, jqXHR) {
+
+                                if (null === data || //null data
+                                        !data.documentElement || //not an xml document
+                                        !data.documentElement.textContent || //malformed xmlDocument
+                                        data.documentElement.textContent.has('exception') //xmlDocument with an exception message
+                                        ) {
+                                    waterUseFailure.apply(this, arguments);
+                                } else {
+                                    var parsedTable = SosResponseParser.parseSosResponse(data);
+                                    var countyAreaSqMiles = newCountyFeature.attributes.AREA_SQMI;
+                                    var countyAreaAcres = Convert.squareMilesToAcres(countyAreaSqMiles);
+                                    var convertedTable = Convert.mgdTableToMmPerDayTable(parsedTable, countyAreaAcres);
+                                    //add a summation series to the table
+                                    convertedTable = convertedTable.map(function (row) {
+                                        var nonDateValues = row.from(1);//don't try to sum dates
+                                        var rowSum = nonDateValues.sum();
+                                        var newRow = row.clone();//shallow array copy
+                                        newRow.push(rowSum);
+                                        return newRow;
+                                    });
+                                    var waterUseDataSeries = DataSeries();
+                                    waterUseDataSeries.data = convertedTable;
+
+                                    //use the series metadata as labels
+                                    var additionalSeriesLabels = SosSources.countyWaterUse.observedProperty.split(',');
+                                    additionalSeriesLabels.push('Aggregate Water Use');
+                                    var waterUseValueLabelsOnly = waterUseDataSeries.metadata.seriesLabels.from(1);//skip the initial 'Date' label
+                                    waterUseDataSeries.metadata.seriesLabels = waterUseValueLabelsOnly.concat(additionalSeriesLabels);
+
+                                    DataSeriesStore.updateWaterUseSeries(waterUseDataSeries);
+                                    WaterBudgetPlot.setPlot()
+                                }
+                            };
+
+                            $.when($.ajax(sosUrl)).then(waterUseSuccess, waterUseFailure);
+
+                            return newCountyValue;
                         }
                     };
                 }

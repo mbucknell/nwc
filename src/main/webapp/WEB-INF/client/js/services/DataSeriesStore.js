@@ -1,7 +1,7 @@
 /*global angular*/
 (function () {
     var dataSeriesStoreModule = angular.module('nwc.dataSeriesStore', ['nwc.sosSources']);
-
+    
     var DataSeries = function () {
         return {
             metadata: {
@@ -10,6 +10,9 @@
             data: []
         };
     };
+    dataSeriesStoreModule.service('DataSeries', ['SosSources',
+        DataSeries
+    ]);
 
     /**
      * Given mixed frequency data series metadata and data, converts it to 
