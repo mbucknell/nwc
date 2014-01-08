@@ -15,7 +15,9 @@
              * @param {array<string>} labels - the labels for the series
              */
             setPlot: function (graphEltSelector, legendEltSelector, values, labels) {
-
+                if(privatePlot && privatePlot.destroy){
+                    privatePlot.destroy();
+                }
                 $([graphEltSelector, legendEltSelector]).addClass('generous_left_margin');
                 var graphElt = $(graphEltSelector)[0];
                 var legendElt = $(legendEltSelector)[0];
