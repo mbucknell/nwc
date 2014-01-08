@@ -43,42 +43,7 @@ waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'Common
             var map = WaterBudgetMap.getMap();
             var hucLayer = map.getHucLayer();
             
-            var hucsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
-                    title: 'huc-identify-control',
-                    hover: false,
-                    layers: [
-                        hucLayer
-                    ],
-                    queryVisible: true,
-                    output: 'object',
-                    drillDown: true,
-                    infoFormat: 'application/vnd.ogc.gml',
-                    vendorParams: {
-                        radius: 5
-                    },
-                    id: 'hucs',
-                    autoActivate: true
-                });
-                var featureInfoHandler = function (responseObject) {
-                    //for some reason the real features are inside an array
-                    var actualFeatures = responseObject.features[0].features;
-                    var hucCount = actualFeatures.length;
-                    if (0 === hucCount) {
-                        //nothing
-                    }
-                    else if (1 === hucCount) {
-                        StoredState.hucId = actualFeatures[0].attributes.HUC_12;
-                        $('#goToNonAmbiguousClick').click();
-                    }
-                    else {
-                        CommonState.ambiguousHucs = actualFeatures;
-                        $('#goToDisabiguateClick').click();
-                    }
-
-
-                };
-                hucsGetFeatureInfoControl.events.register("getfeatureinfo", {}, featureInfoHandler);
-                map.addControl(hucsGetFeatureInfoControl);
+            
                 map.render('hucSelectMap');
                 map.zoomToExtent(map.restrictedExtent, true);
         
@@ -95,8 +60,11 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
                 name: 'County Selection',
                 description: 'Select water use data for a county that intersects with your HUC'
             },
-    function ($scope, StoredState, CommonState, WaterBudgetMap, SosSources, $http, SosResponse) {
-
+    function ($scope, StoredState, CommonState, WaterBudgetMap) {
+        var setCounty = function(countyFeature){
+            StoredState.county = countyFeature;
+        };
+        WaterBudgetMap.getMap().getCountyThatIntersectsWithHucFeature(StoredState.huc, setCounty);
     })
 ]);
 

@@ -1,6 +1,6 @@
 /*global angular,console*/
 (function () {
-    var watchModule = angular.module('nwc.watch', ['nwc.util']);
+    var watchModule = angular.module('nwc.watch', ['nwc.util', 'nwc.conversion']);
 //using null-value map as a set (need fast membership checking later)
     var watchServiceNames = Object.extended();
 
@@ -97,8 +97,8 @@
                 }
             ]);
     registerWatchFactory('county',
-            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState',
-                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q, Convert, DataSeries, WaterBudgetPlot, StoredState) {
+            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState',
+                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, Convert, DataSeries, WaterBudgetPlot, StoredState) {
                     return {
                         propertyToWatch: 'county',
                         watchFunction: function (prop, oldCountyFeature, newCountyFeature) {
