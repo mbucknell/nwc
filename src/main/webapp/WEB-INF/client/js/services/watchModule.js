@@ -91,33 +91,30 @@
                 }
             ]);
     registerWatchFactory('county',
-            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState',
-                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, Convert, DataSeries, WaterBudgetPlot, StoredState) {
+            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState', '$state',
+                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, Convert, DataSeries, WaterBudgetPlot, StoredState, $state) {
                     return {
                         propertyToWatch: 'county',
                         watchFunction: function (prop, oldCountyFeature, newCountyFeature) {
 
                             var offeringId = newCountyFeature.attributes.FIPS;
-                            ;
+                            
                             var sosUrl = SosUrlBuilder.buildSosUrlFromSource(offeringId, SosSources.countyWaterUse);
 
                             var waterUseFailure = function (response) {
+                                var url = response.config.url;
                                 alert(
                                         'An error occurred while retrieving water use data from:\n' +
-                                        this.url + '\n' +
+                                        url + '\n' +
                                         'See browser logs for details'
                                         );
-                                console.error('Error while accessing: ' + this.url + '\n' + response.data);
+                                console.error('Error while accessing: ' + url + '\n' + response.data);
                             };
 
                             var waterUseSuccess = function (response) {
                                 var data = response.data;
-                                if (null === data || //null data
-                                        !data.documentElement || //not an xml document
-                                        !data.documentElement.textContent || //malformed xmlDocument
-                                        data.documentElement.textContent.has('exception') //xmlDocument with an exception message
-                                        ) {
-                                    waterUseFailure.apply(this, arguments);
+                                if (!data || data.has('exception') || data.has('error')) {
+                                    waterUseFailure(response);
                                 } else {
                                     var parsedTable = SosResponseParser.parseSosResponse(data);
                                     var countyAreaSqMiles = newCountyFeature.attributes.AREA_SQMI;
@@ -131,7 +128,7 @@
                                         newRow.push(rowSum);
                                         return newRow;
                                     });
-                                    var waterUseDataSeries = DataSeries();
+                                    var waterUseDataSeries = DataSeries.new();
                                     waterUseDataSeries.data = convertedTable;
 
                                     //use the series metadata as labels
@@ -142,9 +139,13 @@
 
                                     DataSeriesStore.updateWaterUseSeries(waterUseDataSeries);
                                     var plotTimeDensity = StoredState.plotTimeDensity;
-                                    var values = DataSeriesStore[plotTimeDensity].data;
-                                    var labels = DataSeriesStore[plotTimeDensity].metadata.seriesLabels;
-                                    WaterBudgetPlot.updateSeries(values, labels);
+                                    //todo: switch these back to non-hardcoded after merge:
+//                                    var values = DataSeriesStore[plotTimeDensity].data;
+//                                    var labels = DataSeriesStore[plotTimeDensity].metadata.seriesLabels;
+                                    var values = DataSeriesStore['daily'].data;
+                                    var labels = DataSeriesStore['daily'].metadata.seriesLabels;
+                                    CommonState.newDataSeriesStore = true;
+                                    $state.go('workflow.waterBudget.plotData');
                                 }
                             };
 

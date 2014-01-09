@@ -26,6 +26,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonS
                     WaterBudgetPlot.setPlot(plotDivSelector, legendDivSelector, values, labels);
                 }
             });
+            $scope.plotTimeDensity = StoredState.plotTimeDensity;
             $scope.CommonState = CommonState;
         })
 ]);
@@ -41,7 +42,6 @@ waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'Common
             $scope.CommonState = CommonState;
             
             var map = WaterBudgetMap.getMap();
-            var hucLayer = map.getHucLayer();
             
             
                 map.render('hucSelectMap');
@@ -61,10 +61,12 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
                 description: 'Select water use data for a county that intersects with your HUC'
             },
     function ($scope, StoredState, CommonState, WaterBudgetMap) {
+        var map = WaterBudgetMap.getMap();
+        map.render('hucSelectMap');
         var setCounty = function(countyFeature){
             StoredState.county = countyFeature;
         };
-        WaterBudgetMap.getMap().getCountyThatIntersectsWithHucFeature(StoredState.huc, setCounty);
+        map.getCountyThatIntersectsWithHucFeature(StoredState.huc, setCounty);
     })
 ]);
 
@@ -78,6 +80,7 @@ waterBudgetControllers.controller('DisambiguateClick', ['$scope', 'StoredState',
             $scope.hucs = CommonState.ambiguousHucs;
             
 			$scope.setHuck = function(huc) {
+                                StoredState.huc = huc;
 				StoredState.hucId = huc.attributes.HUC_12;
 			};
 			

@@ -54,6 +54,7 @@
         else {
             throw new Error("Cannot update plot - plot not yet constructed.");
         }
+        return privatePlot;
     };
     var plotter = function () {
         return {
