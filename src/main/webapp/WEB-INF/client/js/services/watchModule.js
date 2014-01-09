@@ -1,15 +1,9 @@
 /*global angular,console*/
 (function () {
     var watchModule = angular.module('nwc.watch', ['nwc.util', 'nwc.conversion']);
-//using null-value map as a set (need fast membership checking later)
-    var watchServiceNames = Object.extended();
 
-//this service provides a way to inject the names of all other stored state watch services into a controller
-    watchModule.provider('storedStateWatchers', function () {
-        this.$get = function () {
-            return watchServiceNames.keys();
-        };
-    });
+    //using a map as a set (need fast membership checking later)
+    var watchServiceNames = Object.extended();
 
 //call this function with the same arguments that you would module.factory()
     var registerWatchFactory = function (watchServiceName, dependencyArray) {
@@ -18,7 +12,7 @@
             throw Error("Duplicate watch service name. You must register unique watch service names.");
         }
         else {
-            watchServiceNames[finalName] = null;
+            watchServiceNames[finalName] = 1;
             watchModule.factory(finalName, dependencyArray);
         }
     };
@@ -57,7 +51,7 @@
                                         labeledRawValues = {};
                                 $.each(allAjaxResponseArgs, function (index, ajaxResponseArgs) {
                                     var response = ajaxResponseArgs.data;
-                                    if (null === response) {
+                                    if (!response || !response.length) {
                                         errorsFound = true;
                                         return false;//exit iteration
                                     }
@@ -161,5 +155,16 @@
                     };
                 }
             ]);
+        var allWatchServiceNames = watchServiceNames.keys();
+        var dependencies = ['StoredState'].concat(allWatchServiceNames);
+        
+        var registerAllWatchers = function(){
+            var StoredState = arguments[0];
+            var watchServices = Array.create(arguments).from(1);//ignore storedState
+            angular.forEach(watchServices, function(watchService){
+                StoredState.watch(watchService.propertyToWatch, watchService.watchFunction);
+            });
+        };
+        watchModule.run(dependencies.concat([registerAllWatchers]));
 
 }());
