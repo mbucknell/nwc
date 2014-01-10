@@ -17,8 +17,8 @@ waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonS
         function ($scope, StoredState, CommonState, WaterBudgetPlot) {
             var plotDivSelector = '#waterBudgetPlot';
             var legendDivSelector = '#waterBudgetLegend';
-            $scope.plotType = StoredState.plotType || 'daily';
-            $scope.$watch('plotType', function(newValue, oldValue){
+            StoredState.plotTimeDensity  = StoredState.plotTimeDensity || 'daily';
+            $scope.$watch('StoredState.plotTimeDensity', function(newValue, oldValue){
                 if(newValue !== oldValue){
                     plotData(newValue);
                 }
@@ -35,11 +35,12 @@ waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonS
             $scope.$watch('CommonState.newDataSeriesStore', function(newValue, oldValue){
                 if(newValue){
                     CommonState.newDataSeriesStore = false;
-                    plotData($scope.plotType);
+                    plotData(StoredState.plotTimeDensity);
                 }
             });
-            $scope.plotTimeDensity = StoredState.plotTimeDensity;
+            
             $scope.CommonState = CommonState;
+            $scope.StoredState = StoredState;
         })
 ]);
 
