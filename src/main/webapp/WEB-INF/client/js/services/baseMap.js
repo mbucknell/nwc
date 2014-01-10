@@ -92,10 +92,24 @@
         if (Object.isString(config)) {
             throw new Exception("config must be an object. String detected. You must set config.div if you want the map to auto-render");
         }
-        var defaults = getDefaultConfig();
-        var target = Object.extended();
-        var finalConfig = Object.merge(target, defaults);
-        finalConfig = Object.merge(target, config);
+        var finalConfig = getDefaultConfig();
+        //config overrides all properties on defaultConfig except for arrays.
+        //we append the values of config onto the defaultConfig arrays
+        var value;
+        for(var key in config){
+            if(config.hasOwnProperty(key)){
+                value = config[key];
+                if(Object.has(finalConfig, key)){
+                    if(Object.isArray(finalConfig[key])){
+                        finalConfig[key].add(value);
+                    } else{
+                        finalConfig[key] = value;
+                    }
+                } else {
+                    finalConfig[key] = value;
+                }
+            }
+        }
         return new OpenLayers.Map(finalConfig);
     };
     baseMap.factory('BaseMap', [
