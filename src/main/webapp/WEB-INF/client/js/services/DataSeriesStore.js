@@ -115,6 +115,9 @@
              * DataSeries objects
              */
             self.updateHucSeries = function (seriesHash) {
+                self.daily = DataSeries.new();
+                self.monthly = new DataSeries.new();
+                
                 updateDailyHucSeries(seriesHash);
                 updateMonthlyHucSeries(seriesHash);
             };
