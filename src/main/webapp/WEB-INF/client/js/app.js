@@ -1,15 +1,16 @@
 /*global angular*/
 var nwcApp = angular.module('nwcApp', [
     'nwc.sharedStateServices',
-    'nwc.watch',
     'nwc.util',
+    'nwc.watch',
     'nwc.dataSeriesStore',
     'nwc.sosSources',
     'nwc.sosResponseParser',
     'nwc.controllers.waterBudget',
     'ui.router',
     'ui.bootstrap',
-    'nwc.waterBudgetPlot'
+    'nwc.waterBudgetPlot',
+    'nwc.waterBudgetMap'
 ]);
 
 nwcApp.config(['$stateProvider', '$urlRouterProvider',
@@ -46,6 +47,11 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     url: '/plot-data',
                     templateUrl: '../../client/partials/waterBudget/plotData.html',
                     controller: 'PlotData'
+                })
+                .state('workflow.waterBudget.selectCounty', {
+                    url: '/plot-data',
+                    templateUrl: '../../client/partials/waterBudget/selectHuc.html',
+                    controller: 'SelectCounty'
                 })
                 .state('workflow.waterBudget.FinalStep', {
                     url: '/final',

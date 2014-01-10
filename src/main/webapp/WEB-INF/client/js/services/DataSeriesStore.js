@@ -2,25 +2,32 @@
 (function () {
     var dataSeriesStoreModule = angular.module('nwc.dataSeriesStore', ['nwc.sosSources']);
 
-    var DataSeries = function () {
-        return {
-            metadata: {
-                seriesLabels: ['Date']
-            },
-            data: []
+    var DataSeriesMaker = function () {
+        return{
+            new : function () {
+                return {
+                    metadata: {
+                        seriesLabels: ['Date']
+                    },
+                    data: []
+                };
+            }
         };
     };
+    dataSeriesStoreModule.service('DataSeries', ['SosSources',
+        DataSeriesMaker
+    ]);
 
     /**
      * Given mixed frequency data series metadata and data, converts it to 
      * monthly and daily series for Graph to consume.
      * @returns {undefined}
      */
-    var DataSeriesStoreService = dataSeriesStoreModule.service('DataSeriesStore', ['SosSources',
-        function (SosSources) {
+    var DataSeriesStoreService = dataSeriesStoreModule.service('DataSeriesStore', ['SosSources', 'DataSeries',
+        function (SosSources, DataSeries) {
             var self = this;
-            self.daily = new DataSeries();
-            self.monthly = new DataSeries();
+            self.daily = DataSeries.new();
+            self.monthly = new DataSeries.new();
             var addSeriesLabel = function (seriesClass, metadata) {
                 self[seriesClass].metadata.seriesLabels.push(
                         metadata.seriesName + ' (' + metadata.seriesUnits + ')'

@@ -38,141 +38,48 @@ waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonS
                     plotData($scope.plotType);
                 }
             });
+            $scope.plotTimeDensity = StoredState.plotTimeDensity;
             $scope.CommonState = CommonState;
         })
 ]);
 
-waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonState',
+waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetMap',
     NWC.ControllerHelpers.StepController(
         {
             name: 'HUC Selection',
             description: 'Find your Hydrologic Unit of interest.'
         },
-        function ($scope, StoredState, CommonState) {
+        function ($scope, StoredState, CommonState, WaterBudgetMap) {
             $scope.StoredState = StoredState;
             $scope.CommonState = CommonState;
             
-            var mapLayers = [];
-            var WGS84_GOOGLE_MERCATOR = new OpenLayers.Projection("EPSG:900913");
-             var EPSG900913Options = {
-                sphericalMercator: true,
-                layers: "0",
-                isBaseLayer: true,
-                projection: WGS84_GOOGLE_MERCATOR,
-                units: "m",
-                buffer: 3,
-                transitionEffect: 'resize',
-                wrapDateLine: false
-            };
-             // ////////////////////////////////////////////// BASE LAYERS
-            var zyx = '/MapServer/tile/${z}/${y}/${x}';
-            mapLayers.push(new OpenLayers.Layer.XYZ(
-                    "World Light Gray Base",
-                    "http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base" + zyx,
-                    Object.merge(EPSG900913Options, {numZoomLevels: 14})
-                    ));
-            mapLayers.push(new OpenLayers.Layer.XYZ(
-                    "World Topo Map",
-                    "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map" + zyx,
-                    {isBaseLayer: true, units: "m"}));
-            mapLayers.push(new OpenLayers.Layer.XYZ(
-                    "World Imagery",
-                    "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery" + zyx,
-                    {isBaseLayer: true, units: "m"}));
-            mapLayers.push(new OpenLayers.Layer.XYZ(
-                    "World Street Map",
-                    "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map" + zyx,
-                    {isBaseLayer: true, units: "m"}));
-            mapLayers.push(new OpenLayers.Layer.XYZ(
-                    "World Terrain Base",
-                    "http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief" + zyx,
-                    Object.merge(EPSG900913Options, {numZoomLevels: 14})
-                    ));
-            var workflowLayerOptions = {
-                        opacity: 0.6,
-                        displayInLayerSwitcher: false,
-                        visibility: true,
-                        isBaseLayer : false,
-                        tiled: true
-                    };
-
-            var hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
-                    CONFIG.endpoint.geoserver + 'gwc/service/wms',
-                    {
-                            layers: 'NHDPlusHUCs:NationalWBDSnapshot',
-                            transparent: true,
-                            styles: ['polygon']
-                    },
-                    workflowLayerOptions
-            );
-            mapLayers.push(hucLayer);
-            var controls = [
-                    new OpenLayers.Control.Navigation(),
-                    new OpenLayers.Control.MousePosition({
-                        prefix: 'POS: '
-                    }),
-                    new OpenLayers.Control.ScaleLine({
-                        geodesic: true
-                    }),
-                    new OpenLayers.Control.LayerSwitcher({
-                        roundedCorner: true
-                    }),
-                    new OpenLayers.Control.Zoom()
-            ];
-            var extent = new OpenLayers.Bounds(-146.0698, 19.1647, -42.9301, 52.8949).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
-
-            var map = new OpenLayers.Map('hucSelectMap', {
-                layers: mapLayers,
-                restrictedExtent: extent,
-                projection: WGS84_GOOGLE_MERCATOR,
-                controls: controls
-            });
-            var hucsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
-                title: 'huc-identify-control',
-                hover: false,
-                layers: [
-                    hucLayer
-                ],
-                queryVisible: true,
-                output: 'object',
-                drillDown: true,
-                infoFormat: 'application/vnd.ogc.gml',
-                vendorParams: {
-                    radius: 5
-                },
-                id: 'hucs',
-                autoActivate: true
-            });
-            var featureInfoHandler = function(responseObject){
-            //for some reason the real features are inside an array
-                var actualFeatures = responseObject.features[0].features;
-                var hucCount = actualFeatures.length;
-                if(0 === hucCount){
-                    //nothing
-                }
-                else if(1 === hucCount){
-                    StoredState.hucId = actualFeatures[0].attributes.HUC_12;
-                    $('#goToNonAmbiguousClick').click();
-                }
-                else{
-                    CommonState.ambiguousHucs = actualFeatures;
-                    $('#goToDisabiguateClick').click();
-                }
-
-
-            };
-            hucsGetFeatureInfoControl.events.register("getfeatureinfo", {}, featureInfoHandler);
-            map.addControl(hucsGetFeatureInfoControl);
-
-            map.zoomToExtent(extent, true);
-        
-        
+            var map = WaterBudgetMap.getMap();
+            
+            
+                map.render('hucSelectMap');
+                map.zoomToExtent(map.restrictedExtent, true);
         
             
             
             console.dir(CommonState);
         }
     )
+]);
+
+waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetMap', 'SosSources', '$http',
+    NWC.ControllerHelpers.StepController(
+            {
+                name: 'County Selection',
+                description: 'Select water use data for a county that intersects with your HUC'
+            },
+    function ($scope, StoredState, CommonState, WaterBudgetMap) {
+        var map = WaterBudgetMap.getMap();
+        map.render('hucSelectMap');
+        var setCounty = function(countyFeature){
+            StoredState.county = countyFeature;
+        };
+        map.getCountyThatIntersectsWithHucFeature(StoredState.huc, setCounty);
+    })
 ]);
 
 waterBudgetControllers.controller('DisambiguateClick', ['$scope', 'StoredState', 'CommonState',
@@ -185,6 +92,7 @@ waterBudgetControllers.controller('DisambiguateClick', ['$scope', 'StoredState',
             $scope.hucs = CommonState.ambiguousHucs;
             
 			$scope.setHuck = function(huc) {
+                                StoredState.huc = huc;
 				StoredState.hucId = huc.attributes.HUC_12;
 			};
 			

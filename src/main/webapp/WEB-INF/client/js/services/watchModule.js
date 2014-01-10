@@ -1,15 +1,9 @@
-/*global angular*/
+/*global angular,console*/
 (function () {
-    var watchModule = angular.module('nwc.watch', ['nwc.util']);
-//using null-value map as a set (need fast membership checking later)
-    var watchServiceNames = Object.extended();
+    var watchModule = angular.module('nwc.watch', ['nwc.util', 'nwc.conversion']);
 
-//this service provides a way to inject the names of all other stored state watch services into a controller
-    watchModule.provider('storedStateWatchers', function () {
-        this.$get = function () {
-            return watchServiceNames.keys();
-        };
-    });
+    //using a map as a set (need fast membership checking later)
+    var watchServiceNames = Object.extended();
 
 //call this function with the same arguments that you would module.factory()
     var registerWatchFactory = function (watchServiceName, dependencyArray) {
@@ -18,7 +12,7 @@
             throw Error("Duplicate watch service name. You must register unique watch service names.");
         }
         else {
-            watchServiceNames[finalName] = null;
+            watchServiceNames[finalName] = 1;
             watchModule.factory(finalName, dependencyArray);
         }
     };
@@ -57,7 +51,7 @@
                                         labeledRawValues = {};
                                 $.each(allAjaxResponseArgs, function (index, ajaxResponseArgs) {
                                     var response = ajaxResponseArgs.data;
-                                    if (null === response) {
+                                    if (!response || !response.length) {
                                         errorsFound = true;
                                         return false;//exit iteration
                                     }
@@ -96,5 +90,82 @@
                     };
                 }
             ]);
+    registerWatchFactory('county',
+            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState', '$state',
+                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, Convert, DataSeries, WaterBudgetPlot, StoredState, $state) {
+                    return {
+                        propertyToWatch: 'county',
+                        watchFunction: function (prop, oldCountyFeature, newCountyFeature) {
+
+                            var offeringId = newCountyFeature.attributes.FIPS;
+                            
+                            var sosUrl = SosUrlBuilder.buildSosUrlFromSource(offeringId, SosSources.countyWaterUse);
+
+                            var waterUseFailure = function (response) {
+                                var url = response.config.url;
+                                alert(
+                                        'An error occurred while retrieving water use data from:\n' +
+                                        url + '\n' +
+                                        'See browser logs for details'
+                                        );
+                                console.error('Error while accessing: ' + url + '\n' + response.data);
+                            };
+
+                            var waterUseSuccess = function (response) {
+                                var data = response.data;
+                                if (!data || data.has('exception') || data.has('error')) {
+                                    waterUseFailure(response);
+                                } else {
+                                    var parsedTable = SosResponseParser.parseSosResponse(data);
+                                    var countyAreaSqMiles = newCountyFeature.attributes.AREA_SQMI;
+                                    var countyAreaAcres = Convert.squareMilesToAcres(countyAreaSqMiles);
+                                    var convertedTable = Convert.mgdTableToMmPerDayTable(parsedTable, countyAreaAcres);
+                                    //add a summation series to the table
+                                    convertedTable = convertedTable.map(function (row) {
+                                        var nonDateValues = row.from(1);//don't try to sum dates
+                                        var rowSum = nonDateValues.sum();
+                                        var newRow = row.clone();//shallow array copy
+                                        newRow.push(rowSum);
+                                        return newRow;
+                                    });
+                                    var waterUseDataSeries = DataSeries.new();
+                                    waterUseDataSeries.data = convertedTable;
+
+                                    //use the series metadata as labels
+                                    var additionalSeriesLabels = SosSources.countyWaterUse.observedProperty.split(',');
+                                    additionalSeriesLabels.push('Aggregate Water Use');
+                                    var waterUseValueLabelsOnly = waterUseDataSeries.metadata.seriesLabels.from(1);//skip the initial 'Date' label
+                                    waterUseDataSeries.metadata.seriesLabels = waterUseValueLabelsOnly.concat(additionalSeriesLabels);
+
+                                    DataSeriesStore.updateWaterUseSeries(waterUseDataSeries);
+                                    var plotTimeDensity = StoredState.plotTimeDensity;
+                                    //todo: switch these back to non-hardcoded after merge:
+//                                    var values = DataSeriesStore[plotTimeDensity].data;
+//                                    var labels = DataSeriesStore[plotTimeDensity].metadata.seriesLabels;
+                                    var values = DataSeriesStore['daily'].data;
+                                    var labels = DataSeriesStore['daily'].metadata.seriesLabels;
+                                    CommonState.newDataSeriesStore = true;
+                                    $state.go('workflow.waterBudget.plotData');
+                                }
+                            };
+
+                            $http.get(sosUrl).then(waterUseSuccess, waterUseFailure);
+
+                            return newCountyFeature;
+                        }
+                    };
+                }
+            ]);
+        var allWatchServiceNames = watchServiceNames.keys();
+        var dependencies = ['StoredState'].concat(allWatchServiceNames);
+        
+        var registerAllWatchers = function(){
+            var StoredState = arguments[0];
+            var watchServices = Array.create(arguments).from(1);//ignore storedState
+            angular.forEach(watchServices, function(watchService){
+                StoredState.watch(watchService.propertyToWatch, watchService.watchFunction);
+            });
+        };
+        watchModule.run(dependencies.concat([registerAllWatchers]));
 
 }());
