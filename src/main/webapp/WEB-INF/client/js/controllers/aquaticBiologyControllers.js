@@ -12,13 +12,17 @@
             }
         )
     ]);
-    aquaticBiologyControllers.controller('SelectBioDataSite', [ '$scope', 'StoredState',
+    aquaticBiologyControllers.controller('SelectBioDataSite', [ '$scope', 'StoredState', 'AquaticBiologyMap',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'Aquatic Biology Site Selection Map',
                 description: 'Via the map interface, explore aquatic biology sites across the nation and select them to pursue further investigation in BioData'
             },
-            function($scope, StoredState){
+            function($scope, StoredState, AquaticBiologyMap){
+            
+                var map = AquaticBiologyMap.getMap();
+                map.render('bioSiteSelectMap');
+                map.zoomToExtent(map.restrictedExtent, true);
                 
             }
         )
