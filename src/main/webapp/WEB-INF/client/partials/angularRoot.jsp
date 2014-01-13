@@ -27,6 +27,7 @@
 <!-- controllers -->
 <script type="text/javascript" src="../../client/js/controllers/controllerHelpers.js"></script>
 <script type="text/javascript" src="../../client/js/controllers/waterBudgetControllers.js"></script>
+<script type="text/javascript" src="../../client/js/controllers/aquaticBiologyControllers.js"></script>
 <!-- main app-->
 <script type="text/javascript" src="../../client/js/app.js"></script>
 

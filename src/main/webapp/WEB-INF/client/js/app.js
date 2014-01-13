@@ -7,6 +7,7 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.sosSources',
     'nwc.sosResponseParser',
     'nwc.controllers.waterBudget',
+    'nwc.controllers.aquaticBiology',
     'ui.router',
     'ui.bootstrap',
     'nwc.waterBudgetPlot',
@@ -16,7 +17,7 @@ var nwcApp = angular.module('nwcApp', [
 
 nwcApp.config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
-        $urlRouterProvider.otherwise('/workflow/water-budget/select-huc');
+        $urlRouterProvider.otherwise('/workflow/aquatic-biology/select-biodata-site');
 
         $stateProvider
                 .state('restore', {
@@ -53,6 +54,16 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     url: '/plot-data',
                     templateUrl: '../../client/partials/waterBudget/selectHuc.html',
                     controller: 'SelectCounty'
+                })
+                .state('workflow.aquaticBiology', {
+                    url: '/aquatic-biology',
+                    templateUrl: '../../client/partials/aquaticBiology/aquaticBiologyTemplate.html',
+                    controller: 'AquaticBiology'
+                })
+                .state('workflow.aquaticBiology.selectBioDataSite', {
+                    url: '/select-biodata-site',
+                    templateUrl: '../../client/partials/aquaticBiology/selectBioDataSite.html',
+                    controller: 'SelectBioDataSite'
                 })
                 .state('workflow.waterBudget.FinalStep', {
                     url: '/final',
