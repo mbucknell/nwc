@@ -1,4 +1,4 @@
-/*global angular,OpenLayers*/
+/*global angular,OpenLayers,Exception*/
 (function () {
     var baseMap = angular.module('nwc.map.base', []);
     var getDefaultConfig = function(){
@@ -85,6 +85,9 @@
     /**
      * 
      * @param {Object} config the parameter you would pass to a single-argument OpenLayers.Map constructor.
+     *                  If a parameter's values is an array and a default array exists for that property, the 
+     *                  values in the parameterized array will be appended to the default array. Currently there
+     *                  is no method to override default array parameters.
      * @param {String} config.div Optional parameter that you may specify to ensure the graph auto-renders after construction
      * @returns {OpenLayers.Map}
      */
