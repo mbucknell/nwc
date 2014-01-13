@@ -1,4 +1,4 @@
-/*global angular,console*/
+/*global angular*/
 (function () {
     var watchModule = angular.module('nwc.watch', ['nwc.util', 'nwc.conversion']);
 
@@ -18,8 +18,8 @@
     };
 
     registerWatchFactory('hucId',
-            ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q',
-                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q) {
+            ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q', '$log',
+                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q, $log) {
                     return {
                         propertyToWatch: 'hucId',
                         watchFunction: function (prop, oldHucValue, newHucValue) {
@@ -36,8 +36,10 @@
 
                             var sosError = function () {
                                 //@todo - modal window this
-                                alert('error retrieving time series data');
-                                console.dir(arguments);
+                                var errorMessage = 'error retrieving time series data';
+                                alert(errorMessage);
+                                $log.error(errorMessage);
+                                $log.error(arguments);
                             };
                             /**
                              * 
@@ -91,8 +93,8 @@
                 }
             ]);
     registerWatchFactory('county',
-            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState', '$state',
-                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, Convert, DataSeries, WaterBudgetPlot, StoredState, $state) {
+            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState', '$state', '$log',
+                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, Convert, DataSeries, WaterBudgetPlot, StoredState, $state, $log) {
                     return {
                         propertyToWatch: 'county',
                         watchFunction: function (prop, oldCountyFeature, newCountyFeature) {
@@ -108,7 +110,7 @@
                                         url + '\n' +
                                         'See browser logs for details'
                                         );
-                                console.error('Error while accessing: ' + url + '\n' + response.data);
+                                $log.error('Error while accessing: ' + url + '\n' + response.data);
                             };
 
                             var waterUseSuccess = function (response) {
