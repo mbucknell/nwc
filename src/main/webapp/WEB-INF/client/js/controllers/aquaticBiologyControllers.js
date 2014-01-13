@@ -15,7 +15,7 @@
     aquaticBiologyControllers.controller('SelectBioDataSite', [ '$scope', 'StoredState',
         NWC.ControllerHelpers.StepController(
             {
-                name: 'Aquatic Biology',
+                name: 'Aquatic Biology Site Selection Map',
                 description: 'Via the map interface, explore aquatic biology sites across the nation and select them to pursue further investigation in BioData'
             },
             function($scope, StoredState){

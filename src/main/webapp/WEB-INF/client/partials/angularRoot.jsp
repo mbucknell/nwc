@@ -23,6 +23,7 @@
 <script type="text/javascript" src="../../client/js/services/waterBudgetPlot.js"></script>
 <script type="text/javascript" src="../../client/js/services/baseMap.js"></script>
 <script type="text/javascript" src="../../client/js/services/waterBudgetMap.js"></script>
+<script type="text/javascript" src="../../client/js/services/aquaticBiologyMap.js"></script>
 <script type="text/javascript" src="../../client/js/services/Conversion.js"></script>
 <!-- controllers -->
 <script type="text/javascript" src="../../client/js/controllers/controllerHelpers.js"></script>
