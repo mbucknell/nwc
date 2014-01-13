@@ -1,61 +1,13 @@
 /*global angular,OpenLayers,CONFIG*/
 (function () {
-    var waterBudgetMap = angular.module('nwc.waterBudgetMap', []);
-    waterBudgetMap.factory('WaterBudgetMap', [ 'StoredState', 'CommonState', '$state',
-       function(StoredState, CommonState, $state){
+    var waterBudgetMap = angular.module('nwc.map.waterBudget', []);
+    waterBudgetMap.factory('WaterBudgetMap', [ 'StoredState', 'CommonState', '$state', 'BaseMap',
+       function(StoredState, CommonState, $state, BaseMap){
            var privateMap;
     
         var initMap = function () {
             var mapLayers = [];
-            var WGS84_GOOGLE_MERCATOR = new OpenLayers.Projection("EPSG:900913");
-            var EPSG900913Options = {
-                sphericalMercator: true,
-                layers: "0",
-                isBaseLayer: true,
-                projection: WGS84_GOOGLE_MERCATOR,
-                units: "m",
-                buffer: 3,
-                transitionEffect: 'resize',
-                wrapDateLine: false
-            };
-            // ////////////////////////////////////////////// BASE LAYERS
-            var zyx = '/MapServer/tile/${z}/${y}/${x}';
-            mapLayers.push(new OpenLayers.Layer.XYZ(
-                    "World Light Gray Base",
-                    "http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base" + zyx,
-                    Object.merge(EPSG900913Options, {numZoomLevels: 14})
-                    ));
-            mapLayers.push(new OpenLayers.Layer.XYZ(
-                    "World Topo Map",
-                    "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map" + zyx,
-                    {isBaseLayer: true,
-                        units: "m"
-                    }));
-            mapLayers.push(new OpenLayers.Layer.XYZ(
-                    "World Imagery",
-                    "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery" + zyx,
-                    {isBaseLayer: true,
-                        units: "m"
-                    }));
-            mapLayers.push(new OpenLayers.Layer.XYZ(
-                    "World Street Map",
-                    "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map" + zyx,
-                    {isBaseLayer: true,
-                        units: "m"
-                    }));
-            mapLayers.push(new OpenLayers.Layer.XYZ(
-                    "World Terrain Base",
-                    "http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief" + zyx,
-                    Object.merge(EPSG900913Options, {numZoomLevels: 14})
-                    ));
-            var workflowLayerOptions = {
-                opacity: 0.6,
-                displayInLayerSwitcher: false,
-                visibility: true,
-                isBaseLayer: false,
-                tiled: true
-            };
-
+            var controls = [];
             var hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
                     CONFIG.endpoint.geoserver + 'gwc/service/wms',
                     {
@@ -63,30 +15,11 @@
                         transparent: true,
                         styles: ['polygon']
                     },
-            workflowLayerOptions
+            BaseMap.getWorkflowLayerOptions()
                     );
             mapLayers.push(hucLayer);
-            var controls = [
-                new OpenLayers.Control.Navigation(),
-                new OpenLayers.Control.MousePosition({
-                    prefix: 'POS: '
-                }),
-                new OpenLayers.Control.ScaleLine({
-                    geodesic: true
-                }),
-                new OpenLayers.Control.LayerSwitcher({
-                    roundedCorner: true
-                }),
-                new OpenLayers.Control.Zoom()
-            ];
-            var extent = new OpenLayers.Bounds(-146.0698, 19.1647, -42.9301, 52.8949).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
-
-            var map = new OpenLayers.Map({
-                layers: mapLayers,
-                restrictedExtent: extent,
-                projection: WGS84_GOOGLE_MERCATOR,
-                controls: controls
-            });
+            
+            
             
             var hucsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
                     title: 'huc-identify-control',
@@ -104,6 +37,8 @@
                     id: 'hucs',
                     autoActivate: true
                 });
+                
+                
                 var featureInfoHandler = function (responseObject) {
                     //for some reason the real features are inside an array
                     var actualFeatures = responseObject.features[0].features;
@@ -124,7 +59,12 @@
 
                 };
                 hucsGetFeatureInfoControl.events.register("getfeatureinfo", {}, featureInfoHandler);
-                map.addControl(hucsGetFeatureInfoControl);
+                controls.push(hucsGetFeatureInfoControl);
+                
+                var map = BaseMap.new({
+                    layers: mapLayers,
+                    controls: controls
+                });
             
             
             ///map object methods

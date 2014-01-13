@@ -10,7 +10,8 @@ var nwcApp = angular.module('nwcApp', [
     'ui.router',
     'ui.bootstrap',
     'nwc.waterBudgetPlot',
-    'nwc.waterBudgetMap'
+    'nwc.map.base',
+    'nwc.map.waterBudget'
 ]);
 
 nwcApp.config(['$stateProvider', '$urlRouterProvider',
