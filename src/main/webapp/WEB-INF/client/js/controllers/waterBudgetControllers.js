@@ -2,6 +2,7 @@
 (function(){
     var waterBudgetControllers = angular.module('nwc.controllers.waterBudget', []);
     
+    
     waterBudgetControllers.controller('WaterBudget', ['$scope',
         function ($scope) {
             $scope.name = "Water Budget";
@@ -44,13 +45,13 @@ waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonS
         })
 ]);
 
-waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetMap',
+waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetMap', '$log',
     NWC.ControllerHelpers.StepController(
         {
             name: 'HUC Selection',
             description: 'Find your Hydrologic Unit of interest.'
         },
-        function ($scope, StoredState, CommonState, WaterBudgetMap) {
+        function ($scope, StoredState, CommonState, WaterBudgetMap, $log) {
             $scope.StoredState = StoredState;
             $scope.CommonState = CommonState;
             
@@ -62,7 +63,7 @@ waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'Common
         
             
             
-            console.dir(CommonState);
+            $log.info(CommonState);
         }
     )
 ]);
@@ -83,13 +84,13 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
     })
 ]);
 
-waterBudgetControllers.controller('DisambiguateClick', ['$scope', 'StoredState', 'CommonState',
+waterBudgetControllers.controller('DisambiguateClick', ['$scope', 'StoredState', 'CommonState', '$log',
     NWC.ControllerHelpers.StepController(
         {
             name: 'HUC Disambiguation',
             description: 'Your click fell near multiple HUCs. Select one from the list to continue.'
         },
-        function ($scope, StoredState, CommonState) {             
+        function ($scope, StoredState, CommonState, $log) {             
             $scope.hucs = CommonState.ambiguousHucs;
             
 			$scope.setHuck = function(huc) {
@@ -97,23 +98,23 @@ waterBudgetControllers.controller('DisambiguateClick', ['$scope', 'StoredState',
 				StoredState.hucId = huc.attributes.HUC_12;
 			};
 			
-            console.dir(StoredState);
+            $log.info(StoredState);
         }
     )
 ]);
 
-waterBudgetControllers.controller('FinalStep', ['$scope', 'StoredState', '$state', 'CommonState',
+waterBudgetControllers.controller('FinalStep', ['$scope', 'StoredState', '$state', 'CommonState', '$log',
     NWC.ControllerHelpers.StepController(
         {
             name: 'Final Step',
             description: "You're all done!"
         },
-        function ($scope, StoredState, $state, CommonState) {
+        function ($scope, StoredState, $state, CommonState, $log) {
             StoredState._clientState.name = $state.current.name;
             StoredState._clientState.params = $state.params;
             
             
-            console.dir(CommonState);
+            $log.info(CommonState);
         }
     )
 ]);
