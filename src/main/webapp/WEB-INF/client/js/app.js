@@ -66,6 +66,11 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     templateUrl: '../../client/partials/aquaticBiology/selectBioDataSite.html',
                     controller: 'SelectBioDataSite'
                 })
+                .state('workflow.aquaticBiology.showSelectedBioDataSites', {
+                    url: '/show-selected-biodata-sites',
+                    templateUrl: '../../client/partials/aquaticBiology/showSelectedBioDataSites.html',
+                    controller: 'ShowSelectedBioDataSites'
+                })
                 .state('workflow.waterBudget.FinalStep', {
                     url: '/final',
                     templateUrl: '../../client/partials/waterBudget/FinalWaterBudget.html',

@@ -27,4 +27,15 @@
             }
         )
     ]);
+    aquaticBiologyControllers.controller('ShowSelectedBioDataSites', ['$scope', 'StoredState', 'CommonState',
+        NWC.ControllerHelpers.StepController(
+            {
+                name: 'Aquatic Biology Site Selection List',
+                description: 'Select which sites to explore in BioShare'
+            },
+            function ($scope, StoredState, CommonState) {
+                $scope.CommonState = CommonState;
+            }
+        )
+    ]);
 }());

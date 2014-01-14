@@ -36,6 +36,7 @@
                 initialControls.push(bioDataGetFeatureControl);
                 bioDataGetFeatureControl.events.register('featuresselected', {}, function (e) {
                     CommonState.aquaticBiologySites = e.features;
+                    $state.go('workflow.aquaticBiology.showSelectedBioDataSites');
                     $log.info(CommonState);
                 });
                 
