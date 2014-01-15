@@ -27,14 +27,33 @@
             }
         )
     ]);
-    aquaticBiologyControllers.controller('ShowSelectedBioDataSites', ['$scope', 'StoredState', 'CommonState',
+    aquaticBiologyControllers.controller('ShowSelectedBioDataSites', ['$scope', 'StoredState', 'CommonState', 'StoredState',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'Aquatic Biology Site Selection List',
                 description: 'Select which sites to explore in BioShare'
             },
-            function ($scope, StoredState, CommonState) {
+            function ($scope, StoredState, CommonState, StoredState) {
                 $scope.CommonState = CommonState;
+                $scope.StoredState = StoredState;
+                StoredState.selectedAquaticBiologySites = StoredState.selectedAquaticBiologySites || [];
+
+                $scope.noSitesSelected = function () {
+                    //boolean cast
+                    return StoredState.selectedAquaticBiologySites.length === 0;
+                };
+            }
+        )
+    ]);
+    aquaticBiologyControllers.controller('SendToBioData', ['$scope', 'StoredState', 'CommonState', 'StoredState',
+        NWC.ControllerHelpers.StepController(
+            {
+                name: 'Preparing To Explore in BioData',
+                description: 'Please wait...'
+            },
+            function ($scope, StoredState, CommonState, StoredState) {
+                $scope.CommonState = CommonState;
+                $scope.StoredState = StoredState;
             }
         )
     ]);

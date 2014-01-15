@@ -13,7 +13,8 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.waterBudgetPlot',
     'nwc.map.base',
     'nwc.map.waterBudget',
-    'nwc.map.aquaticBiology'
+    'nwc.map.aquaticBiology',
+    'checklist-model'
 ]);
 
 nwcApp.config(['$stateProvider', '$urlRouterProvider',
@@ -61,7 +62,7 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     templateUrl: '../../client/partials/aquaticBiology/aquaticBiologyTemplate.html',
                     controller: 'AquaticBiology'
                 })
-                .state('workflow.aquaticBiology.selectBioDataSite', {
+                .state('workflow.aquaticBiology.selectBioDataSites', {
                     url: '/select-biodata-site',
                     templateUrl: '../../client/partials/aquaticBiology/selectBioDataSite.html',
                     controller: 'SelectBioDataSite'
@@ -70,6 +71,11 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     url: '/show-selected-biodata-sites',
                     templateUrl: '../../client/partials/aquaticBiology/showSelectedBioDataSites.html',
                     controller: 'ShowSelectedBioDataSites'
+                })
+                .state('workflow.aquaticBiology.sendToBioData', {
+                    url: '/send-to-biodata',
+                    templateUrl: '../../client/partials/aquaticBiology/sendToBioData.html',
+                    controller: 'SendToBioData'
                 })
                 .state('workflow.waterBudget.FinalStep', {
                     url: '/final',
