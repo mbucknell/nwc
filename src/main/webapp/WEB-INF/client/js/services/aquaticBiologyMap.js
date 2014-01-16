@@ -35,6 +35,11 @@
                 });
                 initialControls.push(bioDataGetFeatureControl);
                 bioDataGetFeatureControl.events.register('featuresselected', {}, function (e) {
+                    
+                    //reset user selections to 0
+                    StoredState.selectedAquaticBiologySites = [];
+                    
+                    //let user pick between sites in the dragged box
                     CommonState.aquaticBiologySites = e.features;
                     $state.go('workflow.aquaticBiology.showSelectedBioDataSites');
                     $log.info(CommonState);
