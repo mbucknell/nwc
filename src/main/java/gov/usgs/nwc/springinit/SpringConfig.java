@@ -116,12 +116,6 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
 	 */
 	@Bean
 	public DataSource getDataSource() {
-		System.out.println("\n" + env.getProperty("db.url"));
-		System.out.println(env.getProperty("db.driver"));
-		System.out.println(env.getProperty("db.user"));
-		System.out.println(env.getProperty("db.pass"));	
-		System.out.println(env.getProperty("db.hibernate.dialect"));		
-		
 		BasicDataSource ds = new BasicDataSource();
 		ds.setUrl(env.getProperty("db.url"));
 		ds.setDriverClassName(env.getProperty("db.driver"));
