@@ -42,7 +42,7 @@ angular.module('checklist-model', [])
       }
     }
   }  
-
+    
   return {
     restrict: 'A',
     scope: true,
@@ -77,11 +77,6 @@ angular.module('checklist-model', [])
           remove(model, value);
         }
       });
-
-      // watch element destroy to remove from model
-      elem.bind('$destroy', function() {
-        remove(model, value);
-      });      
 
       // watch model change
       scope.$parent.$watch(attrs.checklistModel, function(newArr, oldArr) {
