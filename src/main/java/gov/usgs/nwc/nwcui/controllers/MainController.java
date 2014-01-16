@@ -119,6 +119,47 @@ public class MainController {
 		return mv;
 	}
 	
+	@RequestMapping(value="/savepoststart", method=RequestMethod.GET)
+    public ModelAndView savePostStart() {
+		log.info("MainController.savePostStart() Called");		
+		
+		ModelAndView mv = new ModelAndView("/savepoststart", "title", "Save Session Post Example");
+		mv.addObject("version", WebsiteUtils.getApplicationVersion());
+				
+		/**
+		 * Add the environment to the session so JSPs can grab their own properties
+		 */
+		mv.addObject("env", env);
+		
+		return mv;
+    }
+	
+	@RequestMapping(value="/savesessionpost", method = RequestMethod.POST)
+	public ModelAndView saveCacheSessionPost(String cachedobject) {
+		log.info("MainController.saveCacheSessionPost() Called");
+		
+		/**
+		 * We have the cached object from the client.  Lets as our URL path generator
+		 * for a unique path to store.
+		 */
+		String path = UUID.randomUUID().toString();
+		
+		/**
+		 * Now we got a path lets turn that path and the cached object into a SiteCache
+		 * object and persist it to the db.
+		 */
+		cacheDao.saveSiteCache(new SiteCache(path, cachedobject));
+		
+		ModelAndView mv = new ModelAndView("/saved", "path", path);
+		
+		/**
+		 * Add the environment to the session so JSPs can grab their own properties
+		 */
+		mv.addObject("env", env);
+		
+		return mv;
+	}
+	
 	@RequestMapping(value="/loadsession/{path}")
     public ModelAndView getCachedSession(@PathVariable String path) {
 		log.info("MainController.getCachedSession() Called");

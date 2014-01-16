@@ -110,7 +110,7 @@ public class SiteCache {
     public String toString() {
             StringBuffer result = new StringBuffer();
             result.append("[SITECACHE] ID: " + this.cacheid + ", PATH: " + this.cachepath + ", CREATED: " + this.created +
-            			  ", LAST-ACCESSED: " + this.lastaccessed + ", OBJECT:\n[\n" + this.cacheobject + "\n]");
+            			  ", LAST-ACCESSED: " + this.lastaccessed + ", OBJECT:\n[" + this.cacheobject + "]\n");
             
             return result.toString();
     }
