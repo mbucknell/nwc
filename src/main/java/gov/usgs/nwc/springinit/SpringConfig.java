@@ -6,13 +6,26 @@
 
 package gov.usgs.nwc.springinit;
 
+import java.util.Map;
+
+import javax.sql.DataSource;
+
+import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
@@ -27,6 +40,8 @@ import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 @Configuration
 @ComponentScan(basePackages="gov.usgs.nwc.nwcui")
 @EnableWebMvc
+@EnableTransactionManagement
+@PropertySource("file:${catalina.home}/conf/nwc.site.properties")		// Unfortunately this is Tomcat specific.  For us its ok
 public class SpringConfig extends WebMvcConfigurerAdapter {
 	
 	@Autowired
@@ -74,9 +89,7 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
         /**
          * The Client source
          */
-        registry.addResourceHandler("/client/**").addResourceLocations("/WEB-INF/client/").setCachePeriod(31556926);
-        
-        
+        registry.addResourceHandler("/client/**").addResourceLocations("/WEB-INF/client/").setCachePeriod(31556926);        
     }
 	
 	/**
@@ -91,5 +104,67 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
+	}
+	
+	
+	/**
+     * PERSISTENCE
+     * ************************************************************************
+     */
+	/**
+	 * Setup the DataSource 
+	 */
+	@Bean
+	public DataSource getDataSource() {
+		System.out.println("\n" + env.getProperty("db.url"));
+		System.out.println(env.getProperty("db.driver"));
+		System.out.println(env.getProperty("db.user"));
+		System.out.println(env.getProperty("db.pass"));	
+		System.out.println(env.getProperty("db.hibernate.dialect"));		
+		
+		BasicDataSource ds = new BasicDataSource();
+		ds.setUrl(env.getProperty("db.url"));
+		ds.setDriverClassName(env.getProperty("db.driver"));
+		ds.setUsername(env.getProperty("db.user"));
+		ds.setPassword(env.getProperty("db.pass"));
+
+		return ds;
+	}
+	
+	/**
+	 * Use plain old JPA for Persistence
+	 */
+	@Bean
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
+		emf.setDataSource(getDataSource());
+		emf.setPackagesToScan("gov.usgs.nwc.nwcui");
+
+		// let Hibernate know which database we're using.
+		// note that this is vendor specific, not JPA
+		Map<String, Object> opts = emf.getJpaPropertyMap();
+		opts.put("hibernate.dialect", env.getProperty("db.hibernate.dialect"));
+
+		HibernateJpaVendorAdapter va = new HibernateJpaVendorAdapter();
+		emf.setJpaVendorAdapter(va);
+
+		return emf;
+	}
+
+	@Bean
+	public PlatformTransactionManager transactionManager() {
+		JpaTransactionManager tm = new JpaTransactionManager(
+				entityManagerFactory().getObject());
+		
+		return tm;
+	}
+
+	// Enable accessing entityManager from view scripts. Required when using
+	// lazy loading
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		OpenEntityManagerInViewInterceptor interceptor = new OpenEntityManagerInViewInterceptor();
+		interceptor.setEntityManagerFactory(entityManagerFactory().getObject());
+		registry.addWebRequestInterceptor(interceptor);
 	}
 }
