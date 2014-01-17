@@ -15,7 +15,7 @@ NWC.ControllerHelpers = {};
         if (!config || !config.name || !config.description) {
             throw new Error("Mandatory Workflow variables not Defined.");
         }
-        return function ($scope, sharedState) {
+        return function ($scope, StoredState) {
             $scope.name = config.name;
             $scope.description = config.description;
 
