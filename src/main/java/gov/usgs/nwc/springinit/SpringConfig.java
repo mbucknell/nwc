@@ -113,6 +113,9 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
      */
 	/**
 	 * Setup the DataSource 
+	 * 		We are using Apache DBCP's BasicDataSource which gives us connection
+	 * 		pooling by default.  Good explaination of how this works is here:
+	 * 		http://stackoverflow.com/questions/14467480/connection-pooling-with-apache-dbcp
 	 */
 	@Bean
 	public DataSource getDataSource() {

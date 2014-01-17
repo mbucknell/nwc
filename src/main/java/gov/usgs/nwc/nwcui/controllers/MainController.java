@@ -25,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -135,7 +136,8 @@ public class MainController {
     }
 	
 	@RequestMapping(value="/savesessionpost", method = RequestMethod.POST)
-	public ModelAndView saveCacheSessionPost(String cachedobject) {
+	@ResponseBody
+	public String saveCacheSessionPost(String cachedobject) {
 		log.info("MainController.saveCacheSessionPost() Called");
 		
 		/**
@@ -150,18 +152,12 @@ public class MainController {
 		 */
 		cacheDao.saveSiteCache(new SiteCache(path, cachedobject));
 		
-		ModelAndView mv = new ModelAndView("/saved", "path", path);
-		
-		/**
-		 * Add the environment to the session so JSPs can grab their own properties
-		 */
-		mv.addObject("env", env);
-		
-		return mv;
+		return path;
 	}
 	
 	@RequestMapping(value="/loadsession/{path}")
-    public ModelAndView getCachedSession(@PathVariable String path) {
+	@ResponseBody
+	public String getCachedSession(@PathVariable String path) {
 		log.info("MainController.getCachedSession() Called");
 		
 		/**
@@ -169,13 +165,6 @@ public class MainController {
 		 */
 		SiteCache cacheobject = cacheDao.getSiteCacheByPath(path);
 		
-		ModelAndView mv = new ModelAndView("/loaded", "cacheobject", cacheobject);
-		
-		/**
-		 * Add the environment to the session so JSPs can grab their own properties
-		 */
-		mv.addObject("env", env);
-		
-		return mv;
+		return cacheobject.getCacheobject();
 	}
 }
