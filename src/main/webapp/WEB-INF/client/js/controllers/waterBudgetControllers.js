@@ -165,7 +165,11 @@ waterBudgetControllers.controller('DemoWaterUsagePlot', ['$scope', 'StoredState'
                 d2.push([date, parseInt(Math.random() * 30)]);
                 d3.push([date, parseInt(Math.random() * 30)]);
             });
-                
+            var Data = function(data, label) {
+                this.data = data;
+                this.label = label;
+            };
+            
 
             
             
@@ -177,7 +181,7 @@ waterBudgetControllers.controller('DemoWaterUsagePlot', ['$scope', 'StoredState'
 
 
             function plotWithOptions () {
-                var plot = $.plot("#placeholder", [d1, d2, d3], {
+                var plot = $.plot("#placeholder", [new Data(d1, 'Agricultural'), new Data(d2, 'Industrial'), new Data(d3, 'Municipal')], {
                     series: {
                         stack: stack,
                         bars: {
@@ -203,11 +207,15 @@ waterBudgetControllers.controller('DemoWaterUsagePlot', ['$scope', 'StoredState'
                         axisLabelFontSizePixels: 12,
                         axisLabelFontFamily: 'Verdana, Arial',
                         axisLabelPadding: 3
+                    },
+                    grid: {
+                        hoverable: true,
+                        borderWidth: 2
+                    },
+                    tooltip: true,
+                    tooltipOpts: {
+                        content: "Date: %x, %s: %y mgd"
                     }
-
-                });
-                $(window).resize(function(event){
-                   plot.draw();
                 });
             }
             plotWithOptions();
