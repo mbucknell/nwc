@@ -70,6 +70,11 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     url: '/final',
                     templateUrl: '../../client/partials/waterBudget/FinalWaterBudget.html',
                     controller: 'FinalStep'
+                })
+                .state('workflow.waterBudget.demoWaterUsagePlot', {
+                    url: '/demo-water-usage-plot',
+                    templateUrl: '../../client/partials/waterBudget/demoWaterUsagePlot.html',
+                    controller: 'DemoWaterUsagePlot'
                 });
     }
 ]);

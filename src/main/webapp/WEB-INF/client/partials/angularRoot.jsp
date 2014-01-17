@@ -13,6 +13,8 @@
 <script type="text/javascript" src="../../webjars/openlayers/2.13.1/OpenLayers.debug.js"></script>
 <script type="text/javascript" src="../../3rdparty/dygraphs/dygraph-dev.js"></script>
 <script type="text/javascript" src="../../webjars/flot/0.8.0/jquery.flot.js"></script>
+<script type="text/javascript" src="../../webjars/flot/0.8.0/jquery.flot.resize.js"></script>
+<script type="text/javascript" src="../../webjars/flot/0.8.0/jquery.flot.time.js"></script>
 <script type="text/javascript" src="../../webjars/flot/0.8.0/jquery.flot.stack.js"></script>
 
 <!-- misc -->

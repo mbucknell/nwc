@@ -139,4 +139,80 @@ waterBudgetControllers.controller('Restore', [
         
     }
 ]);
+
+
+waterBudgetControllers.controller('DemoWaterUsagePlot', ['$scope', 'StoredState', '$state', 'CommonState', '$log',
+    NWC.ControllerHelpers.StepController(
+        {
+            name: 'Demo Water Usage Plot',
+            description: "A Plot for experimenting with flotcharts"
+        },
+        function ($scope, StoredState, $state, CommonState, $log) {
+            StoredState._clientState.name = $state.current.name;
+            StoredState._clientState.params = $state.params;
+
+            var d1 = [];
+            var d2 = [];
+            
+            var d3 = [];
+            
+            (10).times(function(i){
+                if(3 === i){
+                    return;
+                }
+                var date = (new Date("2001/"+ i +"/01")).getTime();
+                d1.push([date, parseInt(Math.random() * 30)]);
+                d2.push([date, parseInt(Math.random() * 30)]);
+                d3.push([date, parseInt(Math.random() * 30)]);
+            });
+                
+
+            
+            
+
+            var stack = true,
+                    bars = true,
+                    lines = false,
+                    steps = false;
+
+
+            function plotWithOptions () {
+                var plot = $.plot("#placeholder", [d1, d2, d3], {
+                    series: {
+                        stack: stack,
+                        bars: {
+                            show: bars,
+                            barWidth: 84000000 * 30 //garbage magic number just for show
+                        }
+                    },
+                    xaxis: {
+                        mode: "time",
+                        tickSize: [3, "month"],
+                        tickLength: 10,
+                        color: "black",
+                        axisLabel: "Date",
+                        axisLabelUseCanvas: true,
+                        axisLabelFontSizePixels: 12,
+                        axisLabelFontFamily: 'Verdana, Arial',
+                        axisLabelPadding: 10
+                    },
+                    yaxis: {
+                        color: "black",
+                        axisLabel: "DNS Query Count",
+                        axisLabelUseCanvas: true,
+                        axisLabelFontSizePixels: 12,
+                        axisLabelFontFamily: 'Verdana, Arial',
+                        axisLabelPadding: 3
+                    }
+
+                });
+                $(window).resize(function(event){
+                   plot.draw();
+                });
+            }
+            plotWithOptions();
+            
+        }
+    )
+]);
 }());
