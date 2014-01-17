@@ -17,6 +17,7 @@
 <script type="text/javascript" src="../../webjars/flot/0.8.0/jquery.flot.time.js"></script>
 <script type="text/javascript" src="../../webjars/flot/0.8.0/jquery.flot.stack.js"></script>
 <script type="text/javascript" src="../../3rdparty/flot-plugins/jquery.flot.tooltip.js"></script>
+<script type="text/javascript" src="../../3rdparty/flot-plugins/jquery.flot.axislabels.js"></script>
 
 
 <!-- misc -->
