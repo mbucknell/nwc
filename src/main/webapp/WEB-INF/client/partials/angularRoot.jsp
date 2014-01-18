@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../3rdparty/flot-plugins/jquery.flot.tooltip.js"></script>
 <script type="text/javascript" src="../../3rdparty/flot-plugins/jquery.flot.axislabels.js"></script>
 
-
+<script type="text/javascript" src="../../3rdparty/checklist-model/checklist-model.js"></script>
 <!-- misc -->
 <script type="text/javascript" src="../../client/js/openLayersExtensions/WaterCensusToolbar/js/WaterCensusToolbar.js"></script>
 
