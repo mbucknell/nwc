@@ -18,11 +18,13 @@
     };
 
     registerWatchFactory('hucId',
-            ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q', '$log',
-                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q, $log) {
+            ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q', '$log', 'DataSeries',
+                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q, $log, DataSeries) {
                     return {
                         propertyToWatch: 'hucId',
                         watchFunction: function (prop, oldHucValue, newHucValue) {
+                            //clear downstream state
+                            CommonState.WaterUsageDataSeries = DataSeries.new();
                             var labeledAjaxCalls = [];
                             //grab the sos sources that will be used to display the initial data 
                             //series. ignore other data sources that the user can add later.
@@ -122,20 +124,12 @@
                                     var countyAreaSqMiles = newCountyInfo.area;
                                     var countyAreaAcres = Convert.squareMilesToAcres(countyAreaSqMiles);
                                     var convertedTable = Convert.mgdTableToMmPerDayTable(parsedTable, countyAreaAcres);
-                                    //add a summation series to the table
-                                    convertedTable = convertedTable.map(function (row) {
-                                        var nonDateValues = row.from(1);//don't try to sum dates
-                                        var rowSum = nonDateValues.sum();
-                                        var newRow = row.clone();//shallow array copy
-                                        newRow.push(rowSum);
-                                        return newRow;
-                                    });
+                                    
                                     var waterUseDataSeries = DataSeries.new();
                                     waterUseDataSeries.data = convertedTable;
 
                                     //use the series metadata as labels
                                     var additionalSeriesLabels = SosSources.countyWaterUse.observedProperty.split(',');
-                                    additionalSeriesLabels.push('Aggregate Water Use');
                                     var waterUseValueLabelsOnly = waterUseDataSeries.metadata.seriesLabels.from(1);//skip the initial 'Date' label
                                     waterUseDataSeries.metadata.seriesLabels = waterUseValueLabelsOnly.concat(additionalSeriesLabels);
 

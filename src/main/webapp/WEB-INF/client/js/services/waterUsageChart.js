@@ -3,59 +3,71 @@
     var waterUsageChart = angular.module('nwc.waterUsageChart', []);
     var privateChart = {};
     var setChart = function(chartEltSelector, values, labels) {
-            
-            var d1 = [];
-            var d2 = [];
-            
-            var d3 = [];
-            var blankTimes = [2, 5, 6];
-            (10).times(function(i){;
-                if(blankTimes.any(i)){
-                    return;
+            if(!labels || !labels.length){
+                if(privateChart.shutdown){
+                    privateChart.shutdown()
                 }
-                var date = (new Date("2001/"+ i +"/01")).getTime();
-                d1.push([date, parseInt(Math.random() * 30)]);
-                d2.push([date, parseInt(Math.random() * 30)]);
-                d3.push([date, parseInt(Math.random() * 30)]);
-            });
-            var Data = function(data, label) {
-                this.data = data;
-                this.label = label;
-            };
-            
-
-            
+                return;
+            }
             var waterUsageUnitName = 'mm per day'; 
-            var dateFormat = '{yyyy}-{MM}-{dd}';
+            var dateFormat = '{yyyy}';
+            var dateIndex = 0;
+
             var stack = true,
                     bars = true;
-            //now transform from the parameterized parallel array format to flotchart's format
+
+            //convert all x values from String to Date
+            values = values.map(function (row) {
+                row[dateIndex] = new Date(row[dateIndex]);
+                return row;
+            });
+            //now transform from the parameterized row-oriented parallel array to flotchart's column-oriented array
             var data = [];
-            if(values.length !== labels.length){
+            //first check row length
+            var dataRowLength = values[0].length - 1;//ignore date column
+            
+            if(dataRowLength !== labels.length){
                 var errMsg = 'Water Usage labels and data differ in length';
                 alert(errMsg);
                 throw new Exception(errMsg);
             }
             
-            labels.each(function(label, index){
-               data.push({data: values[index], label: label}); 
+            labels.each(function(label, labelIndex){
+               var column = {label:label};
+                //date column offesets index calculation by one
+                var valueIndex = labelIndex + 1;
+               column.data = values.map(function(row){
+                       var newRow = [];
+                       newRow.push(row[dateIndex]);
+                       newRow.push(row[valueIndex]);
+                       return newRow;
+                });
+               data.push(column);
             });
-
+            var yearTooltipSeparator = ' - ';
+            var numYearsPerDatum = 5;
             function plotWithOptions () {
-                var plot = $.plot(chartEltSelector, [new Data(d1, 'Agricultural'), new Data(d2, 'Industrial'), new Data(d3, 'Municipal')], {
+                var plot = $.plot(chartEltSelector, data, {
                     series: {
                         stack: stack,
                         bars: {
                             show: bars,
-                            barWidth: 84000000 * 30 //garbage magic number just for show
+                            barWidth: 157766400000
+                            /*
+                             *  #ms in 5 years = (#ms in 4 non-leap years) + (#ms in 1 leap year)   =   157766400000
+                             *      #ms in 4 non-leap years = 4 * #ms one leap year                 =   126144000000
+                             *      #ms in 1 leap year = #ms one non-leap year + #ms in one day     =   31622400000
+                             *      #ms in one non-leap year = 365 * #ms in one day                 =   31536000000
+                             *      #ms in one day = 1000 * 60 * 60 * 24                            =   86400000
+                             */
                         }
                     },
                     xaxis: {
                         mode: "time",
-                        tickSize: [1, "month"],
+                        tickSize: [1, "year"],
                         tickLength: 10,
                         color: "black",
-                        axisLabel: "Date",
+                        axisLabel: "Year",
                         axisLabelPadding: 10
                     },
                     yaxis: {
@@ -73,8 +85,10 @@
                               var offsetIndex = flotItem.datapoint.length - 1;
                               var offset = flotItem.datapoint[offsetIndex];
                               var realValue = yval - offset;
-                              var dateDisplay = Date.create(xval).format(dateFormat);
-                              var tooltipText = "Date: " + dateDisplay + ", " + label + ": " + realValue + " " + waterUsageUnitName;
+                              var initialDatumYear = Date.create(xval).format(dateFormat);
+                              var finalDatumYear = parseInt(initialDatumYear) + numYearsPerDatum;
+                              var dateDisplay = initialDatumYear + yearTooltipSeparator + finalDatumYear;
+                              var tooltipText = 'Date: ' + dateDisplay + "<br/>" + label + ": " + realValue + " " + waterUsageUnitName;
                               return tooltipText;
                           }
                     }
