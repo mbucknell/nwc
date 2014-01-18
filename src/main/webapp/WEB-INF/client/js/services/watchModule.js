@@ -92,14 +92,14 @@
                     };
                 }
             ]);
-    registerWatchFactory('county',
+    registerWatchFactory('countyInfo',
             [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState', '$state', '$log',
                 function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, Convert, DataSeries, WaterBudgetPlot, StoredState, $state, $log) {
                     return {
-                        propertyToWatch: 'county',
-                        watchFunction: function (prop, oldCountyFeature, newCountyFeature) {
+                        propertyToWatch: 'countyInfo',
+                        watchFunction: function (prop, oldCountyInfo, newCountyInfo) {
 
-                            var offeringId = newCountyFeature.attributes.FIPS;
+                            var offeringId = newCountyInfo.offeringId;
                             
                             var sosUrl = SosUrlBuilder.buildSosUrlFromSource(offeringId, SosSources.countyWaterUse);
 
@@ -119,7 +119,7 @@
                                     waterUseFailure(response);
                                 } else {
                                     var parsedTable = SosResponseParser.parseSosResponse(data);
-                                    var countyAreaSqMiles = newCountyFeature.attributes.AREA_SQMI;
+                                    var countyAreaSqMiles = newCountyInfo.area;
                                     var countyAreaAcres = Convert.squareMilesToAcres(countyAreaSqMiles);
                                     var convertedTable = Convert.mgdTableToMmPerDayTable(parsedTable, countyAreaAcres);
                                     //add a summation series to the table
@@ -139,21 +139,15 @@
                                     var waterUseValueLabelsOnly = waterUseDataSeries.metadata.seriesLabels.from(1);//skip the initial 'Date' label
                                     waterUseDataSeries.metadata.seriesLabels = waterUseValueLabelsOnly.concat(additionalSeriesLabels);
 
-                                    DataSeriesStore.updateWaterUseSeries(waterUseDataSeries);
-                                    var plotTimeDensity = StoredState.plotTimeDensity;
-                                    //todo: switch these back to non-hardcoded after merge:
-//                                    var values = DataSeriesStore[plotTimeDensity].data;
-//                                    var labels = DataSeriesStore[plotTimeDensity].metadata.seriesLabels;
-                                    var values = DataSeriesStore['daily'].data;
-                                    var labels = DataSeriesStore['daily'].metadata.seriesLabels;
-                                    CommonState.newDataSeriesStore = true;
+                                    CommonState.WaterUsageDataSeries = waterUseDataSeries;
+                                    CommonState.newWaterUseData = true;
                                     $state.go('workflow.waterBudget.plotData');
                                 }
                             };
 
                             $http.get(sosUrl).then(waterUseSuccess, waterUseFailure);
 
-                            return newCountyFeature;
+                            return newCountyInfo;
                         }
                     };
                 }

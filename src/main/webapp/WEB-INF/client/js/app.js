@@ -11,6 +11,7 @@ var nwcApp = angular.module('nwcApp', [
     'ui.router',
     'ui.bootstrap',
     'nwc.waterBudgetPlot',
+    'nwc.waterUsageChart',
     'nwc.map.base',
     'nwc.map.waterBudget',
     'nwc.map.aquaticBiology'

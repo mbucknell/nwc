@@ -9,25 +9,25 @@
             $scope.description = "Retrieve water data comprising all components of a water budget.";
         }
     ]);
-waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetPlot',
+waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetPlot', 'WaterUsageChart',
     NWC.ControllerHelpers.StepController(
         {
             name: 'Plot Water Budget Data',
             description: 'Visualize the data for your HUC of interest.'
         },
-        function ($scope, StoredState, CommonState, WaterBudgetPlot) {
+        function ($scope, StoredState, CommonState, WaterBudgetPlot, WaterUsageChart) {
             var plotDivSelector = '#waterBudgetPlot';
             var legendDivSelector = '#waterBudgetLegend';
             StoredState.plotTimeDensity  = StoredState.plotTimeDensity || 'daily';
             $scope.$watch('StoredState.plotTimeDensity', function(newValue, oldValue){
                 if(newValue !== oldValue){
-                    plotData(newValue);
+                    plotPTandETaData(newValue);
                 }
             });
             /**
              * {String} category the category of data to plot (daily or monthly)
              */
-            var plotData = function(category){
+            var plotPTandETaData = function(category){
                 var values = CommonState.DataSeriesStore[category].data;
                 var labels = CommonState.DataSeriesStore[category].metadata.seriesLabels;
                 WaterBudgetPlot.setPlot(plotDivSelector, legendDivSelector, values, labels);
@@ -36,7 +36,31 @@ waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonS
             $scope.$watch('CommonState.newDataSeriesStore', function(newValue, oldValue){
                 if(newValue){
                     CommonState.newDataSeriesStore = false;
-                    plotData(StoredState.plotTimeDensity);
+                    plotPTandETaData(StoredState.plotTimeDensity);
+                    //hack: non-obviously trigger re-rendering of the other graph
+                    if(CommonState.WaterUsageDataSeries){
+                       CommonState.newWaterUseData = true;
+                    }
+                }
+            });
+            
+            var chartDivSelector = '#waterUsageChart';
+            
+            var chartWaterUsage= function(){
+                var values = CommonState.WaterUsageDataSeries.data;
+                var labels = CommonState.WaterUsageDataSeries.metadata.seriesLabels;
+                WaterUsageChart.setChart(chartDivSelector, values, labels);
+            };
+            
+            //boolean property is cheaper to watch than deep object comparison
+            $scope.$watch('CommonState.newWaterUseData', function(newValue, oldValue){
+                if(newValue){
+                    CommonState.newWaterUseData = false;
+                    chartWaterUsage();
+                    //hack: non-obviously trigger re-rendering of the other graph
+                    CommonState.newDataSeriesStore = true;
+                    
+                   
                 }
             });
             
@@ -77,10 +101,15 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
     function ($scope, StoredState, CommonState, WaterBudgetMap) {
         var map = WaterBudgetMap.getMap();
         map.render('hucSelectMap');
-        var setCounty = function(countyFeature){
-            StoredState.county = countyFeature;
+        var setCountyInfo = function(countyFeature){
+            var countyInfo = {};
+            countyInfo.offeringId = countyFeature.attributes.FIPS;
+            countyInfo.area = countyFeature.attributes.AREA_SQMI;
+            countyInfo.name = countyFeature.attributes.FULL_NAME.capitalize(true);
+            
+            StoredState.countyInfo = countyInfo;
         };
-        map.getCountyThatIntersectsWithHucFeature(StoredState.huc, setCounty);
+        map.getCountyThatIntersectsWithHucFeature(StoredState.huc, setCountyInfo);
     })
 ]);
 
