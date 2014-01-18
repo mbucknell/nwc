@@ -12,6 +12,13 @@
 <script type="text/javascript" src="../../webjars/sugar/1.3.8/sugar-full.development.js"></script>
 <script type="text/javascript" src="../../webjars/openlayers/2.13.1/OpenLayers.debug.js"></script>
 <script type="text/javascript" src="../../3rdparty/dygraphs/dygraph-dev.js"></script>
+<script type="text/javascript" src="../../webjars/flot/0.8.0/jquery.flot.js"></script>
+<script type="text/javascript" src="../../webjars/flot/0.8.0/jquery.flot.resize.js"></script>
+<script type="text/javascript" src="../../webjars/flot/0.8.0/jquery.flot.time.js"></script>
+<script type="text/javascript" src="../../webjars/flot/0.8.0/jquery.flot.stack.js"></script>
+<script type="text/javascript" src="../../3rdparty/flot-plugins/jquery.flot.tooltip.js"></script>
+<script type="text/javascript" src="../../3rdparty/flot-plugins/jquery.flot.axislabels.js"></script>
+
 <script type="text/javascript" src="../../3rdparty/checklist-model/checklist-model.js"></script>
 <!-- misc -->
 <script type="text/javascript" src="../../client/js/openLayersExtensions/WaterCensusToolbar/js/WaterCensusToolbar.js"></script>
@@ -28,6 +35,7 @@
 <script type="text/javascript" src="../../client/js/services/waterBudgetMap.js"></script>
 <script type="text/javascript" src="../../client/js/services/aquaticBiologyMap.js"></script>
 <script type="text/javascript" src="../../client/js/services/Conversion.js"></script>
+<script type="text/javascript" src="../../client/js/services/waterUsageChart.js"></script>
 <!-- controllers -->
 <script type="text/javascript" src="../../client/js/controllers/controllerHelpers.js"></script>
 <script type="text/javascript" src="../../client/js/controllers/waterBudgetControllers.js"></script>

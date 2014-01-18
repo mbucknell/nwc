@@ -11,6 +11,7 @@ var nwcApp = angular.module('nwcApp', [
     'ui.router',
     'ui.bootstrap',
     'nwc.waterBudgetPlot',
+    'nwc.waterUsageChart',
     'nwc.map.base',
     'nwc.map.waterBudget',
     'nwc.map.aquaticBiology',
@@ -81,6 +82,11 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     url: '/final',
                     templateUrl: '../../client/partials/waterBudget/FinalWaterBudget.html',
                     controller: 'FinalStep'
+                })
+                .state('workflow.waterBudget.demoWaterUsagePlot', {
+                    url: '/demo-water-usage-plot',
+                    templateUrl: '../../client/partials/waterBudget/demoWaterUsagePlot.html',
+                    controller: 'DemoWaterUsagePlot'
                 });
     }
 ]);
