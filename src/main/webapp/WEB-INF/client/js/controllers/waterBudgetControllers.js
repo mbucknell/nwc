@@ -155,9 +155,9 @@ waterBudgetControllers.controller('DemoWaterUsagePlot', ['$scope', 'StoredState'
             var d2 = [];
             
             var d3 = [];
-            
-            (10).times(function(i){
-                if(3 === i){
+            var blankTimes = [2, 5, 6];
+            (10).times(function(i){;
+                if(blankTimes.any(i)){
                     return;
                 }
                 var date = (new Date("2001/"+ i +"/01")).getTime();
@@ -172,12 +172,10 @@ waterBudgetControllers.controller('DemoWaterUsagePlot', ['$scope', 'StoredState'
             
 
             
-            
-
+            var waterUsageUnitName = 'mm per day'; 
+            var dateFormat = '{yyyy}-{MM}-{dd}';
             var stack = true,
-                    bars = true,
-                    lines = false,
-                    steps = false;
+                    bars = true;
 
 
             function plotWithOptions () {
@@ -191,21 +189,15 @@ waterBudgetControllers.controller('DemoWaterUsagePlot', ['$scope', 'StoredState'
                     },
                     xaxis: {
                         mode: "time",
-                        tickSize: [3, "month"],
+                        tickSize: [1, "month"],
                         tickLength: 10,
                         color: "black",
                         axisLabel: "Date",
-                        axisLabelUseCanvas: true,
-                        axisLabelFontSizePixels: 12,
-                        axisLabelFontFamily: 'Verdana, Arial',
                         axisLabelPadding: 10
                     },
                     yaxis: {
                         color: "black",
-                        axisLabel: "DNS Query Count",
-                        axisLabelUseCanvas: true,
-                        axisLabelFontSizePixels: 12,
-                        axisLabelFontFamily: 'Verdana, Arial',
+                        axisLabel: waterUsageUnitName,
                         axisLabelPadding: 3
                     },
                     grid: {
@@ -214,7 +206,14 @@ waterBudgetControllers.controller('DemoWaterUsagePlot', ['$scope', 'StoredState'
                     },
                     tooltip: true,
                     tooltipOpts: {
-                        content: "Date: %x, %s: %y mgd"
+                          content: function(label, xval, yval, flotItem){
+                              var offsetIndex = flotItem.datapoint.length - 1;
+                              var offset = flotItem.datapoint[offsetIndex];
+                              var realValue = yval - offset;
+                              var dateDisplay = Date.create(xval).format(dateFormat);
+                              var tooltipText = "Date: " + dateDisplay + ", " + label + ": " + realValue + " " + waterUsageUnitName;
+                              return tooltipText;
+                          }
                     }
                 });
             }

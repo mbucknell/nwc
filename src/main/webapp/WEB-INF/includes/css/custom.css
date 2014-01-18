@@ -85,3 +85,7 @@
 .huc_table tbody tr:nth-child(odd):hover td {
 	background-color:	#C8D0DD !important;
 }
+
+.axisLabels {
+    font-size: 1.5em;
+}
