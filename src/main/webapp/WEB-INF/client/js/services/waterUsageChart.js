@@ -29,7 +29,17 @@
             var dateFormat = '{yyyy}-{MM}-{dd}';
             var stack = true,
                     bars = true;
-
+            //now transform from the parameterized parallel array format to flotchart's format
+            var data = [];
+            if(values.length !== labels.length){
+                var errMsg = 'Water Usage labels and data differ in length';
+                alert(errMsg);
+                throw new Exception(errMsg);
+            }
+            
+            labels.each(function(label, index){
+               data.push({data: values[index], label: label}); 
+            });
 
             function plotWithOptions () {
                 var plot = $.plot(chartEltSelector, [new Data(d1, 'Agricultural'), new Data(d2, 'Industrial'), new Data(d3, 'Municipal')], {
