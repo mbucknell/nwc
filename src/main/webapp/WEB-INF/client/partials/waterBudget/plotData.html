@@ -1,4 +1,4 @@
-<div class="row" ng-hide="(!CommonState.WaterUsageDataSeries) || CommonState.WaterUsageDataSeries.length">
+<div class="row" ng-hide="(!CommonState.WaterUsageDataSeries) || !(CommonState.WaterUsageDataSeries.data) || !(CommonState.WaterUsageDataSeries.data.length)">
     <h4 ng-bind=" 'Water Usage for ' + StoredState.countyInfo.name + ' County'"></h4>
     <div style="height: 400px;" id="waterUsageChart" class="col-xs-10"></div>
     <div class="col-xs-2">
