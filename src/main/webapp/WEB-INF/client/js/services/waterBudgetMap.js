@@ -1,8 +1,8 @@
 /*global angular,OpenLayers,CONFIG*/
 (function () {
     var waterBudgetMap = angular.module('nwc.map.waterBudget', []);
-    waterBudgetMap.factory('WaterBudgetMap', [ 'StoredState', 'CommonState', '$state', 'BaseMap',
-       function(StoredState, CommonState, $state, BaseMap){
+    waterBudgetMap.factory('WaterBudgetMap', [ 'StoredState', 'CommonState', '$state', 'BaseMap', 'DataSeries',
+       function(StoredState, CommonState, $state, BaseMap, DataSeries){
            var privateMap;
     
         var initMap = function () {
@@ -49,7 +49,7 @@
                     else if (1 === hucCount) {
                         StoredState.huc = actualFeatures[0];
                         StoredState.hucId = actualFeatures[0].attributes.HUC_12;
-                        CommonState.WaterUsageDataSeries = {};
+                        CommonState.WaterUsageDataSeries = DataSeries.new();
                         $state.go('workflow.waterBudget.plotData');
                     }
                     else {
