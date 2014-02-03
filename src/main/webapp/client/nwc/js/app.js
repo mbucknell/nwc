@@ -21,66 +21,66 @@ var nwcApp = angular.module('nwcApp', [
 nwcApp.config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/workflow/aquatic-biology/select-biodata-site');
-
+        var partialsBase = '../../client/nwc/partials/';
         $stateProvider
                 .state('restore', {
                     url: '/state/restore/:stateId',
-                    templateUrl: '../../client/partials/Restoring.html',
+                    templateUrl: 'Restoring.html',
                     controller: 'Restore'
                 })
                 .state('workflow', {
                     url: '/workflow',
-                    templateUrl: '../../client/partials/AllWorkflowShell.html',
+                    templateUrl: partialsBase + 'AllWorkflowShell.html',
                     abstract: true
                 })
                 .state('workflow.waterBudget', {
                     url: '/water-budget',
-                    templateUrl: '../../client/partials/waterBudget/waterBudgetTemplate.html',
+                    templateUrl: partialsBase + 'waterBudget/waterBudgetTemplate.html',
                     controller: 'WaterBudget'
                 })
                 .state('workflow.waterBudget.selectHuc', {
                     url: '/select-huc',
-                    templateUrl: '../../client/partials/waterBudget/selectHuc.html',
+                    templateUrl: partialsBase + 'waterBudget/selectHuc.html',
                     controller: 'SelectHuc'
                 })
                 .state('workflow.waterBudget.disambiguateClick', {
                     url: '/disambiguate-click',
-                    templateUrl: '../../client/partials/waterBudget/disambiguateClick.html',
+                    templateUrl: partialsBase + 'waterBudget/disambiguateClick.html',
                     controller: 'DisambiguateClick'
                 })
                 .state('workflow.waterBudget.plotData', {
                     url: '/plot-data',
-                    templateUrl: '../../client/partials/waterBudget/plotData.html',
+                    templateUrl: partialsBase + 'waterBudget/plotData.html',
                     controller: 'PlotData'
                 })
                 .state('workflow.waterBudget.selectCounty', {
                     url: '/plot-data',
-                    templateUrl: '../../client/partials/waterBudget/selectHuc.html',
+                    templateUrl: partialsBase + 'waterBudget/selectHuc.html',
                     controller: 'SelectCounty'
                 })
                 .state('workflow.aquaticBiology', {
                     url: '/aquatic-biology',
-                    templateUrl: '../../client/partials/aquaticBiology/aquaticBiologyTemplate.html',
+                    templateUrl: partialsBase + 'aquaticBiology/aquaticBiologyTemplate.html',
                     controller: 'AquaticBiology'
                 })
                 .state('workflow.aquaticBiology.selectBioDataSites', {
                     url: '/select-biodata-site',
-                    templateUrl: '../../client/partials/aquaticBiology/selectBioDataSite.html',
+                    templateUrl: partialsBase + 'aquaticBiology/selectBioDataSite.html',
                     controller: 'SelectBioDataSite'
                 })
                 .state('workflow.aquaticBiology.showSelectedBioDataSites', {
                     url: '/show-selected-biodata-sites',
-                    templateUrl: '../../client/partials/aquaticBiology/showSelectedBioDataSites.html',
+                    templateUrl: partialsBase + 'aquaticBiology/showSelectedBioDataSites.html',
                     controller: 'ShowSelectedBioDataSites'
                 })
                 .state('workflow.aquaticBiology.sendToBioData', {
                     url: '/send-to-biodata',
-                    templateUrl: '../../client/partials/aquaticBiology/sendToBioData.html',
+                    templateUrl: partialsBase + 'aquaticBiology/sendToBioData.html',
                     controller: 'SendToBioData'
                 })
                 .state('workflow.waterBudget.FinalStep', {
                     url: '/final',
-                    templateUrl: '../../client/partials/waterBudget/FinalWaterBudget.html',
+                    templateUrl: partialsBase + 'waterBudget/FinalWaterBudget.html',
                     controller: 'FinalStep'
                 });
     }
