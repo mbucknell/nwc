@@ -21,27 +21,27 @@
 
 <script type="text/javascript" src="../../3rdparty/checklist-model/checklist-model.js"></script>
 <!-- misc -->
-<script type="text/javascript" src="../../client/nwc/openLayersExtensions/WaterCensusToolbar/js/WaterCensusToolbar.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/openLayersExtensions/WaterCensusToolbar/js/WaterCensusToolbar.js"></script>
 
 <!--services -->
-<script type="text/javascript" src="../../client/nwc/services/util.js"></script>
-<script type="text/javascript" src="../../client/nwc/services/DataSeriesStore.js"></script>
-<script type="text/javascript" src="../../client/nwc/services/SosSources.js"></script>
-<script type="text/javascript" src="../../client/nwc/services/SosResponseParser.js"></script>
-<script type="text/javascript" src="../../client/nwc/services/watchModule.js"></script>
-<script type="text/javascript" src="../../client/nwc/services/sharedStateServices.js"></script>
-<script type="text/javascript" src="../../client/nwc/services/waterBudgetPlot.js"></script>
-<script type="text/javascript" src="../../client/nwc/services/baseMap.js"></script>
-<script type="text/javascript" src="../../client/nwc/services/waterBudgetMap.js"></script>
-<script type="text/javascript" src="../../client/nwc/services/aquaticBiologyMap.js"></script>
-<script type="text/javascript" src="../../client/nwc/services/Conversion.js"></script>
-<script type="text/javascript" src="../../client/nwc/services/waterUsageChart.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/services/util.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/services/DataSeriesStore.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/services/SosSources.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/services/SosResponseParser.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/services/watchModule.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/services/sharedStateServices.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/services/waterBudgetPlot.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/services/baseMap.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/services/waterBudgetMap.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/services/aquaticBiologyMap.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/services/Conversion.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/services/waterUsageChart.js"></script>
 <!-- controllers -->
-<script type="text/javascript" src="../../client/nwc/controllers/controllerHelpers.js"></script>
-<script type="text/javascript" src="../../client/nwc/controllers/waterBudgetControllers.js"></script>
-<script type="text/javascript" src="../../client/nwc/controllers/aquaticBiologyControllers.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/controllers/controllerHelpers.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/controllers/waterBudgetControllers.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/controllers/aquaticBiologyControllers.js"></script>
 <!-- main app-->
-<script type="text/javascript" src="../../client/nwc/app.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/app.js"></script>
 
 
 
