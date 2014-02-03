@@ -136,8 +136,6 @@
                                 </executions>
                                 <configuration>
                                         <version>1.9.2</version>
-                                        <checkSystemPath>true</checkSystemPath>
-                                        <enforceVersion>true</enforceVersion>
                                 </configuration>
                         </plugin>
                         <plugin>
