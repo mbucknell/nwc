@@ -25,7 +25,7 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
         $stateProvider
                 .state('restore', {
                     url: '/state/restore/:stateId',
-                    templateUrl: 'Restoring.html',
+                    templateUrl: partialsBase + 'Restoring.html',
                     controller: 'Restore'
                 })
                 .state('workflow', {
