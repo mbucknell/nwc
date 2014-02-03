@@ -82,6 +82,27 @@
             <url>http://cida.usgs.gov/maven/cida-public/</url>
         </repository>
     </repositories>
+    	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<spring.version>3.2.2.RELEASE</spring.version>
+                <warName>nwc</warName>
+                <!-- where to extract webjars to -->
+                <webjars.base>target/nwc/client/webjars</webjars.base>
+                <!-- webjars base path plus the maven kruft needed to access the actual libraries -->
+                <webjars.libs>${webjars.base}/META-INF/resources/webjars</webjars.libs>
+                
+                <thirdPartyLibs>src/main/webapp/client/3rdparty</thirdPartyLibs>
+                <nwcJavaScriptBase>src/main/webapp/client/nwc/js</nwcJavaScriptBase>
+                <!-- js lib versions -->
+                <jquery-version>1.10.2</jquery-version>
+                <angular-version>1.2.1</angular-version>
+                <angular-ui-router-version>0.2.0</angular-ui-router-version>
+                <angular-ui-bootstrap-version>0.9.0</angular-ui-bootstrap-version>
+                <flotcharts-version>0.8.0</flotcharts-version>
+                <openlayers-version>2.13.1</openlayers-version>
+                <sugar-version>1.3.8</sugar-version>
+                
+	</properties>
   <build>
 		<plugins>
 			<!-- Need to remove the requirement of the web.xml since	-->
@@ -94,8 +115,11 @@
 					<warName>${warName}</warName>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					
-					<!-- Copy configuration properties to WEBINF/classes -->
+					<filters>
+                                            <filter>pom.xml</filter>
+                                        </filters>
 					<webResources>
+                                                <!-- Copy configuration properties to WEBINF/classes -->
 						<resource>
 				          	<directory>conf/logging/</directory>
 					          <includes>
@@ -103,6 +127,25 @@
 					          </includes>        
 				         		<targetPath>WEB-INF/classes</targetPath>
 			         		</resource>
+                                                
+                                                <resource>
+                                                    <directory>src/main/webapp/WEB-INF/tiles/common</directory><!-- no trailing slash -->
+                                                    <targetPath>WEB-INF/tiles/common</targetPath><!-- no trailing slash -->
+                                                    <filtering>true</filtering>
+                                                    <includes>
+                                                        <include>USGSHead.jsp</include>
+                                                    </includes>
+                                                </resource>
+                                                <resource>
+                                                    <directory>src/main/webapp/client/nwc/partials</directory><!-- no trailing slash -->
+                                                    <targetPath>client/nwc/partials</targetPath><!-- no trailing slash -->
+                                                    <filtering>true</filtering>
+                                                    <includes>
+                                                        <include>angularRoot.jsp</include>
+                                                    </includes>
+                                                    
+                                                </resource>
+                                                
 			      	</webResources>
 				</configuration>
 			</plugin>
@@ -204,31 +247,8 @@
                         </plugin>
                         
 		</plugins>
-		
 		<finalName>${warName}</finalName>
 	</build>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.version>3.2.2.RELEASE</spring.version>
-                <warName>nwc</warName>
-                <!-- where to extract webjars to -->
-                <webjars.base>target/nwc/client/webjars</webjars.base>
-                <!-- webjars base path plus the maven kruft needed to access the actual libraries -->
-                <webjars.libs>${webjars.base}/META-INF/resources/webjars</webjars.libs>
-                
-                <thirdPartyLibs>src/main/webapp/client/3rdparty</thirdPartyLibs>
-                <nwcJavaScriptBase>src/main/webapp/client/nwc/js</nwcJavaScriptBase>
-                <!-- js lib versions -->
-                <jquery-version>1.10.2</jquery-version>
-                <angular-version>1.2.1</angular-version>
-                <angular-ui-router-version>0.2.0</angular-ui-router-version>
-                <angular-ui-bootstrap-version>0.9.0</angular-ui-bootstrap-version>
-                <flotcharts-version>0.8.0</flotcharts-version>
-                <openlayers-version>2.13.1</openlayers-version>
-                <sugar-version>1.3.8</sugar-version>
-                
-	</properties>
 
         <dependencies>
             <dependency>
