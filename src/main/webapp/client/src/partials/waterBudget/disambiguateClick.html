@@ -1,0 +1,26 @@
+<h4 ng-bind="name"></h4>
+<p ng-bind="description"></p>
+
+<div class="table-responsive">
+	<table class="table table-striped huc_table">
+		<thead>
+			<tr>
+				<th>HUC12</th>
+				<th>HUC12 Name</th>
+				<th>Area (acres)</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="huc in hucs" ng-click="setHuck(huc)" ui-sref="^.plotData">
+				<td ng-bind="huc.data.HUC_12"></td>
+				<td ng-bind="huc.data.HU_12_NAME"></td>
+				<td ng-bind="huc.data.ACRES"></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+
+<nav>
+    <a ui-sref="^.selectHuc">Back</a>
+</nav>

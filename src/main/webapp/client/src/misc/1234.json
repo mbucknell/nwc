@@ -1,0 +1,9 @@
+{
+  "_version": 0.1,
+  "_clientState": {
+    "name": "workflow.workflowA.Final",
+    "params": {}
+  },
+  "favoriteColor": "blue",
+  "favoriteNumber": "234"
+}
