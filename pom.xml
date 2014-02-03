@@ -156,13 +156,50 @@
                                         <webDriverCapabilities>
                                                 <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
                                         </webDriverCapabilities>
-                                        <jsSrcDir>src/main/webapp/client/nwc</jsSrcDir>
-                                        <jsTestSrcDir>src/test/javascript/specs</jsTestSrcDir>
+                                        <jsSrcDir>${basedir}</jsSrcDir>
+                                        <jsTestSrcDir>${basedir}/src/test/javascript/specs</jsTestSrcDir>
                                         <sourceIncludes>
-                                            <include>${webjars.libs}/angularjs/**/*.js</include>
-                                            <include>${webjars.libs}/**/*.js</include>
-                                            <include>${project.build.directory}/nwc/client/3rdparty/**/*.js</include>-->
-                                            <include>**/*.js</include>
+<!--library dependencies -->
+<include>${webjars.libs}/jquery/${jquery-version}/jquery.js</include>
+<include>${webjars.libs}/angularjs/${angular-version}/angular.js</include>
+<include>${webjars.libs}/angular-ui-router/${angular-ui-router-version}/angular-ui-router.js</include>
+<include>${webjars.libs}/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap.js</include>
+<include>${webjars.libs}/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap-tpls.js</include>
+<include>${webjars.libs}/sugar/${sugar-version}/sugar-full.development.js</include>
+<include>${webjars.libs}/openlayers/${openlayers-version}/OpenLayers.debug.js</include>
+<include>${thirdPartyLibs}/dygraphs/dygraph-dev.js</include>
+<include>${webjars.libs}/flot/${flotcharts-version}/jquery.flot.js</include>
+<include>${webjars.libs}/flot/${flotcharts-version}/jquery.flot.resize.js</include>
+<include>${webjars.libs}/flot/${flotcharts-version}/jquery.flot.time.js</include>
+<include>${webjars.libs}/flot/${flotcharts-version}/jquery.flot.stack.js</include>
+<include>${thirdPartyLibs}/flot-plugins/jquery.flot.tooltip.js</include>
+<include>${thirdPartyLibs}/flot-plugins/jquery.flot.axislabels.js</include>
+
+<include>${thirdPartyLibs}/checklist-model/checklist-model.js</include>
+<!-- misc -->
+<include>${nwcJavaScriptBase}/openLayersExtensions/WaterCensusToolbar/js/WaterCensusToolbar.js</include>
+
+<!--services -->
+<include>${nwcJavaScriptBase}/services/util.js</include>
+<include>${nwcJavaScriptBase}/services/DataSeriesStore.js</include>
+<include>${nwcJavaScriptBase}/services/SosSources.js</include>
+<include>${nwcJavaScriptBase}/services/SosResponseParser.js</include>
+<include>${nwcJavaScriptBase}/services/watchModule.js</include>
+<include>${nwcJavaScriptBase}/services/sharedStateServices.js</include>
+<include>${nwcJavaScriptBase}/services/waterBudgetPlot.js</include>
+<include>${nwcJavaScriptBase}/services/baseMap.js</include>
+<include>${nwcJavaScriptBase}/services/waterBudgetMap.js</include>
+<include>${nwcJavaScriptBase}/services/aquaticBiologyMap.js</include>
+<include>${nwcJavaScriptBase}/services/Conversion.js</include>
+<include>${nwcJavaScriptBase}/services/waterUsageChart.js</include>
+<!-- controllers -->
+<include>${nwcJavaScriptBase}/controllers/controllerHelpers.js</include>
+<include>${nwcJavaScriptBase}/controllers/waterBudgetControllers.js</include>
+<include>${nwcJavaScriptBase}/controllers/aquaticBiologyControllers.js</include>
+<!-- main app-->
+<include>${nwcJavaScriptBase}/app.js</include>
+
+
                                         </sourceIncludes>
                                 </configuration>
                         </plugin>
@@ -177,9 +214,21 @@
 		<spring.version>3.2.2.RELEASE</spring.version>
                 <warName>nwc</warName>
                 <!-- where to extract webjars to -->
-                <webjars.base>${project.build.directory}/nwc/client/webjars</webjars.base>
+                <webjars.base>target/nwc/client/webjars</webjars.base>
                 <!-- webjars base path plus the maven kruft needed to access the actual libraries -->
                 <webjars.libs>${webjars.base}/META-INF/resources/webjars</webjars.libs>
+                
+                <thirdPartyLibs>src/main/webapp/client/3rdparty</thirdPartyLibs>
+                <nwcJavaScriptBase>src/main/webapp/client/nwc/js</nwcJavaScriptBase>
+                <!-- js lib versions -->
+                <jquery-version>1.10.2</jquery-version>
+                <angular-version>1.2.1</angular-version>
+                <angular-ui-router-version>0.2.0</angular-ui-router-version>
+                <angular-ui-bootstrap-version>0.9.0</angular-ui-bootstrap-version>
+                <flotcharts-version>0.8.0</flotcharts-version>
+                <openlayers-version>2.13.1</openlayers-version>
+                <sugar-version>1.3.8</sugar-version>
+                
 	</properties>
 
         <dependencies>
@@ -354,35 +403,40 @@
 		<!-- ================================================================== -->
                 
 		<!-- <webjars> -->
+                <dependency>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>jquery</artifactId>
+                    <version>${jquery-version}</version>
+                </dependency>
 		<dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>angularjs</artifactId>
-		    <version>1.2.1</version>
+		    <version>${angular-version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>angular-ui-router</artifactId>
-		    <version>0.2.0</version>
+		    <version>${angular-ui-router-version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>sugar</artifactId>
-		    <version>1.3.8</version>
+		    <version>${sugar-version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>angular-ui-bootstrap</artifactId>
-		    <version>0.9.0</version>
+		    <version>${angular-ui-bootstrap-version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>openlayers</artifactId>
-		    <version>2.13.1</version>
+		    <version>${openlayers-version}</version>
 		</dependency>
                 <dependency>
                     <groupId>org.webjars</groupId>
                     <artifactId>flot</artifactId>
-                    <version>0.8.0-1</version>
+                    <version>${flotcharts-version}-1</version>
                 </dependency>
 		<!-- </webjars> -->
                 
