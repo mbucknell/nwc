@@ -159,47 +159,46 @@
                                         <jsSrcDir>${basedir}</jsSrcDir>
                                         <jsTestSrcDir>${basedir}/src/test/javascript/specs</jsTestSrcDir>
                                         <sourceIncludes>
-<!--library dependencies -->
-<include>${webjars.libs}/jquery/${jquery-version}/jquery.js</include>
-<include>${webjars.libs}/angularjs/${angular-version}/angular.js</include>
-<include>${webjars.libs}/angular-ui-router/${angular-ui-router-version}/angular-ui-router.js</include>
-<include>${webjars.libs}/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap.js</include>
-<include>${webjars.libs}/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap-tpls.js</include>
-<include>${webjars.libs}/sugar/${sugar-version}/sugar-full.development.js</include>
-<include>${webjars.libs}/openlayers/${openlayers-version}/OpenLayers.debug.js</include>
-<include>${thirdPartyLibs}/dygraphs/dygraph-dev.js</include>
-<include>${webjars.libs}/flot/${flotcharts-version}/jquery.flot.js</include>
-<include>${webjars.libs}/flot/${flotcharts-version}/jquery.flot.resize.js</include>
-<include>${webjars.libs}/flot/${flotcharts-version}/jquery.flot.time.js</include>
-<include>${webjars.libs}/flot/${flotcharts-version}/jquery.flot.stack.js</include>
-<include>${thirdPartyLibs}/flot-plugins/jquery.flot.tooltip.js</include>
-<include>${thirdPartyLibs}/flot-plugins/jquery.flot.axislabels.js</include>
+                                            <!--library dependencies -->
+                                            <include>${webjars.libs}/jquery/${jquery-version}/jquery.js</include>
+                                            <include>${webjars.libs}/angularjs/${angular-version}/angular.js</include>
+                                            <include>${webjars.libs}/angular-ui-router/${angular-ui-router-version}/angular-ui-router.js</include>
+                                            <include>${webjars.libs}/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap.js</include>
+                                            <include>${webjars.libs}/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap-tpls.js</include>
+                                            <include>${webjars.libs}/sugar/${sugar-version}/sugar-full.development.js</include>
+                                            <include>${webjars.libs}/openlayers/${openlayers-version}/OpenLayers.debug.js</include>
+                                            <include>${thirdPartyLibs}/dygraphs/dygraph-dev.js</include>
+                                            <include>${webjars.libs}/flot/${flotcharts-version}/jquery.flot.js</include>
+                                            <include>${webjars.libs}/flot/${flotcharts-version}/jquery.flot.resize.js</include>
+                                            <include>${webjars.libs}/flot/${flotcharts-version}/jquery.flot.time.js</include>
+                                            <include>${webjars.libs}/flot/${flotcharts-version}/jquery.flot.stack.js</include>
+                                            <include>${thirdPartyLibs}/flot-plugins/jquery.flot.tooltip.js</include>
+                                            <include>${thirdPartyLibs}/flot-plugins/jquery.flot.axislabels.js</include>
 
-<include>${thirdPartyLibs}/checklist-model/checklist-model.js</include>
-<!-- misc -->
-<include>${nwcJavaScriptBase}/openLayersExtensions/WaterCensusToolbar/js/WaterCensusToolbar.js</include>
+                                            <include>${thirdPartyLibs}/checklist-model/checklist-model.js</include>
+                                            <!-- misc -->
+                                            <include>${nwcJavaScriptBase}/openLayersExtensions/WaterCensusToolbar/js/WaterCensusToolbar.js</include>
 
-<!--services -->
-<include>${nwcJavaScriptBase}/services/util.js</include>
-<include>${nwcJavaScriptBase}/services/DataSeriesStore.js</include>
-<include>${nwcJavaScriptBase}/services/SosSources.js</include>
-<include>${nwcJavaScriptBase}/services/SosResponseParser.js</include>
-<include>${nwcJavaScriptBase}/services/watchModule.js</include>
-<include>${nwcJavaScriptBase}/services/sharedStateServices.js</include>
-<include>${nwcJavaScriptBase}/services/waterBudgetPlot.js</include>
-<include>${nwcJavaScriptBase}/services/baseMap.js</include>
-<include>${nwcJavaScriptBase}/services/waterBudgetMap.js</include>
-<include>${nwcJavaScriptBase}/services/aquaticBiologyMap.js</include>
-<include>${nwcJavaScriptBase}/services/Conversion.js</include>
-<include>${nwcJavaScriptBase}/services/waterUsageChart.js</include>
-<!-- controllers -->
-<include>${nwcJavaScriptBase}/controllers/controllerHelpers.js</include>
-<include>${nwcJavaScriptBase}/controllers/waterBudgetControllers.js</include>
-<include>${nwcJavaScriptBase}/controllers/aquaticBiologyControllers.js</include>
-<!-- main app-->
-<include>${nwcJavaScriptBase}/app.js</include>
-
-
+                                            <!--services -->
+                                            <include>${nwcJavaScriptBase}/services/util.js</include>
+                                            <include>${nwcJavaScriptBase}/services/DataSeriesStore.js</include>
+                                            <include>${nwcJavaScriptBase}/services/SosSources.js</include>
+                                            <include>${nwcJavaScriptBase}/services/SosResponseParser.js</include>
+                                            <include>${nwcJavaScriptBase}/services/watchModule.js</include>
+                                            <include>${nwcJavaScriptBase}/services/sharedStateServices.js</include>
+                                            <include>${nwcJavaScriptBase}/services/waterBudgetPlot.js</include>
+                                            <include>${nwcJavaScriptBase}/services/baseMap.js</include>
+                                            <include>${nwcJavaScriptBase}/services/waterBudgetMap.js</include>
+                                            <include>${nwcJavaScriptBase}/services/aquaticBiologyMap.js</include>
+                                            <include>${nwcJavaScriptBase}/services/Conversion.js</include>
+                                            <include>${nwcJavaScriptBase}/services/waterUsageChart.js</include>
+                                            <!-- controllers -->
+                                            <include>${nwcJavaScriptBase}/controllers/controllerHelpers.js</include>
+                                            <include>${nwcJavaScriptBase}/controllers/waterBudgetControllers.js</include>
+                                            <include>${nwcJavaScriptBase}/controllers/aquaticBiologyControllers.js</include>
+                                            <!-- main app-->
+                                            <include>${nwcJavaScriptBase}/app.js</include>
+                                            
                                         </sourceIncludes>
                                 </configuration>
                         </plugin>
