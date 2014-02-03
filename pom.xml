@@ -118,7 +118,7 @@
                                         </goals>
                                         <configuration>
                                             <includeGroupIds>org.webjars</includeGroupIds>
-                                            <outputDirectory>${project.build.directory}/webjars</outputDirectory>
+                                            <outputDirectory>${webjars}</outputDirectory>
                                         </configuration>
                                     </execution>
                                 </executions>
@@ -156,11 +156,12 @@
                                         <webDriverCapabilities>
                                                 <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
                                         </webDriverCapabilities>
-                                        <jsSrcDir>${project.basedir}/src/main/webapp/WEB-INF/client/</jsSrcDir>
-                                        <jsTestSrcDir>${project.basedir}/src/test/javascript/specs</jsTestSrcDir>
+                                        <jsSrcDir>src/main/webapp/client/</jsSrcDir>
+                                        <jsTestSrcDir>src/test/javascript/specs</jsTestSrcDir>
                                         <sourceIncludes>
-                                            <include>${webjars}/**/*.js</include>
-                                            <include>/src/main/webapp/WEB-INF/includes/3rdparty/**/*.js</include>
+                                            <!--<include>${webjars}/**/*.js</include>-->
+                                            <!--<include>src/main/webapp/WEB-INF/includes/3rdparty/**/*.js</include>-->
+                                            <include>**/*.js</include>
                                         </sourceIncludes>
                                 </configuration>
                         </plugin>
@@ -174,7 +175,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>3.2.2.RELEASE</spring.version>
                 <warName>nwc</warName>
-                <webjars>${project.build.directory}/webjars</webjars>
+                <webjars>${project.build.directory}/nwc/client/webjars</webjars>
 	</properties>
 
         <dependencies>
