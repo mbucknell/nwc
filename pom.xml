@@ -118,7 +118,7 @@
                                         </goals>
                                         <configuration>
                                             <includeGroupIds>org.webjars</includeGroupIds>
-                                            <outputDirectory>${webjars}</outputDirectory>
+                                            <outputDirectory>${webjars.base}</outputDirectory>
                                         </configuration>
                                     </execution>
                                 </executions>
@@ -136,6 +136,8 @@
                                 </executions>
                                 <configuration>
                                         <version>1.9.2</version>
+                                        <checkSystemPath>true</checkSystemPath>
+                                        <enforceVersion>true</enforceVersion>
                                 </configuration>
                         </plugin>
                         <plugin>
@@ -156,11 +158,12 @@
                                         <webDriverCapabilities>
                                                 <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
                                         </webDriverCapabilities>
-                                        <jsSrcDir>src/main/webapp/client/</jsSrcDir>
+                                        <jsSrcDir>src/main/webapp/client/nwc</jsSrcDir>
                                         <jsTestSrcDir>src/test/javascript/specs</jsTestSrcDir>
                                         <sourceIncludes>
-                                            <!--<include>${webjars}/**/*.js</include>-->
-                                            <!--<include>src/main/webapp/WEB-INF/includes/3rdparty/**/*.js</include>-->
+                                            <include>${webjars.libs}/angularjs/**/*.js</include>
+                                            <include>${webjars.libs}/**/*.js</include>
+                                            <include>${project.build.directory}/nwc/client/3rdparty/**/*.js</include>-->
                                             <include>**/*.js</include>
                                         </sourceIncludes>
                                 </configuration>
@@ -175,7 +178,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>3.2.2.RELEASE</spring.version>
                 <warName>nwc</warName>
-                <webjars>${project.build.directory}/nwc/client/webjars</webjars>
+                <!-- where to extract webjars to -->
+                <webjars.base>${project.build.directory}/nwc/client/webjars</webjars.base>
+                <!-- webjars base path plus the maven kruft needed to access the actual libraries -->
+                <webjars.libs>${webjars.base}/META-INF/resources/webjars</webjars.libs>
 	</properties>
 
         <dependencies>
