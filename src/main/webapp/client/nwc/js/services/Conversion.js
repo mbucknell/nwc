@@ -1,15 +1,16 @@
 /*global angular*/
 (function () {
     var Conversion = angular.module('nwc.conversion', []);
+    
+    /**
+     * Dimensional analysis for conversion factor as determined by dblodgett
+     * 
+     * Million Gallons      1 000 000           1 m^3               1 acre          1000 mm
+     * _______________  *   _________   *   _______________ *   _____________   *   ________    = 935.395 mm*acres/day
+     *      day             1 million       264.172 gallons     4046.86 m^2           1 m                     
+     */
+    var mgdToMmAcresPerDayConversionFactor = 935.395;
     var mgdToMmAcresPerDay = function (mgd) {
-        /**
-         * Dimensional analysis for conversion factor as determined by dblodgett
-         * 
-         * Million Gallons      1 000 000           1 m^3               1 acre          1000 mm
-         * _______________  *   _________   *   _______________ *   _____________   *   ________    = 935.395 mm*acres/day
-         *      day             1 million       264.172 gallons     4046.86 m^2           1 m                     
-         */
-        var mgdToMmAcresPerDayConversionFactor = 935.395;
         return mgd * mgdToMmAcresPerDayConversionFactor;
     };
     /**
@@ -41,9 +42,9 @@
         return table.map(convertRow);
     };
 
+    //conversion factor per http://en.wikipedia.org/wiki/Acre#Description
+    var squareMilesToAcresConversionFactor = 640.0;
     var squareMilesToAcres = function (squareMiles) {
-        //conversion factor per http://en.wikipedia.org/wiki/Acre#Description
-        var squareMilesToAcresConversionFactor = 640.0;
         return squareMiles * squareMilesToAcresConversionFactor;
     };
     Conversion.service('Convert', [

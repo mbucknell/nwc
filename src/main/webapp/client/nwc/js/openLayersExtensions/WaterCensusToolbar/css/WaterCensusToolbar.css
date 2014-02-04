@@ -13,7 +13,7 @@
 
 
 .olControlWaterCensusToolbar div {
-    background-image: url("../../../../../webjars/openlayers/2.13.1/theme/default/img/editing_tool_bar.png");
+    background-image: url("../../../../../../webjars/openlayers/2.13.1/theme/default/img/editing_tool_bar.png");
     background-repeat: no-repeat;
     margin: 0 0 5px 5px;
     width: 24px;

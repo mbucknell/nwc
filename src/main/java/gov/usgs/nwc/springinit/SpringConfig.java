@@ -77,9 +77,9 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
         /**
          * External Support Resources (Twitter Bootstrap and JQuery)
          */
-        registry.addResourceHandler("/bootstrap/**").addResourceLocations("/WEB-INF/includes/3rdparty/bootstrap/").setCachePeriod(31556926);
-        registry.addResourceHandler("/jquery/**").addResourceLocations("/WEB-INF/includes/3rdparty/jquery/").setCachePeriod(31556926);
-        registry.addResourceHandler("/3rdparty/**").addResourceLocations("/WEB-INF/includes/3rdparty/").setCachePeriod(31556926);
+        registry.addResourceHandler("/bootstrap/**").addResourceLocations("/client/3rdparty/bootstrap/").setCachePeriod(31556926);
+        registry.addResourceHandler("/jquery/**").addResourceLocations("/client/3rdparty/jquery/").setCachePeriod(31556926);
+        registry.addResourceHandler("/3rdparty/**").addResourceLocations("/client/3rdparty/").setCachePeriod(31556926);
         
         /**
          * Our Bootstrap themes (I separate them from the above so that I know exactly what is what and where)
@@ -89,7 +89,7 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
         /**
          * The Client source
          */
-        registry.addResourceHandler("/client/**").addResourceLocations("/WEB-INF/client/").setCachePeriod(31556926);        
+        registry.addResourceHandler("/client/**").addResourceLocations("/client/").setCachePeriod(31556926);        
     }
 	
 	/**
