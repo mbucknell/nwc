@@ -223,22 +223,15 @@
                                             <include>${nwcJavaScriptBase}/openLayersExtensions/WaterCensusToolbar/js/WaterCensusToolbar.js</include>
 
                                             <!--services -->
-                                            <include>${nwcJavaScriptBase}/services/util.js</include>
-                                            <include>${nwcJavaScriptBase}/services/DataSeriesStore.js</include>
-                                            <include>${nwcJavaScriptBase}/services/SosSources.js</include>
-                                            <include>${nwcJavaScriptBase}/services/SosResponseParser.js</include>
-                                            <include>${nwcJavaScriptBase}/services/watchModule.js</include>
-                                            <include>${nwcJavaScriptBase}/services/sharedStateServices.js</include>
-                                            <include>${nwcJavaScriptBase}/services/waterBudgetPlot.js</include>
-                                            <include>${nwcJavaScriptBase}/services/baseMap.js</include>
-                                            <include>${nwcJavaScriptBase}/services/waterBudgetMap.js</include>
-                                            <include>${nwcJavaScriptBase}/services/aquaticBiologyMap.js</include>
-                                            <include>${nwcJavaScriptBase}/services/Conversion.js</include>
-                                            <include>${nwcJavaScriptBase}/services/waterUsageChart.js</include>
+
+                                            <!-- 
+                                                if errors are encountered due to mis-ordering of service script loading, 
+                                                consult this file's history for the previous explicitly-ordered list
+                                            -->
+                                            <include>${nwcJavaScriptBase}/services/*.js</include>
                                             <!-- controllers -->
                                             <include>${nwcJavaScriptBase}/controllers/controllerHelpers.js</include>
-                                            <include>${nwcJavaScriptBase}/controllers/waterBudgetControllers.js</include>
-                                            <include>${nwcJavaScriptBase}/controllers/aquaticBiologyControllers.js</include>
+                                            <include>${nwcJavaScriptBase}/controllers/*.js</include>
                                             <!-- main app-->
                                             <include>${nwcJavaScriptBase}/app.js</include>
                                             
