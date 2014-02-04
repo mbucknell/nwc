@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.ModelAndView; 
 
 @Controller
 
@@ -45,7 +45,6 @@ public class MainController {
 		log.info("MainController.entry() Called");		
 		
 		ModelAndView mv = new ModelAndView("/main", "title", "Dashboard");
-		mv.addObject("version", WebsiteUtils.getApplicationVersion());
 		
 		/**
 		 * Lets get all available workflows

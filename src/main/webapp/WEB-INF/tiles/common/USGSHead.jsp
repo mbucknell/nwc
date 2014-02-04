@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <!-- JQuery -->
-<script type="text/javascript" src="${context}/jquery/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="${context}/webjars/jquery/${jquery-version}/jquery.min.js"></script>
 
 <!-- Twitter Bootstrap -->
 <script type="text/javascript" src="${context}/bootstrap/js/bootstrap.min.js"></script>

@@ -6,6 +6,6 @@
 
 <div class="row" style="margin: 0px;">
 	<div class="col-xs-12 nwc-container">
-		<%@include file="/WEB-INF/client/partials/angularRoot.jsp"%>
+		<%@include file="../../../client/nwc/partials/angularRoot.jsp"%>
 	</div>
 </div>
