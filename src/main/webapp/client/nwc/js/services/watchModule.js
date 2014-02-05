@@ -147,7 +147,7 @@
                 }
             ]);
 //    var statTypes = ["GOF", "GOFMonth", "magnifSeven", "magStat", "flowStat", "durStat", "timStat", "rateStat", "otherStat"];
-    var statTypes = ["GOF", "GOFMonth", "rateStat", "otherStat"];
+    var statTypes = ["rateStat", "otherStat"];
 
     registerWatchFactory('gage',
                         ['$http', 'CommonState', '$log', 'StreamStats',
