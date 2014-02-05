@@ -33,28 +33,48 @@
                         metadata.seriesName + ' (' + metadata.seriesUnits + ')'
                         );
             };
-            var updateDailyHucSeries = function (series) {
+            /*
+                daymet comes in daily
+                eta comes in monthly
+                Presume both series' data arrays are sorted in order of ascending date.
+            
+                Every day-row of every month must have daymet value as-is
+                If a given month has a monthly eta value, you must divide the value 
+                by the number of days in the month and insert the result in 
+                every day-row for that month. If a given month has no eta value,
+                insert NaN in every day-row for that month.
+            */
+            var updateDailyHucSeries = function (nameToSeriesMap) {
                 var dailyTable = [],
                         etaIndex = 0,
+                        //set eta for daily 
                         etaForCurrentMonth = NaN,
-                        dayMetSeries = series.dayMet,
-                        etaSeries = series.eta;
+                        dayMetSeries = nameToSeriesMap.dayMet,
+                        etaSeries = nameToSeriesMap.eta;
 
                 dayMetSeries.data.each(function (dayMetRow) {
                     var dayMetDateStr = dayMetRow[0],
                             dayMetValue = dayMetRow[1],
+                             //extract day-of-month number from the date string
                             dayIndexInString = dayMetDateStr.lastIndexOf('/') + 1,
                             dayMetDay = dayMetDateStr.substr(dayIndexInString, 2);
+                    //if looking at the first day of a month
                     if ('01' === dayMetDay) {
                         var etaRow = etaSeries.data[etaIndex];
+                        //check to see if you've fallen off the end of the eta data
                         if (etaRow) {
                             var etaDateStr = etaRow[0];
                             var etaValue = etaRow[1];
+                            //ensure that there is eta data for this month.
                             if (etaDateStr === dayMetDateStr) {
                                 etaForCurrentMonth = etaValue;
                                 etaIndex++;
                             }
                         }//else we have fallen off the end of the eta array
+// do we need something like this?:
+//                        else {
+//                            etaForCurrentMonth = NaN;
+//                        }
                     }
                     var date = new Date(dayMetDateStr);
                     var averageDailyEta = etaForCurrentMonth / date.daysInMonth();
@@ -65,16 +85,16 @@
                 addSeriesLabel('daily', dayMetSeries.metadata);
                 addSeriesLabel('daily', etaSeries.metadata);
             };
-            var updateMonthlyHucSeries = function (series) {
+            var updateMonthlyHucSeries = function (nameToSeriesMap) {
                 var monthlyTable = [],
                         etaIndex = 0,
                         etaForCurrentMonth = NaN,
-                        dayMetSeries = series.dayMet,
+                        dayMetSeries = nameToSeriesMap.dayMet,
                         monthlyAccumulation = 0,
                         firstMonthOfPeriodOfRecord = true,
                         monthDateStr = '', //stored at the beginning of every month, used later once the totals have been accumulated for the month
                         endOfMonth, //stores the end of the current month of iteration
-                        etaSeries = series.eta;
+                        etaSeries = nameToSeriesMap.eta;
 
 
                 dayMetSeries.data.each(function (dayMetRow) {
@@ -111,155 +131,17 @@
                 addSeriesLabel('monthly', etaSeries.metadata);
             };
             /**
-             * @param {Map<String, DataSeries>} seriesHash A hash of series id to
+             * @param {Map<String, DataSeries>} nameToSeriesMap A map of series id to
              * DataSeries objects
              */
-            self.updateHucSeries = function (seriesHash) {
+            self.updateHucSeries = function (nameToSeriesMap) {
                 self.daily = DataSeries.new();
                 self.monthly = DataSeries.new();
                 
-                updateDailyHucSeries(seriesHash);
-                updateMonthlyHucSeries(seriesHash);
+                updateDailyHucSeries(nameToSeriesMap);
+                updateMonthlyHucSeries(nameToSeriesMap);
             };
-            var getRowDate = function (row) {
-                var date,
-                        dateString,
-                        dateIndexInRow = 0;
-                if (row && row[dateIndexInRow]) {
-                    dateString = row[dateIndexInRow];
-                    date = new Date(dateString);
-                    if (!date.isValid()) {
-                        throw new Error("invalid date specified");
-                    }
-                }
-                else {
-                    throw new Error("empty or undefined row");
-                }
-                return date;
-            };
-            var getRowValuesWithoutDate = function (row) {
-                var startOfValuesIndex = 1;
-                return row.from(startOfValuesIndex);
-            };
-            var nextWaterUseRowIndex = 0;   //this always points at the next row, not the current one
-            var getNextWaterUseRow = function (waterUseSeries) {
-                var nextWaterUseRow = waterUseSeries.data[nextWaterUseRowIndex];
-                nextWaterUseRowIndex++;
-                return nextWaterUseRow;
-            };
-            var addDefaultTimeIncrement = function (date) {
-                return date.advance(SosSources.countyWaterUse.defaultTimeIncrement);
-            };
-            /**
-             * @param {DataSeries} waterUseSeries
-             * @param {DataSeries} existingTimeSeries
-             */
-            self.mergeWaterUseSeriesIntoExistingTimeSeries = function (waterUseSeries, existingTimeSeries) {
-                //first merge data into daily data series
-                //
-                //IMPORTANT: re-init the water use row counter
-                nextWaterUseRowIndex = 0;
 
-                var nextWaterUseRow = getNextWaterUseRow(waterUseSeries);
-                var nextWaterUseDate = getRowDate(nextWaterUseRow);
-                var nextWaterUseValues = getRowValuesWithoutDate(nextWaterUseRow);
-
-                //initially fill an array of length == firstRow.length-1 with NaN's 
-                //this var will be updated throughout the loop
-                var valuesToAppendToRow = nextWaterUseValues.map(function () {
-                    return NaN;
-                });
-                var lastWaterUseValuesHaveBeenJoinedToTimeSeries = false;
-                existingTimeSeries.data = existingTimeSeries.data.map(function (row) {
-                    var rowDate = getRowDate(row);
-                    if (rowDate.is(nextWaterUseDate)) {
-                        //update current values to append to rows
-                        valuesToAppendToRow = nextWaterUseValues.clone();
-
-                        //now update info that will be used on+for next date discovery
-                        nextWaterUseRow = getNextWaterUseRow(waterUseSeries);
-                        //if you have more water use rows
-                        if (nextWaterUseRow) {
-                            nextWaterUseDate = getRowDate(nextWaterUseRow);
-                            nextWaterUseValues = getRowValuesWithoutDate(nextWaterUseRow);
-                        }
-                        //if you have no more water use rows to join in
-                        else {
-                            /*
-                             * if you have joined the last water use row's values into 
-                             * the time series for the duration of the defaultTimeIncrement
-                             * then you need to join NaN values to the rest of the time series.
-                             */
-                            if (lastWaterUseValuesHaveBeenJoinedToTimeSeries) {
-                                /*
-                                 * nextWaterUseValues was set to an array of NaNs when 
-                                 * we started joining the last water use values to the 
-                                 * time series
-                                 */
-                                valuesToAppendToRow = nextWaterUseValues;
-
-                                //now ensure that the outermost comparison of the loop
-                                //is never again satisfied
-                                nextWaterUseDate = undefined;
-                            }
-                            else {
-                                /*
-                                 * after we join the current water use row, there will be 
-                                 * no more water use rows to join. At the moment when we 
-                                 * assign true to this variable, it is not true that the
-                                 * last water use values have all been joined, but by 
-                                 * the next time the variable is read 
-                                 * (the if condition above), all of the last water use
-                                 * values will be joined.
-                                 */
-                                lastWaterUseValuesHaveBeenJoinedToTimeSeries = true;
-
-                                /*
-                                 * Since there are no more rows in the waterUse data,
-                                 * we must derive the date that satisfies this loop's date 
-                                 * comparison by adding the default time increment.
-                                 */
-                                nextWaterUseDate = addDefaultTimeIncrement(rowDate.clone());
-                                /*
-                                 * After we join the last water use row to the 
-                                 * time series for the default duration, we will need 
-                                 * to join an array of NaN water use values to all 
-                                 * subsequent time steps
-                                 */
-                                nextWaterUseValues = valuesToAppendToRow.map(function () {
-                                    return NaN;
-                                });
-                            }
-                        }
-                    }
-                    return row.concat(valuesToAppendToRow);
-                });
-
-                //then merge labels into data series metadata
-                existingTimeSeries.metadata.seriesLabels = existingTimeSeries.metadata.seriesLabels.concat(waterUseSeries.metadata.seriesLabels);
-            };
-            /**
-             * @param {DataSeries} waterUseSeries
-             */
-            self.updateDailyWaterUseSeries = function (waterUseSeries) {
-                self.mergeWaterUseSeriesIntoExistingTimeSeries(waterUseSeries, self.daily);
-            };
-            /**
-             * @param {DataSeries} waterUseSeries
-             */
-            self.updateMonthlyWaterUseSeries = function (waterUseSeries) {
-                self.mergeWaterUseSeriesIntoExistingTimeSeries(waterUseSeries, self.monthly);
-            };
-            /**
-             * @param {DataSeries} waterUseSeries A hash of series id to
-             * DataSeries objects
-             */
-            self.updateWaterUseSeries = function (waterUseSeries) {
-                //these functions assume that the water use time series will always be 
-                //inferior in time length to the existing time series
-                self.updateDailyWaterUseSeries(waterUseSeries);
-                self.updateMonthlyWaterUseSeries(waterUseSeries);
-            };
         }]);
 
 }());
