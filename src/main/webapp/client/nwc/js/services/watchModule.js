@@ -146,6 +146,31 @@
                     };
                 }
             ]);
+//    var statTypes = ["GOF", "GOFMonth", "magnifSeven", "magStat", "flowStat", "durStat", "timStat", "rateStat", "otherStat"];
+    var statTypes = ["GOF", "GOFMonth", "rateStat", "otherStat"];
+
+    registerWatchFactory('gage',
+                        ['$http', 'CommonState', '$log', 'StreamStats',
+                function ($http, CommonState, $log, StreamStats) {
+                    return {
+                        propertyToWatch: 'gage',
+                        watchFunction: function (prop, oldGage, newGage) {
+                            if (oldGage !== newGage && newGage.data) {
+                                //reset
+                                CommonState.gageStatistics = [];
+                                var siteId = newGage.data.STAID;
+                                var callback = function(statistics){
+                                    CommonState.gageStatistics = statistics;
+                                };
+                                StreamStats.getSiteStats(siteId, statTypes, callback);
+                            }
+                            return newGage;
+                        }
+                    };
+                }
+            ]
+    );
+            
         var allWatchServiceNames = watchServiceNames.keys();
         var dependencies = ['StoredState'].concat(allWatchServiceNames);
         

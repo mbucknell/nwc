@@ -69,27 +69,29 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
 		/**
 		 * Our Support Resources
 		 */
-		registry.addResourceHandler("/favicon.ico").addResourceLocations("/WEB-INF/includes/img/favicon.ico").setCachePeriod(31556926);
-        registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/includes/css/").setCachePeriod(31556926);
-        registry.addResourceHandler("/img/**").addResourceLocations("/WEB-INF/includes/img/").setCachePeriod(31556926);
-        registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/includes/js/").setCachePeriod(31556926);
+        final int cachePeriod = Integer.parseInt(env.getProperty("webResourceCachePeriod", "31556926"));
+        registry.addResourceHandler("/favicon.ico").addResourceLocations("/WEB-INF/includes/img/favicon.ico").setCachePeriod(cachePeriod);
+        registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/includes/css/").setCachePeriod(cachePeriod);
+        registry.addResourceHandler("/img/**").addResourceLocations("/WEB-INF/includes/img/").setCachePeriod(cachePeriod);
+        registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/includes/js/", "/js/").setCachePeriod(cachePeriod);
         
         /**
          * External Support Resources (Twitter Bootstrap and JQuery)
          */
-        registry.addResourceHandler("/bootstrap/**").addResourceLocations("/client/3rdparty/bootstrap/").setCachePeriod(31556926);
-        registry.addResourceHandler("/jquery/**").addResourceLocations("/client/3rdparty/jquery/").setCachePeriod(31556926);
-        registry.addResourceHandler("/3rdparty/**").addResourceLocations("/client/3rdparty/").setCachePeriod(31556926);
-        
+        registry.addResourceHandler("/bootstrap/**").addResourceLocations("/client/3rdparty/bootstrap/").setCachePeriod(cachePeriod);
+        registry.addResourceHandler("/jquery/**").addResourceLocations("/client/3rdparty/jquery/").setCachePeriod(cachePeriod);
+        registry.addResourceHandler("/3rdparty/**").addResourceLocations("/client/3rdparty/").setCachePeriod(cachePeriod);
+
         /**
          * Our Bootstrap themes (I separate them from the above so that I know exactly what is what and where)
          */
-        registry.addResourceHandler("/themes/**").addResourceLocations("/WEB-INF/includes/themes/").setCachePeriod(31556926);
+        registry.addResourceHandler("/themes/**").addResourceLocations("/WEB-INF/includes/themes/").setCachePeriod(cachePeriod);
         
         /**
          * The Client source
          */
-        registry.addResourceHandler("/client/**").addResourceLocations("/client/").setCachePeriod(31556926);        
+
+        registry.addResourceHandler("/client/**").addResourceLocations("/client/").setCachePeriod(cachePeriod);        
     }
 	
 	/**

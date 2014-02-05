@@ -24,8 +24,9 @@
                     (function(){
                         window.CONFIG = {};
                         CONFIG.endpoint = {};
-                        CONFIG.endpoint.geoserver = '<%= props.getProperty("nwc.endpoint.geoserver", "http://cida-wiwsc-wsdev.er.usgs.gov:8081/geoserver/")%>';
-                        CONFIG.endpoint.thredds = '<%= props.getProperty("nwc.endpoint.thredds", "http://cida-wiwsc-wsqa.er.usgs.gov:8081/thredds/sos/watersmart/sos/watersmart/")%>';
+                        CONFIG.endpoint.geoserver = '<%= props.getProperty("nwc.endpoint.geoserver", "http://cida-eros-wsdev.er.usgs.gov:8081/geoserver/")%>';
+                        CONFIG.endpoint.thredds = '<%= props.getProperty("nwc.endpoint.thredds", "http://cida-eros-wsqa.er.usgs.gov:8081/thredds/sos/watersmart/sos/watersmart/")%>';
+                        CONFIG.endpoint.wps = '<%= props.getProperty("nwc.endpoint.wps", "http://cida-eros-wsqa.er.usgs.gov:8081/wps")%>';
                         
                     }());
                 </script>
