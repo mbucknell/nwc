@@ -8,6 +8,7 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.sosResponseParser',
     'nwc.controllers.waterBudget',
     'nwc.controllers.aquaticBiology',
+    'nwc.controllers.streamflowStatistics',
     'ui.router',
     'ui.bootstrap',
     'nwc.waterBudgetPlot',
@@ -15,6 +16,7 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.map.base',
     'nwc.map.waterBudget',
     'nwc.map.aquaticBiology',
+    'nwc.map.streamflow',
     'checklist-model'
 ]);
 
@@ -82,6 +84,26 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     url: '/final',
                     templateUrl: partialsBase + 'waterBudget/FinalWaterBudget.html',
                     controller: 'FinalStep'
+                })
+                .state('workflow.streamflowStatistics', {
+                    url: '/streamflow-statistics',
+                    templateUrl: partialsBase + 'streamflowStatistics/streamflowStatisticsTemplate.html',
+                    controller: 'StreamflowStatistics'
+                })
+                .state('workflow.streamflowStatistics.selectGage', {
+                    url: '/select-gage',
+                    templateUrl: partialsBase + 'streamflowStatistics/selectGage.html',
+                    controller: 'SelectGages'
+                })
+                .state('workflow.streamflowStatistics.disambiguateGages', {
+                    url: '/disambiguate-gages',
+                    templateUrl: partialsBase + 'streamflowStatistics/disambiguateGages.html',
+                    controller: 'DisambiguateGages'
+                })
+                .state('workflow.streamflowStatistics.displayGageStatistics', {
+                    url: '/display-gage-statistics',
+                    templateUrl: partialsBase + 'streamflowStatistics/displayGageStatistics.html',
+                    controller: 'DisplayGageStatistics'
                 });
     }
 ]);

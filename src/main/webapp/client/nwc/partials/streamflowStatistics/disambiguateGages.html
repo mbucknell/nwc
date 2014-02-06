@@ -1,0 +1,26 @@
+<h4 ng-bind="name"></h4>
+<p ng-bind="description"></p>
+
+<div class="table-responsive">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Gage ID</th>
+				<th>Gage Name</th>
+                                <th>Drainage Area (km^2)</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="gage in gages" ng-click="affirmGage(gage)">
+				<td ng-bind="gage.data.STAID"></td>
+				<td ng-bind="gage.data.STANAME"></td>
+				<td ng-bind="gage.data.DRAIN_SQKM"></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+
+<nav>
+    <a ui-sref="^.selectGage">Back</a>
+</nav>
