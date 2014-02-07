@@ -83,6 +83,18 @@ describe('DataSeriesStore', function(){
             expect(dss.monthly.data.length).toBe(monthsInDateRange - 1);
         });
     });
-    
+    describe('DataSeriesStore#updateDailyHucSeries', function(){
+        it('should place NaNs in every day-row of a month if no eta data is present for that month', function(){
+            var daysInFirstMonth = dateRangeStart.daysInMonth();
+            var firstMonthsDays = dss.daily.data.to(daysInFirstMonth);
+            etaForADayIsNaN = function(dayRow){
+                var etaForDay = dayRow[etaIndex];
+                return isNaN(etaForDay);
+            };
+            firstMonthsDays.each(function(dayRow, index){
+               expect(etaForADayIsNaN(dayRow)).toBe(true); 
+            });
+        });
+    });
     
 });
