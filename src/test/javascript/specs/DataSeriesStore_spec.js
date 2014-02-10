@@ -30,6 +30,7 @@ describe('DataSeriesStore', function(){
     var etaOffsetInMonths = 1;
     
     var etaDateRangeStart = Date.create(dateRangeStart).addMonths(etaOffsetInMonths);
+    //all tests currently presume only 1 month of eta values.
     var etaData = [
         [formatDate(etaDateRangeStart), etaDefaultValue]
     ];
@@ -94,6 +95,36 @@ describe('DataSeriesStore', function(){
             firstMonthsDays.each(function(dayRow, index){
                expect(etaForADayIsNaN(dayRow)).toBe(true); 
             });
+        });
+        var numDaysInFirstMonthWithEtaData = etaDateRangeStart.daysInMonth();
+        var numDaysBetweenStartOfDataAndStartOfEtaData = etaDateRangeStart.daysSince(dateRangeStart);
+
+        it('if eta data is present for a month, it should divide the monthly eta value ' + 
+            'by the number of days in the month and place that value in each day-row of the month', function(){
+          
+           var expectedDailyEtaValue = etaDefaultValue / numDaysInFirstMonthWithEtaData;
+           var firstMonthOfEtaData = dss.daily.data.from(numDaysBetweenStartOfDataAndStartOfEtaData + 1).to(numDaysInFirstMonthWithEtaData);
+           firstMonthOfEtaData.each(function(dayRow, index){
+              expect(dayRow[etaIndex]).toBe(expectedDailyEtaValue);
+           });
+        });
+        it('if eta data is not present for a month, it should place NaN in the eta field for all of the day-rows of the month', function(){
+            
+            var assertNanEta = function(dayRow, index){
+                expect(isNaN(dayRow[etaIndex])).toBe(true);
+            };
+            
+            //test before the daymet values start
+            var numDaysInMonthBeforeEtaData = dateRangeStart.daysInMonth();
+            var monthBeforeEtaData = dss.daily.data.from(0).to(numDaysInMonthBeforeEtaData);
+            
+            monthBeforeEtaData.each(assertNanEta);
+            //and test after the daymet values end
+            var numDaysInMonthAfterEtaData = Date.create(etaDateRangeStart).addMonths(1).daysInMonth();
+            var numDaysBetweenStartOfDataAndStartOfMonthAfterEtaData = numDaysBetweenStartOfDataAndStartOfEtaData + numDaysInFirstMonthWithEtaData;
+            var monthAfterEtaData = dss.daily.data.from(numDaysBetweenStartOfDataAndStartOfMonthAfterEtaData + 1).to(numDaysInMonthAfterEtaData);
+            monthAfterEtaData.each(assertNanEta);
+            
         });
     });
     

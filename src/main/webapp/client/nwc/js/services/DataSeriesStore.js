@@ -78,10 +78,9 @@
                                 etaIndex++;
                             }
                         }//else we have fallen off the end of the eta array
-// do we need something like this?:
-//                        else {
-//                            etaForCurrentMonth = NaN;
-//                        }
+                        else {
+                            etaForCurrentMonth = NaN;
+                        }
                     }
                     var date = new Date(dayMetDateStr);
                     var averageDailyEta = etaForCurrentMonth / date.daysInMonth();
