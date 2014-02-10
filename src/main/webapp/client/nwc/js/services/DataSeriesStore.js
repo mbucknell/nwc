@@ -85,9 +85,9 @@
                     var date = new Date(dayMetDateStr);
                     var averageDailyEta = etaForCurrentMonth / date.daysInMonth();
                     var rowToAdd = [];
-                    rowToAdd[columnIndices['date']] = date;
-                    rowToAdd[columnIndices['dayMet']] = dayMetValue;
-                    rowToAdd[columnIndices['eta']] = averageDailyEta;
+                    rowToAdd[columnIndices.date] = date;
+                    rowToAdd[columnIndices.dayMet] = dayMetValue;
+                    rowToAdd[columnIndices.eta] = averageDailyEta;
                     dailyTable.push(rowToAdd);
                 });
                 self.daily.data = dailyTable;
@@ -166,9 +166,9 @@
                         }
                         var date = new Date(monthDateStr);
                         var rowToAdd = [];
-                        rowToAdd[columnIndices['date']] = date;
-                        rowToAdd[columnIndices['dayMet']] = monthlyAccumulation;
-                        rowToAdd[columnIndices['eta']] = etaForCurrentMonth;
+                        rowToAdd[columnIndices.date] = date;
+                        rowToAdd[columnIndices.dayMet] = monthlyAccumulation;
+                        rowToAdd[columnIndices.eta] = etaForCurrentMonth;
                         monthlyTable.push(rowToAdd);
                         
                         //reset for the next months
