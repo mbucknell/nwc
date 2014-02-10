@@ -56,7 +56,7 @@ describe('DataSeriesStore', function(){
         dateRangeStart = dateRangeStart;
         dateRangeEnd = dateRangeEnd;
     });    
-    describe('DataSeriesStore#updateMonthlyHucSeries', function(){
+    describe('DataSeriesStore.updateMonthlyHucSeries', function(){
         it('should include the correct number of months', function(){
             expect(dss.monthly.data.length).toBe(monthsInDateRange);
         });
@@ -84,7 +84,7 @@ describe('DataSeriesStore', function(){
             expect(dss.monthly.data.length).toBe(monthsInDateRange - 1);
         });
     });
-    describe('DataSeriesStore#updateDailyHucSeries', function(){
+    describe('DataSeriesStore.updateDailyHucSeries', function(){
         it('should place NaNs in every day-row of a month if no eta data is present for that month', function(){
             var daysInFirstMonth = dateRangeStart.daysInMonth();
             var firstMonthsDays = dss.daily.data.to(daysInFirstMonth);

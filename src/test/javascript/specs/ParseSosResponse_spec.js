@@ -1,4 +1,4 @@
-describe('ParseSosResponse.js', function(){
+describe('SosResponseParser', function(){
     var $injector = angular.injector(['nwc.sosResponseParser']);
     var SosResponseParser = $injector.get('SosResponseParser');
     //testing constants:
