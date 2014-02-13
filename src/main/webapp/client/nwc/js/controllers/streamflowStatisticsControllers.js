@@ -45,7 +45,8 @@
                     url: 'http://cida-eros-wsdev.er.usgs.gov:8081/wps/WebProcessingService',
                     callbacks:{
                         result:{
-                            success: function(){
+                            success: function(response){
+                                console.dir(response);
                                 debugger;
                             }
                         }

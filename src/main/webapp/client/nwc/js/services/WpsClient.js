@@ -142,8 +142,12 @@
                 }
                 return status;
             };
-            var getResultsUrlFromStatusDoc = function(responseDoc){
-                debugger;
+            var getResultsUrlFromStatusDoc = function(statusDoc){
+                var rootElt = statusDoc.children[0];
+                //assume only one Reference element in doc
+                var referenceElt = rootElt.getElementsByTagName('Reference')[0];
+                var resultsUrl = referenceElt.getAttribute('href');
+                return resultsUrl;
             };
            /**
              * Determines if the response contains xml. If it does not, return true.
@@ -240,7 +244,6 @@
             var pollStatus = function (cfg, statusUrl) {
                 OpenLayers.Request.GET({
                     url: statusUrl,
-                    cfg: cfg,
                     success: function (response) {
                         var exceptions = wereThereExceptionsInResponse(response);
                         if (exceptions) {
@@ -252,25 +255,30 @@
                             var status = getStatusFromStatusDoc(responseDoc);
                             switch (status){
                                 case ProcessStatus.FAILED:
+                                    //base case
                                     this.callbacks.status.failure.apply(this, arguments);
                                     break;
                                 case ProcessStatus.SUCCEEDED:
+                                    //base case
                                     this.callbacks.status.success.apply(this, arguments);
                                     var resultsUrl = getResultsUrlFromStatusDoc(responseDoc);
                                     retrieveResults(cfg, resultsUrl);
                                     break;
                                 case ProcessStatus.IN_PROGRESS:
-                                    //asynchronous recursive base case:
                                     if(cfg._statusPollCount < cfg.maxNumberOfPolls){
+                                        //deffered recursive case
                                         cfg._statusPollCount++; 
                                         setTimeout(function(){pollStatus(cfg, statusUrl);}, cfg.statusPollFrequency);
                                     }
                                     else{
+                                        //base case
                                         this.callbacks.status.failure.apply(this, arguments);
                                     }
                                     break;
+                                default:
+                                    //base case
+                                    throw Error("Undefined status code detected");
                             }
-                            
                         }
                     },
                     failure: function (response) {
@@ -280,7 +288,16 @@
                 });
             };
             var retrieveResults = function(cfg, resultsUrl){
-                console.log('placeholder - retrieving results from ' + resultsUrl);
+                 OpenLayers.Request.GET({
+                    url: resultsUrl,
+                    success: function (response) {
+                        this.callbacks.result.success.apply(this, arguments)
+                    },
+                    failure: function(response) {
+                        this.callbacks.result.failure.apply(this, arguments)
+                    },
+                    scope: cfg
+                });
             };
             /**
              * 
