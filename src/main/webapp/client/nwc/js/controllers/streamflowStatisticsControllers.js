@@ -1,6 +1,6 @@
 /*global angular*/
 (function () {
-    var streamflowStatistics = angular.module('nwc.controllers.streamflowStatistics', ['nwc.streamStats']);
+    var streamflowStatistics = angular.module('nwc.controllers.streamflowStatistics', ['nwc.streamStats', 'nwc.wps']);
     streamflowStatistics.controller('StreamflowStatistics', [ '$scope', 'StoredState',
         NWC.ControllerHelpers.WorkflowController(
             {
@@ -12,13 +12,45 @@
             }
         )
     ]);
-    streamflowStatistics.controller('SelectGages', ['$scope', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap',
+    streamflowStatistics.controller('SelectGages', ['$scope', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap', 'wps',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'Select Stream Gage',
                 description: 'Select a gage to retrieve its statistics.'
             },
-            function ($scope, StoredState, CommonState, StoredState, StreamflowMap) {
+            function ($scope, StoredState, CommonState, StoredState, StreamflowMap, wps) {
+                var doc = wps.createWpsExecuteRequestDocument('org.n52.wps.server.r.stats_nwis',
+                    [
+                        {
+                            name: 'sites',
+                            value: '06915000'
+                        }, 
+                        {
+                            name: 'startdate',
+                            value: '1990-01-01'
+                        }, 
+                        {
+                            name: 'enddate',
+                            value: '2000-01-01'
+                        }, 
+                        {
+                            name: 'stats',
+                            value: 'rateStat,otherStat'
+                        }
+                    ],
+                    wps.defaultAsynchronousResponseForm
+                );
+            wps.executeAsynchronousRequest({
+                    wpsRequestDocument : doc,
+                    url: 'http://cida-eros-wsdev.er.usgs.gov:8081/wps/WebProcessingService',
+                    callbacks:{
+                        result:{
+                            success: function(){
+                                debugger;
+                            }
+                        }
+                    }
+                });
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
                 var mapId = 'gageSelectMap';
