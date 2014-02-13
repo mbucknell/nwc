@@ -101,7 +101,7 @@
                 var statusUrl = responseDoc.children[0].getAttribute('statusLocation');
                 return statusUrl;
             };
-            
+
             /**
              * 
              * @param {XMLElement} parentElt
@@ -110,43 +110,43 @@
              */
             var extractExactlyOneElementByTagName = function (parentElt, tagName) {
                 var matchingChildElts = parentElt.getElementsByTagName(tagName);
-                if(1 !== matchingChildElts.length){
+                if (1 !== matchingChildElts.length) {
                     throw Error('unanticipated format -- this node of the document should contain exactly one element of tag name ' + tagName);
                 }
                 return matchingChildElts[0];
             };
-            
+
             //Pseudo-enum
             var ProcessStatus = {
                 SUCCEEDED: 1,
                 FAILED: 2,
                 IN_PROGRESS: 3
             };
-            
-            var getStatusFromStatusDoc = function(statusDoc) {
+
+            var getStatusFromStatusDoc = function (statusDoc) {
                 var parentElt = statusDoc.children[0];
                 var statusElt = extractExactlyOneElementByTagName(parentElt, 'Status');
                 var status = ProcessStatus.IN_PROGRESS;
                 var successful = !!statusElt.getElementsByTagName('ProcessSucceeded').length;
-                if(successful){
+                if (successful) {
                     status = ProcessStatus.SUCCEEDED;
                 }
-                else{
+                else {
                     var failed = !!statusElt.getElementsByTagName('ProcessFailed').length;
-                    if(failed){
+                    if (failed) {
                         status = ProcessStatus.FAILED;
                     }
                 }
                 return status;
             };
-            var getResultsUrlFromStatusDoc = function(statusDoc){
+            var getResultsUrlFromStatusDoc = function (statusDoc) {
                 var rootElt = statusDoc.children[0];
                 //assume only one Reference element in doc
                 var referenceElt = rootElt.getElementsByTagName('Reference')[0];
                 var resultsUrl = referenceElt.getAttribute('href');
                 return resultsUrl;
             };
-           /**
+            /**
              * Determines if the response contains xml. If it does not, return true.
              * If it contains xml, but there are Exception tags, return true.
              * Otherwise, return false.
@@ -211,8 +211,8 @@
                                     ' must be of type function. Got type ' + typeOfSubcatagoryMember);
                         }
                     });
-                //initialize counter for callbacks. 
-                cfg._statusPollCount = 0;
+                    //initialize counter for callbacks. 
+                    cfg._statusPollCount = 0;
                 });
                 return cfg;
             };
@@ -250,7 +250,7 @@
                             var responseDoc = response.responseXML;
                             this.callbacks.status.success.apply(this, arguments);
                             var status = getStatusFromStatusDoc(responseDoc);
-                            switch (status){
+                            switch (status) {
                                 case ProcessStatus.FAILED:
                                     //base case
                                     this.callbacks.status.failure.apply(this, arguments);
@@ -262,12 +262,14 @@
                                     retrieveResults(cfg, resultsUrl);
                                     break;
                                 case ProcessStatus.IN_PROGRESS:
-                                    if(cfg._statusPollCount < cfg.maxNumberOfPolls){
+                                    if (cfg._statusPollCount < cfg.maxNumberOfPolls) {
                                         //deffered recursive case
-                                        cfg._statusPollCount++; 
-                                        setTimeout(function(){pollStatus(cfg, statusUrl);}, cfg.statusPollFrequency);
+                                        cfg._statusPollCount++;
+                                        setTimeout(function () {
+                                            pollStatus(cfg, statusUrl);
+                                        }, cfg.statusPollFrequency);
                                     }
-                                    else{
+                                    else {
                                         //base case
                                         this.callbacks.status.failure.apply(this, arguments);
                                     }
@@ -284,13 +286,13 @@
                     scope: cfg
                 });
             };
-            var retrieveResults = function(cfg, resultsUrl){
-                 OpenLayers.Request.GET({
+            var retrieveResults = function (cfg, resultsUrl) {
+                OpenLayers.Request.GET({
                     url: resultsUrl,
                     success: function (response) {
                         this.callbacks.result.success.apply(this, arguments)
                     },
-                    failure: function(response) {
+                    failure: function (response) {
                         this.callbacks.result.failure.apply(this, arguments)
                     },
                     scope: cfg
