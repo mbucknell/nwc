@@ -212,7 +212,7 @@
                         }
                     });
                     //initialize counter for callbacks. 
-                    cfg._statusPollCount = 0;
+                    cfg.statusPollCount = 0;
                 });
                 return cfg;
             };
@@ -229,7 +229,8 @@
                         else {
                             this.callbacks.start.success.apply(this, arguments);
                             var statusUrl = getStatusUrlFromStartDoc(response.responseXML);
-                            pollStatus(this, statusUrl);
+                            this.statusUrl = statusUrl;
+                            pollStatus(this);
                         }
                     },
                     failure: function (response) {
@@ -238,9 +239,9 @@
                     scope: cfg
                 });
             };
-            var pollStatus = function (cfg, statusUrl) {
+            var pollStatus = function (cfg) {
                 OpenLayers.Request.GET({
-                    url: statusUrl,
+                    url: cfg.statusUrl,
                     success: function (response) {
                         var exceptions = wereThereExceptionsInResponse(response);
                         if (exceptions) {
@@ -259,14 +260,15 @@
                                     //base case
                                     this.callbacks.status.success.apply(this, arguments);
                                     var resultsUrl = getResultsUrlFromStatusDoc(responseDoc);
-                                    retrieveResults(cfg, resultsUrl);
+                                    cfg.resultsUrl = resultsUrl;
+                                    retrieveResults(cfg);
                                     break;
                                 case ProcessStatus.IN_PROGRESS:
-                                    if (cfg._statusPollCount < cfg.maxNumberOfPolls) {
+                                    if (cfg.statusPollCount < cfg.maxNumberOfPolls) {
                                         //deffered recursive case
-                                        cfg._statusPollCount++;
+                                        cfg.statusPollCount++;
                                         setTimeout(function () {
-                                            pollStatus(cfg, statusUrl);
+                                            pollStatus(cfg);
                                         }, cfg.statusPollFrequency);
                                     }
                                     else {
@@ -276,7 +278,7 @@
                                     break;
                                 default:
                                     //base case
-                                    throw Error("Undefined status code detected");
+                                    throw Error("Undefined WPS process status code detected");
                             }
                         }
                     },
@@ -286,9 +288,9 @@
                     scope: cfg
                 });
             };
-            var retrieveResults = function (cfg, resultsUrl) {
+            var retrieveResults = function (cfg) {
                 OpenLayers.Request.GET({
-                    url: resultsUrl,
+                    url: cfg.resultsUrl,
                     success: function (response) {
                         this.callbacks.result.success.apply(this, arguments)
                     },

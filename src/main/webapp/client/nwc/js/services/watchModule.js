@@ -150,8 +150,8 @@
     var statTypes = ["rateStat", "otherStat"];
 
     registerWatchFactory('gage',
-                        ['$http', 'CommonState', '$log', 'StreamStats',
-                function ($http, CommonState, $log, StreamStats) {
+                        ['$http', 'CommonState', '$log', 'StreamStats', '$rootScope',
+                function ($http, CommonState, $log, StreamStats, $rootScope) {
                     return {
                         propertyToWatch: 'gage',
                         watchFunction: function (prop, oldGage, newGage) {
@@ -159,10 +159,13 @@
                                 //reset
                                 CommonState.gageStatistics = [];
                                 var siteId = newGage.data.STAID;
-                                var callback = function(statistics){
-                                    CommonState.gageStatistics = statistics;
+                                var callback = function(statistics, resultsUrl){
+                                    $rootScope.$apply(function(){
+                                        CommonState.gageStatistics = statistics;
+                                        CommonState.gageStatisticsUrl = resultsUrl;
+                                    })
                                 };
-                                StreamStats.getSiteStats(siteId, statTypes, callback);
+                                StreamStats.getSiteStats([siteId], statTypes, callback);
                             }
                             return newGage;
                         }

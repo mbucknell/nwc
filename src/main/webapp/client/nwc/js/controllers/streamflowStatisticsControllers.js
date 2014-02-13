@@ -12,46 +12,13 @@
             }
         )
     ]);
-    streamflowStatistics.controller('SelectGages', ['$scope', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap', 'wps',
+    streamflowStatistics.controller('SelectGages', ['$scope', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'Select Stream Gage',
                 description: 'Select a gage to retrieve its statistics.'
             },
-            function ($scope, StoredState, CommonState, StoredState, StreamflowMap, wps) {
-                var doc = wps.createWpsExecuteRequestDocument('org.n52.wps.server.r.stats_nwis',
-                    [
-                        {
-                            name: 'sites',
-                            value: '06915000'
-                        }, 
-                        {
-                            name: 'startdate',
-                            value: '1990-01-01'
-                        }, 
-                        {
-                            name: 'enddate',
-                            value: '2000-01-01'
-                        }, 
-                        {
-                            name: 'stats',
-                            value: 'rateStat,otherStat'
-                        }
-                    ],
-                    wps.defaultAsynchronousResponseForm
-                );
-            wps.executeAsynchronousRequest({
-                    wpsRequestDocument : doc,
-                    url: 'http://cida-eros-wsdev.er.usgs.gov:8081/wps/WebProcessingService',
-                    callbacks:{
-                        result:{
-                            success: function(response){
-                                console.dir(response);
-                                debugger;
-                            }
-                        }
-                    }
-                });
+            function ($scope, StoredState, CommonState, StoredState, StreamflowMap) {
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
                 var mapId = 'gageSelectMap';

@@ -2,90 +2,81 @@
 (function () {
     var streamStats = angular.module('nwc.streamStats', []);
 
-    var siteStatsXmlTemplate =
-            '<?xml version="1.0" encoding="UTF-8"?>'
-            + '<wps:Execute xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" service="WPS" version="1.0.0" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsExecute_request.xsd">'
-            + '  <ows:Identifier>org.n52.wps.server.r.stats_observed_all</ows:Identifier>'
-            + '  <wps:DataInputs>'
-            + '    <wps:Input>'
-            + '      <ows:Identifier>sites</ows:Identifier>'
-            + '      <wps:Data>'
-            + '        <wps:LiteralData>${sites}</wps:LiteralData>'
-            + '      </wps:Data>'
-            + '    </wps:Input>'
-            + '    <wps:Input>'
-            + '      <ows:Identifier>startdate</ows:Identifier>'
-            + '      <wps:Data>'
-            + '        <wps:LiteralData>1980-10-01</wps:LiteralData>'
-            + '      </wps:Data>'
-            + '    </wps:Input>'
-            + '    <wps:Input>'
-            + '      <ows:Identifier>enddate</ows:Identifier>'
-            + '      <wps:Data>'
-            + '        <wps:LiteralData>2010-09-29</wps:LiteralData>'
-            + '      </wps:Data>'
-            + '    </wps:Input>'
-            + '    <wps:Input>'
-            + '      <ows:Identifier>stats</ows:Identifier>'
-            + '      <wps:Data>'
-            + '        <wps:LiteralData>${stats}</wps:LiteralData>'
-            + '      </wps:Data>'
-            + '    </wps:Input>'
-            + '  </wps:DataInputs>'
-            + '  <wps:ResponseForm>'
-            + '      <wps:RawDataOutput mimeType="text/plain">'
-            + '        <ows:Identifier>output</ows:Identifier>'
-            + '      </wps:RawDataOutput>'
-            + '  </wps:ResponseForm>'
-            + '</wps:Execute>';
-
-    streamStats.service('StreamStats', ['$http', '$log',
-        function ($http, $log) {
+    streamStats.service('StreamStats', ['$http', '$log', 'wps',
+        function ($http, $log, wps) {
             return {
                 /**
                  * 
-                 * @param {String} siteId
+                 * @param {Array<String>} siteIds
                  * @param {Array<String>} statTypes, any of [GOF,GOFMonth,magnifSeven,magStat,flowStat,durStat,timStat,rateStat,otherStat]
-                 * @param {Function} callback accepts one argument, an array of statistics objects
+                 * @param {Function} callback accepts two arguments, an array of statistics objects, and a String URL from which to obtain the results
                  * @returns {HttpPromise}
                  */
-                getSiteStats: function (siteId, statTypes, callback) {
+                getSiteStats: function (siteIds, statTypes, callback) {
                     var statTypesString = statTypes.join(',');
-
-                    //build the request document
-                    //don't modify the template, get a fresh copy
-                    var requestDocument = new String(siteStatsXmlTemplate);
-                    requestDocument = requestDocument.replace("${sites}", siteId);
-                    requestDocument = requestDocument.replace("${stats}", statTypesString);
-                    $http.post(CONFIG.endpoint.wps, requestDocument).then(
-                            function (response) {
-                                var responseText = response.data;
-                                var statArray = responseText.split('\n');
-                                statArray = statArray.map(function (row) {
-                                    return row.split('\t');
-                                });
-                                var namesIndex = 0;
-                                var valuesIndex = 1;
-                                var names = statArray[namesIndex];
-                                var values = statArray[valuesIndex];
-
-                                var statObjectArray = [];
-                                names.each(function (name, nameIndex) {
-                                    statObjectArray.push({
-                                        name: name,
-                                        value: values[nameIndex]//parallel array
+                    var siteIdsString = siteIds.join(',');
+                    var doc = wps.createWpsExecuteRequestDocument('org.n52.wps.server.r.stats_nwis',
+                    [
+                        {
+                            name: 'sites',
+                            value: siteIdsString
+                        }, 
+                        {
+                            name: 'startdate',
+                            value: '1980-10-01'
+                        }, 
+                        {
+                            name: 'enddate',
+                            value: '2010-09-29'
+                        }, 
+                        {
+                            name: 'stats',
+                            value: statTypesString
+                        }
+                    ],
+                    wps.defaultAsynchronousResponseForm
+                );
+                wps.executeAsynchronousRequest({
+                        wpsRequestDocument : doc,
+                        url: CONFIG.endpoint.wps,
+                        maxNumberOfPolls: 15,
+                        callbacks:{
+                            result:{
+                                success: function (response) {
+                                    var responseText = response.responseText;
+                                    var statArray = responseText.split('\n');
+                                    statArray = statArray.map(function (row) {
+                                        return row.split('\t');
                                     });
-                                });
+                                    var namesIndex = 0;
+                                    var valuesIndex = 1;
+                                    var names = statArray[namesIndex];
+                                    var values = statArray[valuesIndex];
 
-                                callback(statObjectArray);
+                                    var statObjectArray = [];
+                                    names.each(function (name, nameIndex) {
+                                        statObjectArray.push({
+                                            name: name,
+                                            value: values[nameIndex]//parallel array
+                                        });
+                                    });
+                                    var resultsUrl = this.resultsUrl;
+                                    callback(statObjectArray, resultsUrl);
+                                }
                             },
-                            function (response) {
-                                alert('There was an error retrieving the statistics. See browser console log for details.');
-                                $log.error(response.data);
-                            });
+                            status:{
+                                failure: function(response){
+                                    if(this.statusPollCount === this.maxNumberOfPolls){
+                                        var numSeconds = ((this.statusPollFrequency * this.statusPollCount)/1000).toFixed(0);
+                                        var message = 'The server timed out after ' + this.statusPollCount + ' attempts (' + numSeconds + ' seconds).';
+                                        console.error(message);
+                                    }
+                                }
+                            }
+                        }
+                    });                
                 }
-            };
+            }
         }
     ]);
-
 }());
