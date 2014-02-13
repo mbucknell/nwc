@@ -83,9 +83,6 @@
             var defaultCallbacks = {
                 success: function () {
                     //this is intentionally a no-op
-                    //@todo remove this demo code
-                    alert('success');
-
                 },
                 failure: function (response) {
                     var errMsg = "An error occurred during an ajax call. Consult the browser's logs for details";
