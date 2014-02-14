@@ -101,15 +101,44 @@
                 var statusUrl = responseDoc.children[0].getAttribute('statusLocation');
                 return statusUrl;
             };
-
+            /**
+             * 
+             * @param {XMLElement} parentElt
+             * @param {String} tagName
+             * @param {String} namespacePrefix  for an element <myNs:myTagName/>, this would be 'myNs'
+             * @param {String} namespaceURI the fully-formed URI as appears in the xmlns attribute value
+             * @returns {HTMLCollection}
+             * @inspiration http://stackoverflow.com/a/2220499
+             */
+            var crossBrowserGetElementsByTagNameNS = function(parentElt, tagName, namespacePrefix, namespaceURI){
+                var elts = parentElt.getElementsByTagName(namespacePrefix + ':' + tagName);
+                if (!elts.length) {
+                    elts = parentElt.getElementsByTagName(tagName);
+                }
+                if (!elts.length) {
+                    elts = parentElt.getElementsByTagNameNS(namespaceURI, 'point');
+                }
+                return elts;
+            };
+            var wpsNamespacePrefix = 'ns';
+            var wpsNamespaceURI = 'http://www.opengis.net/wps/1.0.0';
+            /**
+             * 
+             * @param {XMLElement} parentElt
+             * @param {String} tagName
+             * @returns {HTMLCollection}
+             */
+            getWpsElementsByTagName = function (parentElt, tagName) {
+                return crossBrowserGetElementsByTagNameNS(parentElt, tagName, wpsNamespacePrefix, wpsNamespaceURI);
+            };
             /**
              * 
              * @param {XMLElement} parentElt
              * @param {String} tagName
              * @returns {XMLElement}
              */
-            var extractExactlyOneElementByTagName = function (parentElt, tagName) {
-                var matchingChildElts = parentElt.getElementsByTagName(tagName);
+            var extractExactlyOneWpsElementByTagName = function (parentElt, tagName) {
+                var matchingChildElts = crossBrowserGetElementsByTagNameNS(parentElt, tagName, wpsNamespacePrefix, wpsNamespaceURI);
                 if (1 !== matchingChildElts.length) {
                     throw Error('unanticipated format -- this node of the document should contain exactly one element of tag name ' + tagName);
                 }
@@ -122,30 +151,41 @@
                 FAILED: 2,
                 IN_PROGRESS: 3
             };
-
+            
+            /**
+             * @param {XMLDocument} statusDoc
+             * @returns {ProcessStatus.SUCCEEDED|ProcessStatus.FAILED|ProcessStatus.IN_PROGRESS}
+             */
             var getStatusFromStatusDoc = function (statusDoc) {
+                
                 var parentElt = statusDoc.children[0];
-                var statusElt = extractExactlyOneElementByTagName(parentElt, 'Status');
+                var statusElt = extractExactlyOneWpsElementByTagName(parentElt, 'Status');
                 var status = ProcessStatus.IN_PROGRESS;
-                var successful = !!statusElt.getElementsByTagName('ProcessSucceeded').length;
+                var successful = !!getWpsElementsByTagName(statusElt, 'ProcessSucceeded').length;
                 if (successful) {
                     status = ProcessStatus.SUCCEEDED;
                 }
                 else {
-                    var failed = !!statusElt.getElementsByTagName('ProcessFailed').length;
+                    var failed = !!getWpsElementsByTagName(statusElt, 'ProcessFailed').length;
                     if (failed) {
                         status = ProcessStatus.FAILED;
                     }
                 }
                 return status;
             };
+            
+            /**
+             * @param {XMLDocument} statusDoc
+             * @returns {String} results url
+             */
             var getResultsUrlFromStatusDoc = function (statusDoc) {
                 var rootElt = statusDoc.children[0];
                 //assume only one Reference element in doc
-                var referenceElt = rootElt.getElementsByTagName('Reference')[0];
+                var referenceElt = getWpsElementsByTagName(rootElt, 'Reference')[0];
                 var resultsUrl = referenceElt.getAttribute('href');
                 return resultsUrl;
             };
+            
             /**
              * Determines if the response contains xml. If it does not, return true.
              * If it contains xml, but there are Exception tags, return true.
@@ -158,7 +198,7 @@
                 hasExceptions = false;
                 if (response.responseXML) {
                     var responseDoc = response.responseXML;
-                    var exceptions = responseDoc.getElementsByTagNameNS('*', 'Exception');
+                    var exceptions = getWpsElementsByTagName(responseDoc, 'Exception');
                     var hasExceptions = !!exceptions.length;
                 }
                 else {
@@ -216,7 +256,11 @@
                 });
                 return cfg;
             };
-
+            
+            /**
+             * Starts the Asynchronous WPS Process Execution
+             * @param {type} cfg
+             */
             var start = function (cfg) {
                 OpenLayers.Request.POST({
                     url: cfg.url,
@@ -239,6 +283,11 @@
                     scope: cfg
                 });
             };
+            
+            /**
+             * Polls the status of the asynchronous process begun in start()
+             * @param {type} cfg
+             */
             var pollStatus = function (cfg) {
                 OpenLayers.Request.GET({
                     url: cfg.statusUrl,
@@ -288,6 +337,13 @@
                     scope: cfg
                 });
             };
+            
+            /**
+             * Retrieves the results of the process once pollStatus() determines
+             * that the process has finished successfully
+             * @param {type} cfg
+             * @returns {undefined}
+             */
             var retrieveResults = function (cfg) {
                 OpenLayers.Request.GET({
                     url: cfg.resultsUrl,
@@ -301,6 +357,9 @@
                 });
             };
             /**
+             * Automates the execution, monitoring, and result retrieval of an
+             * asynchronous WPS process. Many callbacks are available to 
+             * customize behavior if desired.
              * 
              * @param config.url - mandatory - a string url for a wps endpoint
              * @param config.wpsRequestDocument - mandatory - a string of a valid wps request document
