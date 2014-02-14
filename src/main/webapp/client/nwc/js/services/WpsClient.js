@@ -1,4 +1,8 @@
 /*global angular,OpenLayers*/
+/**
+ * @requires Openlayers, angular
+ * @todo - convert calls to 'each' to for-loops
+ */
 (function () {
     var wps = angular.module('nwc.wps', []);
     wps.service('wps', [
@@ -8,21 +12,25 @@
             var exports = {};
             exports.defaultResultIdentifier = defaultResultIdentifier;
             exports.defaultStatusIdentifier = defaultStatusIdentifier;
-            exports.defaultSynchronousResponseForm = {
-                'rawDataOutput': {
-                    'identifier': defaultResultIdentifier
-                }
-            };
-            exports.defaultAsynchronousResponseForm = {
-                responseDocument: {
-                    storeExecuteResponse: 'true',
-                    status: 'true',
-                    output: {
-                        asReference: true,
-                        mimeType: 'text/plain',
-                        identifier: defaultResultIdentifier
+            exports.getDefaultSynchronousResponseForm = function () {
+                return {
+                    'rawDataOutput': {
+                        'identifier': defaultResultIdentifier
                     }
-                }
+                };
+            };
+            exports.getDefaultAsynchronousResponseForm = function(){
+                return {
+                    'responseDocument': {
+                        'storeExecuteResponse': 'true',
+                        'status': 'true',
+                        'output': {
+                            'asReference': true,
+                            'mimeType': 'text/plain',
+                            'identifier': defaultResultIdentifier
+                        }
+                    }
+                };
             };
 
             /**
@@ -38,7 +46,7 @@
              * @returns {String} Return the request XML as a string
              */
             exports.createWpsExecuteRequestDocument = function (processId, dataInputs, responseForm) {
-                responseForm = responseForm || exports.defaultSynchronousResponseForm;
+                responseForm = responseForm || exports.getDefaultSynchronousResponseForm();
                 var formattedData = [];
                 for (var i = 0; i < dataInputs.length; i++) {
                     formattedData.push(
@@ -60,21 +68,24 @@
                 return requestDocument;
             };
 
-            var defaultExecuteAsynchronousRequestParams = {
-                status: {
-                    identifier: defaultStatusIdentifier,
-                    pollFrequency: 1000,
-                    maxNumberOfPolls: 5,
-                }
+            exports.getDefaultExecuteAsynchronousRequestParams = function () {
+                return{
+                    status: {
+                        identifier: defaultStatusIdentifier,
+                        pollFrequency: 1000,
+                        maxNumberOfPolls: 5
+                    }
+                };
             };
-            var mandatoryAsynchParams = ['wpsRequestDocument', 'url', 'callbacks'];
-
-            var asyncCallbackCategories = [
-                'start',
+            var mandatoryAsynchParams = ['wpsRequestDocument', 'url', 'result'];
+            
+            var asyncPhases = [
+                'start', 
                 'status',
                 'result'
             ];
-            var asyncCallbackSubcategories = [
+            
+            var asyncCallbackCategories = [
                 'success',
                 'failure'
             ];
@@ -145,11 +156,21 @@
                 return matchingChildElts[0];
             };
 
-            //Pseudo-enum
-            var ProcessStatus = {
-                SUCCEEDED: 1,
-                FAILED: 2,
-                IN_PROGRESS: 3
+            /**
+             * @returns {Object} a pseudo-enum used for determining process status
+             * @example 
+             *  var ProcessStatus = wps.getProcessStatusEnum;
+             *  switch(myStatus){
+             *      case ProcessStatus.SUCCEDED:
+             *  ...
+             *  
+             */
+            exports.getProcessStatusEnum = function(){
+                return {
+                    SUCCEEDED: 1,
+                    FAILED: 2,
+                    IN_PROGRESS: 3
+                };
             };
             
             /**
@@ -157,7 +178,7 @@
              * @returns {ProcessStatus.SUCCEEDED|ProcessStatus.FAILED|ProcessStatus.IN_PROGRESS}
              */
             var getStatusFromStatusDoc = function (statusDoc) {
-                
+                var ProcessStatus = exports.getProcessStatusEnum();
                 var parentElt = statusDoc.children[0];
                 var statusElt = extractExactlyOneWpsElementByTagName(parentElt, 'Status');
                 var status = ProcessStatus.IN_PROGRESS;
@@ -217,49 +238,46 @@
              */
             var validateAndInitializeConfig = function (cfg) {
                 // <parameter validation>
-                mandatoryAsynchParams.each(function (paramName) {
+                for(var i = 0; i < mandatoryAsynchParams.length; i++){
+                    var paramName = mandatoryAsynchParams[i];
                     if (undefined === cfg[paramName]) {
-                        throw Error(paramName + ' must be defined');
+                        throw Error('config.' + paramName + ' must be defined');
                     }
-                });
-                //verify presence of success 
-                var needCallbackMsg = 'config.callbacks.result.success must be defined';
-                if (!cfg.callbacks.result) {
-                    throw Error(needCallbackMsg);
                 }
+                //verify presence of result.success callback
                 if ('undefined' === typeof cfg.callbacks.result.success) {
-                    throw Error(needCallbackMsg);
+                    throw Error('config.result.success must be defined');
                 }
-                //validate callbacks
-                asyncCallbackCategories.each(function (callbackCategory) {
-                    var callbackType = typeof cfg.callbacks[callbackCategory];
-
+                
+                //validate phases and callbacks, initializing callbacks to default if necessary
+                for(var j = 0; j < asyncPhases.length; j++){
+                    var asyncPhaseName = asyncPhases[j];
+                    var phaseType = typeof cfg.callbacks[asyncPhaseName];
                     //initialize if necessary
-                    if ('object' !== callbackType) {
-                        cfg.callbacks[callbackCategory] = {};
+                    if ('object' !== phaseType) {
+                        cfg[asyncPhaseName] = {};
                     }
-                    asyncCallbackSubcategories.each(function (subcategory) {
-                        var subCategoryMember = cfg.callbacks[callbackCategory][subcategory];
-                        var typeOfSubcatagoryMember = typeof subCategoryMember;
+                    for(var k = 0; k < asyncCallbackCategories.length; k++){
+                        var category = asyncCallbackCategories[k];
+                        var categoryMember = cfg[asyncPhaseName][category];
+                        var typeOfCatagoryMember = typeof categoryMember;
 
-                        //if a callback for a subcategory is not defined, set it to the default callback for that subcategory
-                        if ('undefined' === typeOfSubcatagoryMember) {
-                            cfg.callbacks[callbackCategory][subcategory] = defaultCallbacks[subcategory];
+                        //if a callback for a category is not defined, set it to the default callback for that category
+                        if ('undefined' === typeOfCatagoryMember) {
+                            cfg.callbacks[asyncPhaseName][category] = defaultCallbacks[category];
                         }
-                        else if ('function' !== typeOfSubcatagoryMember) {
-                            throw Error('parameter ' + callbackCategory + '.' + subcategory +
-                                    ' must be of type function. Got type ' + typeOfSubcatagoryMember);
+                        else if ('function' !== typeOfCatagoryMember) {
+                            throw Error('parameter config.' + asyncPhaseName + '.' + category +
+                                    ' must be of type function. Got type ' + typeOfCatagoryMember);
                         }
-                    });
-                    //initialize counter for callbacks. 
-                    cfg.statusPollCount = 0;
-                });
+                    }
+                }
                 return cfg;
             };
             
             /**
              * Starts the Asynchronous WPS Process Execution
-             * @param {type} cfg
+             * @param {Object} cfg
              */
             var start = function (cfg) {
                 OpenLayers.Request.POST({
@@ -268,61 +286,60 @@
                     success: function (response) {
                         var exceptions = wereThereExceptionsInResponse(response);
                         if (exceptions) {
-                            this.callbacks.start.failure.apply(this, arguments);
+                            cfg.start.failure(response, cfg);
                         }
                         else {
-                            this.callbacks.start.success.apply(this, arguments);
+                            cfg.start.success(response, cfg);
                             var statusUrl = getStatusUrlFromStartDoc(response.responseXML);
-                            this.statusUrl = statusUrl;
-                            pollStatus(this);
+                            pollStatus(cfg, statusUrl, 0);
                         }
                     },
                     failure: function (response) {
-                        this.callbacks.start.error.apply(this, arguments);
-                    },
-                    scope: cfg
+                        cfg.start.failure(response, cfg);
+                    }
                 });
             };
             
             /**
              * Polls the status of the asynchronous process begun in start()
-             * @param {type} cfg
+             * @param {Object} cfg
+             * @param {String} statusUrl
+             * @param {Integer} pollCount
              */
-            var pollStatus = function (cfg) {
+            var pollStatus = function (cfg, statusUrl, pollCount) {
+                var ProcessStatus = exports.getProcessStatusEnum();
                 OpenLayers.Request.GET({
-                    url: cfg.statusUrl,
+                    url: statusUrl,
                     success: function (response) {
                         var exceptions = wereThereExceptionsInResponse(response);
                         if (exceptions) {
-                            this.callbacks.status.failure.apply(this, arguments);
+                            cfg.status.failure(response, pollCount, ProcessStatus.FAILED, statusUrl, cfg);
                         }
                         else {
                             var responseDoc = response.responseXML;
-                            this.callbacks.status.success.apply(this, arguments);
                             var status = getStatusFromStatusDoc(responseDoc);
                             switch (status) {
                                 case ProcessStatus.FAILED:
                                     //base case
-                                    this.callbacks.status.failure.apply(this, arguments);
+                                    cfg.status.failure(response, pollCount, status, statusUrl, cfg);
                                     break;
                                 case ProcessStatus.SUCCEEDED:
                                     //base case
-                                    this.callbacks.status.success.apply(this, arguments);
+                                    cfg.status.success(response, pollCount, status, statusUrl, cfg);
                                     var resultsUrl = getResultsUrlFromStatusDoc(responseDoc);
-                                    cfg.resultsUrl = resultsUrl;
-                                    retrieveResults(cfg);
+                                    handleResultsUrl(cfg, resultsUrl);
                                     break;
                                 case ProcessStatus.IN_PROGRESS:
-                                    if (cfg.statusPollCount < cfg.maxNumberOfPolls) {
+                                    if (pollCount < cfg.maxNumberOfPolls) {
                                         //deffered recursive case
-                                        cfg.statusPollCount++;
+                                        pollCount++;
                                         setTimeout(function () {
-                                            pollStatus(cfg);
+                                            pollStatus(cfg, statusUrl, status, pollCount);
                                         }, cfg.statusPollFrequency);
                                     }
                                     else {
                                         //base case
-                                        this.callbacks.status.failure.apply(this, arguments);
+                                        cfg.status.failure(response, pollCount, status, statusUrl, cfg);
                                     }
                                     break;
                                 default:
@@ -332,29 +349,29 @@
                         }
                     },
                     failure: function (response) {
-                        this.callbacks.status.error.apply(this, arguments);
-                    },
-                    scope: cfg
+                        cfg.status.failure(response, pollCount, ProcessStatus.FAILED, statusUrl, cfg);
+                    }
                 });
             };
             
             /**
              * Retrieves the results of the process once pollStatus() determines
              * that the process has finished successfully
-             * @param {type} cfg
-             * @returns {undefined}
+             * @param {Object} cfg
+             * @param {String} resultsUrl - the url from which to retrieve the results
              */
-            var retrieveResults = function (cfg) {
-                OpenLayers.Request.GET({
-                    url: cfg.resultsUrl,
-                    success: function (response) {
-                        this.callbacks.result.success.apply(this, arguments)
-                    },
-                    failure: function (response) {
-                        this.callbacks.result.failure.apply(this, arguments)
-                    },
-                    scope: cfg
-                });
+            var handleResultsUrl = function (cfg, resultsUrl) {
+                cfg.result.success(resultsUrl, cfg);
+            };
+            /**
+             * 
+             * @param {Mixed} obj
+             * @returns {Boolean} true if object, false otherwise
+             * @url http://stackoverflow.com/a/8511350
+             */
+            var isObject = function (obj) {
+                //because `(typeof null  === 'object') === true`
+                return null !== obj && 'object' === typeof obj;
             };
             /**
              * Automates the execution, monitoring, and result retrieval of an
@@ -379,14 +396,18 @@
              * @param config.status.success - optional - a function handling for successful status polling
              *  The function is called with the follwing parameters:
              *  {XMLDocument} response - the response document from starting up the request
-             *  {Object} config - the config information passed in from the invocation of executeAsynchronousRequest
+             *  {Integer} pollCount - the number of polls performed. 0-based.
+             *  {Integer} processStatus - a number whose value is defined in wps.getProcessStatusEnum()
              *  {String} statusUrl - the url being polled for the status
+             *  {Object} config - the config information passed in from the invocation of executeAsynchronousRequest
              *  
              * @param config.status.failure - optional - a function handling unsuccessful status polling
              *  The function is called with the follwing parameters:
              *  {XMLDocument} response - the response document from starting up the request
-             *  {Object} config - the config information passed in from the invocation of executeAsynchronousRequest
+             *  {Integer} pollCount - the number of polls performed. 0-based.
+             *  {Integer} processStatus - a number whose value is defined in wps.getProcessStatusEnum()
              *  {String} statusUrl - the url being polled for the status
+             *  {Object} config - the config information passed in from the invocation of executeAsynchronousRequest
              *  
              * @param config.status.identifier - optional - the xml key used to extract the status data from the status document
              * @param config.status.pollFrequency - optional - a Number of milliseconds to wait between polling
@@ -408,8 +429,24 @@
              */
             exports.executeAsynchronousRequest = function (userConfig) {
                 var cfg = {};
-                OpenLayers.Util.extend(cfg, defaultExecuteAsynchronousRequestParams);
-                OpenLayers.Util.extend(cfg, userConfig);
+                //set up default properties in config
+                OpenLayers.Util.extend(cfg, exports.getDefaultExecuteAsynchronousRequestParams());
+                //now selectively copy user properties into cfg
+                for(var userPropertyName in userConfig){
+                    if(userConfig.hasOwnProperty(userPropertyName)){
+                        var propertyValue = userConfig[userPropertyName];
+                        if(isObject(propertyValue)){ 
+                            //initialize object in target, if not already there
+                            cfg[userPropertyName] = cfg[userPropertyName] || {};
+                            //don't blow away all the properties of the existing object, merge the users' properties in on top
+                            OpenLayers.Util.extend(cfg[userPropertyName], userConfig[userPropertyName]);
+                        }
+                        else{
+                            cfg[userPropertyName] = userConfig[userPropertyName];
+                        }
+                    }
+                }
+                
                 cfg = validateAndInitializeConfig(cfg);
                 start(cfg);
             };
