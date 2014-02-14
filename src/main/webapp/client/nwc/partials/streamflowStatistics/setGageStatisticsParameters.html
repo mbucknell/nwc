@@ -1,0 +1,34 @@
+
+<h4 ng-bind="name"></h4>
+<p ng-bind="description"></p>
+
+
+<div class="row">
+    <dl>
+        <dt>Gage ID</dt>
+        <dd ng-bind="StoredState.gage.data.STAID"></dd>
+        <dt>Gage Name</dt>
+        <dd ng-bind="StoredState.gage.data.STANAME"></dd>
+        <dt>Drainage Area (km^2)</dt>
+        <dd ng-bind="StoredState.gage.data.DRAIN_SQKM"></dd>
+    </dl>
+</div>
+
+<div class="row">
+        <div class="col-md-6">
+            <p class="input-group">
+              <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="gageStatisticsParameters.startDate" min="minDate" max="maxDate" ng-required="true" close-text="Close" />
+              <span class="input-group-btn">
+                <button class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <p class="input-group">
+              <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="gageStatisticsParameters.endDate" min="minDate" max="maxDate"   ng-required="true" close-text="Close" />
+              <span class="input-group-btn">
+                <button class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+        </div>
+    </div>

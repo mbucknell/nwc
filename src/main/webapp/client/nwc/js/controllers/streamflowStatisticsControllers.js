@@ -40,11 +40,39 @@
                 $scope.gages = CommonState.ambiguousGages;
                 $scope.affirmGage = function(gage){
                     StoredState.gage = gage;
-                    $state.go('^.displayGageStatistics');
+                    $state.go('^.setGageStatisticsParameters');
                 };
             }
         )
     ]);
+    
+    var minStatDate = new Date('1980-10-01');
+    var maxStatDate = new Date('2010-09-29');
+    streamflowStatistics.controller('SetGageStatisticsParameters', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state',
+        NWC.ControllerHelpers.StepController(
+            {
+                name: 'Select Gage Statistics Parameters',
+                description: 'Select a subset of the time series for which you would like to calculate statistics.'
+            },
+            function ($scope, StoredState, CommonState, StoredState, $state) {
+                $scope.CommonState = CommonState;
+                $scope.StoredState = StoredState;
+                CommonState.gageStatisticsParameters = CommonState.gageStatisticsParameters || {};
+                var gageStatisticsParameters = CommonState.gageStatisticsParameters;
+                $scope.gageStatisticsParameters = gageStatisticsParameters;
+                gageStatisticsParameters.statGroups = gageStatisticsParameters.statGroups || [];
+                
+                $scope.dateFormat = 'yyyy-MM-DD';
+                $scope.minDate = minStatDate;
+                $scope.maxDate = maxStatDate;
+                
+                if(!StoredState.gage){
+                    $state.go('^.selectGage');
+                }
+            }
+        )
+    ]);
+    
     streamflowStatistics.controller('DisplayGageStatistics', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats',
         NWC.ControllerHelpers.StepController(
             {
@@ -61,5 +89,5 @@
             }
         )
     ]);
-    
+
 }());
