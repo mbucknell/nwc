@@ -60,13 +60,13 @@
                 return requestDocument;
             };
 
-            var defaultExecuteAsynchronousRequestParams =
-                    {
-                        statusIdentifier: defaultStatusIdentifier,
-                        statusPollFrequency: 1000,
-                        maxNumberOfPolls: 5,
-                        resultIdentifier: defaultResultIdentifier
-                    };
+            var defaultExecuteAsynchronousRequestParams = {
+                status: {
+                    identifier: defaultStatusIdentifier,
+                    pollFrequency: 1000,
+                    maxNumberOfPolls: 5,
+                }
+            };
             var mandatoryAsynchParams = ['wpsRequestDocument', 'url', 'callbacks'];
 
             var asyncCallbackCategories = [
@@ -367,18 +367,37 @@
              * note that all callbacks are called with a single argument - a response object
              * all callbacks are called with config as the context. In other words, all properties present in config
              * are accessible to the callback through 'this'.
-             * @param config.callbacks.start.success - optional - a function handling successful initiation of a request
-             * @param config.callbacks.start.failure - optional - a function handling successful initiation of a request
+             * @param config.start.success - optional - a function handling successful initiation of a request.
+             *  The function is called with the follwing parameters:
+             *  {XMLDocument} response - the response document from starting up the request
+             *  {Object} config - the config information passed in from the invocation of executeAsynchronousRequest
+             * @param config.start.failure - optional - a function handling successful initiation of a request
+             *  The function is called with the follwing parameters:
+             *  {XMLDocument} response - the response document from starting up the request
+             *  {Object} config - the config information passed in from the invocation of executeAsynchronousRequest
+             *  
+             * @param config.status.success - optional - a function handling for successful status polling
+             *  The function is called with the follwing parameters:
+             *  {XMLDocument} response - the response document from starting up the request
+             *  {Object} config - the config information passed in from the invocation of executeAsynchronousRequest
+             *  {String} statusUrl - the url being polled for the status
+             *  
+             * @param config.status.failure - optional - a function handling unsuccessful status polling
+             *  The function is called with the follwing parameters:
+             *  {XMLDocument} response - the response document from starting up the request
+             *  {Object} config - the config information passed in from the invocation of executeAsynchronousRequest
+             *  {String} statusUrl - the url being polled for the status
+             *  
+             * @param config.status.identifier - optional - the xml key used to extract the status data from the status document
+             * @param config.status.pollFrequency - optional - a Number of milliseconds to wait between polling
+             * @param config.status.maxNumberOfPolls - optional - an Integer number of polls to perform before the status failure
              * 
-             * @param config.callbacks.status.success - optional - a function handling for successful status polling
-             * @param config.callbacks.status.failure - optional - a function hanlding unsuccessful status polling
-             * @param config.statusIdentifier - optional - the xml key used to extract the status data from the status document
-             * @param config.statusPollFrequency - optional - a Number of milliseconds to wait between polling
-             * @param config.maxNumberOfPolls - optional - an Integer number of polls to perform before the status failure
-             * 
-             * @param config.callbacks.result.success - mandatory - a function handling successful result retrieval
-             * @param config.callbacks.result.failure - optional - a function handling unsuccessful result retrieval
-             * @param config.resultIdentifier - the xml key used to extract the result data from the results document
+             * @param config.result.success - mandatory - a function handling result retrieval
+             *  The function is called with the follwing parameters:
+             *  {String} resultsUrl - the url from which the results can be retrieved
+             *  {Object} config - the config information passed in from the invocation of executeAsynchronousRequest
+             *  Note that you cannot specify config.result.failure since any failure would have already been handled by 
+             *  config.status.failure or config.start.failure
              *
              * This function:
              *  sends an asynchronous wps execute request
