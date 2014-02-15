@@ -34,43 +34,56 @@
                             value: statTypesString
                         }
                     ],
-                    wps.defaultAsynchronousResponseForm
+                    wps.getDefaultAsynchronousResponseForm()
                 );
+                var resultsHaveBeenObtained = function (response, resultsUrl) {
+                    var responseText = response.data;
+                    var statArray = responseText.split('\n');
+                    statArray = statArray.map(function (row) {
+                        return row.split('\t');
+                    });
+                    var namesIndex = 0;
+                    var valuesIndex = 1;
+                    var names = statArray[namesIndex];
+                    var values = statArray[valuesIndex];
+
+                    var statObjectArray = [];
+                    names.each(function (name, nameIndex) {
+                        statObjectArray.push({
+                            name: name,
+                            value: values[nameIndex]//parallel array
+                        });
+                    });
+                    callback(statObjectArray, resultsUrl);
+                };
+                    var resultsCouldNotBeObtained = function (response) {
+                    var msg = 'Process Completed, but there was an error retrieving the results';
+                    $log.error(msg);
+                    alert(msg);
+                };
+        
                 wps.executeAsynchronousRequest({
                         wpsRequestDocument : doc,
                         url: CONFIG.endpoint.wps,
-                        maxNumberOfPolls: 15,
-                        callbacks:{
-                            result:{
-                                success: function (response) {
-                                    var responseText = response.responseText;
-                                    var statArray = responseText.split('\n');
-                                    statArray = statArray.map(function (row) {
-                                        return row.split('\t');
-                                    });
-                                    var namesIndex = 0;
-                                    var valuesIndex = 1;
-                                    var names = statArray[namesIndex];
-                                    var values = statArray[valuesIndex];
-
-                                    var statObjectArray = [];
-                                    names.each(function (name, nameIndex) {
-                                        statObjectArray.push({
-                                            name: name,
-                                            value: values[nameIndex]//parallel array
-                                        });
-                                    });
-                                    var resultsUrl = this.resultsUrl;
-                                    callback(statObjectArray, resultsUrl);
-                                }
-                            },
-                            status:{
-                                failure: function(response){
-                                    if(this.statusPollCount === this.maxNumberOfPolls){
-                                        var numSeconds = ((this.statusPollFrequency * this.statusPollCount)/1000).toFixed(0);
-                                        var message = 'The server timed out after ' + this.statusPollCount + ' attempts (' + numSeconds + ' seconds).';
-                                        console.error(message);
-                                    }
+                        result:{
+                            success: function (resultsUrl, config) {
+                                //now that we have the results url, ajax-get the results.
+                                $http.get(resultsUrl).then(
+                                    function(response){
+                                        resultsHaveBeenObtained(response, resultsUrl);
+                                    },
+                                    resultsCouldNotBeObtained
+                                );
+                            }
+                        },
+                        status:{
+                            maxNumberOfPolls: 60,
+                            failure: function(response, pollCount, processStatus, statusUrl, config){
+                                if(pollCount === config.status.maxNumberOfPolls){
+                                    var numSeconds = ((config.status.pollFrequency * pollCount)/1000).toFixed(0);
+                                    var message = 'The server timed out after ' + pollCount + ' attempts (' + numSeconds + ' seconds).';
+                                    $log.error(message);
+                                    alert(message);
                                 }
                             }
                         }
