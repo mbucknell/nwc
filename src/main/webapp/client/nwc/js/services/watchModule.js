@@ -160,10 +160,8 @@
                                 CommonState.gageStatistics = [];
                                 var siteId = newGage.data.STAID;
                                 var callback = function(statistics, resultsUrl){
-                                    $rootScope.$apply(function(){
-                                        CommonState.gageStatistics = statistics;
-                                        CommonState.gageStatisticsUrl = resultsUrl;
-                                    })
+                                    CommonState.gageStatistics = statistics;
+                                    CommonState.gageStatisticsUrl = resultsUrl;
                                 };
                                 StreamStats.getSiteStats([siteId], statTypes, callback);
                             }
