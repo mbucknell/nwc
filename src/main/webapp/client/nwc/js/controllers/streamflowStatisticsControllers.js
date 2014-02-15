@@ -1,6 +1,6 @@
 /*global angular*/
 (function () {
-    var streamflowStatistics = angular.module('nwc.controllers.streamflowStatistics', ['nwc.streamStats']);
+    var streamflowStatistics = angular.module('nwc.controllers.streamflowStatistics', ['nwc.streamStats', 'nwc.wps']);
     streamflowStatistics.controller('StreamflowStatistics', [ '$scope', 'StoredState',
         NWC.ControllerHelpers.WorkflowController(
             {

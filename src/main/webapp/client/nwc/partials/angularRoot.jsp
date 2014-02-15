@@ -55,6 +55,7 @@
 <script type="text/javascript" src="../../client/nwc/js/services/Conversion.js"></script>
 <script type="text/javascript" src="../../client/nwc/js/services/waterUsageChart.js"></script>
 <script type="text/javascript" src="../../client/nwc/js/services/streamStats.js"></script>
+<script type="text/javascript" src="../../client/nwc/js/services/WpsClient.js"></script>
 
 <!-- controllers -->
 <script type="text/javascript" src="../../client/nwc/js/controllers/controllerHelpers.js"></script>
