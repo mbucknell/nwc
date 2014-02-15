@@ -39,9 +39,9 @@
              * @param {Array} dataInputs - array of objects {'name' : xxx, 'value' : xxx}
              * @param {Object} responseForm optional object describing response format- for example:
              {
-             'rawDataOutput': {
-             'identifier': 'result'
-             }
+                'rawDataOutput': {
+                    'identifier': 'result'
+                    }
              }
              * @returns {String} Return the request XML as a string
              */
@@ -95,6 +95,10 @@
                 success: function () {
                     //this is intentionally a no-op
                 },
+                /**
+                 * all failure callbacks are called with response as the first argument
+                 * @param {XMLDocument} response
+                 */
                 failure: function (response) {
                     var errMsg = "An error occurred during an ajax call. Consult the browser's logs for details";
                     alert(errMsg);
@@ -245,14 +249,14 @@
                     }
                 }
                 //verify presence of result.success callback
-                if ('undefined' === typeof cfg.callbacks.result.success) {
+                if ('undefined' === typeof cfg.result.success) {
                     throw Error('config.result.success must be defined');
                 }
                 
                 //validate phases and callbacks, initializing callbacks to default if necessary
                 for(var j = 0; j < asyncPhases.length; j++){
                     var asyncPhaseName = asyncPhases[j];
-                    var phaseType = typeof cfg.callbacks[asyncPhaseName];
+                    var phaseType = typeof cfg[asyncPhaseName];
                     //initialize if necessary
                     if ('object' !== phaseType) {
                         cfg[asyncPhaseName] = {};
@@ -264,7 +268,7 @@
 
                         //if a callback for a category is not defined, set it to the default callback for that category
                         if ('undefined' === typeOfCatagoryMember) {
-                            cfg.callbacks[asyncPhaseName][category] = defaultCallbacks[category];
+                            cfg[asyncPhaseName][category] = defaultCallbacks[category];
                         }
                         else if ('function' !== typeOfCatagoryMember) {
                             throw Error('parameter config.' + asyncPhaseName + '.' + category +
@@ -330,12 +334,12 @@
                                     handleResultsUrl(cfg, resultsUrl);
                                     break;
                                 case ProcessStatus.IN_PROGRESS:
-                                    if (pollCount < cfg.maxNumberOfPolls) {
+                                    if (pollCount < cfg.status.maxNumberOfPolls) {
                                         //deffered recursive case
                                         pollCount++;
                                         setTimeout(function () {
-                                            pollStatus(cfg, statusUrl, status, pollCount);
-                                        }, cfg.statusPollFrequency);
+                                            pollStatus(cfg, statusUrl, pollCount);
+                                        }, cfg.status.pollFrequency);
                                     }
                                     else {
                                         //base case
@@ -374,16 +378,13 @@
                 return null !== obj && 'object' === typeof obj;
             };
             /**
-             * Automates the execution, monitoring, and result retrieval of an
-             * asynchronous WPS process. Many callbacks are available to 
-             * customize behavior if desired.
+             * Automates the execution and monitoring of an asynchronous WPS 
+             * process. Many callbacks are available to customize behavior 
+             * if desired.
              * 
              * @param config.url - mandatory - a string url for a wps endpoint
              * @param config.wpsRequestDocument - mandatory - a string of a valid wps request document
              * 
-             * note that all callbacks are called with a single argument - a response object
-             * all callbacks are called with config as the context. In other words, all properties present in config
-             * are accessible to the callback through 'this'.
              * @param config.start.success - optional - a function handling successful initiation of a request.
              *  The function is called with the follwing parameters:
              *  {XMLDocument} response - the response document from starting up the request
@@ -420,12 +421,6 @@
              *  Note that you cannot specify config.result.failure since any failure would have already been handled by 
              *  config.status.failure or config.start.failure
              *
-             * This function:
-             *  sends an asynchronous wps execute request
-             *  extracts the status url out of the result document
-             *  polls the status url until the proccess is complete
-             *  retrieves the actual result once processing is complete
-             *  
              */
             exports.executeAsynchronousRequest = function (userConfig) {
                 var cfg = {};
