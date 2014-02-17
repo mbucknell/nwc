@@ -46,8 +46,8 @@
         )
     ]);
     
-    var minStatDate = new Date('1980-10-01');
-    var maxStatDate = new Date('2010-09-29');
+    var minStatDate = new Date('1980/10/01');
+    var maxStatDate = new Date('2010/09/29');
     streamflowStatistics.controller('SetGageStatisticsParameters', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state',
         NWC.ControllerHelpers.StepController(
             {
@@ -55,9 +55,10 @@
                 description: 'Select a subset of the time series for which you would like to calculate statistics.'
             },
             function ($scope, StoredState, CommonState, StoredState, $state) {
-//                if (!StoredState.gage) {
-//                    $state.go('^.selectGage');
-//                }
+                CommonState.streamflowStatsParamsReady = false;
+                if (!StoredState.gage) {
+                    $state.go('^.selectGage');
+                }
                 
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
@@ -73,19 +74,22 @@
                 $scope.maxDate = maxStatDate;
                 
                 $scope.openMinDatePicker = function($event){
-                    open($event, 'minDateOpened');
+                    openDatePickerPopup($event, 'minDateOpened');
                 };
                 $scope.openMaxDatePicker = function($event){
-                    open($event, 'maxDateOpened');
+                    openDatePickerPopup($event, 'maxDateOpened');
                 };
                 
-                var open = function ($event, openedPropertyName) {
+                var openDatePickerPopup = function ($event, openedPropertyName) {
                     $event.preventDefault();
                     $event.stopPropagation();
 
                     $scope[openedPropertyName] = true;
                 };
-
+                $scope.calculateStats = function(){
+                  StoredState.streamflowStatsParamsReady = true;
+                  $state.go('^.displayGageStatistics');
+                };
             }
         )
     ]);

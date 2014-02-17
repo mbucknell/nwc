@@ -149,23 +149,27 @@
 //    var statTypes = ["GOF", "GOFMonth", "magnifSeven", "magStat", "flowStat", "durStat", "timStat", "rateStat", "otherStat"];
     var statTypes = ["rateStat", "otherStat"];
 
-    registerWatchFactory('gage',
-                        ['$http', 'CommonState', '$log', 'StreamStats', '$rootScope',
-                function ($http, CommonState, $log, StreamStats, $rootScope) {
+    registerWatchFactory('streamflowStatsParamsReady',
+                        ['$http', 'CommonState', '$log', 'StreamStats', '$rootScope', 'StoredState',
+                function ($http, CommonState, $log, StreamStats, $rootScope, StoredState) {
                     return {
-                        propertyToWatch: 'gage',
-                        watchFunction: function (prop, oldGage, newGage) {
-                            if (oldGage !== newGage && newGage.data) {
+                        propertyToWatch: 'streamflowStatsParamsReady',
+                        watchFunction: function (prop, oldValue, streamFlowStatsParamsReady) {
+                            if (streamFlowStatsParamsReady) {
                                 //reset
                                 CommonState.gageStatistics = [];
+                                
+                                var newGage = StoredState.gage;
+                                var startDate = CommonState.gageStatisticsParameters.startDate;
+                                var endDate = CommonState.gageStatisticsParameters.endDate;
                                 var siteId = newGage.data.STAID;
                                 var callback = function(statistics, resultsUrl){
                                     CommonState.gageStatistics = statistics;
                                     CommonState.gageStatisticsUrl = resultsUrl;
                                 };
-                                StreamStats.getSiteStats([siteId], statTypes, callback);
+                                StreamStats.getSiteStats([siteId], statTypes, startDate, endDate, callback);
                             }
-                            return newGage;
+                            return streamFlowStatsParamsReady;
                         }
                     };
                 }
