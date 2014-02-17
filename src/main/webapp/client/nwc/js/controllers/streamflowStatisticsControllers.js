@@ -71,7 +71,8 @@
                 $scope.dateFormat = 'yyyy-MM-dd';
                 $scope.minDate = minStatDate;
                 $scope.maxDate = maxStatDate;
-                
+                $scope.maxDateForTheMinDateField = gageStatisticsParameters.endDate;
+                $scope.minDateForTheMaxDateField = gageStatisticsParameters.startDate;
                 $scope.openMinDatePicker = function($event){
                     open($event, 'minDateOpened');
                 };

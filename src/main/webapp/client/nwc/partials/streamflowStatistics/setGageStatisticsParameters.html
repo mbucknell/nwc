@@ -23,8 +23,7 @@
 
             <p class="input-group">
 
-              <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="gageStatisticsParameters.startDate" min="minDate" max="maxDate" ng-required="true" close-text="Close" is-open="minDateOpened"/>
-              <!--<input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="gageStatisticsParameters.startDate" ng-required="true" close-text="Close" is-open="minDateOpened"/>-->
+              <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="gageStatisticsParameters.startDate" min="minDate" max="gageStatisticsParameters.endDate" ng-required="true" close-text="Close" is-open="minDateOpened"/>
               <span class="input-group-btn">
                 <button class="btn btn-default" ng-click="openMinDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>
@@ -34,7 +33,7 @@
                             <label>To:</label>
 
             <p class="input-group">
-              <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="gageStatisticsParameters.endDate" min="minDate" max="maxDate"   ng-required="true" close-text="Close" is-open="maxDateOpened"/>
+              <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="gageStatisticsParameters.endDate" min="gageStatisticsParameters.startDate" max="maxDate"   ng-required="true" close-text="Close" is-open="maxDateOpened"/>
               <span class="input-group-btn">
                 <button class="btn btn-default" ng-click="openMaxDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>
@@ -42,7 +41,6 @@
         </div>
         <div class="col-md-2"></div>
     </div>
-    
     <div class="text-center">
         <button ng-disabled="statsParams.$invalid" class="btn btn-success" ui-sref="^.displayGageStatistics">Calculate Statistics</button>
     </div>
