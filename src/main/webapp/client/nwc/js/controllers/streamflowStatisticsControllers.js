@@ -55,20 +55,37 @@
                 description: 'Select a subset of the time series for which you would like to calculate statistics.'
             },
             function ($scope, StoredState, CommonState, StoredState, $state) {
+//                if (!StoredState.gage) {
+//                    $state.go('^.selectGage');
+//                }
+                
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
                 CommonState.gageStatisticsParameters = CommonState.gageStatisticsParameters || {};
                 var gageStatisticsParameters = CommonState.gageStatisticsParameters;
                 $scope.gageStatisticsParameters = gageStatisticsParameters;
                 gageStatisticsParameters.statGroups = gageStatisticsParameters.statGroups || [];
-                
-                $scope.dateFormat = 'yyyy-MM-DD';
+                gageStatisticsParameters.startDate = Date.create(minStatDate);//clone
+                gageStatisticsParameters.endDate = Date.create(maxStatDate);//clone
+
+                $scope.dateFormat = 'yyyy-MM-dd';
                 $scope.minDate = minStatDate;
                 $scope.maxDate = maxStatDate;
                 
-                if(!StoredState.gage){
-                    $state.go('^.selectGage');
-                }
+                $scope.openMinDatePicker = function($event){
+                    open($event, 'minDateOpened');
+                };
+                $scope.openMaxDatePicker = function($event){
+                    open($event, 'maxDateOpened');
+                };
+                
+                var open = function ($event, openedPropertyName) {
+                    $event.preventDefault();
+                    $event.stopPropagation();
+
+                    $scope[openedPropertyName] = true;
+                };
+
             }
         )
     ]);
