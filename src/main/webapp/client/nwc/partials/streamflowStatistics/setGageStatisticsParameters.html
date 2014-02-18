@@ -40,8 +40,32 @@
             </p>
         </div>
         <div class="col-md-2"></div>
-    </div>
+</div>
+<div class="row">
+        <h4 class="text-center">Statistic Groups</h4>
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Select ?</th>
+            <th>Statistic Group Name</th>
+        </tr>
+    </thead>
+    <tbody ng-repeat="statGroup in streamStatsOptions">
+        <tr>
+            <td class="xs-col-2">
+                <input type="checkbox" checklist-model="StoredState.gageStatisticsParameters.statGroups" checklist-value="statGroup"/>
+            </td>
+            <td class="xs-col-4" ng-bind="statGroup"></td>
+        </tr>
+    </tbody>
+</table>
+</div>
+    
     <div class="text-center">
         <button ng-disabled="statsParams.$invalid" class="btn btn-success" ng-click="calculateStats()">Calculate Statistics</button>
     </div>
 </form>
+
+<nav>
+        <button class="btn" ui-sref="^.selectGage"><span class="glyphicon glyphicon-arrow-left"> </span>Back</button>
+</nav>

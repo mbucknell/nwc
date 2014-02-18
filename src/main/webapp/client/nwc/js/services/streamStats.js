@@ -5,6 +5,9 @@
     streamStats.service('StreamStats', ['$http', '$log', 'wps',
         function ($http, $log, wps) {
             return {
+                getAllStatTypes: function(){
+                    return ["GOF", "GOFMonth", "magnifSeven", "magStat", "flowStat", "durStat", "timStat", "rateStat", "otherStat"];
+                },
                 /**
                  * 
                  * @param {Array<String>} siteIds

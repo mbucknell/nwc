@@ -240,7 +240,7 @@
     ]);
 
 
-//    var statTypes = ["GOF", "GOFMonth", "magnifSeven", "magStat", "flowStat", "durStat", "timStat", "rateStat", "otherStat"];
+    
     var statTypes = ["rateStat", "otherStat"];
 
     registerWatchFactory('streamflowStatsParamsReady',
@@ -254,13 +254,14 @@
                                 CommonState.gageStatistics = [];
                                 
                                 var newGage = StoredState.gage;
-                                var startDate = CommonState.gageStatisticsParameters.startDate;
-                                var endDate = CommonState.gageStatisticsParameters.endDate;
+                                var startDate = StoredState.gageStatisticsParameters.startDate;
+                                var endDate = StoredState.gageStatisticsParameters.endDate;
                                 var siteId = newGage.data.STAID;
                                 var callback = function(statistics, resultsUrl){
                                     CommonState.gageStatistics = statistics;
                                     CommonState.gageStatisticsUrl = resultsUrl;
                                 };
+                                var statTypes  = StoredState.gageStatisticsParameters.statGroups;
                                 StreamStats.getSiteStats([siteId], statTypes, startDate, endDate, callback);
                             }
                             return streamFlowStatsParamsReady;
