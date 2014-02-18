@@ -1,66 +1,66 @@
 /*global angular*/
 (function () {
     var rdbParser = angular.module('nwc.rdbParser', []);
-    var RdbTable = function(){
+    var RdbTable = function () {
         var self = this === window ? {} : this;
         //a map of column name to row number
-        self.columnHeaders = []; 
+        self.columnHeaders = [];
         self.data = [];//row-oriented
-        self.getColumnByIndex = function(index){
+        self.getColumnByIndex = function (index) {
             var columns = self.subsetTableByColumnIndices([index]);
             return columns[0];
         };
-        self.subsetRow = function(row, rowIndices){
+        self.subsetRow = function (row, rowIndices) {
             var subsettedRow = rowIndices.map(
-                function(rowIndex){
-                    return row[rowIndex];
-                }
+                    function (rowIndex) {
+                        return row[rowIndex];
+                    }
             );
             return subsettedRow;
         };
-        self.subsetTableByColumnIndices= function(indices){
+        self.subsetTableByColumnIndices = function (indices) {
             var subsettedTable = [];
-            (indices.length).times(function(){
+            (indices.length).times(function () {
                 subsettedTable.push([]);
             });
-            self.data.each(function(row){
-               var columns = self.subsetRow(row, indices);
-               columns.each(function(value, key){
-                   subsettedTable[key].push(value);
-               });
+            self.data.each(function (row) {
+                var columns = self.subsetRow(row, indices);
+                columns.each(function (value, key) {
+                    subsettedTable[key].push(value);
+                });
             });
             return subsettedTable;
         };
-        self.getIndexOfColumnName = function(columnName){
+        self.getIndexOfColumnName = function (columnName) {
             return self.columnHeaders.indexOf(columnName);
         };
-        self.getColumnByName = function(columnName){
+        self.getColumnByName = function (columnName) {
             var columnIndex = self.getIndexOfColumnName(columnName);
             var column = self.getColumnByIndex(columnIndex);
             return column;
         };
-        
+
     };
     rdbParser.service('rdbTable', [
-       function(){
-           return {
-               new: function(){
-                   return new RdbTable();
-               }
-           };
-       }
+        function () {
+            return {
+                new : function () {
+                    return new RdbTable();
+                }
+            };
+        }
     ]);
-    var RowType= {
-        COMMENTS : 0,
+    var RowType = {
+        COMMENTS: 0,
         COLUMN_NAMES: 1,
         COLUMN_DEFINITION: 2,
         DATA: 3
     };
-    
+
     var commentPrefix = '#';
     var lineDelimeter = '\n';
     var columnDelimeter = '\t';
-    var isComment = function(line){
+    var isComment = function (line) {
         return commentPrefix === line[0];
     };
     rdbParser.service('rdbParser', ['rdbTable',
@@ -115,11 +115,11 @@
                     });
                     tables.push(currentTable);
                     return tables;
-                    
+
                 }
             };
         }
     ]);
-    
-    
+
+
 }());
