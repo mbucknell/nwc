@@ -1,6 +1,6 @@
 /*global angular*/
 (function () {
-    var watchModule = angular.module('nwc.watch', ['nwc.util', 'nwc.conversion']);
+    var watchModule = angular.module('nwc.watch', ['nwc.util', 'nwc.conversion', 'nwc.rdbParser']);
 
     //using a map as a set (need fast membership checking later)
     var watchServiceNames = Object.extended();
@@ -146,6 +146,100 @@
                     };
                 }
             ]);
+    var nwisBaseUrl = 'http://waterservices.usgs.gov/nwis/site/?';
+    var getNwisQueryParams = function () {
+        return {
+            'format': 'rdb',
+            'seriesCatalogOutput': 'true',
+            'parameterCd': '00060',
+            'outputDataTypeCd': 'dv'
+        };
+    };
+    var startDateColName = 'begin_date';
+    var endDateColName = 'end_date';
+    
+    /**
+     * Replace '-' with '/' in date strings to prevent time-zone errors.
+     * @param {String} dateStr
+     * @returns {String}
+     */
+    var reformatDateStr = function(dateStr){
+      return dateStr.replace(/-/g, '/');
+    };
+    var strToDate = function(dateStr){
+        return new Date(dateStr);
+    };
+    registerWatchFactory('gage', [
+        '$http', 'CommonState', '$log', 'StreamStats', '$rootScope', 'StoredState', 'rdbParser' , '$state',
+        function ($http, CommonState, $log, StreamStats, $rootScope, StoredState, rdbParser, $state) {
+            return {
+                propertyToWatch: 'gage',
+                //once a gage is selected, ask nwis what the relevant period of record is
+                watchFunction: function (prop, oldValue, newGage) {
+                    //reset params
+                    delete CommonState.streamFlowStatStartDate;
+                    delete CommonState.streamFlowStatEndDate;
+                    
+                    var siteId = newGage.data.STAID;
+                    var params = getNwisQueryParams();
+                    params.sites = siteId;
+                    //@todo remove this in favor of SugarJS method once sugarjs webjar pull request upgrading version is accepted
+                    var queryString = '';
+                    var first = true;
+                    for(var key in params){
+                        if(params.hasOwnProperty(key)){
+                            var value = params[key];
+                            var appendVal = '';
+                            if(first){
+                                first = false;
+                            } else {
+                                appendVal += '&';
+                            }
+                            
+                            appendVal += encodeURIComponent(key) + '=' + encodeURIComponent(value);
+                            queryString += appendVal;
+                        }
+                    }
+                    //var queryString = Object.toQueryString(params);
+                    var url = nwisBaseUrl + queryString;
+
+                    
+                    $http.get(url).then(
+                            function (response) {
+                                var rdbTables = rdbParser.parse(response.data);
+                                if(!rdbTables.length){
+                                    throw Error('Error parsing NWIS series catalog output response');
+                                }
+                                var table = rdbTables[0];
+                                var startColumn = table.getColumnByName(startDateColName);
+                                startColumn = startColumn.map(reformatDateStr);
+                                startColumn = startColumn.map(strToDate);
+                                startColumn.sort(function(a, b){return a-b;});
+                                var startDate = startColumn[0];
+                                
+                                var endColumn = table.getColumnByName(endDateColName);
+                                endColumn = endColumn.map(reformatDateStr);
+                                endColumn = endColumn.map(strToDate);
+                                endColumn.sort(function(a, b){return a+b;});
+                                var endDate = endColumn[0];
+                                
+                                CommonState.streamFlowStatStartDate = startDate;
+                                CommonState.streamFlowStatEndDate = endDate;
+                                $state.go('workflow.streamflowStatistics.setGageStatisticsParameters');
+                            },
+                            function (response) {
+                                var msg = 'An error occurred while asking NWIS web for the period of record for the selected site';
+                                $log.error(msg);
+                                alert(msg);
+                            }
+                    );
+                return newGage;
+                }
+            };
+        }
+    ]);
+
+
 //    var statTypes = ["GOF", "GOFMonth", "magnifSeven", "magStat", "flowStat", "durStat", "timStat", "rateStat", "otherStat"];
     var statTypes = ["rateStat", "otherStat"];
 

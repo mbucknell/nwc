@@ -40,14 +40,11 @@
                 $scope.gages = CommonState.ambiguousGages;
                 $scope.affirmGage = function(gage){
                     StoredState.gage = gage;
-                    $state.go('^.setGageStatisticsParameters');
                 };
             }
         )
     ]);
     
-    var minStatDate = new Date('1980/10/01');
-    var maxStatDate = new Date('2010/09/29');
     streamflowStatistics.controller('SetGageStatisticsParameters', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state',
         NWC.ControllerHelpers.StepController(
             {
@@ -66,12 +63,12 @@
                 var gageStatisticsParameters = CommonState.gageStatisticsParameters;
                 $scope.gageStatisticsParameters = gageStatisticsParameters;
                 gageStatisticsParameters.statGroups = gageStatisticsParameters.statGroups || [];
-                gageStatisticsParameters.startDate = Date.create(minStatDate);//clone
-                gageStatisticsParameters.endDate = Date.create(maxStatDate);//clone
+                gageStatisticsParameters.startDate =  new Date(CommonState.streamFlowStatStartDate);
+                gageStatisticsParameters.endDate =  new Date(CommonState.streamFlowStatEndDate);
 
                 $scope.dateFormat = 'yyyy-MM-dd';
-                $scope.minDate = minStatDate;
-                $scope.maxDate = maxStatDate;
+                $scope.minDate = CommonState.streamFlowStatStartDate;
+                $scope.maxDate = CommonState.streamFlowStatEndDate;
                 
                 $scope.openMinDatePicker = function($event){
                     openDatePickerPopup($event, 'minDateOpened');
