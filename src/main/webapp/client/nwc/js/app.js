@@ -90,25 +90,25 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     templateUrl: partialsBase + 'streamflowStatistics/streamflowStatisticsTemplate.html',
                     controller: 'StreamflowStatistics'
                 })
-                .state('workflow.streamflowStatistics.selectGage', {
-                    url: '/select-gage',
-                    templateUrl: partialsBase + 'streamflowStatistics/selectGage.html',
-                    controller: 'SelectGages'
+                .state('workflow.streamflowStatistics.selectSite', {
+                    url: '/select-site',
+                    templateUrl: partialsBase + 'streamflowStatistics/selectSite.html',
+                    controller: 'SelectSite'
                 })
                 .state('workflow.streamflowStatistics.disambiguateGages', {
                     url: '/disambiguate-gages',
                     templateUrl: partialsBase + 'streamflowStatistics/disambiguateGages.html',
                     controller: 'DisambiguateGages'
                 })
-                .state('workflow.streamflowStatistics.setGageStatisticsParameters', {
-                    url: '/set-gage-statistics-parameters',
-                    templateUrl: partialsBase + 'streamflowStatistics/setGageStatisticsParameters.html',
-                    controller: 'SetGageStatisticsParameters'
+                .state('workflow.streamflowStatistics.setSiteStatisticsParameters', {
+                    url: '/set-site-statistics-parameters',
+                    templateUrl: partialsBase + 'streamflowStatistics/setSiteStatisticsParameters.html',
+                    controller: 'SetSiteStatisticsParameters'
                 })
-                .state('workflow.streamflowStatistics.displayGageStatistics', {
-                    url: '/display-gage-statistics',
-                    templateUrl: partialsBase + 'streamflowStatistics/displayGageStatistics.html',
-                    controller: 'DisplayGageStatistics'
+                .state('workflow.streamflowStatistics.displayStatistics', {
+                    url: '/display-statistics',
+                    templateUrl: partialsBase + 'streamflowStatistics/displayStatistics.html',
+                    controller: 'DisplayStatistics'
                 });
     }
 ]);

@@ -64,7 +64,7 @@
                     displayInLayerSwitcher: false
                 });
                 flowlineRaster.id = 'nhd-flowlines-raster-layer';
-
+                
                 // ////////////////////////////////////////////// GAGES
                 var gageFeatureLayer = new OpenLayers.Layer.WMS(
                     "Gage Location",
@@ -88,7 +88,22 @@
                     CONFIG.endpoint.geoserver + 'wms'
                 );
                 gageData.id = 'gage-location-data';
+                var hucLayerOptions = BaseMap.getWorkflowLayerOptions();
+                hucLayerOptions.visibility = false;
 
+                var hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
+                    CONFIG.endpoint.geoserver + 'gwc/service/wms',
+                    {
+                        layers: 'NHDPlusHUCs:huc12_SE_Basins_v2',
+                        transparent: true,
+                        styles: ['polygon']
+                    },
+                    hucLayerOptions
+                );
+                hucLayer.id = 'hucs';
+                
+                mapLayers.push(hucLayer);
+                
                 mapLayers.push(gageData);
                 mapLayers.push(gageFeatureLayer);
 
@@ -126,7 +141,7 @@
                         if(responseObject.features[0].features && responseObject.features[0].features.length){
                             var realFeatures = responseObject.features[0].features;
                             realFeatures = realFeatures.map(stripGeometryProperty);
-                            CommonState.ambiguousGages = realFeatures;
+                            CommonState.ambiguousGages = realFeatures;//rare instance in which it is ok to write directly to CommonState; we don't need to enable state restoration for ambiguous clicks
                             $state.go('workflow.streamflowStatistics.disambiguateGages');
                         }
                     }
@@ -134,6 +149,51 @@
                 
                 wmsGetFeatureInfoControl.events.register("getfeatureinfo", {}, wmsGetFeatureInfoHandler);
                 initialControls.push(wmsGetFeatureInfoControl);
+                
+                var hucsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
+                    title: 'huc-identify-control',
+                    hover: false,
+                    layers: [
+                        hucLayer
+                    ],
+                    queryVisible: true,
+                    output: 'object',
+                    drillDown: true,
+                    infoFormat: 'application/vnd.ogc.gml',
+                    vendorParams: {
+                        radius: 5
+                    },
+                    id: 'hucs',
+                    autoActivate: false
+                });
+                
+                var minStatDate = new Date('1980/10/01');
+                var maxStatDate = new Date('2010/09/29');
+                var featureInfoHandler = function (responseObject) {
+                    //for some reason the real features are inside an array
+                    var actualFeatures = responseObject.features[0].features;
+                    actualFeatures = actualFeatures.map(stripGeometryProperty);
+                    var hucCount = actualFeatures.length;
+                    if (0 === hucCount) {
+                        //nothing
+                    }
+                    else {
+                        var sortedFeatures = actualFeatures.sort(function(a, b){
+                            return b.data.mi2 - a.data.mi2;
+                        });
+                        StoredState.streamFlowStatsHuc = sortedFeatures[0];
+                        CommonState.streamFlowStatStartDate = minStatDate;
+                        CommonState.streamFlowStatEndDate = maxStatDate;
+                        StoredState.siteStatisticsParameters = StoredState.siteStatisticsParameters || {};
+                        var statisticsParameters = StoredState.siteStatisticsParameters;
+                        statisticsParameters.startDate = new Date(minStatDate);
+                        statisticsParameters.endDate = new Date(maxStatDate);
+                        $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
+                    }
+                };
+                hucsGetFeatureInfoControl.events.register("getfeatureinfo", {}, featureInfoHandler);
+                initialControls.push(hucsGetFeatureInfoControl);
+                
                 
                 
                 map = BaseMap.new({
@@ -164,8 +224,36 @@
                 var mapZoomForExtent = map.getZoomForExtent(map.restrictedExtent);
                 map.setCenter(map.restrictedExtent.getCenterLonLat(), mapZoomForExtent);
                 updateFromClipValue(streamOrderClipValues[map.zoom]);
-
                 
+                /**
+                 * 
+                 * @param {String} interest one of 'observed' or 'modeled'
+                 */
+                map.switchToInterest = function(interest){
+                    if('observed' === interest){
+                        hucsGetFeatureInfoControl.deactivate();
+                        hucLayer.setVisibility(false);
+                        StoredState.streamFlowStatsHuc = undefined;
+                        
+                        gageFeatureLayer.setVisibility(true);
+                        flowlineRaster.setVisibility(true);
+                        wmsGetFeatureInfoControl.activate();
+                    }
+                    else if('modeled' === interest){
+                        
+                        gageFeatureLayer.setVisibility(false);
+                        flowlineRaster.setVisibility(false);
+                        wmsGetFeatureInfoControl.deactivate();
+                        StoredState.gage = undefined;
+
+                        hucLayer.setVisibility(true);
+                        hucsGetFeatureInfoControl.activate();
+
+                    }
+                    else{
+                        throw Error('unknown interest supplied: ' + interest);
+                    }
+                };
                 return map;
             };
             var getMap = function () {
@@ -174,6 +262,9 @@
                 }
                 return map;
             };
+            
+            
+            
             return {
                 initMap: initMap,
                 getMap: getMap

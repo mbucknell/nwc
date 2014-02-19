@@ -4,7 +4,7 @@
     streamflowStatistics.controller('StreamflowStatistics', [ '$scope', 'StoredState',
         NWC.ControllerHelpers.WorkflowController(
             {
-                name: 'Streamflow Statstics',
+                name: 'Streamflow Statistics',
                 description: 'Retrieve streamflow statistics for streams and gages across the nation'
             },
             function($scope, StoredState){
@@ -12,19 +12,26 @@
             }
         )
     ]);
-    streamflowStatistics.controller('SelectGages', ['$scope', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap',
+    streamflowStatistics.controller('SelectSite', ['$scope', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap',
         NWC.ControllerHelpers.StepController(
             {
-                name: 'Select Stream Gage',
-                description: 'Select a gage to retrieve its statistics.'
+                name: 'Select Gage or HUC',
+                description: 'Select a gage or a HUC to retrieve its statistics.'
             },
             function ($scope, StoredState, CommonState, StoredState, StreamflowMap) {
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
-                var mapId = 'gageSelectMap';
+                var mapId = 'siteSelectMap';
                 var map = StreamflowMap.getMap();
                 map.render(mapId);
                 map.zoomToExtent(map.restrictedExtent, true);
+                
+                StoredState.interestType = StoredState.interestType || 'observed' ;
+                $scope.$watch('StoredState.interestType', function(newInterest, oldInterest){
+                    if(newInterest !== oldInterest){
+                        StreamflowMap.getMap().switchToInterest(newInterest);
+                    }
+                });
             }
         )
     ]);
@@ -45,26 +52,26 @@
         )
     ]);
     
-    streamflowStatistics.controller('SetGageStatisticsParameters', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats',
+    streamflowStatistics.controller('SetSiteStatisticsParameters', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats',
         NWC.ControllerHelpers.StepController(
             {
-                name: 'Select Gage Statistics Parameters',
-                description: 'Select a subset of the time series for which you would like to calculate statistics.'
+                name: 'Select Streamflow Statistics Parameters',
+                description: 'Select a subset of the time series for which you would like to calculate various statistics.'
             },
             function ($scope, StoredState, CommonState, StoredState, $state, StreamStats) {
                 CommonState.streamflowStatsParamsReady = false;
-                if (!StoredState.gage) {
-                    $state.go('^.selectGage');
+                if (!StoredState.gage && !StoredState.streamFlowStatsHuc) {
+                    $state.go('^.selectSite');
                 }
                 $scope.streamStatsOptions = StreamStats.getAllStatTypes();
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
-                StoredState.gageStatisticsParameters = StoredState.gageStatisticsParameters || {};
-                var gageStatisticsParameters = StoredState.gageStatisticsParameters;
-                $scope.gageStatisticsParameters = gageStatisticsParameters;
-                gageStatisticsParameters.statGroups = gageStatisticsParameters.statGroups || [];
-                gageStatisticsParameters.startDate =  new Date(CommonState.streamFlowStatStartDate);
-                gageStatisticsParameters.endDate =  new Date(CommonState.streamFlowStatEndDate);
+                StoredState.siteStatisticsParameters = StoredState.siteStatisticsParameters || {};
+                var siteStatisticsParameters = StoredState.siteStatisticsParameters;
+                $scope.siteStatisticsParameters = siteStatisticsParameters;
+                siteStatisticsParameters.statGroups = siteStatisticsParameters.statGroups || [];
+                siteStatisticsParameters.startDate =  new Date(CommonState.streamFlowStatStartDate);
+                siteStatisticsParameters.endDate =  new Date(CommonState.streamFlowStatEndDate);
 
                 $scope.dateFormat = 'yyyy-MM-dd';
                 $scope.minDate = CommonState.streamFlowStatStartDate;
@@ -83,26 +90,26 @@
 
                     $scope[openedPropertyName] = true;
                 };
-                $scope.calculateStats = function(){
+                $scope.calculateStats = function () {
                   StoredState.streamflowStatsParamsReady = true;
-                  $state.go('^.displayGageStatistics');
+                  $state.go('^.displayStatistics');
                 };
             }
         )
     ]);
     
-    streamflowStatistics.controller('DisplayGageStatistics', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats',
+    streamflowStatistics.controller('DisplayStatistics', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats',
         NWC.ControllerHelpers.StepController(
             {
-                name: 'View Gage Statistics',
-                description: 'Visualize and export the statistics for this gage.'
+                name: 'View Statistics',
+                description: 'Visualize and export the statistics for the selected site.'
             },
             function ($scope, StoredState, CommonState, StoredState, $state, StreamStats) {
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
                 
-                if(!StoredState.gage){
-                    $state.go('^.selectGage');
+                if(!StoredState.gage && !StoredState.streamFlowStatsHuc){
+                    $state.go('^.selectSite');
                 }
             }
         )
