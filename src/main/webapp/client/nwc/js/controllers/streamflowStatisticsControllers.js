@@ -101,8 +101,8 @@
     streamflowStatistics.controller('DisplayStatistics', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats',
         NWC.ControllerHelpers.StepController(
             {
-                name: 'View Gage Statistics',
-                description: 'Visualize and export the statistics for this gage.'
+                name: 'View Statistics',
+                description: 'Visualize and export the statistics for the selected site.'
             },
             function ($scope, StoredState, CommonState, StoredState, $state, StreamStats) {
                 $scope.CommonState = CommonState;
