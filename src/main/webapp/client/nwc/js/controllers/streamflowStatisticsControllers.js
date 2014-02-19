@@ -12,16 +12,16 @@
             }
         )
     ]);
-    streamflowStatistics.controller('SelectGages', ['$scope', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap',
+    streamflowStatistics.controller('SelectSite', ['$scope', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap',
         NWC.ControllerHelpers.StepController(
             {
-                name: 'Select Stream Gage',
-                description: 'Select a gage to retrieve its statistics.'
+                name: 'Select Gage or HUC',
+                description: 'Select a gage or a HUC to retrieve its statistics.'
             },
             function ($scope, StoredState, CommonState, StoredState, StreamflowMap) {
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
-                var mapId = 'gageSelectMap';
+                var mapId = 'siteSelectMap';
                 var map = StreamflowMap.getMap();
                 map.render(mapId);
                 map.zoomToExtent(map.restrictedExtent, true);
@@ -61,7 +61,7 @@
             function ($scope, StoredState, CommonState, StoredState, $state, StreamStats) {
                 CommonState.streamflowStatsParamsReady = false;
                 if (!StoredState.gage && !StoredState.streamFlowStatsHuc) {
-                    $state.go('^.selectGage');
+                    $state.go('^.selectSite');
                 }
                 $scope.streamStatsOptions = StreamStats.getAllStatTypes();
                 $scope.CommonState = CommonState;
@@ -109,7 +109,7 @@
                 $scope.StoredState = StoredState;
                 
                 if(!StoredState.gage && !StoredState.streamFlowStatsHuc){
-                    $state.go('^.selectGage');
+                    $state.go('^.selectSite');
                 }
             }
         )

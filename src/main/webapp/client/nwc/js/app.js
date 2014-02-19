@@ -90,10 +90,10 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     templateUrl: partialsBase + 'streamflowStatistics/streamflowStatisticsTemplate.html',
                     controller: 'StreamflowStatistics'
                 })
-                .state('workflow.streamflowStatistics.selectGage', {
-                    url: '/select-gage',
-                    templateUrl: partialsBase + 'streamflowStatistics/selectGage.html',
-                    controller: 'SelectGages'
+                .state('workflow.streamflowStatistics.selectSite', {
+                    url: '/select-site',
+                    templateUrl: partialsBase + 'streamflowStatistics/selectSite.html',
+                    controller: 'SelectSite'
                 })
                 .state('workflow.streamflowStatistics.disambiguateGages', {
                     url: '/disambiguate-gages',
