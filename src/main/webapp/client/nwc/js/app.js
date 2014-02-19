@@ -100,6 +100,11 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     templateUrl: partialsBase + 'streamflowStatistics/disambiguateGages.html',
                     controller: 'DisambiguateGages'
                 })
+                .state('workflow.streamflowStatistics.setGageStatisticsParameters', {
+                    url: '/set-gage-statistics-parameters',
+                    templateUrl: partialsBase + 'streamflowStatistics/setGageStatisticsParameters.html',
+                    controller: 'SetGageStatisticsParameters'
+                })
                 .state('workflow.streamflowStatistics.displayGageStatistics', {
                     url: '/display-gage-statistics',
                     templateUrl: partialsBase + 'streamflowStatistics/displayGageStatistics.html',

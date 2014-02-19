@@ -1,0 +1,71 @@
+
+<h4 ng-bind="name"></h4>
+<p ng-bind="description"></p>
+
+
+<div class="row">
+    <dl>
+        <dt>Gage ID</dt>
+        <dd ng-bind="StoredState.gage.data.STAID"></dd>
+        <dt>Gage Name</dt>
+        <dd ng-bind="StoredState.gage.data.STANAME"></dd>
+        <dt>Drainage Area (km^2)</dt>
+        <dd ng-bind="StoredState.gage.data.DRAIN_SQKM"></dd>
+    </dl>
+</div>
+<form name="statsParams" novalidate>
+<div class="row">
+    <h4 class="text-center">Date Range</h4>
+    
+    <div class="col-md-2"></div>
+        <div class="col-md-4">
+                                            <label>From:</label>
+
+            <p class="input-group">
+
+              <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="gageStatisticsParameters.startDate" min="minDate" max="gageStatisticsParameters.endDate" ng-required="true" close-text="Close" is-open="minDateOpened"/>
+              <span class="input-group-btn">
+                <button class="btn btn-default" ng-click="openMinDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+        </div>
+        <div class="col-md-4">
+                            <label>To:</label>
+
+            <p class="input-group">
+              <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="gageStatisticsParameters.endDate" min="gageStatisticsParameters.startDate" max="maxDate"   ng-required="true" close-text="Close" is-open="maxDateOpened"/>
+              <span class="input-group-btn">
+                <button class="btn btn-default" ng-click="openMaxDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+        </div>
+        <div class="col-md-2"></div>
+</div>
+<div class="row">
+        <h4 class="text-center">Statistic Groups</h4>
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Select ?</th>
+            <th>Statistic Group Name</th>
+        </tr>
+    </thead>
+    <tbody ng-repeat="statGroup in streamStatsOptions">
+        <tr>
+            <td class="xs-col-2">
+                <input type="checkbox" checklist-model="StoredState.gageStatisticsParameters.statGroups" checklist-value="statGroup"/>
+            </td>
+            <td class="xs-col-4" ng-bind="statGroup"></td>
+        </tr>
+    </tbody>
+</table>
+</div>
+    
+    <div class="text-center">
+        <button ng-disabled="statsParams.$invalid" class="btn btn-success" ng-click="calculateStats()">Calculate Statistics</button>
+    </div>
+</form>
+
+<nav>
+        <button class="btn" ui-sref="^.selectGage"><span class="glyphicon glyphicon-arrow-left"> </span>Back</button>
+</nav>

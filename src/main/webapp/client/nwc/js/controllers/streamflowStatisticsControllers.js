@@ -40,11 +40,57 @@
                 $scope.gages = CommonState.ambiguousGages;
                 $scope.affirmGage = function(gage){
                     StoredState.gage = gage;
-                    $state.go('^.displayGageStatistics');
                 };
             }
         )
     ]);
+    
+    streamflowStatistics.controller('SetGageStatisticsParameters', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats',
+        NWC.ControllerHelpers.StepController(
+            {
+                name: 'Select Gage Statistics Parameters',
+                description: 'Select a subset of the time series for which you would like to calculate statistics.'
+            },
+            function ($scope, StoredState, CommonState, StoredState, $state, StreamStats) {
+                CommonState.streamflowStatsParamsReady = false;
+                if (!StoredState.gage) {
+                    $state.go('^.selectGage');
+                }
+                $scope.streamStatsOptions = StreamStats.getAllStatTypes();
+                $scope.CommonState = CommonState;
+                $scope.StoredState = StoredState;
+                StoredState.gageStatisticsParameters = StoredState.gageStatisticsParameters || {};
+                var gageStatisticsParameters = StoredState.gageStatisticsParameters;
+                $scope.gageStatisticsParameters = gageStatisticsParameters;
+                gageStatisticsParameters.statGroups = gageStatisticsParameters.statGroups || [];
+                gageStatisticsParameters.startDate =  new Date(CommonState.streamFlowStatStartDate);
+                gageStatisticsParameters.endDate =  new Date(CommonState.streamFlowStatEndDate);
+
+                $scope.dateFormat = 'yyyy-MM-dd';
+                $scope.minDate = CommonState.streamFlowStatStartDate;
+                $scope.maxDate = CommonState.streamFlowStatEndDate;
+                
+                $scope.openMinDatePicker = function($event){
+                    openDatePickerPopup($event, 'minDateOpened');
+                };
+                $scope.openMaxDatePicker = function($event){
+                    openDatePickerPopup($event, 'maxDateOpened');
+                };
+                
+                var openDatePickerPopup = function ($event, openedPropertyName) {
+                    $event.preventDefault();
+                    $event.stopPropagation();
+
+                    $scope[openedPropertyName] = true;
+                };
+                $scope.calculateStats = function(){
+                  StoredState.streamflowStatsParamsReady = true;
+                  $state.go('^.displayGageStatistics');
+                };
+            }
+        )
+    ]);
+    
     streamflowStatistics.controller('DisplayGageStatistics', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats',
         NWC.ControllerHelpers.StepController(
             {
@@ -61,5 +107,5 @@
             }
         )
     ]);
-    
+
 }());
