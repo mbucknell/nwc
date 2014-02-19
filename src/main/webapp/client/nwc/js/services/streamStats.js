@@ -92,49 +92,18 @@
                     var endDateString = dateToString(endDate);
 
                     var doc = wps.createWpsExecuteRequestDocument('org.n52.wps.server.r.stats_huc12_modeled',
-                            //@todo change this from an array of objects to a simple key-value map
-                                    [
-                                        {
-                                            name: 'sites',
-                                            value: siteIdsString
-                                        },
-                                        {
-                                            name: 'startdate',
-                                            value: startDateString
-                                        },
-                                        {
-                                            name: 'enddate',
-                                            value: endDateString
-                                        },
-                                        {
-                                            name: 'stats',
-                                            value: statTypesString
-                                        },
-                                        {
-                                            name: 'sos',
-                                            value: CONFIG.endpoint.thredds + 'HUC12_data/HUC12_Q.nc'
-                                        },
-                                        {
-                                            name: 'observedProperty',
-                                            value: 'MEAN_streamflow'
-                                        },
-                                        {
-                                            name: 'wfsUrl',
-                                            value: CONFIG.endpoint.geoserver + 'NHDPlusHUCs/ows'
-                                        },
-                                        {
-                                            name: 'wfsTypename',
-                                            value: 'NHDPlusHUCs:huc12_SE_Basins_v2'
-                                        },
-                                        {
-                                            name: 'wfsFilterProperty',
-                                            value: 'NHDPlusHUCs:HUC12'
-                                        },
-                                        {
-                                            name: 'wfsAreaPropertyname',
-                                            value: 'NHDPlusHUCs:mi2'
-                                        }
-                                    ],
+                                    {
+                                        'sites': siteIdsString,
+                                        'startdate': startDateString,
+                                        'enddate': endDateString,
+                                        'stats': statTypesString,
+                                        'sos': CONFIG.endpoint.thredds + 'HUC12_data/HUC12_Q.nc',
+                                        'observedProperty': 'MEAN_streamflow',
+                                        'wfsUrl': CONFIG.endpoint.geoserver + 'NHDPlusHUCs/ows',
+                                        'wfsTypename': 'NHDPlusHUCs:huc12_SE_Basins_v2',
+                                        'wfsFilterProperty': 'NHDPlusHUCs:HUC12',
+                                        'wfsAreaPropertyname': 'NHDPlusHUCs:mi2'
+                                    },
                                     wps.getDefaultAsynchronousResponseForm()
                                     );
                             wps.executeAsynchronousRequest({
@@ -161,26 +130,14 @@
 
 
                             var doc = wps.createWpsExecuteRequestDocument('org.n52.wps.server.r.stats_nwis',
-                                    [
-                                        {
-                                            name: 'sites',
-                                            value: siteIdsString
-                                        },
-                                        {
-                                            name: 'startdate',
-                                            value: startDateString
-                                        },
-                                        {
-                                            name: 'enddate',
-                                            value: endDateString
-                                        },
-                                        {
-                                            name: 'stats',
-                                            value: statTypesString
-                                        }
-                                    ],
-                                    wps.getDefaultAsynchronousResponseForm()
-                                    );
+                                {
+                                    'sites': siteIdsString,
+                                    'startdate': startDateString,
+                                    'enddate': endDateString,
+                                    'stats': statTypesString
+                                },
+                                wps.getDefaultAsynchronousResponseForm()
+                            );
                             wps.executeAsynchronousRequest({
                                 wpsRequestDocument: doc,
                                 url: CONFIG.endpoint.wps,

@@ -36,7 +36,7 @@
             /**
              * 
              * @param {String} processId String identifying the WPS request
-             * @param {Array} dataInputs - array of objects {'name' : xxx, 'value' : xxx}
+             * @param {Object} dataInputs - Map of parameter name to value objects {'name1' : 'value1', 'nameA' : 'value4'}
              * @param {Object} responseForm optional object describing response format- for example:
              {
                 'rawDataOutput': {
@@ -48,17 +48,20 @@
             exports.createWpsExecuteRequestDocument = function (processId, dataInputs, responseForm) {
                 responseForm = responseForm || exports.getDefaultSynchronousResponseForm();
                 var formattedData = [];
-                for (var i = 0; i < dataInputs.length; i++) {
-                    formattedData.push(
+                for (var key in dataInputs) {
+                    if (dataInputs.hasOwnProperty(key)) {
+                        var value = dataInputs[key];
+                        formattedData.push(
                             {
-                                'identifier': dataInputs[i].name,
+                                'identifier': key,
                                 'data': {
                                     'literalData': {
-                                        'value': dataInputs[i].value
+                                        'value': value
                                     }
                                 }
                             }
-                    );
+                        );
+                    }
                 }
                 var requestDocument = new OpenLayers.Format.WPSExecute().write({
                     'identifier': processId,
