@@ -235,7 +235,7 @@
 
                                     CommonState.streamFlowStatStartDate = startDate;
                                     CommonState.streamFlowStatEndDate = endDate;
-                                    $state.go('workflow.streamflowStatistics.setGageStatisticsParameters');
+                                    $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
                                 },
                                 function (response) {
                                     var msg = 'An error occurred while asking NWIS web for the period of record for the selected site';
@@ -261,13 +261,13 @@
                                 CommonState.gageStatistics = [];
                                 var newGage = StoredState.gage;
                                 var newHuc = StoredState.streamFlowStatsHuc;
-                                var startDate = StoredState.gageStatisticsParameters.startDate;
-                                var endDate = StoredState.gageStatisticsParameters.endDate;
+                                var startDate = StoredState.siteStatisticsParameters.startDate;
+                                var endDate = StoredState.siteStatisticsParameters.endDate;
                                 var callback = function(statistics, resultsUrl){
                                     CommonState.gageStatistics = statistics;
                                     CommonState.gageStatisticsUrl = resultsUrl;
                                 };
-                                var statTypes  = StoredState.gageStatisticsParameters.statGroups;
+                                var statTypes  = StoredState.siteStatisticsParameters.statGroups;
                                 
                                 if(newGage){
                                     var siteId = newGage.data.STAID;

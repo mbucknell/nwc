@@ -184,11 +184,11 @@
                         StoredState.streamFlowStatsHuc = sortedFeatures[0];
                         CommonState.streamFlowStatStartDate = minStatDate;
                         CommonState.streamFlowStatEndDate = maxStatDate;
-                        StoredState.gageStatisticsParameters = StoredState.gageStatisticsParameters || {};
-                        var statisticsParameters = StoredState.gageStatisticsParameters;
+                        StoredState.siteStatisticsParameters = StoredState.siteStatisticsParameters || {};
+                        var statisticsParameters = StoredState.siteStatisticsParameters;
                         statisticsParameters.startDate = new Date(minStatDate);
                         statisticsParameters.endDate = new Date(maxStatDate);
-                        $state.go('workflow.streamflowStatistics.setGageStatisticsParameters');
+                        $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
                     }
                 };
                 hucsGetFeatureInfoControl.events.register("getfeatureinfo", {}, featureInfoHandler);

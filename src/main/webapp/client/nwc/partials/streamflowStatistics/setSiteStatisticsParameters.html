@@ -12,7 +12,7 @@
 
             <p class="input-group">
 
-              <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="gageStatisticsParameters.startDate" min="minDate" max="gageStatisticsParameters.endDate" ng-required="true" close-text="Close" is-open="minDateOpened"/>
+              <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="siteStatisticsParameters.startDate" min="minDate" max="siteStatisticsParameters.endDate" ng-required="true" close-text="Close" is-open="minDateOpened"/>
               <span class="input-group-btn">
                 <button class="btn btn-default" ng-click="openMinDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>
@@ -22,7 +22,7 @@
                             <label>To:</label>
 
             <p class="input-group">
-              <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="gageStatisticsParameters.endDate" min="gageStatisticsParameters.startDate" max="maxDate"   ng-required="true" close-text="Close" is-open="maxDateOpened"/>
+              <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="siteStatisticsParameters.endDate" min="siteStatisticsParameters.startDate" max="maxDate"   ng-required="true" close-text="Close" is-open="maxDateOpened"/>
               <span class="input-group-btn">
                 <button class="btn btn-default" ng-click="openMaxDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>
@@ -42,7 +42,7 @@
     <tbody ng-repeat="statGroup in streamStatsOptions">
         <tr>
             <td class="xs-col-2">
-                <input type="checkbox" name="statGroup" checklist-model="StoredState.gageStatisticsParameters.statGroups" checklist-value="statGroup"/>
+                <input type="checkbox" name="statGroup" checklist-model="StoredState.siteStatisticsParameters.statGroups" checklist-value="statGroup"/>
             </td>
             <td class="xs-col-4" ng-bind="statGroup"></td>
         </tr>
@@ -51,7 +51,7 @@
 </div>
     
     <div class="text-center">
-        <button ng-disabled="statsParams.$invalid || !StoredState.gageStatisticsParameters.statGroups.length" class="btn btn-success" ng-click="calculateStats()">Calculate Statistics</button>
+        <button ng-disabled="statsParams.$invalid || !StoredState.siteStatisticsParameters.statGroups.length" class="btn btn-success" ng-click="calculateStats()">Calculate Statistics</button>
     </div>
 </form>
 

@@ -52,11 +52,11 @@
         )
     ]);
     
-    streamflowStatistics.controller('SetGageStatisticsParameters', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats',
+    streamflowStatistics.controller('SetSiteStatisticsParameters', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats',
         NWC.ControllerHelpers.StepController(
             {
-                name: 'Select Gage Statistics Parameters',
-                description: 'Select a subset of the time series for which you would like to calculate statistics.'
+                name: 'Select Streamflow Statistics Parameters',
+                description: 'Select a subset of the time series for which you would like to calculate various statistics.'
             },
             function ($scope, StoredState, CommonState, StoredState, $state, StreamStats) {
                 CommonState.streamflowStatsParamsReady = false;
@@ -66,12 +66,12 @@
                 $scope.streamStatsOptions = StreamStats.getAllStatTypes();
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
-                StoredState.gageStatisticsParameters = StoredState.gageStatisticsParameters || {};
-                var gageStatisticsParameters = StoredState.gageStatisticsParameters;
-                $scope.gageStatisticsParameters = gageStatisticsParameters;
-                gageStatisticsParameters.statGroups = gageStatisticsParameters.statGroups || [];
-                gageStatisticsParameters.startDate =  new Date(CommonState.streamFlowStatStartDate);
-                gageStatisticsParameters.endDate =  new Date(CommonState.streamFlowStatEndDate);
+                StoredState.siteStatisticsParameters = StoredState.siteStatisticsParameters || {};
+                var siteStatisticsParameters = StoredState.siteStatisticsParameters;
+                $scope.siteStatisticsParameters = siteStatisticsParameters;
+                siteStatisticsParameters.statGroups = siteStatisticsParameters.statGroups || [];
+                siteStatisticsParameters.startDate =  new Date(CommonState.streamFlowStatStartDate);
+                siteStatisticsParameters.endDate =  new Date(CommonState.streamFlowStatEndDate);
 
                 $scope.dateFormat = 'yyyy-MM-dd';
                 $scope.minDate = CommonState.streamFlowStatStartDate;
