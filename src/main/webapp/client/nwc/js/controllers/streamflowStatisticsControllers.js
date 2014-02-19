@@ -4,7 +4,7 @@
     streamflowStatistics.controller('StreamflowStatistics', [ '$scope', 'StoredState',
         NWC.ControllerHelpers.WorkflowController(
             {
-                name: 'Streamflow Statstics',
+                name: 'Streamflow Statistics',
                 description: 'Retrieve streamflow statistics for streams and gages across the nation'
             },
             function($scope, StoredState){
@@ -25,6 +25,13 @@
                 var map = StreamflowMap.getMap();
                 map.render(mapId);
                 map.zoomToExtent(map.restrictedExtent, true);
+                
+                StoredState.interestType = StoredState.interestType || 'observed' ;
+                $scope.$watch('StoredState.interestType', function(newInterest, oldInterest){
+                    if(newInterest !== oldInterest){
+                        StreamflowMap.getMap().switchToInterest(newInterest);
+                    }
+                });
             }
         )
     ]);
@@ -53,7 +60,7 @@
             },
             function ($scope, StoredState, CommonState, StoredState, $state, StreamStats) {
                 CommonState.streamflowStatsParamsReady = false;
-                if (!StoredState.gage) {
+                if (!StoredState.gage && !StoredState.streamFlowStatsHuc) {
                     $state.go('^.selectGage');
                 }
                 $scope.streamStatsOptions = StreamStats.getAllStatTypes();
@@ -101,7 +108,7 @@
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
                 
-                if(!StoredState.gage){
+                if(!StoredState.gage && !StoredState.streamFlowStatsHuc){
                     $state.go('^.selectGage');
                 }
             }

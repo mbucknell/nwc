@@ -169,79 +169,86 @@
     var strToDate = function(dateStr){
         return new Date(dateStr);
     };
+    /**
+     * On gage change, query nwis for the start and end dates of that gage's relevant data.
+     * Once obtained, stuff start and end dates into Common State as absolute minimums and maximums for the datepickers
+     * Then navigate to the stat params form.
+     */
     registerWatchFactory('gage', [
-        '$http', 'CommonState', '$log', 'StreamStats', '$rootScope', 'StoredState', 'rdbParser' , '$state',
+        '$http', 'CommonState', '$log', 'StreamStats', '$rootScope', 'StoredState', 'rdbParser', '$state',
         function ($http, CommonState, $log, StreamStats, $rootScope, StoredState, rdbParser, $state) {
             return {
                 propertyToWatch: 'gage',
                 //once a gage is selected, ask nwis what the relevant period of record is
                 watchFunction: function (prop, oldValue, newGage) {
-                    //reset params
-                    delete CommonState.streamFlowStatStartDate;
-                    delete CommonState.streamFlowStatEndDate;
-                    
-                    var siteId = newGage.data.STAID;
-                    var params = getNwisQueryParams();
-                    params.sites = siteId;
-                    //@todo remove this in favor of SugarJS method once sugarjs webjar pull request upgrading version is accepted
-                    var queryString = '';
-                    var first = true;
-                    for(var key in params){
-                        if(params.hasOwnProperty(key)){
-                            var value = params[key];
-                            var appendVal = '';
-                            if(first){
-                                first = false;
-                            } else {
-                                appendVal += '&';
-                            }
-                            
-                            appendVal += encodeURIComponent(key) + '=' + encodeURIComponent(value);
-                            queryString += appendVal;
-                        }
-                    }
-                    //var queryString = Object.toQueryString(params);
-                    var url = nwisBaseUrl + queryString;
+                    if (newGage !== undefined) {
+                        //reset params
+                        CommonState.streamFlowStatStartDate = undefined;
+                        CommonState.streamFlowStatEndDate = undefined;
 
-                    
-                    $http.get(url).then(
-                            function (response) {
-                                var rdbTables = rdbParser.parse(response.data);
-                                if(!rdbTables.length){
-                                    throw Error('Error parsing NWIS series catalog output response');
+                        var siteId = newGage.data.STAID;
+                        var params = getNwisQueryParams();
+                        params.sites = siteId;
+                        //@todo remove this in favor of SugarJS method once sugarjs webjar pull request upgrading version is accepted
+                        var queryString = '';
+                        var first = true;
+                        for (var key in params) {
+                            if (params.hasOwnProperty(key)) {
+                                var value = params[key];
+                                var appendVal = '';
+                                if (first) {
+                                    first = false;
+                                } else {
+                                    appendVal += '&';
                                 }
-                                var table = rdbTables[0];
-                                var startColumn = table.getColumnByName(startDateColName);
-                                startColumn = startColumn.map(reformatDateStr);
-                                startColumn = startColumn.map(strToDate);
-                                startColumn.sort(function(a, b){return a-b;});
-                                var startDate = startColumn[0];
-                                
-                                var endColumn = table.getColumnByName(endDateColName);
-                                endColumn = endColumn.map(reformatDateStr);
-                                endColumn = endColumn.map(strToDate);
-                                endColumn.sort(function(a, b){return a+b;});
-                                var endDate = endColumn[0];
-                                
-                                CommonState.streamFlowStatStartDate = startDate;
-                                CommonState.streamFlowStatEndDate = endDate;
-                                $state.go('workflow.streamflowStatistics.setGageStatisticsParameters');
-                            },
-                            function (response) {
-                                var msg = 'An error occurred while asking NWIS web for the period of record for the selected site';
-                                $log.error(msg);
-                                alert(msg);
+
+                                appendVal += encodeURIComponent(key) + '=' + encodeURIComponent(value);
+                                queryString += appendVal;
                             }
-                    );
-                return newGage;
+                        }
+                        //var queryString = Object.toQueryString(params);
+                        var url = nwisBaseUrl + queryString;
+
+
+                        $http.get(url).then(
+                                function (response) {
+                                    var rdbTables = rdbParser.parse(response.data);
+                                    if (!rdbTables.length) {
+                                        throw Error('Error parsing NWIS series catalog output response');
+                                    }
+                                    var table = rdbTables[0];
+                                    var startColumn = table.getColumnByName(startDateColName);
+                                    startColumn = startColumn.map(reformatDateStr);
+                                    startColumn = startColumn.map(strToDate);
+                                    startColumn.sort(function (a, b) {
+                                        return a - b;
+                                    });
+                                    var startDate = startColumn[0];
+
+                                    var endColumn = table.getColumnByName(endDateColName);
+                                    endColumn = endColumn.map(reformatDateStr);
+                                    endColumn = endColumn.map(strToDate);
+                                    endColumn.sort(function (a, b) {
+                                        return a + b;
+                                    });
+                                    var endDate = endColumn[0];
+
+                                    CommonState.streamFlowStatStartDate = startDate;
+                                    CommonState.streamFlowStatEndDate = endDate;
+                                    $state.go('workflow.streamflowStatistics.setGageStatisticsParameters');
+                                },
+                                function (response) {
+                                    var msg = 'An error occurred while asking NWIS web for the period of record for the selected site';
+                                    $log.error(msg);
+                                    alert(msg);
+                                }
+                        );
+                    }
+                    return newGage;
                 }
             };
         }
     ]);
-
-
-    
-    var statTypes = ["rateStat", "otherStat"];
 
     registerWatchFactory('streamflowStatsParamsReady',
                         ['$http', 'CommonState', '$log', 'StreamStats', '$rootScope', 'StoredState',
@@ -252,17 +259,29 @@
                             if (streamFlowStatsParamsReady) {
                                 //reset
                                 CommonState.gageStatistics = [];
-                                
                                 var newGage = StoredState.gage;
+                                var newHuc = StoredState.streamFlowStatsHuc;
                                 var startDate = StoredState.gageStatisticsParameters.startDate;
                                 var endDate = StoredState.gageStatisticsParameters.endDate;
-                                var siteId = newGage.data.STAID;
                                 var callback = function(statistics, resultsUrl){
                                     CommonState.gageStatistics = statistics;
                                     CommonState.gageStatisticsUrl = resultsUrl;
                                 };
                                 var statTypes  = StoredState.gageStatisticsParameters.statGroups;
-                                StreamStats.getSiteStats([siteId], statTypes, startDate, endDate, callback);
+                                
+                                if(newGage){
+                                    var siteId = newGage.data.STAID;
+                                    StreamStats.getSiteStats([siteId], statTypes, startDate, endDate, callback);
+                                }
+                                else if(newHuc){
+                                    var hucId = newHuc.data.HUC12;
+                                    StreamStats.getHucStats([hucId], statTypes, startDate, endDate, callback);
+                                }
+                                else{
+                                    var msg = 'Error: Neither a HUC nor a gage is defined. Cannot continue computing statistics.';
+                                    $log.error(StoredState.streamFlowStatsHuc);
+                                    alert(msg);
+                                }
                             }
                             return streamFlowStatsParamsReady;
                         }

@@ -2,17 +2,6 @@
 <h4 ng-bind="name"></h4>
 <p ng-bind="description"></p>
 
-
-<div class="row">
-    <dl>
-        <dt>Gage ID</dt>
-        <dd ng-bind="StoredState.gage.data.STAID"></dd>
-        <dt>Gage Name</dt>
-        <dd ng-bind="StoredState.gage.data.STANAME"></dd>
-        <dt>Drainage Area (km^2)</dt>
-        <dd ng-bind="StoredState.gage.data.DRAIN_SQKM"></dd>
-    </dl>
-</div>
 <form name="statsParams" novalidate>
 <div class="row">
     <h4 class="text-center">Date Range</h4>
@@ -53,7 +42,7 @@
     <tbody ng-repeat="statGroup in streamStatsOptions">
         <tr>
             <td class="xs-col-2">
-                <input type="checkbox" checklist-model="StoredState.gageStatisticsParameters.statGroups" checklist-value="statGroup"/>
+                <input type="checkbox" name="statGroup" checklist-model="StoredState.gageStatisticsParameters.statGroups" checklist-value="statGroup"/>
             </td>
             <td class="xs-col-4" ng-bind="statGroup"></td>
         </tr>
@@ -62,7 +51,7 @@
 </div>
     
     <div class="text-center">
-        <button ng-disabled="statsParams.$invalid" class="btn btn-success" ng-click="calculateStats()">Calculate Statistics</button>
+        <button ng-disabled="statsParams.$invalid || !StoredState.gageStatisticsParameters.statGroups.length" class="btn btn-success" ng-click="calculateStats()">Calculate Statistics</button>
     </div>
 </form>
 
