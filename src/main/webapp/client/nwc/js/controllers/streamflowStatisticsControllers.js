@@ -90,15 +90,15 @@
 
                     $scope[openedPropertyName] = true;
                 };
-                $scope.calculateStats = function(){
+                $scope.calculateStats = function () {
                   StoredState.streamflowStatsParamsReady = true;
-                  $state.go('^.displayGageStatistics');
+                  $state.go('^.displayStatistics');
                 };
             }
         )
     ]);
     
-    streamflowStatistics.controller('DisplayGageStatistics', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats',
+    streamflowStatistics.controller('DisplayStatistics', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'View Gage Statistics',

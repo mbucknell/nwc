@@ -1,0 +1,43 @@
+<h4 ng-bind="name"></h4>
+<p ng-bind="description"></p>
+
+<h4>Statistics for Selected Site</h4>
+<div ng-hide="!CommonState.gage">
+    <dl>
+        <dt>Gage ID</dt>
+        <dd ng-bind="StoredState.gage.data.STAID"></dd>
+        <dt>Gage Name</dt>
+        <dd ng-bind="StoredState.gage.data.STANAME"></dd>
+        <dt>Drainage Area (km^2)</dt>
+        <dd ng-bind="StoredState.gage.data.DRAIN_SQKM"></dd>
+    </dl>
+</div>
+<div ng-hide="!StoredState.streamFlowStatsHuc">
+    <dl>
+        <dt>HUC ID</dt>
+        <dd ng-bind="StoredState.streamFlowStatsHuc.data.HUC12"></dd>
+    </dl>
+</div>
+
+<h5 ng-hide="CommonState.streamflowStatistics.length">Calculating Statistics...</h5>
+
+<div ng-hide="CommonState.streamflowStatistics.length === 0" class="table-responsive">
+        <a ng-href="{{CommonState.streamflowStatisticsUrl}}">Download These Statistics</a>
+	<table class="table table-striped huc_table">
+            <thead>
+			<tr>
+				<th>Name</th>
+				<th>Value</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="stat in CommonState.streamflowStatistics">
+				<td class="xs-col-2" ng-bind="stat.name"></td>
+				<td class="xs-col-10" ng-bind="stat.value"></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<nav>
+    <a ui-sref="^.setSiteStatisticsParameters">Back</a>
+</nav>

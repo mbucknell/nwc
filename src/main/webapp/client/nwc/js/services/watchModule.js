@@ -258,14 +258,14 @@
                         watchFunction: function (prop, oldValue, streamFlowStatsParamsReady) {
                             if (streamFlowStatsParamsReady) {
                                 //reset
-                                CommonState.gageStatistics = [];
+                                CommonState.streamflowStatistics = [];
                                 var newGage = StoredState.gage;
                                 var newHuc = StoredState.streamFlowStatsHuc;
                                 var startDate = StoredState.siteStatisticsParameters.startDate;
                                 var endDate = StoredState.siteStatisticsParameters.endDate;
                                 var callback = function(statistics, resultsUrl){
-                                    CommonState.gageStatistics = statistics;
-                                    CommonState.gageStatisticsUrl = resultsUrl;
+                                    CommonState.streamflowStatistics = statistics;
+                                    CommonState.streamflowStatisticsUrl = resultsUrl;
                                 };
                                 var statTypes  = StoredState.siteStatisticsParameters.statGroups;
                                 

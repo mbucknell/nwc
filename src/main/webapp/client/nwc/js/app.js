@@ -105,10 +105,10 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     templateUrl: partialsBase + 'streamflowStatistics/setSiteStatisticsParameters.html',
                     controller: 'SetSiteStatisticsParameters'
                 })
-                .state('workflow.streamflowStatistics.displayGageStatistics', {
-                    url: '/display-gage-statistics',
-                    templateUrl: partialsBase + 'streamflowStatistics/displayGageStatistics.html',
-                    controller: 'DisplayGageStatistics'
+                .state('workflow.streamflowStatistics.displayStatistics', {
+                    url: '/display-statistics',
+                    templateUrl: partialsBase + 'streamflowStatistics/displayStatistics.html',
+                    controller: 'DisplayStatistics'
                 });
     }
 ]);
