@@ -116,7 +116,7 @@
              * @returns {String} the status url
              */
             var getStatusUrlFromStartDoc = function (responseDoc) {
-                var statusUrl = responseDoc.children[0].getAttribute('statusLocation');
+                var statusUrl = responseDoc.childNodes[0].getAttribute('statusLocation');
                 return statusUrl;
             };
             /**
@@ -186,7 +186,7 @@
              */
             var getStatusFromStatusDoc = function (statusDoc) {
                 var ProcessStatus = exports.getProcessStatusEnum();
-                var parentElt = statusDoc.children[0];
+                var parentElt = statusDoc.childNodes[0];
                 var statusElt = extractExactlyOneWpsElementByTagName(parentElt, 'Status');
                 var status = ProcessStatus.IN_PROGRESS;
                 var successful = !!getWpsElementsByTagName(statusElt, 'ProcessSucceeded').length;
@@ -207,7 +207,7 @@
              * @returns {String} results url
              */
             var getResultsUrlFromStatusDoc = function (statusDoc) {
-                var rootElt = statusDoc.children[0];
+                var rootElt = statusDoc.childNodes[0];
                 //assume only one Reference element in doc
                 var referenceElt = getWpsElementsByTagName(rootElt, 'Reference')[0];
                 var resultsUrl = referenceElt.getAttribute('href');
