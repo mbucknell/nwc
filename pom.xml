@@ -101,7 +101,7 @@
                 
                 <!-- main app code -->
 
-                <nwcJavaScriptBase>src/main/webapp/client/nwc/js</nwcJavaScriptBase>
+                <nwcClientBase>src/main/webapp/client/nwc/</nwcClientBase>
                 <!-- js lib versions -->
                 <jquery-version>1.10.2</jquery-version>
                 <angular-version>1.2.1</angular-version>
@@ -148,11 +148,11 @@
                                                     </includes>
                                                 </resource>
                                                 <resource>
-                                                    <directory>src/main/webapp/client/nwc/partials</directory><!-- no trailing slash -->
-                                                    <targetPath>client/nwc/partials</targetPath><!-- no trailing slash -->
+                                                    <directory>src/main/webapp/client/nwc/general</directory><!-- no trailing slash -->
+                                                    <targetPath>client/nwc/general</targetPath><!-- no trailing slash -->
                                                     <filtering>true</filtering>
                                                     <includes>
-                                                        <include>angularRoot.jsp</include>
+                                                        <include>clientRoot.jsp</include>
                                                     </includes>
                                                     
                                                 </resource>
@@ -249,7 +249,7 @@
                                             <include>${thirdParty.base}/checklist-model/checklist-model.js</include>
 
                                             <!-- misc -->
-                                            <include>${nwcJavaScriptBase}/openLayersExtensions/WaterCensusToolbar/js/WaterCensusToolbar.js</include>
+                                            <include>${nwcClientBase}/general/openLayersExtensions/WaterCensusToolbar/js/WaterCensusToolbar.js</include>
 
                                             <!--services -->
 
@@ -257,12 +257,11 @@
                                                 if errors are encountered due to mis-ordering of service script loading, 
                                                 consult this file's history for the previous explicitly-ordered list
                                             -->
-                                            <include>${nwcJavaScriptBase}/services/*.js</include>
+                                            <include>${nwcClientBase}/general/**/*.js</include>
                                             <!-- controllers -->
-                                            <include>${nwcJavaScriptBase}/controllers/controllerHelpers.js</include>
-                                            <include>${nwcJavaScriptBase}/controllers/*.js</include>
+                                            <include>${nwcClientBase}/workflows/**/*.js</include>
                                             <!-- main app-->
-                                            <include>${nwcJavaScriptBase}/app.js</include>
+                                            <include>${nwcClientBase}/app.js</include>
                                             
                                         </sourceIncludes>
                                 </configuration>
