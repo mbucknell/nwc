@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -134,9 +135,9 @@ public class MainController {
 		return mv;
     }
 	
-	@RequestMapping(value="/savesessionpost", method = RequestMethod.POST)
+	@RequestMapping(value="/savesession", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveCacheSessionPost(String cachedobject) {
+	public String saveCacheSessionPost(@RequestBody String cachedobject) {
 		log.info("MainController.saveCacheSessionPost() Called");
 		
 		/**

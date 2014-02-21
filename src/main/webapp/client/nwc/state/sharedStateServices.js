@@ -54,7 +54,7 @@ sharedStateServices.factory('StatePersistence', [
             };
 
             var store = function (stateObject) {
-                $http.post('../../savesessionpost', stateObject)
+                $http.post('../../savesession', stateObject)
                     .success(function (data) {
                         console.dir(data);
                         $modal.open({

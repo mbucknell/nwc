@@ -9,6 +9,7 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.sosSources',
     'nwc.sosResponseParser',
     'nwc.workflows.all',
+    'nwc.controllers.state',
     'nwc.controllers.waterBudget',
     'nwc.controllers.aquaticBiology',
     'nwc.controllers.streamflowStatistics',
@@ -29,12 +30,15 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
         var clientBasePath = '../../client/nwc/';
         var workflowsBasePath = clientBasePath + 'workflows/';
         var generalBasePath = clientBasePath + 'general/partials/';
+        var stateBasePath = clientBasePath + 'state/';
         $stateProvider
             .state('restore', {
                 url: '/state/restore/:stateId',
-                templateUrl: generalBasePath + 'Restoring.html',
-                controller: 'Restore'
-            })
+                templateUrl: stateBasePath + 'Restoring.html',
+                controller: 'RestoreState'
+            });
+            
+        $stateProvider
             .state('workflow', {
                 url: '/workflow',
                 templateUrl: workflowsBasePath + 'AllWorkflowShell.html',
