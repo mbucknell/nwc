@@ -60,6 +60,7 @@
 
 <!-- controllers -->
 <script type="text/javascript" src="../../client/nwc/general/controllers/controllerHelpers.js"></script>
+<script type="text/javascript" src="../../client/nwc/workflows/AllWorkflowController.js"></script>
 <script type="text/javascript" src="../../client/nwc/workflows/waterBudget/waterBudgetControllers.js"></script>
 <script type="text/javascript" src="../../client/nwc/workflows/aquaticBiology/aquaticBiologyControllers.js"></script>
 <script type="text/javascript" src="../../client/nwc/workflows/streamflowStatistics/streamflowStatisticsControllers.js"></script>

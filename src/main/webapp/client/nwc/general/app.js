@@ -1,4 +1,6 @@
 /*global angular*/
+(function(){
+
 var nwcApp = angular.module('nwcApp', [
     'nwc.sharedStateServices',
     'nwc.util',
@@ -6,6 +8,7 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.dataSeriesStore',
     'nwc.sosSources',
     'nwc.sosResponseParser',
+    'nwc.workflows.all',
     'nwc.controllers.waterBudget',
     'nwc.controllers.aquaticBiology',
     'nwc.controllers.streamflowStatistics',
@@ -35,6 +38,7 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
             .state('workflow', {
                 url: '/workflow',
                 templateUrl: workflowsBasePath + 'AllWorkflowShell.html',
+                controller: 'AllWorkflow',
                 abstract: true
             });
         var waterBudgetBasePath = workflowsBasePath + 'waterBudget/';
@@ -119,3 +123,17 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                 });
     }
 ]);
+
+//automatically update StoredState object on angular-ui-router state change so that
+//individual controllers and/or services do not have to pass the current state name
+//and parameters into StatePersistence methods.
+
+nwcApp.run(['$rootScope', 'StoredState', 
+    function($rootScope, StoredState){
+        $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+            StoredState.stateName = toState.name;
+            StoredState.stateParams = toParams;
+        });
+}]);
+
+}());
