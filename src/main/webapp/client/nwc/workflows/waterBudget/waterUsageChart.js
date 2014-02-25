@@ -3,7 +3,7 @@
     var waterUsageChart = angular.module('nwc.waterUsageChart', []);
     var privateChart = {};
     var setChart = function(chartEltSelector, values, labels) {
-            if(!labels || !labels.length){
+            if(!values || !values.length){
                 if(privateChart.shutdown){
                     privateChart.shutdown()
                 }

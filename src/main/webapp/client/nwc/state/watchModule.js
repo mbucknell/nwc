@@ -16,22 +16,21 @@
             watchModule.factory(finalName, dependencyArray);
         }
     };
-
-    registerWatchFactory('hucId',
-            ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q', '$log', 'DataSeries',
-                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q, $log, DataSeries) {
-                    return {
-                        propertyToWatch: 'hucId',
-                        watchFunction: function (prop, oldHucValue, newHucValue) {
-                            //clear downstream state
-                            CommonState.WaterUsageDataSeries = DataSeries.new();
-                            var labeledAjaxCalls = [];
+    registerWatchFactory('hucFeatureId',
+            ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q', '$log', 'DataSeries', 'WaterBudgetMap',
+                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q, $log, DataSeries, WaterBudgetMap) {
+                    
+                    /**
+                     * @param {String} huc 12 digit identifier for the hydrologic unit
+                     */
+                    var getTimeSeries = function(huc){
+                        var labeledAjaxCalls = [];
                             //grab the sos sources that will be used to display the initial data 
                             //series. ignore other data sources that the user can add later.
                             var initialSosSourceKeys = ['eta', 'dayMet'];
                             var initialSosSources = Object.select(SosSources, initialSosSourceKeys);
                             angular.forEach(initialSosSources, function (source, sourceId) {
-                                var url = SosUrlBuilder.buildSosUrlFromSource(newHucValue, source);
+                                var url = SosUrlBuilder.buildSosUrlFromSource(huc, source);
                                 var labeledAjaxCall = $http.get(url, {label: sourceId});
                                 labeledAjaxCalls.push(labeledAjaxCall);
                             });
@@ -88,8 +87,50 @@
                                 }
                             };
                             $q.all(labeledAjaxCalls).then(sosSuccess, sosError);
-                            
-                            return newHucValue;
+                    };
+                    
+                    
+
+                    return {
+                        propertyToWatch: 'hucFeatureId',
+                        watchFunction: function (prop, oldHucFeatureId, newHucFeatureId) {
+                            if (newHucFeatureId) {
+                                //clear downstream state
+                                CommonState.WaterUsageDataSeries = DataSeries.new();
+                                if (!CommonState.hucFeature || CommonState.hucFeature.fid !== newHucFeatureId) {
+                                    var hucWMSLayer = WaterBudgetMap.getMap().getHucLayer();
+                                    var protocol = new OpenLayers.Protocol.WFS.fromWMSLayer(hucWMSLayer);
+//                                    var outputFormat = 'application/vnd.ogc.gml';
+                                    var url = CONFIG.endpoint.geoserver + 'ows?service=wfs&version=2.0.0&request=GetFeature&typeNames=NHDPlusHUCs:NationalWBDSnapshot';
+//                                        url += '&outputFormat=' + outputFormat;
+                                        url += '&featureID=' + newHucFeatureId;
+                                    var success = function (response) {
+                                        //win
+                                        //get feature object out of response, put in CommonState
+                                        var prot = protocol;
+                                        var huc = response.data.data.HUC_12;
+                                        getTimeSeries(huc);
+                                        return response.data;
+                                    };
+                                    var failure = function (response) {
+                                        //fail 
+                                        var message = 'Error retrieving huc feature object with id:' + newHucFeatureId;
+                                        $log.error(message);
+                                        $log.error(response);
+                                        alert(message);
+                                    };
+                                    CommonState.hucFeature = $http.get(url, {
+                                    }).then(
+                                        success,
+                                        failure
+                                    );
+                                }
+                                else {
+                                    getTimeSeries(CommonState.hucFeature.data.HUC_12);
+                                }
+                                //WFS get Feature retrieve the object
+                            }
+                            return newHucFeatureId;
                         }
                     };
                 }
@@ -291,10 +332,9 @@
     );
             
         var allWatchServiceNames = watchServiceNames.keys();
-        var dependencies = ['StoredState'].concat(allWatchServiceNames);
+        var dependencies = ['StoredState', 'CommonState'].concat(allWatchServiceNames);
         
-        var registerAllWatchers = function(){
-            var StoredState = arguments[0];
+        var registerAllWatchers = function(StoredState, CommonState){
             var watchServices = Array.create(arguments).from(1);//ignore storedState
             angular.forEach(watchServices, function(watchService){
                 StoredState.watch(watchService.propertyToWatch, watchService.watchFunction);

@@ -9,11 +9,12 @@
             var mapLayers = [];
             var controls = [];
             var hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
-                    CONFIG.endpoint.geoserver + 'gwc/service/wms',
+                    CONFIG.endpoint.geoserver + 'ows?',
                     {
                         layers: 'NHDPlusHUCs:NationalWBDSnapshot',
                         transparent: true,
-                        styles: ['polygon']
+                        styles: ['polygon'],
+                        tiled: true
                     },
             BaseMap.getWorkflowLayerOptions()
                     );
@@ -47,8 +48,10 @@
                         //nothing
                     }
                     else if (1 === hucCount) {
-                        StoredState.huc = actualFeatures[0];
-                        StoredState.hucId = actualFeatures[0].attributes.HUC_12;
+                        var actualFeature = actualFeatures[0];
+                        var fid = actualFeature.fid;
+                        CommonState.hucFeature = actualFeature;
+                        StoredState.hucFeatureId = actualFeature.fid;
                         CommonState.WaterUsageDataSeries = DataSeries.new();
                         $state.go('workflow.waterBudget.plotData');
                     }

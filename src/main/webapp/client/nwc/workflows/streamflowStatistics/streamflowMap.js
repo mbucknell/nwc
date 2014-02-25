@@ -1,8 +1,8 @@
 /*global angular,OpenLayers,CONFIG*/
 (function () {
-    var streamflowMap = angular.module('nwc.map.streamflow', []);
-    streamflowMap.factory('StreamflowMap', ['StoredState', 'CommonState', '$state', 'BaseMap', '$log',
-        function (StoredState, CommonState, $state, BaseMap, $log) {
+    var streamflowMap = angular.module('nwc.map.streamflow', ['nwc.util']);
+    streamflowMap.factory('StreamflowMap', ['StoredState', 'CommonState', '$state', 'BaseMap', '$log', 'util',
+        function (StoredState, CommonState, $state, BaseMap, $log, util) {
             var map;
             
             var streamOrderClipValue = 0,
@@ -128,19 +128,13 @@
                         radius: 5
                     }
                 });
-
-                //removes the 'geometry' property of the OpenLayers features so that
-                //the features will be serializable
-                var stripGeometryProperty = function (realFeature) {
-                    return Object.reject(realFeature, 'geometry');
-                };
                 
                 var wmsGetFeatureInfoHandler = function(responseObject){
                     if(responseObject.features && responseObject.features.length){
                         //OpenLayers stores the actual features in a weird spot of the response
                         if(responseObject.features[0].features && responseObject.features[0].features.length){
                             var realFeatures = responseObject.features[0].features;
-                            realFeatures = realFeatures.map(stripGeometryProperty);
+                            realFeatures = realFeatures.map(util.rejectGeometry);
                             CommonState.ambiguousGages = realFeatures;//rare instance in which it is ok to write directly to CommonState; we don't need to enable state restoration for ambiguous clicks
                             $state.go('workflow.streamflowStatistics.disambiguateGages');
                         }
