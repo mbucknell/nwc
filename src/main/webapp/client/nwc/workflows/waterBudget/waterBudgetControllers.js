@@ -109,7 +109,7 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
             
             StoredState.countyInfo = countyInfo;
         };
-        map.getCountyThatIntersectsWithHucFeature(CommonState.hucFeature, setCountyInfo);
+        map.getCountyThatIntersectsWithHucFeature(StoredState.hucFeature, setCountyInfo);
     })
 ]);
 
@@ -126,8 +126,7 @@ waterBudgetControllers.controller('DisambiguateClick', ['$scope', 'StoredState',
              * @param {OpenLayers.Feature} huc
              */
             $scope.setHuc = function (huc) {
-//                CommonState.hucFeature = huc;
-                StoredState.hucFeatureId = huc.fid;
+                StoredState.hucFeature = huc;
                 $state.go('^.plotData');
             };
 			

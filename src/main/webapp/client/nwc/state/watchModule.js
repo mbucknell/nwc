@@ -16,7 +16,7 @@
             watchModule.factory(finalName, dependencyArray);
         }
     };
-    registerWatchFactory('hucFeatureId',
+    registerWatchFactory('hucFeature',
             ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q', '$log', 'DataSeries', 'WaterBudgetMap',
                 function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q, $log, DataSeries, WaterBudgetMap) {
                     
@@ -92,45 +92,14 @@
                     
 
                     return {
-                        propertyToWatch: 'hucFeatureId',
-                        watchFunction: function (prop, oldHucFeatureId, newHucFeatureId) {
-                            if (newHucFeatureId) {
+                        propertyToWatch: 'hucFeature',
+                        watchFunction: function (prop, oldHucFeature, newHucFeature) {
+                            if (newHucFeature) {
                                 //clear downstream state
                                 CommonState.WaterUsageDataSeries = DataSeries.new();
-                                if (!CommonState.hucFeature || CommonState.hucFeature.fid !== newHucFeatureId) {
-                                    var hucWMSLayer = WaterBudgetMap.getMap().getHucLayer();
-                                    var protocol = new OpenLayers.Protocol.WFS.fromWMSLayer(hucWMSLayer);
-//                                    var outputFormat = 'application/vnd.ogc.gml';
-                                    var url = CONFIG.endpoint.geoserver + 'ows?service=wfs&version=2.0.0&request=GetFeature&typeNames=NHDPlusHUCs:NationalWBDSnapshot';
-//                                        url += '&outputFormat=' + outputFormat;
-                                        url += '&featureID=' + newHucFeatureId;
-                                    var success = function (response) {
-                                        //win
-                                        //get feature object out of response, put in CommonState
-                                        var prot = protocol;
-                                        var huc = response.data.data.HUC_12;
-                                        getTimeSeries(huc);
-                                        return response.data;
-                                    };
-                                    var failure = function (response) {
-                                        //fail 
-                                        var message = 'Error retrieving huc feature object with id:' + newHucFeatureId;
-                                        $log.error(message);
-                                        $log.error(response);
-                                        alert(message);
-                                    };
-                                    CommonState.hucFeature = $http.get(url, {
-                                    }).then(
-                                        success,
-                                        failure
-                                    );
-                                }
-                                else {
-                                    getTimeSeries(CommonState.hucFeature.data.HUC_12);
-                                }
-                                //WFS get Feature retrieve the object
+                                getTimeSeries(newHucFeature.data.HUC_12);
                             }
-                            return newHucFeatureId;
+                            return newHucFeature;
                         }
                     };
                 }

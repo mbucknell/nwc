@@ -64,7 +64,7 @@ sharedStateServices.factory('StatePersistence', [
             };
             
             
-            var geoJsonFormatter = new OpenLayers.Format.GeoJson();
+            var geoJsonFormatter = new OpenLayers.Format.GeoJSON();
             
             /**
              * A few objects cannot use the default JSON.stringify serialization because they
@@ -81,8 +81,8 @@ sharedStateServices.factory('StatePersistence', [
             //map of property name to custom deserialization function
             var customDeserializers = {
                 'hucFeature': function(hucFeatureString){
-                    var deserializedHuc = geoJsonFormatter.read(hucFeatureString);
-                    return deserializedHuc;
+                    var deserializedHucArray = geoJsonFormatter.read(hucFeatureString);
+                    return deserializedHucArray[0];
                 }
             };
 
