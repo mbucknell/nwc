@@ -46,8 +46,10 @@ sharedStateServices.factory('StatePersistence', [
                         customDeserializationProperties.each(function (customDeserializationProperty) {
                             var customDeserializer = customDeserializers[customDeserializationProperty];
                             var valueToDeserialize = data[customDeserializationProperty];
-                            var customValue = customDeserializer(valueToDeserialize);
-                            customlyDeserializedState[customDeserializationProperty] = customValue;
+                            if(valueToDeserialize){
+                                var customValue = customDeserializer(valueToDeserialize);
+                                customlyDeserializedState[customDeserializationProperty] = customValue;
+                            }
                         });
                         
                         Object.merge(StoredState, customlyDeserializedState);
@@ -89,12 +91,14 @@ sharedStateServices.factory('StatePersistence', [
             var store = function (stateObject) {
                 var customSerializationProperties = Object.keys(customSerializers);
                 var nonCircularState = Object.reject(stateObject, customSerializationProperties);
-                
-                customSerializationProperties.each(function(customSerializationProperty){
-                   var customSerializer = customSerializers[customSerializationProperty];
-                   var circularValue = stateObject[customSerializationProperty];
-                   var customValue = customSerializer(circularValue);
-                   nonCircularState[customSerializationProperty] = customValue;
+
+                customSerializationProperties.each(function (customSerializationProperty) {
+                    var customSerializer = customSerializers[customSerializationProperty];
+                    var originalValue = stateObject[customSerializationProperty];
+                    if (originalValue) {
+                        var customValue = customSerializer(originalValue);
+                        nonCircularState[customSerializationProperty] = customValue;
+                    }
                 });
                 
                 $http.post('../../savesession', nonCircularState)

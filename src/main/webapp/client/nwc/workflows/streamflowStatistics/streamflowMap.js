@@ -166,7 +166,7 @@
                 var featureInfoHandler = function (responseObject) {
                     //for some reason the real features are inside an array
                     var actualFeatures = responseObject.features[0].features;
-                    actualFeatures = actualFeatures.map(stripGeometryProperty);
+                    actualFeatures = actualFeatures.map(util.rejectGeometry);
                     var hucCount = actualFeatures.length;
                     if (0 === hucCount) {
                         //nothing
