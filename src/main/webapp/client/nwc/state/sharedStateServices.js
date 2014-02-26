@@ -37,7 +37,7 @@ sharedStateServices.factory('StatePersistence', [
         'StoredState', '$state', '$timeout', '$http', '$modal', 'CommonState',
         function (StoredState, $state, $timeout, $http, $modal, CommonState) {
             var restore = function (stateId) {
-                $http.get('../../loadsession/' + stateId)
+                $http.get('../loadsession/' + stateId)
                     .success(function (data) {
                         
                         var customDeserializationProperties = Object.keys(customDeserializers);
@@ -67,7 +67,6 @@ sharedStateServices.factory('StatePersistence', [
             
             
             var geoJsonFormatter = new OpenLayers.Format.GeoJSON();
-            
             /**
              * A few objects cannot use the default JSON.stringify serialization because they
              * contain unserializable circular references. These functions catch
@@ -78,6 +77,11 @@ sharedStateServices.factory('StatePersistence', [
                 'hucFeature' : function(hucFeature){
                     var serializedHuc = geoJsonFormatter.write(hucFeature);
                     return serializedHuc;
+                },
+                siteStatisticsParameters: function(params){
+                    if(params.startDate){
+                        
+                    }
                 }
             };
             //map of property name to custom deserialization function
@@ -101,18 +105,8 @@ sharedStateServices.factory('StatePersistence', [
                     }
                 });
                 
-                $http.post('../../savesession', nonCircularState)
-                    .success(function (data) {
-                        console.dir(data);
-                        $modal.open({
-                            template: '<p>Share this link with others:</p><input type="text" value="' + data + '"/>'
-                        });
-                    })
-                    .error(function () {
-                        $modal.open({
-                            template: 'Error Storing State'
-                        });
-                    });
+                var httpPromise = $http.post('../savesession', nonCircularState);
+                return httpPromise;
             };
             return {
                 restore: restore,
