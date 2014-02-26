@@ -27,7 +27,7 @@ var nwcApp = angular.module('nwcApp', [
 nwcApp.config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/workflow/aquatic-biology/select-biodata-site');
-        var clientBasePath = '../../client/nwc/';
+        var clientBasePath = '../client/nwc/';
         var workflowsBasePath = clientBasePath + 'workflows/';
         var generalBasePath = clientBasePath + 'general/partials/';
         var stateBasePath = clientBasePath + 'state/';

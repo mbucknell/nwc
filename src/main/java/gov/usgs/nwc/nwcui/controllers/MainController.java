@@ -63,28 +63,12 @@ public class MainController {
 		
 		return mv;
     }
-	
-	@RequestMapping(value = {"/ang/**"}, method=RequestMethod.GET)
-    public ModelAndView workflow(HttpServletRequest request) {
-		log.info("MainController.workflow() Called");
-		
-		String path = (String) request.getAttribute( HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE );
-		String workflowName = WebsiteUtils.parseWorkflow(path);
-		
-		Map<String, Workflow> workflowsMap = WorkflowFactory.getInstance().getWorkflowsMap();
-		
-		log.error("PATH: [" + path + "]");
-		log.error("WORKFLOWNAME: [" + workflowName + "]");
-		
-		Workflow workflow = workflowsMap.get(workflowName);
-		if(workflow == null) {
-			workflow = new Workflow("", "Unknown Workflow Requested", "", "");
-		}
-		
-		log.error("WORKFLOWIMAGE: [" + workflow.getImage() + "]");
-		
-		ModelAndView mv = new ModelAndView("/workflow", "title", workflow.getName());
-		mv.addObject("workflow", workflow);
+    
+    	@RequestMapping(value = {"/ang/**"}, method=RequestMethod.GET)
+    public ModelAndView specificWorkflow() {
+		log.info("MainController.specificWorkflow() Called");
+
+		ModelAndView mv = new ModelAndView("/workflow", "title", "");
 		
 		/**
 		 * Add the environment to the session so JSPs can grab their own properties

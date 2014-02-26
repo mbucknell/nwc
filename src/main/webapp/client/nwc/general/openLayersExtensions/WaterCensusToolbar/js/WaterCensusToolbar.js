@@ -5,7 +5,7 @@ OpenLayers.Control.WaterCensusToolbar = OpenLayers.Class(OpenLayers.Control.Pane
      *     to extend the control.
      */
     initialize: function (panelOptions, controls) {
-        NWC.loadCSS('../../client/nwc/general/openLayersExtensions/WaterCensusToolbar/css/WaterCensusToolbar.css');
+        NWC.loadCSS('../client/nwc/general/openLayersExtensions/WaterCensusToolbar/css/WaterCensusToolbar.css');
         OpenLayers.Control.Panel.prototype.initialize.apply(this, [panelOptions]);
         var controlsToAdd = [
             new OpenLayers.Control.Navigation(),
