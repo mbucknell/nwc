@@ -178,7 +178,7 @@
                         StoredState.streamFlowStatsHuc = sortedFeatures[0];
                         CommonState.streamFlowStatStartDate = minStatDate;
                         CommonState.streamFlowStatEndDate = maxStatDate;
-                        StoredState.siteStatisticsParameters = StoredState.siteStatisticsParameters || {};
+                        StoredState.siteStatisticsParameters = {};
                         var statisticsParameters = StoredState.siteStatisticsParameters;
                         statisticsParameters.startDate = new Date(minStatDate);
                         statisticsParameters.endDate = new Date(maxStatDate);

@@ -39,6 +39,7 @@
     ]);
     
 //call this function with the same arguments that you would module.factory()
+    //@todo : eliminate this? It will confuse newcomers. The extra functionality this wrapper provides is likely unnecessary
     var registerWatchFactory = function (watchServiceName, dependencyArray) {
         var finalName = 'nwc.watch.' + watchServiceName;
         if (watchServiceName.has(finalName)) {
@@ -240,7 +241,7 @@
                         var siteId = newGage.data.STAID;
                         var params = getNwisQueryParams();
                         params.sites = siteId;
-                        //@todo remove this in favor of SugarJS method once sugarjs webjar pull request upgrading version is accepted
+                        //@todo remove this in favor of SugarJS toQueryString method once sugarjs webjar pull request upgrading version is accepted
                         var queryString = '';
                         var first = true;
                         for (var key in params) {
@@ -304,8 +305,8 @@
     ]);
     var streamStatsReadyName = 'streamflowStatsParamsReady';
     registerWatchFactory(streamStatsReadyName,
-                        ['$http', 'CommonState', '$log', 'StreamStats', '$rootScope', 'StoredState', 'RunningWatches',
-                function ($http, CommonState, $log, StreamStats, $rootScope, StoredState, RunningWatches) {
+                        ['$http', 'CommonState', '$log', 'StreamStats', '$rootScope', 'StoredState', 'RunningWatches', '$state',
+                function ($http, CommonState, $log, StreamStats, $rootScope, StoredState, RunningWatches, $state) {
                     return {
                         propertyToWatch: 'streamflowStatsParamsReady',
                         watchFunction: function (prop, oldValue, streamFlowStatsParamsReady) {
@@ -313,6 +314,7 @@
                             if (streamFlowStatsParamsReady) {
                                 //reset
                                 CommonState.streamflowStatistics = [];
+
                                 var newGage = StoredState.gage;
                                 var newHuc = StoredState.streamFlowStatsHuc;
                                 var startDate = StoredState.siteStatisticsParameters.startDate;
@@ -338,6 +340,11 @@
                                     alert(msg);
                                     RunningWatches.remove(streamStatsReadyName);
                                 }
+                                $state.go('workflow.streamflowStatistics.displayStatistics');
+
+                            }
+                            else {
+                                RunningWatches.remove(streamStatsReadyName);
                             }
                             return streamFlowStatsParamsReady;
                         }

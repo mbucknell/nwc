@@ -50,11 +50,16 @@ sharedStateServices.factory('StatePersistence', [
                             var valueToDeserialize = data[customDeserializationProperty];
                             if(valueToDeserialize){
                                 var customValue = customDeserializer(valueToDeserialize);
-                                customlyDeserializedState[customDeserializationProperty] = customValue;
+                                if(customValue){
+                                    //custom deserializers may want to stop a serialized value from appearing in the final object
+                                    customlyDeserializedState[customDeserializationProperty] = customValue;
+                                }
                             }
                         });
-                        //grab promises for all of the potential 
                         Object.merge(StoredState, customlyDeserializedState);
+                        //now a special case -- 
+                        //streamflowStatsParamsReady needs to be loaded *after* siteStatisticsParameters
+                        StoredState.streamflowStatsParamsReady = data.streamflowStatsParamsReady;
                         //let async listeners on StoredState finish before rendering the main ui
                         var checkWatchers = function(){
                             if(RunningWatches.isEmpty()){
@@ -118,6 +123,7 @@ sharedStateServices.factory('StatePersistence', [
                 }
             };
             //map of property name to custom deserialization function
+            //use string literals for keys so that they do not get minified away
             var customDeserializers = {
                 'hucFeature': function(hucFeatureString){
                     var deserializedHucArray = geoJsonFormatter.read(hucFeatureString);
@@ -131,10 +137,16 @@ sharedStateServices.factory('StatePersistence', [
                         params.endDate = deserializeDate(params.endDate);
                     }
                     return params;
+                },
+                'streamflowStatsParamsReady': function(ready){
+                    //do not initially include this value in the object
+                    return undefined;
                 }
             };
 
-            var store = function (stateObject) {
+            var store = function (usersStateObject) {
+                //don't modify the object the user has passed, make a copy
+                var stateObject = Object.clone(usersStateObject, true);
                 var customSerializationProperties = Object.keys(customSerializers);
                 var nonCircularState = Object.reject(stateObject, customSerializationProperties);
 
@@ -146,7 +158,7 @@ sharedStateServices.factory('StatePersistence', [
                         nonCircularState[customSerializationProperty] = customValue;
                     }
                 });
-                
+
                 var httpPromise = $http.post('../savesession', nonCircularState);
                 return httpPromise;
             };
