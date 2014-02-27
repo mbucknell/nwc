@@ -65,7 +65,7 @@ public class MainController {
     }
     
     	@RequestMapping(value = {"/ang/**"}, method=RequestMethod.GET)
-    public ModelAndView specificWorkflow() {
+    public ModelAndView enterClientSideApp() {
 		log.info("MainController.specificWorkflow() Called");
 
 		ModelAndView mv = new ModelAndView("/workflow", "title", "");

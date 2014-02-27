@@ -176,8 +176,8 @@
                             return b.data.mi2 - a.data.mi2;
                         });
                         StoredState.streamFlowStatsHuc = sortedFeatures[0];
-                        CommonState.streamFlowStatStartDate = minStatDate;
-                        CommonState.streamFlowStatEndDate = maxStatDate;
+                        CommonState.streamFlowStatMinDate = minStatDate;
+                        CommonState.streamFlowStatMaxDate = maxStatDate;
                         StoredState.siteStatisticsParameters = {};
                         var statisticsParameters = StoredState.siteStatisticsParameters;
                         statisticsParameters.startDate = new Date(minStatDate);

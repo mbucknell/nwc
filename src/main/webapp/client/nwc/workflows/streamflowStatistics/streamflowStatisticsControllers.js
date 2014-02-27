@@ -72,12 +72,12 @@
                 var siteStatisticsParameters = StoredState.siteStatisticsParameters;
                 $scope.siteStatisticsParameters = siteStatisticsParameters;
                 siteStatisticsParameters.statGroups = siteStatisticsParameters.statGroups || [];
-                siteStatisticsParameters.startDate =  siteStatisticsParameters.startDate || new Date(CommonState.streamFlowStatStartDate);
-                siteStatisticsParameters.endDate =  siteStatisticsParameters.endDate || new Date(CommonState.streamFlowStatEndDate);
+                siteStatisticsParameters.startDate =  siteStatisticsParameters.startDate || new Date(CommonState.streamFlowStatMinDate);
+                siteStatisticsParameters.endDate =  siteStatisticsParameters.endDate || new Date(CommonState.streamFlowStatMaxDate);
 
                 $scope.dateFormat = 'yyyy-MM-dd';
-                $scope.minDate = CommonState.streamFlowStatStartDate;
-                $scope.maxDate = CommonState.streamFlowStatEndDate;
+                $scope.minDate = CommonState.streamFlowStatMinDate;
+                $scope.maxDate = CommonState.streamFlowStatMaxDate;
                 
                 $scope.openMinDatePicker = function($event){
                     openDatePickerPopup($event, 'minDateOpened');

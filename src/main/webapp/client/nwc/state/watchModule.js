@@ -235,8 +235,8 @@
                     RunningWatches.add(gageName);
                     if (newGage !== undefined) {
                         //reset params
-                        CommonState.streamFlowStatStartDate = undefined;
-                        CommonState.streamFlowStatEndDate = undefined;
+                        CommonState.streamFlowStatMinDate = undefined;
+                        CommonState.streamFlowStatMaxDate = undefined;
 
                         var siteId = newGage.data.STAID;
                         var params = getNwisQueryParams();
@@ -285,8 +285,8 @@
                                     });
                                     var endDate = endColumn[0];
 
-                                    CommonState.streamFlowStatStartDate = startDate;
-                                    CommonState.streamFlowStatEndDate = endDate;
+                                    CommonState.streamFlowStatMinDate = startDate;
+                                    CommonState.streamFlowStatMaxDate = endDate;
                                     RunningWatches.remove(gageName);
                                     $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
                                 },

@@ -12,8 +12,8 @@ var storedState = Object.extended({
 var commonState = Object.extended({
     DataSeriesStore: Object.extended(),
     newDataSeriesStore: false,
-    streamFlowStatEndDate: new Date(),
-    streamFlowStatStartDate: new Date()
+    streamFlowStatMinDate: new Date(),
+    streamFlowStatMaxDate: new Date()
 });
 
 //this factory provides access to the state that is NOT stored to the server, but that
@@ -145,14 +145,22 @@ sharedStateServices.factory('StatePersistence', [
             };
 
             var store = function (usersStateObject) {
-                //don't modify the object the user has passed, make a copy
-                var stateObject = Object.clone(usersStateObject, true);
+                //we can't modify the usersStateObject, we must make a copy.
+                //But we can't attempt a deep clone without first stripping properties
+                //that might have cirucluar references. Properties with circular references
+                //already need to have custom serializers that will subsequently put the 
+                //potentially circular objects in a serializable form in the session to be persisted
+                
                 var customSerializationProperties = Object.keys(customSerializers);
-                var nonCircularState = Object.reject(stateObject, customSerializationProperties);
+
+                var userStateObjectWithoutCustomSerialProps = Object.reject(usersStateObject, customSerializationProperties);
+                
+                //don't modify the object the user has passed, make a copy
+                var nonCircularState = Object.clone(userStateObjectWithoutCustomSerialProps, true);
 
                 customSerializationProperties.each(function (customSerializationProperty) {
                     var customSerializer = customSerializers[customSerializationProperty];
-                    var originalValue = stateObject[customSerializationProperty];
+                    var originalValue = usersStateObject[customSerializationProperty];
                     if (originalValue) {
                         var customValue = customSerializer(originalValue);
                         nonCircularState[customSerializationProperty] = customValue;
