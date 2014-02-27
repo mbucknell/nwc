@@ -4,7 +4,6 @@
 <%@include file="/WEB-INF/base.jsp"%>
 
 
-<span class="site_title"><a href="${context}">National Water Census</a> - ${title}</span>
-<span class="site_version">${version}</span>
+<span class="site_title"><a href="${context}">National Water Census</a></span>
 
 

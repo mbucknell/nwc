@@ -90,7 +90,7 @@
                     preselectBioDataSites(siteIds);
                 } else {
                     //retrieve document from server
-                    $.when($.get('../../client/nwc/misc/BioDataSiteSelection.xml')).then(
+                    $.when($.get('../client/nwc/misc/BioDataSiteSelection.xml')).then(
                         function (response, status, jqXHR) {
                             bioDataSiteSelectionDoc = response;
                             preselectBioDataSites(siteIds);

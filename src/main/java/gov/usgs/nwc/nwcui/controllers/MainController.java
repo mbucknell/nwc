@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -62,28 +63,12 @@ public class MainController {
 		
 		return mv;
     }
-	
-	@RequestMapping(value = {"/ang/**"}, method=RequestMethod.GET)
-    public ModelAndView workflow(HttpServletRequest request) {
-		log.info("MainController.workflow() Called");
-		
-		String path = (String) request.getAttribute( HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE );
-		String workflowName = WebsiteUtils.parseWorkflow(path);
-		
-		Map<String, Workflow> workflowsMap = WorkflowFactory.getInstance().getWorkflowsMap();
-		
-		log.error("PATH: [" + path + "]");
-		log.error("WORKFLOWNAME: [" + workflowName + "]");
-		
-		Workflow workflow = workflowsMap.get(workflowName);
-		if(workflow == null) {
-			workflow = new Workflow("", "Unknown Workflow Requested", "", "");
-		}
-		
-		log.error("WORKFLOWIMAGE: [" + workflow.getImage() + "]");
-		
-		ModelAndView mv = new ModelAndView("/workflow", "title", workflow.getName());
-		mv.addObject("workflow", workflow);
+    
+    	@RequestMapping(value = {"/ang/**"}, method=RequestMethod.GET)
+    public ModelAndView enterClientSideApp() {
+		log.info("MainController.specificWorkflow() Called");
+
+		ModelAndView mv = new ModelAndView("/workflow", "title", "");
 		
 		/**
 		 * Add the environment to the session so JSPs can grab their own properties
@@ -134,9 +119,9 @@ public class MainController {
 		return mv;
     }
 	
-	@RequestMapping(value="/savesessionpost", method = RequestMethod.POST)
+	@RequestMapping(value="/savesession", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveCacheSessionPost(String cachedobject) {
+	public String saveCacheSessionPost(@RequestBody String cachedobject) {
 		log.info("MainController.saveCacheSessionPost() Called");
 		
 		/**

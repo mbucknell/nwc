@@ -2,7 +2,7 @@
 <h4 ng-bind="name"></h4>
 <p ng-bind="description"></p>
 
-<form name="statsParams" novalidate>
+<form name="statsParams" novalidate ng-show="siteStatisticsParameters && siteStatisticsParameters.startDate && siteStatisticsParameters.endDate">
 <div class="row">
     <h4 class="text-center">Date Range</h4>
     
