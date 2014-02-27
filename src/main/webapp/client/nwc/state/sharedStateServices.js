@@ -113,13 +113,16 @@ sharedStateServices.factory('StatePersistence', [
                     return serializedHuc;
                 },
                 'siteStatisticsParameters': function(params){
-                    if(params.startDate){
-                        params.startDate = serializeDate(params.startDate);
+                    //You are being passed a reference to the existing parameters
+                    //in-use by the app. Don't modify it; make a copy.
+                    var clone = Object.clone(params, true);
+                    if(clone.startDate){
+                        clone.startDate = serializeDate(clone.startDate);
                     }
-                    if(params.endDate){
-                        params.endDate = serializeDate(params.endDate);
+                    if(clone.endDate){
+                        clone.endDate = serializeDate(clone.endDate);
                     }
-                    return params;
+                    return clone;
                 }
             };
             //map of property name to custom deserialization function
@@ -145,19 +148,11 @@ sharedStateServices.factory('StatePersistence', [
             };
 
             var store = function (usersStateObject) {
-                //we can't modify the usersStateObject, we must make a copy.
-                //But we can't attempt a deep clone without first stripping properties
-                //that might have cirucluar references. Properties with circular references
-                //already need to have custom serializers that will subsequently put the 
-                //potentially circular objects in a serializable form in the session to be persisted
-                
                 var customSerializationProperties = Object.keys(customSerializers);
-
-                var userStateObjectWithoutCustomSerialProps = Object.reject(usersStateObject, customSerializationProperties);
                 
-                //don't modify the object the user has passed, make a copy
-                var nonCircularState = Object.clone(userStateObjectWithoutCustomSerialProps, true);
-
+                //reject potentially circular properties that have their own serializers
+                var nonCircularState = Object.reject(usersStateObject, customSerializationProperties);
+                
                 customSerializationProperties.each(function (customSerializationProperty) {
                     var customSerializer = customSerializers[customSerializationProperty];
                     var originalValue = usersStateObject[customSerializationProperty];
