@@ -1,17 +1,19 @@
 /*global angular*/
 (function(){
-var sharedStateServices = angular.module('nwc.sharedStateServices', []);
+var sharedStateServices = angular.module('nwc.sharedStateServices', ['nwc.watch']);
 
 //enable sugarjs instance methods
 var storedState = Object.extended({
-    _version: 0.1,
+    _version: 0.1
 });
 
 
 //enable sugarjs instance methods
 var commonState = Object.extended({
     DataSeriesStore: Object.extended(),
-    newDataSeriesStore: false
+    newDataSeriesStore: false,
+    streamFlowStatEndDate: new Date(),
+    streamFlowStatStartDate: new Date()
 });
 
 //this factory provides access to the state that is NOT stored to the server, but that
@@ -67,6 +69,26 @@ sharedStateServices.factory('StatePersistence', [
             
             
             var geoJsonFormatter = new OpenLayers.Format.GeoJSON();
+            
+            var dateFormat = '{yyyy}/{MM}/{dd}';
+            /**
+             * 
+             * @param {Date} date object
+             * @returns {String}
+             */
+            var serializeDate = function(date){
+                var dateStr = date.format(dateFormat);
+                return dateStr;
+            };
+            /**
+             * 
+             * @param {String} dateStr
+             * @returns {Date}
+             */
+            var deserializeDate = function(dateStr){
+                var date = new Date(dateStr);
+                return date;
+            };
             /**
              * A few objects cannot use the default JSON.stringify serialization because they
              * contain unserializable circular references. These functions catch
@@ -78,10 +100,14 @@ sharedStateServices.factory('StatePersistence', [
                     var serializedHuc = geoJsonFormatter.write(hucFeature);
                     return serializedHuc;
                 },
-                siteStatisticsParameters: function(params){
+                'siteStatisticsParameters': function(params){
                     if(params.startDate){
-                        
+                        params.startDate = serializeDate(params.startDate);
                     }
+                    if(params.endDate){
+                        params.endDate = serializeDate(params.endDate);
+                    }
+                    return params;
                 }
             };
             //map of property name to custom deserialization function
@@ -89,6 +115,15 @@ sharedStateServices.factory('StatePersistence', [
                 'hucFeature': function(hucFeatureString){
                     var deserializedHucArray = geoJsonFormatter.read(hucFeatureString);
                     return deserializedHucArray[0];
+                },
+                'siteStatisticsParameters': function(params){
+                    if(params.startDate){
+                        params.startDate = deserializeDate(params.startDate);
+                    }
+                    if(params.endDate){
+                        params.endDate = deserializeDate(params.endDate);
+                    }
+                    return params;
                 }
             };
 

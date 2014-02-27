@@ -4,7 +4,14 @@
 
     //using a map as a set (need fast membership checking later)
     var watchServiceNames = Object.extended();
-
+    var watchPromises = [];
+    
+    watchModule.service('watchPromises',[
+        function(){
+            return watchPromises;
+        }
+    ]);
+    
 //call this function with the same arguments that you would module.factory()
     var registerWatchFactory = function (watchServiceName, dependencyArray) {
         var finalName = 'nwc.watch.' + watchServiceName;
@@ -19,7 +26,8 @@
     registerWatchFactory('hucFeature',
             ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q', '$log', 'DataSeries', 'WaterBudgetMap',
                 function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q, $log, DataSeries, WaterBudgetMap) {
-                    
+                    var myPromise = $q.defer();
+                    watchPromises.push(myPromise);
                     /**
                      * @param {String} huc 12 digit identifier for the hydrologic unit
                      */
@@ -41,6 +49,7 @@
                                 alert(errorMessage);
                                 $log.error(errorMessage);
                                 $log.error(arguments);
+                                myPromise.reject();
                             };
                             /**
                              * 
@@ -84,6 +93,7 @@
                                     CommonState.DataSeriesStore.merge(DataSeriesStore);
                                     //boolean property is cheaper to watch than deep object comparison
                                     CommonState.newDataSeriesStore = true;
+                                    myPromise.resolve();
                                 }
                             };
                             $q.all(labeledAjaxCalls).then(sosSuccess, sosError);
@@ -105,8 +115,10 @@
                 }
             ]);
     registerWatchFactory('countyInfo',
-            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState', '$state', '$log',
-                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, Convert, DataSeries, WaterBudgetPlot, StoredState, $state, $log) {
+            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState', '$state', '$log', '$q',
+                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, Convert, DataSeries, WaterBudgetPlot, StoredState, $state, $log, $q) {
+                        var myPromise = $q.defer();
+                        watchPromises.push(myPromise);
                     return {
                         propertyToWatch: 'countyInfo',
                         watchFunction: function (prop, oldCountyInfo, newCountyInfo) {
@@ -117,12 +129,12 @@
 
                             var waterUseFailure = function (response) {
                                 var url = response.config.url;
-                                alert(
-                                        'An error occurred while retrieving water use data from:\n' +
+                                var message = 'An error occurred while retrieving water use data from:\n' +
                                         url + '\n' +
-                                        'See browser logs for details'
-                                        );
+                                        'See browser logs for details';
+                                alert(message);
                                 $log.error('Error while accessing: ' + url + '\n' + response.data);
+                                myPromise.reject(message);
                             };
 
                             var waterUseSuccess = function (response) {
@@ -145,6 +157,7 @@
 
                                     CommonState.WaterUsageDataSeries = waterUseDataSeries;
                                     CommonState.newWaterUseData = true;
+                                    myPromise.resolve();
                                     $state.go('workflow.waterBudget.plotData');
                                 }
                             };
@@ -185,8 +198,11 @@
      * Then navigate to the stat params form.
      */
     registerWatchFactory('gage', [
-        '$http', 'CommonState', '$log', 'StreamStats', '$rootScope', 'StoredState', 'rdbParser', '$state',
-        function ($http, CommonState, $log, StreamStats, $rootScope, StoredState, rdbParser, $state) {
+        '$http', 'CommonState', '$log', 'StreamStats', '$rootScope', 'StoredState', 'rdbParser', '$state', '$q',
+        function ($http, CommonState, $log, StreamStats, $rootScope, StoredState, rdbParser, $state, $q) {
+            var myPromise = $q.defer();
+            watchPromises.push(myPromise);
+            
             return {
                 propertyToWatch: 'gage',
                 //once a gage is selected, ask nwis what the relevant period of record is
@@ -245,12 +261,14 @@
 
                                     CommonState.streamFlowStatStartDate = startDate;
                                     CommonState.streamFlowStatEndDate = endDate;
+                                    myPromise.resolve();
                                     $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
                                 },
                                 function (response) {
                                     var msg = 'An error occurred while asking NWIS web for the period of record for the selected site';
                                     $log.error(msg);
                                     alert(msg);
+                                    myPromise.reject(msg);
                                 }
                         );
                     }
@@ -261,8 +279,10 @@
     ]);
 
     registerWatchFactory('streamflowStatsParamsReady',
-                        ['$http', 'CommonState', '$log', 'StreamStats', '$rootScope', 'StoredState',
-                function ($http, CommonState, $log, StreamStats, $rootScope, StoredState) {
+                        ['$http', 'CommonState', '$log', 'StreamStats', '$rootScope', 'StoredState', '$q',
+                function ($http, CommonState, $log, StreamStats, $rootScope, StoredState, $q) {
+                    var myPromise = $q.defer();
+                    watchPromises.push(myPromise);
                     return {
                         propertyToWatch: 'streamflowStatsParamsReady',
                         watchFunction: function (prop, oldValue, streamFlowStatsParamsReady) {
