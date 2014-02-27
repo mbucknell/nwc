@@ -36,8 +36,8 @@ sharedStateServices.factory('StoredState', [
 ]);
 
 sharedStateServices.factory('StatePersistence', [
-        'StoredState', '$state', '$timeout', '$http', '$modal', 'CommonState',
-        function (StoredState, $state, $timeout, $http, $modal, CommonState) {
+        'StoredState', '$state', '$timeout', '$http', '$modal', 'CommonState', 'RunningWatches', '$log',
+        function (StoredState, $state, $timeout, $http, $modal, CommonState, RunningWatches, $log) {
             var restore = function (stateId) {
                 $http.get('../loadsession/' + stateId)
                     .success(function (data) {
@@ -53,12 +53,19 @@ sharedStateServices.factory('StatePersistence', [
                                 customlyDeserializedState[customDeserializationProperty] = customValue;
                             }
                         });
-                        
+                        //grab promises for all of the potential 
                         Object.merge(StoredState, customlyDeserializedState);
-                        //let listeners on StoredState run before changing state
-                        $timeout(function(){
-                            $state.go(StoredState.stateName, StoredState.stateParams);
-                        });
+                        //let async listeners on StoredState finish before rendering the main ui
+                        var checkWatchers = function(){
+                            if(RunningWatches.isEmpty()){
+                                $log.info('All asynchronous runtime content has been loaded');
+                                $state.go(StoredState.stateName, StoredState.stateParams);
+                            }
+                            else{
+                                $timeout(checkWatchers, 500);
+                            }
+                        };
+                        $timeout(checkWatchers, 500);
                     })
                     .error(function () {
                         $modal.open({

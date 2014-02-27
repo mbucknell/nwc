@@ -4,11 +4,37 @@
 
     //using a map as a set (need fast membership checking later)
     var watchServiceNames = Object.extended();
-    var watchPromises = [];
     
-    watchModule.service('watchPromises',[
-        function(){
-            return watchPromises;
+    watchModule.service('RunningWatches', [ '$log',
+        function ($log) {
+            //a psuedo-set of running watches
+            //the keys are the watch names
+            //the values are meaningless
+            var runningWatches = {};
+            var defaultValue = 1;
+
+            return {
+                /*
+                 * @param {String} watchName
+                 */
+                add: function (watchName) {
+                    $log.info('Started Running Watch "' + watchName + '"');
+                    runningWatches[watchName] = defaultValue;
+                },
+                /**
+                 * @param {type} watchName
+                 */
+                remove: function (watchName) {
+                    $log.info('Stopped Running Watch "' + watchName + '"');
+                    delete runningWatches[watchName];
+                },
+                /**
+                 * @returns {Boolean} true if no running watches, false if running watches present
+                 */
+                isEmpty: function () {
+                    return !Object.keys(runningWatches).length;
+                }
+            };
         }
     ]);
     
@@ -23,11 +49,10 @@
             watchModule.factory(finalName, dependencyArray);
         }
     };
-    registerWatchFactory('hucFeature',
-            ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q', '$log', 'DataSeries', 'WaterBudgetMap',
-                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q, $log, DataSeries, WaterBudgetMap) {
-                    var myPromise = $q.defer();
-                    watchPromises.push(myPromise);
+    var hucFeatureName = 'hucFeature';
+    registerWatchFactory(hucFeatureName,
+            ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q', '$log', 'DataSeries', 'WaterBudgetMap', 'RunningWatches',
+                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q, $log, DataSeries, WaterBudgetMap, RunningWatches) {
                     /**
                      * @param {String} huc 12 digit identifier for the hydrologic unit
                      */
@@ -49,7 +74,7 @@
                                 alert(errorMessage);
                                 $log.error(errorMessage);
                                 $log.error(arguments);
-                                myPromise.reject();
+                                RunningWatches.remove(hucFeatureName);
                             };
                             /**
                              * 
@@ -93,17 +118,18 @@
                                     CommonState.DataSeriesStore.merge(DataSeriesStore);
                                     //boolean property is cheaper to watch than deep object comparison
                                     CommonState.newDataSeriesStore = true;
-                                    myPromise.resolve();
+                                    RunningWatches.remove(hucFeatureName);
                                 }
                             };
                             $q.all(labeledAjaxCalls).then(sosSuccess, sosError);
                     };
                     
                     
-
+                    
                     return {
-                        propertyToWatch: 'hucFeature',
+                        propertyToWatch: hucFeatureName,
                         watchFunction: function (prop, oldHucFeature, newHucFeature) {
+                            RunningWatches.add(hucFeatureName);
                             if (newHucFeature) {
                                 //clear downstream state
                                 CommonState.WaterUsageDataSeries = DataSeries.new();
@@ -114,15 +140,14 @@
                     };
                 }
             ]);
-    registerWatchFactory('countyInfo',
-            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState', '$state', '$log', '$q',
-                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, Convert, DataSeries, WaterBudgetPlot, StoredState, $state, $log, $q) {
-                        var myPromise = $q.defer();
-                        watchPromises.push(myPromise);
+            var countyInfoName = 'countyInfo';
+    registerWatchFactory(countyInfoName,
+            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState', '$state', '$log', 'RunningWatches',
+                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, Convert, DataSeries, WaterBudgetPlot, StoredState, $state, $log, RunningWatches) {
                     return {
-                        propertyToWatch: 'countyInfo',
+                        propertyToWatch: countyInfoName,
                         watchFunction: function (prop, oldCountyInfo, newCountyInfo) {
-
+                            RunningWatches.add(countyInfoName);
                             var offeringId = newCountyInfo.offeringId;
                             
                             var sosUrl = SosUrlBuilder.buildSosUrlFromSource(offeringId, SosSources.countyWaterUse);
@@ -134,7 +159,7 @@
                                         'See browser logs for details';
                                 alert(message);
                                 $log.error('Error while accessing: ' + url + '\n' + response.data);
-                                myPromise.reject(message);
+                                RunningWatches.remove(countyInfoName);
                             };
 
                             var waterUseSuccess = function (response) {
@@ -157,7 +182,7 @@
 
                                     CommonState.WaterUsageDataSeries = waterUseDataSeries;
                                     CommonState.newWaterUseData = true;
-                                    myPromise.resolve();
+                                    RunningWatches.remove(countyInfoName);
                                     $state.go('workflow.waterBudget.plotData');
                                 }
                             };
@@ -197,16 +222,16 @@
      * Once obtained, stuff start and end dates into Common State as absolute minimums and maximums for the datepickers
      * Then navigate to the stat params form.
      */
-    registerWatchFactory('gage', [
-        '$http', 'CommonState', '$log', 'StreamStats', '$rootScope', 'StoredState', 'rdbParser', '$state', '$q',
-        function ($http, CommonState, $log, StreamStats, $rootScope, StoredState, rdbParser, $state, $q) {
-            var myPromise = $q.defer();
-            watchPromises.push(myPromise);
+    var gageName = 'gage';
+    registerWatchFactory(gageName, [
+        '$http', 'CommonState', '$log', 'StreamStats', '$rootScope', 'StoredState', 'rdbParser', '$state', 'RunningWatches',
+        function ($http, CommonState, $log, StreamStats, $rootScope, StoredState, rdbParser, $state, RunningWatches) {
             
             return {
-                propertyToWatch: 'gage',
+                propertyToWatch: gageName,
                 //once a gage is selected, ask nwis what the relevant period of record is
                 watchFunction: function (prop, oldValue, newGage) {
+                    RunningWatches.add(gageName);
                     if (newGage !== undefined) {
                         //reset params
                         CommonState.streamFlowStatStartDate = undefined;
@@ -261,14 +286,14 @@
 
                                     CommonState.streamFlowStatStartDate = startDate;
                                     CommonState.streamFlowStatEndDate = endDate;
-                                    myPromise.resolve();
+                                    RunningWatches.remove(gageName);
                                     $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
                                 },
                                 function (response) {
                                     var msg = 'An error occurred while asking NWIS web for the period of record for the selected site';
                                     $log.error(msg);
                                     alert(msg);
-                                    myPromise.reject(msg);
+                                    RunningWatches.remove(gageName);
                                 }
                         );
                     }
@@ -277,15 +302,14 @@
             };
         }
     ]);
-
-    registerWatchFactory('streamflowStatsParamsReady',
-                        ['$http', 'CommonState', '$log', 'StreamStats', '$rootScope', 'StoredState', '$q',
-                function ($http, CommonState, $log, StreamStats, $rootScope, StoredState, $q) {
-                    var myPromise = $q.defer();
-                    watchPromises.push(myPromise);
+    var streamStatsReadyName = 'streamflowStatsParamsReady';
+    registerWatchFactory(streamStatsReadyName,
+                        ['$http', 'CommonState', '$log', 'StreamStats', '$rootScope', 'StoredState', 'RunningWatches',
+                function ($http, CommonState, $log, StreamStats, $rootScope, StoredState, RunningWatches) {
                     return {
                         propertyToWatch: 'streamflowStatsParamsReady',
                         watchFunction: function (prop, oldValue, streamFlowStatsParamsReady) {
+                            RunningWatches.add(streamStatsReadyName);
                             if (streamFlowStatsParamsReady) {
                                 //reset
                                 CommonState.streamflowStatistics = [];
@@ -296,6 +320,7 @@
                                 var callback = function(statistics, resultsUrl){
                                     CommonState.streamflowStatistics = statistics;
                                     CommonState.streamflowStatisticsUrl = resultsUrl;
+                                    RunningWatches.remove(streamStatsReadyName);
                                 };
                                 var statTypes  = StoredState.siteStatisticsParameters.statGroups;
                                 
@@ -311,6 +336,7 @@
                                     var msg = 'Error: Neither a HUC nor a gage is defined. Cannot continue computing statistics.';
                                     $log.error(StoredState.streamFlowStatsHuc);
                                     alert(msg);
+                                    RunningWatches.remove(streamStatsReadyName);
                                 }
                             }
                             return streamFlowStatsParamsReady;
