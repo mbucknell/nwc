@@ -74,12 +74,12 @@
 
             return {
                 getAllStatTypes: function () {
-                    return ["magnifSeven", "magStat", "flowStat", "durStat", "timStat", "rateStat", "otherStat"];
+                    return ["magnifSeven", "magStat", "flowStat", "durStat", "timStat", "rateStat"];
                 },
                 /**
                  * 
                  * @param {Array<String>} hucIds
-                 * @param {Array<String>} statTypes any of [magnifSeven,magStat,flowStat,durStat,timStat,rateStat,otherStat]
+                 * @param {Array<String>} statTypes any of [magnifSeven,magStat,flowStat,durStat,timStat,rateStat]
                  * @param {Date} startDate the start of the period for which to calculate statistics
                  * @param {Date} endDate the start of the period for which to calculate statistics
                  * @param {Function} callback accepts two arguments, an array of statistics objects, and a String URL from which to obtain the results
@@ -116,7 +116,7 @@
                         /**
                          * 
                          * @param {Array<String>} siteIds
-                         * @param {Array<String>} statTypes any of [magnifSeven,magStat,flowStat,durStat,timStat,rateStat,otherStat]
+                         * @param {Array<String>} statTypes any of [magnifSeven,magStat,flowStat,durStat,timStat,rateStat]
                          * @param {Date} startDate the start of the period for which to calculate statistics
                          * @param {Date} endDate the start of the period for which to calculate statistics
                          * @param {Function} callback accepts two arguments, an array of statistics objects, and a String URL from which to obtain the results
