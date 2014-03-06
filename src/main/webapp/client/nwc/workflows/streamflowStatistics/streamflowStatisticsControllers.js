@@ -24,7 +24,7 @@
                 var mapId = 'siteSelectMap';
                 var map = StreamflowMap.getMap();
                 map.render(mapId);
-                map.zoomToExtent(map.restrictedExtent, true);
+                map.zoomToExtent(map.extent, true);
                 
                 StoredState.interestType = StoredState.interestType || 'observed' ;
                 $scope.$watch('StoredState.interestType', function(newInterest, oldInterest){

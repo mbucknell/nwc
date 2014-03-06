@@ -3,8 +3,9 @@
     var baseMap = angular.module('nwc.map.base', []);
     var getDefaultConfig = function(){
         var mapLayers = [];
-        var WGS84_GOOGLE_MERCATOR = new OpenLayers.Projection("EPSG:900913");
-        var EPSG900913Options = {
+        var WGS84_GOOGLE_MERCATOR = new OpenLayers.Projection("EPSG:3857");
+        var WGS84_GEOGRAPHIC = new OpenLayers.Projection("EPSG:4326");
+        var EPSG3857Options = {
             sphericalMercator: true,
             layers: "0",
             isBaseLayer: true,
@@ -12,7 +13,7 @@
             units: "m",
             buffer: 3,
             transitionEffect: 'resize',
-            wrapDateLine: false
+            wrapDateLine: true
         };
         // ////////////////////////////////////////////// BASE LAYERS
         var zyx = '/MapServer/tile/${z}/${y}/${x}';
@@ -22,7 +23,8 @@
                 "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map" + zyx,
                 {
                     isBaseLayer: true,
-                    units: "m"
+                    units: "m",
+                    wrapDateLine: true
                 }
             )
         );
@@ -30,24 +32,26 @@
         mapLayers.push(new OpenLayers.Layer.XYZ(
                 "World Light Gray Base",
                 "http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base" + zyx,
-                Object.merge(EPSG900913Options, {numZoomLevels: 14})
+                Object.merge(EPSG3857Options, {numZoomLevels: 14})
                 ));
         mapLayers.push(new OpenLayers.Layer.XYZ(
                 "World Topo Map",
                 "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map" + zyx,
                 {isBaseLayer: true,
-                    units: "m"
+                    units: "m",
+                    wrapDateLine: true
                 }));
         mapLayers.push(new OpenLayers.Layer.XYZ(
                 "World Imagery",
                 "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery" + zyx,
                 {isBaseLayer: true,
-                    units: "m"
+                    units: "m",
+                    wrapDateLine: true
                 }));
         mapLayers.push(new OpenLayers.Layer.XYZ(
                 "World Terrain Base",
                 "http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief" + zyx,
-                Object.merge(EPSG900913Options, {numZoomLevels: 14})
+                Object.merge(EPSG3857Options, {numZoomLevels: 14})
                 ));
 
 
@@ -55,7 +59,9 @@
         var controls = [
             new OpenLayers.Control.Navigation(),
             new OpenLayers.Control.MousePosition({
-                prefix: 'POS: '
+                prefix: 'POS: ',
+                numDigits: 2,
+                displayProjection: WGS84_GEOGRAPHIC
             }),
             new OpenLayers.Control.ScaleLine({
                 geodesic: true
@@ -65,13 +71,13 @@
             }),
             new OpenLayers.Control.Zoom()
         ];
-        var extent = new OpenLayers.Bounds(-146.0698, 19.1647, -42.9301, 52.8949).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
-
-
+        var maxExtent = new OpenLayers.Bounds(-179.0, 10.0, -42.0, 75.0).transform(WGS84_GEOGRAPHIC, WGS84_GOOGLE_MERCATOR);
+        var initialExtent = new OpenLayers.Bounds(-165.0, 10.0, -65.0, 65.0).transform(WGS84_GEOGRAPHIC, WGS84_GOOGLE_MERCATOR);
 
         var defaultConfig = {
+            extent: initialExtent,
             layers: mapLayers,
-            restrictedExtent: extent,
+            restrictedExtent: maxExtent,
             projection: WGS84_GOOGLE_MERCATOR,
             controls: controls
         };
