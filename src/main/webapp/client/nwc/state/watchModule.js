@@ -184,7 +184,6 @@
                                     CommonState.WaterUsageDataSeries = waterUseDataSeries;
                                     CommonState.newWaterUseData = true;
                                     RunningWatches.remove(countyInfoName);
-                                    $state.go('workflow.waterBudget.plotData');
                                 }
                             };
 
@@ -288,7 +287,6 @@
                                     CommonState.streamFlowStatMinDate = startDate;
                                     CommonState.streamFlowStatMaxDate = endDate;
                                     RunningWatches.remove(gageName);
-                                    $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
                                 },
                                 function (response) {
                                     var msg = 'An error occurred while asking NWIS web for the period of record for the selected site';
@@ -340,7 +338,6 @@
                                     alert(msg);
                                     RunningWatches.remove(streamStatsReadyName);
                                 }
-                                $state.go('workflow.streamflowStatistics.displayStatistics');
 
                             }
                             else {
@@ -357,7 +354,7 @@
         var dependencies = ['StoredState', 'CommonState'].concat(allWatchServiceNames);
         
         var registerAllWatchers = function(StoredState, CommonState){
-            var watchServices = Array.create(arguments).from(1);//ignore storedState
+            var watchServices = Array.create(arguments).from(2);//ignore storedState/commonState
             angular.forEach(watchServices, function(watchService){
                 StoredState.watch(watchService.propertyToWatch, watchService.watchFunction);
             });
