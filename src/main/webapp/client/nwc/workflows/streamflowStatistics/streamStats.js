@@ -13,8 +13,8 @@
     };
 
 
-    streamStats.service('StreamStats', ['$http', '$log', 'wps',
-        function ($http, $log, wps) {
+    streamStats.service('StreamStats', ['$http', '$log', 'wps', 'statDict',
+        function ($http, $log, wps, statDict) {
             var resultsCouldNotBeObtained = function (response) {
                 var msg = 'Process Completed, but there was an error retrieving the results';
                 $log.error(msg);
@@ -35,7 +35,8 @@
                 names.each(function (name, nameIndex) {
                     statObjectArray.push({
                         name: name,
-                        value: values[nameIndex]//parallel array
+                        value: values[nameIndex],//parallel array
+                        desc: statDict[name]
                     });
                 });
                 callback(statObjectArray, resultsUrl);

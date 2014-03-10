@@ -58,6 +58,7 @@
 <script type="text/javascript" src="../client/nwc/general/services/Conversion.js"></script>
 <script type="text/javascript" src="../client/nwc/workflows/waterBudget/waterUsageChart.js"></script>
 <script type="text/javascript" src="../client/nwc/workflows/streamflowStatistics/streamStats.js"></script>
+<script type="text/javascript" src="../client/nwc/workflows/streamflowStatistics/statisticDescriptions.js"></script>
 <script type="text/javascript" src="../client/nwc/general/services/WpsClient.js"></script>
 <script type="text/javascript" src="../client/nwc/general/services/RdbParser.js"></script>
 

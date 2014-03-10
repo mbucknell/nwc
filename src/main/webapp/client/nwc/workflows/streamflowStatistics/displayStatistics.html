@@ -28,12 +28,14 @@
 			<tr>
 				<th>Name</th>
 				<th>Value</th>
+                <th>Description</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="stat in CommonState.streamflowStatistics">
-				<td class="xs-col-2" ng-bind="stat.name"></td>
-				<td class="xs-col-10" ng-bind="stat.value"></td>
+				<td ng-bind="stat.name"></td>
+				<td ng-bind="stat.value"></td>
+                <td ng-bind="stat.desc"></td>
 			</tr>
 		</tbody>
 	</table>
