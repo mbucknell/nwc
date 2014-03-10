@@ -22,7 +22,7 @@
             
                 var map = AquaticBiologyMap.getMap();
                 map.render('bioSiteSelectMap');
-                map.zoomToExtent(map.restrictedExtent, true);
+                map.zoomToExtent(map.extent, true);
                 
             }
         )

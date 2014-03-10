@@ -83,7 +83,7 @@ waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'Common
             
             
                 map.render('hucSelectMap');
-                map.zoomToExtent(map.restrictedExtent, true);
+                map.zoomToExtent(map.extent, true);
         
             
             

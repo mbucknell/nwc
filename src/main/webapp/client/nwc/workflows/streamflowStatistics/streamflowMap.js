@@ -215,8 +215,8 @@
                         true
                 );
 
-                var mapZoomForExtent = map.getZoomForExtent(map.restrictedExtent);
-                map.setCenter(map.restrictedExtent.getCenterLonLat(), mapZoomForExtent);
+                var mapZoomForExtent = map.getZoomForExtent(map.extent);
+                map.setCenter(map.extent.getCenterLonLat(), mapZoomForExtent);
                 updateFromClipValue(streamOrderClipValues[map.zoom]);
                 
                 /**
