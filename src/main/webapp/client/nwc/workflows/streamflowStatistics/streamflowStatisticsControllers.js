@@ -48,6 +48,7 @@
                 $scope.affirmGage = function(gage){
                     StoredState.gage = gage;
                     StoredState.siteStatisticsParameters = {};
+                    $state.go('^.setSiteStatisticsParameters');
                 };
                 
             }
