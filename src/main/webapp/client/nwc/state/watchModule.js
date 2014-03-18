@@ -141,7 +141,7 @@
                     };
                 }
             ]);
-            var countyInfoName = 'countyInfo';
+    var countyInfoName = 'countyInfo';
     registerWatchFactory(countyInfoName,
             [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState', '$state', '$log', 'RunningWatches',
                 function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, Convert, DataSeries, WaterBudgetPlot, StoredState, $state, $log, RunningWatches) {
@@ -349,16 +349,73 @@
                 }
             ]
     );
+    
+    var mapSelectControlName = "mapSelectEnabled";
+    var mapPanControlName = "mapPanEnabled";
+    var mapZoomControlName = "mapZoomEnabled";
+    registerWatchFactory(mapSelectControlName, ['CommonState', '$log', 'RunningWatches',
+            function (CommonState, $log, RunningWatches) {
+                return {
+                    propertyToWatch: mapSelectControlName,
+                    watchFunction: function (prop, oldValue, newValue) {
+                        RunningWatches.add(mapSelectControlName);
+                        if (newValue) {
+                            CommonState[mapPanControlName] = false;
+                            CommonState[mapZoomControlName] = false;
+                        }
+                        RunningWatches.remove(mapSelectControlName);
+                        return newValue;
+                    }
+                };
+            }
+        ]
+    );
+    registerWatchFactory(mapPanControlName, ['CommonState', '$log', 'RunningWatches',
+            function (CommonState, $log, RunningWatches) {
+                return {
+                    propertyToWatch: mapPanControlName,
+                    watchFunction: function (prop, oldValue, newValue) {
+                        RunningWatches.add(mapPanControlName);
+                        if (newValue) {
+                            CommonState[mapSelectControlName] = false;
+                            CommonState[mapZoomControlName] = false;
+                        }
+                        RunningWatches.remove(mapPanControlName);
+                        return newValue;
+                    }
+                };
+            }
+        ]
+    );
+    registerWatchFactory(mapZoomControlName, ['CommonState', '$log', 'RunningWatches',
+            function (CommonState, $log, RunningWatches) {
+                return {
+                    propertyToWatch: mapZoomControlName,
+                    watchFunction: function (prop, oldValue, newValue) {
+                        RunningWatches.add(mapZoomControlName);
+                        if (newValue) {
+                            CommonState[mapSelectControlName] = false;
+                            CommonState[mapPanControlName] = false;
+                        }
+                        RunningWatches.remove(mapZoomControlName);
+                        return newValue;
+                    }
+                };
+            }
+        ]
+    );
             
-        var allWatchServiceNames = watchServiceNames.keys();
-        var dependencies = ['StoredState', 'CommonState'].concat(allWatchServiceNames);
-        
-        var registerAllWatchers = function(StoredState, CommonState){
-            var watchServices = Array.create(arguments).from(2);//ignore storedState/commonState
-            angular.forEach(watchServices, function(watchService){
-                StoredState.watch(watchService.propertyToWatch, watchService.watchFunction);
-            });
-        };
-        watchModule.run(dependencies.concat([registerAllWatchers]));
+    var allWatchServiceNames = watchServiceNames.keys();
+    var dependencies = ['StoredState', 'CommonState'].concat(allWatchServiceNames);
+
+    var registerAllWatchers = function(StoredState, CommonState){
+        var watchServices = Array.create(arguments).from(2);//ignore storedState/commonState
+        angular.forEach(watchServices, function(watchService){
+            StoredState.watch(watchService.propertyToWatch, watchService.watchFunction);
+            // This is wrong, fix soon. We want to watch common and stored differently.
+            CommonState.watch(watchService.propertyToWatch, watchService.watchFunction);
+        });
+    };
+    watchModule.run(dependencies.concat([registerAllWatchers]));
 
 }());

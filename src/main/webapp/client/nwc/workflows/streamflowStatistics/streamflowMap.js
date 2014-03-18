@@ -43,8 +43,7 @@
                         mapLayer.updateFromClipValue(val);
                     }
                 }
-            };
-            
+            };            
             
             var initMap = function () {
                 var mapLayers = [];
@@ -71,8 +70,9 @@
                     CONFIG.endpoint.geoserver + 'NWC/wms',
                     {
                         LAYERS: 'NWC:gagesII',
-                        STYLES: '',
+                        STYLES: 'gagesii_por',
                         format: 'image/png',
+                        transparent: true,
                         tiled: true
                     },
                     {
@@ -247,6 +247,9 @@
                     else{
                         throw Error('unknown interest supplied: ' + interest);
                     }
+                };
+                map.switchGageStyle = function(styleName) {
+                    gageFeatureLayer.mergeNewParams({STYLES: styleName});
                 };
                 return map;
             };

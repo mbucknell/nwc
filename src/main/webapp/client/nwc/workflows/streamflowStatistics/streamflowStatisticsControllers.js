@@ -25,13 +25,23 @@
                 var map = StreamflowMap.getMap();
                 map.render(mapId);
                 map.zoomToExtent(map.extent, true);
-                
-                StoredState.interestType = StoredState.interestType || 'observed' ;
-                $scope.$watch('StoredState.interestType', function(newInterest, oldInterest){
+
+                StoredState.interestType = StoredState.interestType || 'observed';
+                StoredState.gageStyle = StoredState.gageStyle || 'gagesii_por';
+                //CommonState.mapSelectEnabled = CommonState.mapSelectEnabled || true;
+                $scope.$watch('StoredState.interestType', function(newInterest, oldInterest) {
                     if(newInterest !== oldInterest){
                         StreamflowMap.getMap().switchToInterest(newInterest);
                     }
                 });
+                $scope.$watch('StoredState.gageStyle', function(newStyle, oldStyle) {
+                    if(newStyle !== oldStyle) {
+                        StreamflowMap.getMap().switchGageStyle(newStyle);
+                    }
+                });
+                $scope.showGageStyleSelector = function() {
+                    return StoredState.interestType === 'observed';
+                };
             }
         )
     ]);

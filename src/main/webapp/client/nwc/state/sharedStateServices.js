@@ -12,6 +12,9 @@ var storedState = Object.extended({
 var commonState = Object.extended({
     DataSeriesStore: Object.extended(),
     newDataSeriesStore: false,
+    mapSelectEnabled: true,
+    mapPanEnabled: false,
+    mapZoomEnabled: false,
     streamFlowStatMinDate: new Date(),
     streamFlowStatMaxDate: new Date()
 });

@@ -1,10 +1,31 @@
 <div class="row">
 
-<div class="text-center">
-        <div class="btn-group">
+    <div class="text-center">
+        <div class="row">
+            <div class="btn-group">
                 <button type="button" class="btn btn-primary" ng-model="StoredState.interestType" btn-radio="'observed'">Observed</button>
                 <button type="button" class="btn btn-primary" ng-model="StoredState.interestType" btn-radio="'modeled'">Modeled</button>
             </div>
-</div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div id="mapControls">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" ng-model="CommonState.mapSelectEnabled" btn-radio="true">Select</button>
+                        <button type="button" class="btn btn-primary" ng-model="CommonState.mapPanEnabled" btn-radio="true">Pan</button>
+                        <button type="button" class="btn btn-primary" ng-model="CommonState.mapZoomEnabled" btn-radio="true">Zoom</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="btn-group" ng-show="showGageStyleSelector()">
+                    <button type="button" class="btn btn-primary" ng-model="StoredState.gageStyle" btn-radio="'gagesii_por'">Period of Record</button>
+                    <button type="button" class="btn btn-primary" ng-model="StoredState.gageStyle" btn-radio="'gagesii_ref'">Reference</button>
+                    <button type="button" class="btn btn-primary" ng-model="StoredState.gageStyle" btn-radio="'gagesii_other'">Other</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
 <div id="siteSelectMap" class="col-xs-12" style="height: 500px;"></div>
