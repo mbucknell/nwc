@@ -110,13 +110,16 @@
                 mapLayers.push(flowlinesData);
                 mapLayers.push(flowlineRaster);   
                 
-                var waterCensusToolbar = new OpenLayers.Control.WaterCensusToolbar({});
-                initialControls.push(waterCensusToolbar);
+                //var waterCensusToolbar = new OpenLayers.Control.WaterCensusToolbar({});
+                //initialControls.push(waterCensusToolbar);
+                initialControls.push(new OpenLayers.Control.Navigation({id: 'streamflow-navigation'}));
+                initialControls.push(new OpenLayers.Control.ZoomBox({id: 'streamflow-zoom'}));
                 
                 var wmsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
+                    id: 'gage-identify-control',
                     title: 'gage-identify-control',
                     hover: false,
-                    autoActivate: true,
+                    autoActivate: false,
                     layers: [
                         gageFeatureLayer
                     ],
@@ -145,6 +148,7 @@
                 initialControls.push(wmsGetFeatureInfoControl);
                 
                 var hucsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
+                    id: 'huc-identify-control',
                     title: 'huc-identify-control',
                     hover: false,
                     layers: [

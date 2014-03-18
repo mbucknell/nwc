@@ -353,15 +353,20 @@
     var mapSelectControlName = "mapSelectEnabled";
     var mapPanControlName = "mapPanEnabled";
     var mapZoomControlName = "mapZoomEnabled";
-    registerWatchFactory(mapSelectControlName, ['CommonState', '$log', 'RunningWatches',
-            function (CommonState, $log, RunningWatches) {
+    registerWatchFactory(mapSelectControlName, ['CommonState', 'StoredState', 'StreamflowMap', '$log', 'RunningWatches',
+            function (CommonState, StoredState, StreamflowMap, $log, RunningWatches) {
                 return {
                     propertyToWatch: mapSelectControlName,
                     watchFunction: function (prop, oldValue, newValue) {
                         RunningWatches.add(mapSelectControlName);
+                        var controlId = (StoredState.interestType === 'observed') ? 'gage-identify-control' : 'huc-identify-control';
+                        var selectControl = StreamflowMap.getMap().getControlsBy('id', controlId)[0];
                         if (newValue) {
+                            selectControl.activate();
                             CommonState[mapPanControlName] = false;
                             CommonState[mapZoomControlName] = false;
+                        } else {
+                            selectControl.deactivate();
                         }
                         RunningWatches.remove(mapSelectControlName);
                         return newValue;
@@ -370,15 +375,19 @@
             }
         ]
     );
-    registerWatchFactory(mapPanControlName, ['CommonState', '$log', 'RunningWatches',
-            function (CommonState, $log, RunningWatches) {
+    registerWatchFactory(mapPanControlName, ['CommonState', 'StreamflowMap', '$log', 'RunningWatches',
+            function (CommonState, StreamflowMap, $log, RunningWatches) {
                 return {
                     propertyToWatch: mapPanControlName,
                     watchFunction: function (prop, oldValue, newValue) {
                         RunningWatches.add(mapPanControlName);
+                        var navControl = StreamflowMap.getMap().getControlsBy('id', 'streamflow-navigation')[0];
                         if (newValue) {
+                            navControl.activate();
                             CommonState[mapSelectControlName] = false;
                             CommonState[mapZoomControlName] = false;
+                        } else {
+                            navControl.deactivate();
                         }
                         RunningWatches.remove(mapPanControlName);
                         return newValue;
@@ -387,15 +396,19 @@
             }
         ]
     );
-    registerWatchFactory(mapZoomControlName, ['CommonState', '$log', 'RunningWatches',
-            function (CommonState, $log, RunningWatches) {
+    registerWatchFactory(mapZoomControlName, ['CommonState', 'StreamflowMap', '$log', 'RunningWatches',
+            function (CommonState, StreamflowMap, $log, RunningWatches) {
                 return {
                     propertyToWatch: mapZoomControlName,
                     watchFunction: function (prop, oldValue, newValue) {
                         RunningWatches.add(mapZoomControlName);
+                        var zoomControl = StreamflowMap.getMap().getControlsBy('id', 'streamflow-zoom')[0];
                         if (newValue) {
+                            zoomControl.activate();
                             CommonState[mapSelectControlName] = false;
                             CommonState[mapPanControlName] = false;
+                        } else {
+                            zoomControl.deactivate();
                         }
                         RunningWatches.remove(mapZoomControlName);
                         return newValue;

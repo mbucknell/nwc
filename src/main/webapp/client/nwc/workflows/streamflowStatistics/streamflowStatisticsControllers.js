@@ -28,7 +28,7 @@
 
                 StoredState.interestType = StoredState.interestType || 'observed';
                 StoredState.gageStyle = StoredState.gageStyle || 'gagesii_por';
-                //CommonState.mapSelectEnabled = CommonState.mapSelectEnabled || true;
+                CommonState.mapSelectEnabled = true;
                 $scope.$watch('StoredState.interestType', function(newInterest, oldInterest) {
                     if(newInterest !== oldInterest){
                         StreamflowMap.getMap().switchToInterest(newInterest);
