@@ -12,9 +12,7 @@ var storedState = Object.extended({
 var commonState = Object.extended({
     DataSeriesStore: Object.extended(),
     newDataSeriesStore: false,
-    mapSelectEnabled: false,
-    mapPanEnabled: false,
-    mapZoomEnabled: false,
+    activatedMapControl: "select",
     gageStyleDescription: "Gages for Evaluating Streamflow",
     streamFlowStatMinDate: new Date(),
     streamFlowStatMaxDate: new Date()
