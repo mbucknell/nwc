@@ -89,3 +89,9 @@
 .axisLabels {
     font-size: 1.5em;
 }
+
+[ng-click],
+[data-ng-click],
+[x-ng-click] {
+    cursor: pointer;
+}

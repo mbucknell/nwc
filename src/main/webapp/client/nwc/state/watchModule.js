@@ -141,7 +141,7 @@
                     };
                 }
             ]);
-            var countyInfoName = 'countyInfo';
+    var countyInfoName = 'countyInfo';
     registerWatchFactory(countyInfoName,
             [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState', '$state', '$log', 'RunningWatches',
                 function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, Convert, DataSeries, WaterBudgetPlot, StoredState, $state, $log, RunningWatches) {
@@ -260,41 +260,41 @@
                         //var queryString = Object.toQueryString(params);
                         var url = nwisBaseUrl + queryString;
 
+                        var gageInfoFailure = function(response) {
+                            var msg = 'An error occurred while asking NWIS web for the period of record for the selected site';
+                            $log.error(msg);
+                            alert(msg);
+                            RunningWatches.remove(gageName);
+                        };
+                        var gageInfoSuccess = function (response) {
+                            var rdbTables = rdbParser.parse(response.data);
+                            if (!rdbTables.length) {
+                                throw Error('Error parsing NWIS series catalog output response');
+                            }
+                            var table = rdbTables[0];
+                            var startColumn = table.getColumnByName(startDateColName);
+                            startColumn = startColumn.map(reformatDateStr);
+                            startColumn = startColumn.map(strToDate);
+                            startColumn.sort(function(a, b) {
+                                return a - b;
+                            });
+                            var startDate = startColumn[0];
 
-                        $http.get(url).then(
-                                function (response) {
-                                    var rdbTables = rdbParser.parse(response.data);
-                                    if (!rdbTables.length) {
-                                        throw Error('Error parsing NWIS series catalog output response');
-                                    }
-                                    var table = rdbTables[0];
-                                    var startColumn = table.getColumnByName(startDateColName);
-                                    startColumn = startColumn.map(reformatDateStr);
-                                    startColumn = startColumn.map(strToDate);
-                                    startColumn.sort(function (a, b) {
-                                        return a - b;
-                                    });
-                                    var startDate = startColumn[0];
+                            var endColumn = table.getColumnByName(endDateColName);
+                            endColumn = endColumn.map(reformatDateStr);
+                            endColumn = endColumn.map(strToDate);
+                            endColumn.sort(function(a, b) {
+                                return a + b;
+                            });
+                            var endDate = endColumn[0];
 
-                                    var endColumn = table.getColumnByName(endDateColName);
-                                    endColumn = endColumn.map(reformatDateStr);
-                                    endColumn = endColumn.map(strToDate);
-                                    endColumn.sort(function (a, b) {
-                                        return a + b;
-                                    });
-                                    var endDate = endColumn[0];
-
-                                    CommonState.streamFlowStatMinDate = startDate;
-                                    CommonState.streamFlowStatMaxDate = endDate;
-                                    RunningWatches.remove(gageName);
-                                },
-                                function (response) {
-                                    var msg = 'An error occurred while asking NWIS web for the period of record for the selected site';
-                                    $log.error(msg);
-                                    alert(msg);
-                                    RunningWatches.remove(gageName);
-                                }
-                        );
+                            CommonState.streamFlowStatMinDate = startDate;
+                            CommonState.streamFlowStatMaxDate = endDate;
+                            RunningWatches.remove(gageName);
+                            // Adding this back here, need to rework some of this logic 
+                            $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
+                        };
+                        $http.get(url).then(gageInfoSuccess, gageInfoFailure);
                     }
                     return newGage;
                 }
@@ -349,16 +349,86 @@
                 }
             ]
     );
+    
+    var mapSelectControlName = "mapSelectEnabled";
+    var mapPanControlName = "mapPanEnabled";
+    var mapZoomControlName = "mapZoomEnabled";
+    registerWatchFactory(mapSelectControlName, ['CommonState', 'StoredState', 'StreamflowMap', '$log', 'RunningWatches',
+            function (CommonState, StoredState, StreamflowMap, $log, RunningWatches) {
+                return {
+                    propertyToWatch: mapSelectControlName,
+                    watchFunction: function (prop, oldValue, newValue) {
+                        RunningWatches.add(mapSelectControlName);
+                        var controlId = (StoredState.interestType === 'observed') ? 'gage-identify-control' : 'huc-identify-control';
+                        var selectControl = StreamflowMap.getMap().getControlsBy('id', controlId)[0];
+                        if (newValue) {
+                            selectControl.activate();
+                            CommonState[mapPanControlName] = false;
+                            CommonState[mapZoomControlName] = false;
+                        } else {
+                            selectControl.deactivate();
+                        }
+                        RunningWatches.remove(mapSelectControlName);
+                        return newValue;
+                    }
+                };
+            }
+        ]
+    );
+    registerWatchFactory(mapPanControlName, ['CommonState', 'StreamflowMap', '$log', 'RunningWatches',
+            function (CommonState, StreamflowMap, $log, RunningWatches) {
+                return {
+                    propertyToWatch: mapPanControlName,
+                    watchFunction: function (prop, oldValue, newValue) {
+                        RunningWatches.add(mapPanControlName);
+                        var navControl = StreamflowMap.getMap().getControlsBy('id', 'streamflow-navigation')[0];
+                        if (newValue) {
+                            navControl.activate();
+                            CommonState[mapSelectControlName] = false;
+                            CommonState[mapZoomControlName] = false;
+                        } else {
+                            navControl.deactivate();
+                        }
+                        RunningWatches.remove(mapPanControlName);
+                        return newValue;
+                    }
+                };
+            }
+        ]
+    );
+    registerWatchFactory(mapZoomControlName, ['CommonState', 'StreamflowMap', '$log', 'RunningWatches',
+            function (CommonState, StreamflowMap, $log, RunningWatches) {
+                return {
+                    propertyToWatch: mapZoomControlName,
+                    watchFunction: function (prop, oldValue, newValue) {
+                        RunningWatches.add(mapZoomControlName);
+                        var zoomControl = StreamflowMap.getMap().getControlsBy('id', 'streamflow-zoom')[0];
+                        if (newValue) {
+                            zoomControl.activate();
+                            CommonState[mapSelectControlName] = false;
+                            CommonState[mapPanControlName] = false;
+                        } else {
+                            zoomControl.deactivate();
+                        }
+                        RunningWatches.remove(mapZoomControlName);
+                        return newValue;
+                    }
+                };
+            }
+        ]
+    );
             
-        var allWatchServiceNames = watchServiceNames.keys();
-        var dependencies = ['StoredState', 'CommonState'].concat(allWatchServiceNames);
-        
-        var registerAllWatchers = function(StoredState, CommonState){
-            var watchServices = Array.create(arguments).from(2);//ignore storedState/commonState
-            angular.forEach(watchServices, function(watchService){
-                StoredState.watch(watchService.propertyToWatch, watchService.watchFunction);
-            });
-        };
-        watchModule.run(dependencies.concat([registerAllWatchers]));
+    var allWatchServiceNames = watchServiceNames.keys();
+    var dependencies = ['StoredState', 'CommonState'].concat(allWatchServiceNames);
+
+    var registerAllWatchers = function(StoredState, CommonState){
+        var watchServices = Array.create(arguments).from(2);//ignore storedState/commonState
+        angular.forEach(watchServices, function(watchService){
+            StoredState.watch(watchService.propertyToWatch, watchService.watchFunction);
+            // This is wrong, fix soon. We want to watch common and stored differently.
+            CommonState.watch(watchService.propertyToWatch, watchService.watchFunction);
+        });
+    };
+    watchModule.run(dependencies.concat([registerAllWatchers]));
 
 }());
