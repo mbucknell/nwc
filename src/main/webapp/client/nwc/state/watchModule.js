@@ -350,83 +350,13 @@
             ]
     );
     
-    var mapSelectControlName = "mapSelectEnabled";
-    var mapPanControlName = "mapPanEnabled";
-    var mapZoomControlName = "mapZoomEnabled";
-    registerWatchFactory(mapSelectControlName, ['CommonState', 'StoredState', 'StreamflowMap', '$log', 'RunningWatches',
-            function (CommonState, StoredState, StreamflowMap, $log, RunningWatches) {
-                return {
-                    propertyToWatch: mapSelectControlName,
-                    watchFunction: function (prop, oldValue, newValue) {
-                        RunningWatches.add(mapSelectControlName);
-                        var controlId = (StoredState.interestType === 'observed') ? 'gage-identify-control' : 'huc-identify-control';
-                        var selectControl = StreamflowMap.getMap().getControlsBy('id', controlId)[0];
-                        if (newValue) {
-                            selectControl.activate();
-                            CommonState[mapPanControlName] = false;
-                            CommonState[mapZoomControlName] = false;
-                        } else {
-                            selectControl.deactivate();
-                        }
-                        RunningWatches.remove(mapSelectControlName);
-                        return newValue;
-                    }
-                };
-            }
-        ]
-    );
-    registerWatchFactory(mapPanControlName, ['CommonState', 'StreamflowMap', '$log', 'RunningWatches',
-            function (CommonState, StreamflowMap, $log, RunningWatches) {
-                return {
-                    propertyToWatch: mapPanControlName,
-                    watchFunction: function (prop, oldValue, newValue) {
-                        RunningWatches.add(mapPanControlName);
-                        var navControl = StreamflowMap.getMap().getControlsBy('id', 'streamflow-navigation')[0];
-                        if (newValue) {
-                            navControl.activate();
-                            CommonState[mapSelectControlName] = false;
-                            CommonState[mapZoomControlName] = false;
-                        } else {
-                            navControl.deactivate();
-                        }
-                        RunningWatches.remove(mapPanControlName);
-                        return newValue;
-                    }
-                };
-            }
-        ]
-    );
-    registerWatchFactory(mapZoomControlName, ['CommonState', 'StreamflowMap', '$log', 'RunningWatches',
-            function (CommonState, StreamflowMap, $log, RunningWatches) {
-                return {
-                    propertyToWatch: mapZoomControlName,
-                    watchFunction: function (prop, oldValue, newValue) {
-                        RunningWatches.add(mapZoomControlName);
-                        var zoomControl = StreamflowMap.getMap().getControlsBy('id', 'streamflow-zoom')[0];
-                        if (newValue) {
-                            zoomControl.activate();
-                            CommonState[mapSelectControlName] = false;
-                            CommonState[mapPanControlName] = false;
-                        } else {
-                            zoomControl.deactivate();
-                        }
-                        RunningWatches.remove(mapZoomControlName);
-                        return newValue;
-                    }
-                };
-            }
-        ]
-    );
-            
     var allWatchServiceNames = watchServiceNames.keys();
-    var dependencies = ['StoredState', 'CommonState'].concat(allWatchServiceNames);
+    var dependencies = ['StoredState'].concat(allWatchServiceNames);
 
-    var registerAllWatchers = function(StoredState, CommonState){
-        var watchServices = Array.create(arguments).from(2);//ignore storedState/commonState
+    var registerAllWatchers = function(StoredState){
+        var watchServices = Array.create(arguments).from(1);//ignore storedState
         angular.forEach(watchServices, function(watchService){
             StoredState.watch(watchService.propertyToWatch, watchService.watchFunction);
-            // This is wrong, fix soon. We want to watch common and stored differently.
-            CommonState.watch(watchService.propertyToWatch, watchService.watchFunction);
         });
     };
     watchModule.run(dependencies.concat([registerAllWatchers]));

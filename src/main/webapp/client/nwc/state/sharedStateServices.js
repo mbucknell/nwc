@@ -15,6 +15,7 @@ var commonState = Object.extended({
     mapSelectEnabled: false,
     mapPanEnabled: false,
     mapZoomEnabled: false,
+    gageStyleDescription: "Gages for Evaluating Streamflow",
     streamFlowStatMinDate: new Date(),
     streamFlowStatMaxDate: new Date()
 });

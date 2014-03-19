@@ -90,6 +90,10 @@
     font-size: 1.5em;
 }
 
+.spacer {
+    margin-top: 0.5em;
+}
+
 [ng-click],
 [data-ng-click],
 [x-ng-click] {

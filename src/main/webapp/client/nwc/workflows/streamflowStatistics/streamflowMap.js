@@ -94,7 +94,7 @@
                 var hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
                     CONFIG.endpoint.geoserver + 'gwc/service/wms',
                     {
-                        layers: 'NHDPlusHUCs:huc12_SE_Basins_v2',
+                        layers: 'NWC:huc12_SE_Basins_v2',
                         transparent: true,
                         styles: ['polygon']
                     },
@@ -116,7 +116,7 @@
                 initialControls.push(new OpenLayers.Control.ZoomBox({id: 'streamflow-zoom'}));
                 
                 var wmsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
-                    id: 'gage-identify-control',
+                    id: 'streamflow-gage-identify-control',
                     title: 'gage-identify-control',
                     hover: false,
                     autoActivate: false,
@@ -148,7 +148,7 @@
                 initialControls.push(wmsGetFeatureInfoControl);
                 
                 var hucsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
-                    id: 'huc-identify-control',
+                    id: 'streamflow-huc-identify-control',
                     title: 'huc-identify-control',
                     hover: false,
                     layers: [
@@ -161,7 +161,6 @@
                     vendorParams: {
                         radius: 5
                     },
-                    id: 'hucs',
                     autoActivate: false
                 });
                 
