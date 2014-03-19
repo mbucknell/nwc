@@ -3,8 +3,8 @@
  * @requires angular
  */
 (function () {
-    var statDict = angular.module('nwc.streamStats.statDict', []);
-    statDict.factory("statDict", function() {
+    var dictionary = angular.module('nwc.streamStats.dictionary', []);
+    dictionary.factory("statDict", function() {
         return {
             "ma1"         : "Mean of the daily mean flow values for the entire flow record (cubic feet per second - temporal).",
             "ma2"	      : "Median of the daily mean flow values for the entire flow record (cubic feet per second - temporal).",
@@ -196,6 +196,50 @@
             "flow_75obs"  : "temp",
             "flow_90obs"  : "temp",
             "flow_15obs"  : "temp"
+        };
+    });
+    dictionary.factory("styleDescriptions", function() {
+        return {
+            default: {
+                styleName: "blue_circle",
+                description: "Gages for Evaluating Streamflow"
+            },
+            active: {
+                styleName: "gagesii_active",
+                description: "Gages Active in 2009"
+            },
+            reference: {
+                styleName: "gagesii_reference",
+                description: "Reference Gages"
+            },
+            por: {
+                styleName: "gagesii_por",
+                description: "Gages Sorted by Period of Record"
+            }
+        };
+    });
+    dictionary.factory("interestTypeDescriptions", function() {
+        return {
+            observed: {
+                text: "Observed streamflow from National Water Information System Gages",
+                url: "http://waterdata.usgs.gov/nwis"
+            },
+            modeled: {
+                text: "Daily streamflow estimates at watershed outlets"
+            }
+        };
+    });
+    dictionary.factory("mapControlDescriptions", function() {
+        return {
+            select: {
+                description: "Single click selects sites or watersheds. Can pan by click and drag. Can zoom with double click, map buttons or scroll ball."
+            },
+            pan: {
+                description: "Can pan by click and drag. Can zoom with double click, map buttons or scroll ball"
+            },
+            zoom: {
+                description: "Click and hold to drag a bounding box to zoom into"
+            }
         };
     });
 }());
