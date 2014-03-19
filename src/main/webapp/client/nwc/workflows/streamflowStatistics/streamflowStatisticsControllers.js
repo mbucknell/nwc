@@ -27,7 +27,7 @@
                 map.zoomToExtent(map.extent, true);
 
                 StoredState.interestType = StoredState.interestType || 'observed';
-                StoredState.gageStyle = StoredState.gageStyle || 'gagesii_por';
+                StoredState.gageStyle = StoredState.gageStyle || 'blue_circle';
                 CommonState.mapSelectEnabled = true;
                 $scope.$watch('StoredState.interestType', function(newInterest, oldInterest) {
                     if(newInterest !== oldInterest){

@@ -70,7 +70,7 @@
                     CONFIG.endpoint.geoserver + 'NWC/wms',
                     {
                         LAYERS: 'NWC:gagesII',
-                        STYLES: 'gagesii_por',
+                        STYLES: 'blue_circle',
                         format: 'image/png',
                         transparent: true,
                         tiled: true
