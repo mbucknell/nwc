@@ -12,13 +12,13 @@
             }
         )
     ]);
-    streamflowStatistics.controller('SelectSite', ['$scope', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap', 'styleDescriptions', 'interestTypeDescriptions', 'mapControlDescriptions',
+    streamflowStatistics.controller('SelectSite', ['$scope', '$document', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap', 'styleDescriptions', 'interestTypeDescriptions', 'mapControlDescriptions',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'Select Gage or HUC',
                 description: 'Select a gage or a HUC to retrieve its statistics.'
             },
-            function ($scope, StoredState, CommonState, StoredState, StreamflowMap, styleDescriptions, interestTypeDescriptions, mapControlDescriptions) {
+            function ($scope, $document, StoredState, CommonState, StoredState, StreamflowMap, styleDescriptions, interestTypeDescriptions, mapControlDescriptions) {
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
                 $scope.styleDescriptions = styleDescriptions;
@@ -43,23 +43,24 @@
                     }
                 });
                 $scope.$watch('CommonState.activatedMapControl', function(newControl, oldControl) {
+                    var controlId;
+                    if (newControl === 'zoom') {
+                        controlId = 'streamflow-zoom';
+                    } else if (newControl === 'pan') {
+                        controlId = 'streamflow-navigation';
+                    } else {
+                        controlId = (StoredState.interestType === 'observed') ? 'streamflow-gage-identify-control' : 'streamflow-huc-identify-control';
+                    }
                     if (newControl !== oldControl) {
-                        var controlId;
-                        if (newControl === 'zoom') {
-                            controlId = 'streamflow-zoom';
-                        } else if (newControl === 'pan') {
-                            controlId = 'streamflow-navigation';
-                        } else {
-                            controlId = (StoredState.interestType === 'observed') ? 'streamflow-gage-identify-control' : 'streamflow-huc-identify-control';
-                        }
                         var controls = StreamflowMap.getMap().getControlsBy('id', /streamflow.*/);
                         angular.forEach(controls, function(control) {
                             control.deactivate();
                         });
-                        var activeControl = StreamflowMap.getMap().getControlsBy('id', controlId)[0];
-                        activeControl.activate();
-                        CommonState.mapControlDescription = mapControlDescriptions[newControl].description;
                     }
+                    var activeControl = StreamflowMap.getMap().getControlsBy('id', controlId)[0];
+                    activeControl.activate();
+                    CommonState.mapControlDescription = mapControlDescriptions[newControl].description;
+                    CommonState.mapControlCursor = mapControlDescriptions[newControl].cursor;
                 });
                 $scope.showGageStyleSelector = function() {
                     return StoredState.interestType === 'observed';
@@ -70,6 +71,7 @@
                 CommonState.activatedMapControl = 'select';
                 CommonState.interestTypeDescription = interestTypeDescriptions[StoredState.interestType];
                 CommonState.mapControlDescription = mapControlDescriptions.select.description;
+                CommonState.mapControlCursor = mapControlDescriptions.select.cursor;
             }
         )
     ]);

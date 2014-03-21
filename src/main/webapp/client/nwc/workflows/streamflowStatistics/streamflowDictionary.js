@@ -1,10 +1,10 @@
-/*global angular*/
+/*global angular SCE*/
 /**
  * @requires angular
  */
 (function () {
     var dictionary = angular.module('nwc.streamStats.dictionary', []);
-    dictionary.factory("statDict", function() {
+    dictionary.factory("statDict", ['$sce', function($sce) {
         return {
             "ma1"         : "Mean of the daily mean flow values for the entire flow record (cubic feet per second - temporal).",
             "ma2"	      : "Median of the daily mean flow values for the entire flow record (cubic feet per second - temporal).",
@@ -197,8 +197,8 @@
             "flow_90obs"  : "temp",
             "flow_15obs"  : "temp"
         };
-    });
-    dictionary.factory("styleDescriptions", function() {
+    }]);
+    dictionary.factory("styleDescriptions", ['$sce', function($sce) {
         return {
             default: {
                 styleName: "blue_circle",
@@ -210,36 +210,39 @@
             },
             reference: {
                 styleName: "gagesii_reference",
-                description: "Reference Gages"
+                description: "Gages II Reference Gages"
             },
             por: {
                 styleName: "gagesii_por",
                 description: "Gages Sorted by Period of Record"
             }
         };
-    });
-    dictionary.factory("interestTypeDescriptions", function() {
+    }]);
+    dictionary.factory("interestTypeDescriptions", ['$sce', function($sce) {
         return {
             observed: {
-                text: "Observed streamflow from National Water Information System Gages",
-                url: "http://waterdata.usgs.gov/nwis"
+                description: $sce.trustAsHtml("Observed streamflow from <a href=\"http://waterdata.usgs.gov/nwis\">National Water Information System</a> Gages.")
             },
             modeled: {
-                text: "Daily streamflow estimates at watershed outlets"
+                description: "Daily streamflow estimates at watershed outlets."
             }
         };
-    });
-    dictionary.factory("mapControlDescriptions", function() {
+    }]);
+    // Cursor field not currently used
+    dictionary.factory("mapControlDescriptions", ['$sce', function($sce) {
         return {
             select: {
-                description: "Single click selects sites or watersheds. Can pan by click and drag. Can zoom with double click, map buttons or scroll ball."
+                description: "Single click selects sites or watersheds. Pan by click and drag. Zoom with double click, map buttons or scroll wheel.",
+                cursor: {cursor: "pointer"}
             },
             pan: {
-                description: "Can pan by click and drag. Can zoom with double click, map buttons or scroll ball"
+                description: "Can pan by click and drag. Zoom with double click, map buttons or scroll wheel.",
+                cursor: {cursor: "move"}
             },
             zoom: {
-                description: "Click and hold to drag a bounding box to zoom into"
+                description: "Click and hold to drag a bounding box to zoom.",
+                cursor: {cursor: "crosshair"}
             }
         };
-    });
+    }]);
 }());

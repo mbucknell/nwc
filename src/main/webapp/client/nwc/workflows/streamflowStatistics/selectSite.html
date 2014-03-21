@@ -1,21 +1,15 @@
 <div class="row">
-
-    <div class="text-center">
-        <div class="row">
+    <div class="well">
+        <div class="row col-xs-12">
             Streamflow Type:
             <div class="btn-group">
                 <button type="button" class="btn btn-primary" ng-model="StoredState.interestType" btn-radio="'observed'">Observed</button>
                 <button type="button" class="btn btn-primary" ng-model="StoredState.interestType" btn-radio="'modeled'">Modeled</button>
             </div>
-            <span ng-if="CommonState.interestTypeDescription.url !== undefined">
-                <a href="{{CommonState.interestTypeDescription.url}}">{{CommonState.interestTypeDescription.text}}</a>
-            </span>
-            <span ng-if="CommonState.interestTypeDescription.url === undefined">
-                {{CommonState.interestTypeDescription.text}}
-            </span>
+            <span ng-bind-html="CommonState.interestTypeDescription.description"></span>
         </div>
-        
-        <div class="row spacer">
+
+        <div class="row spacer col-xs-12">
             Map Controls:
             <div class="btn-group">
                 <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'select'">Select</button>
@@ -24,8 +18,8 @@
             </div>
             <span>{{CommonState.mapControlDescription}}</span>
         </div>
-        
-        <div class="row spacer" ng-show="showGageStyleSelector()">
+
+        <div class="row spacer col-xs-12" ng-show="showGageStyleSelector()">
             Stream Gage Filters:
             <div class="btn-group">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -38,8 +32,8 @@
                     <li><a ng-model="StoredState.gageStyle" btn-radio="'por'">{{styleDescriptions.por.description}}</a></li>
                 </ul>
             </div>
-            <a href="http://pubs.er.usgs.gov/publication/70046617">Options to filter displayed stream gages from the Gages II dataset</a>
+            Options to filter displayed stream gages from the <a href="http://pubs.er.usgs.gov/publication/70046617">Gages II dataset</a>
         </div>
     </div>
+    <div id="siteSelectMap" class="row spacer col-xs-12" style="height: 500px;" ng-style="CommonState.mapControlCursor"></div>
 </div>
-<div id="siteSelectMap" class="col-xs-12 spacer" style="height: 500px;"></div>

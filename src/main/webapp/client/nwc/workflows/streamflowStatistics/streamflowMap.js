@@ -112,8 +112,12 @@
                 
                 //var waterCensusToolbar = new OpenLayers.Control.WaterCensusToolbar({});
                 //initialControls.push(waterCensusToolbar);
-                initialControls.push(new OpenLayers.Control.Navigation({id: 'streamflow-navigation'}));
-                initialControls.push(new OpenLayers.Control.ZoomBox({id: 'streamflow-zoom'}));
+                initialControls.push(new OpenLayers.Control.Navigation({
+                    id: 'streamflow-navigation'
+                }));
+                initialControls.push(new OpenLayers.Control.ZoomBox({
+                    id: 'streamflow-zoom'
+                }));
                 
                 var wmsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
                     id: 'streamflow-gage-identify-control',
