@@ -210,7 +210,7 @@
             },
             reference: {
                 styleName: "gagesii_reference",
-                description: "Reference Gages"
+                description: "Gages II Reference Gages"
             },
             por: {
                 styleName: "gagesii_por",
@@ -221,23 +221,27 @@
     dictionary.factory("interestTypeDescriptions", ['$sce', function($sce) {
         return {
             observed: {
-                description: $sce.trustAsHtml("Observed streamflow from <a href=\"http://waterdata.usgs.gov/nwis\">National Water Information System</a> Gages")
+                description: $sce.trustAsHtml("Observed streamflow from <a href=\"http://waterdata.usgs.gov/nwis\">National Water Information System</a> Gages.")
             },
             modeled: {
-                description: "Daily streamflow estimates at watershed outlets"
+                description: "Daily streamflow estimates at watershed outlets."
             }
         };
     }]);
+    // Cursor field not currently used
     dictionary.factory("mapControlDescriptions", ['$sce', function($sce) {
         return {
             select: {
-                description: "Single click selects sites or watersheds. Can pan by click and drag. Can zoom with double click, map buttons or scroll ball."
+                description: "Single click selects sites or watersheds. Pan by click and drag. Zoom with double click, map buttons or scroll wheel.",
+                cursor: {cursor: "pointer"}
             },
             pan: {
-                description: "Can pan by click and drag. Can zoom with double click, map buttons or scroll ball"
+                description: "Can pan by click and drag. Zoom with double click, map buttons or scroll wheel.",
+                cursor: {cursor: "move"}
             },
             zoom: {
-                description: "Click and hold to drag a bounding box to zoom into"
+                description: "Click and hold to drag a bounding box to zoom.",
+                cursor: {cursor: "crosshair"}
             }
         };
     }]);
