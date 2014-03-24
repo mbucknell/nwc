@@ -4,5 +4,6 @@
 /target
 
 Vagrantfile
+/.vagrant
 nb-configuration.xml
 nbactions.xml
