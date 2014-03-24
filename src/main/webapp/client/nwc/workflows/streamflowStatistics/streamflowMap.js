@@ -5,46 +5,6 @@
         function (StoredState, CommonState, $state, BaseMap, $log, util) {
             var map;
             
-            var streamOrderClipValue = 0,
-            streamOrderTable = new Array(21),
-            streamOrderSlider = undefined,
-            streamOrderLock = true,
-            streamOrderClipValues = undefined;
-
-            var getClipValueForZoom = function (zoom) {
-                return streamOrderClipValues[zoom];
-            };
-            var setClipValueForZoom = function (zoom, value) {
-                if (streamOrderLock === true) {
-                    var zoomIndex;
-                    for (zoomIndex = 0; zoomIndex < streamOrderTable.length; ++zoomIndex) {
-                        if (zoomIndex < zoom) {
-                            if (streamOrderTable[zoomIndex].getValue() < value) {
-                                streamOrderTable[zoomIndex].setValue(value);
-                            }
-                        } else if (zoomIndex > zoom) {
-                            if (streamOrderTable[zoomIndex].getValue() > value) {
-                                streamOrderTable[zoomIndex].setValue(value);
-                            }
-                        } else {
-                            streamOrderTable[zoomIndex].setValue(value);
-                        }
-                    }
-                } else {
-                    streamOrderTable[zoom].setValue(value);
-                }
-            };
-            var updateFromClipValue = function (val) {
-                this.streamOrderClipValue = val;
-                var layerIdx;
-                for (layerIdx = 0; layerIdx < map.layers.length; layerIdx++) {
-                    var mapLayer = map.layers[layerIdx];
-                    if (typeof mapLayer.updateFromClipValue === 'function') {
-                        mapLayer.updateFromClipValue(val);
-                    }
-                }
-            };            
-            
             var initMap = function () {
                 var mapLayers = [];
                 var initialControls = [];
@@ -53,13 +13,13 @@
                 var flowlinesData = new OpenLayers.Layer.FlowlinesData(
                         "Flowline WMS (Data)",
                         CONFIG.endpoint.geoserver + 'gwc/service/wms'
-                        );
+                );
                 flowlinesData.id = 'nhd-flowlines-data-layer';
 
                 var flowlineRaster = new OpenLayers.Layer.FlowlinesRaster({
                     name: "NHD Flowlines",
                     dataLayer: flowlinesData,
-                    streamOrderClipValue: streamOrderClipValue,
+                    streamOrderClipValue: 0,
                     displayInLayerSwitcher: false
                 });
                 flowlineRaster.id = 'nhd-flowlines-raster-layer';
@@ -189,36 +149,26 @@
                 hucsGetFeatureInfoControl.events.register("getfeatureinfo", {}, featureInfoHandler);
                 initialControls.push(hucsGetFeatureInfoControl);
                 
-                
-                
                 map = BaseMap.new({
                     layers: mapLayers,
                     controls: initialControls
                 });
-                
-                var clipCount = 7;
-                var zoomLevels = map.getNumZoomLevels();
-                streamOrderClipValues = new Array(zoomLevels);
-                var tableLength = streamOrderClipValues.length;
-                var cInd;
-                for (cInd = 0; cInd < tableLength; cInd++) {
-                    streamOrderClipValues[cInd] = Math.ceil((tableLength - cInd) * (clipCount / tableLength));
-                }
-                
+
                 map.events.register(
                         'zoomend',
                         map,
                         function () {
                             var zoom = map.zoom;
                             $log.info('Current map zoom: ' + zoom);
-                            updateFromClipValue(getClipValueForZoom(zoom));
+                            flowlineRaster.updateFromClipValue(flowlineRaster.getClipValueForZoom(zoom));
                         },
                         true
                 );
 
                 var mapZoomForExtent = map.getZoomForExtent(map.extent);
                 map.setCenter(map.extent.getCenterLonLat(), mapZoomForExtent);
-                updateFromClipValue(streamOrderClipValues[map.zoom]);
+                flowlineRaster.setStreamOrderClipValues(map.getNumZoomLevels());
+                flowlineRaster.updateFromClipValue(flowlineRaster.getClipValueForZoom(map.zoom));
                 
                 /**
                  * 

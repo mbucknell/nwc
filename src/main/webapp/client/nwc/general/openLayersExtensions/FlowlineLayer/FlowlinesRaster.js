@@ -17,6 +17,13 @@ OpenLayers.Layer.FlowlinesRaster = OpenLayers.Class(OpenLayers.Layer.Raster, {
     flowlineAboveClipPixelB: 255,
     flowlineAboveClipPixelA: 128,
     CLASS_NAME: "OpenLayers.Layer.FlowlinesRaster",
+    
+    streamOrderClipValue: 0,
+    streamOrderTable: new Array(21),
+    streamOrderSlider: undefined,
+    streamOrderLock: true,
+    streamOrderClipValues: new Array(21),
+    
     initialize: function (config) {
         this.createFlowlineAboveClipPixel();
         config.isBaseLayer = false;
@@ -57,5 +64,38 @@ OpenLayers.Layer.FlowlinesRaster = OpenLayers.Class(OpenLayers.Layer.Raster, {
         if (this.getVisibility()) {
             this.onDataUpdate();
         }
+    },
+    getClipValueForZoom: function (zoom) {
+        return this.streamOrderClipValues[zoom];
+    },
+    setClipValueForZoom: function (zoom, value) {
+        if (streamOrderLock === true) {
+            var zoomIndex;
+            for (zoomIndex = 0; zoomIndex < this.streamOrderTable.length; ++zoomIndex) {
+                if (zoomIndex < zoom) {
+                    if (this.streamOrderTable[zoomIndex].getValue() < value) {
+                        this.streamOrderTable[zoomIndex].setValue(value);
+                    }
+                } else if (zoomIndex > zoom) {
+                    if (this.streamOrderTable[zoomIndex].getValue() > value) {
+                        this.streamOrderTable[zoomIndex].setValue(value);
+                    }
+                } else {
+                    this.streamOrderTable[zoomIndex].setValue(value);
+                }
+            }
+        } else {
+            this.streamOrderTable[zoom].setValue(value);
+        }
+    },
+    setStreamOrderClipValues: function(zoomLevels) {
+        var clipCount = 7;
+        this.streamOrderClipValues = new Array(zoomLevels);
+        var tableLength = this.streamOrderClipValues.length;
+        var cInd;
+        for (cInd = 0; cInd < tableLength; cInd++) {
+            this.streamOrderClipValues[cInd] = Math.ceil((tableLength - cInd) * (clipCount / tableLength));
+        }
     }
+    
 });

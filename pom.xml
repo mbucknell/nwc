@@ -57,6 +57,14 @@
             <organizationUrl>http://cida.usgs.gov</organizationUrl>
             <timezone>-6</timezone>
         </developer>
+        <developer>
+            <id>jiwalker</id>
+            <name>Jordan Walker</name>
+            <email>jiwalker@usgs.gov</email>
+            <organization>Center for Integrated Data Analytics</organization>
+            <organizationUrl>http://cida.usgs.gov</organizationUrl>
+            <timezone>-6</timezone>
+        </developer>
     </developers>
     <scm>
         <url>https://github.com/USGS-CIDA/nwc</url>

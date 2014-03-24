@@ -1,8 +1,8 @@
 /*global angular,OpenLayers,CONFIG*/
 (function () {
     var waterBudgetMap = angular.module('nwc.map.waterBudget', []);
-    waterBudgetMap.factory('WaterBudgetMap', [ 'StoredState', 'CommonState', '$state', 'BaseMap', 'DataSeries',
-       function(StoredState, CommonState, $state, BaseMap, DataSeries){
+    waterBudgetMap.factory('WaterBudgetMap', [ 'StoredState', 'CommonState', '$state', '$log', 'BaseMap', 'DataSeries',
+       function(StoredState, CommonState, $state, $log, BaseMap, DataSeries){
            var privateMap;
     
         var initMap = function () {
@@ -20,7 +20,23 @@
                     );
             mapLayers.push(hucLayer);
             
-            
+            // ////////////////////////////////////////////// FLOWLINES
+            var flowlinesData = new OpenLayers.Layer.FlowlinesData(
+                    "Flowline WMS (Data)",
+                    CONFIG.endpoint.geoserver + 'gwc/service/wms'
+            );
+            flowlinesData.id = 'nhd-flowlines-data-layer';
+
+            var flowlineRaster = new OpenLayers.Layer.FlowlinesRaster({
+                name: "NHD Flowlines",
+                dataLayer: flowlinesData,
+                streamOrderClipValue: 0,
+                displayInLayerSwitcher: false
+            });
+            flowlineRaster.id = 'nhd-flowlines-raster-layer';
+
+            mapLayers.push(flowlinesData);
+            mapLayers.push(flowlineRaster);
             
             var hucsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
                     title: 'huc-identify-control',
@@ -68,6 +84,20 @@
                     layers: mapLayers,
                     controls: controls
                 });
+                
+                map.events.register(
+                        'zoomend',
+                        map,
+                        function () {
+                            var zoom = map.zoom;
+                            $log.info('Current map zoom: ' + zoom);
+                            flowlineRaster.updateFromClipValue(flowlineRaster.getClipValueForZoom(zoom));
+                        },
+                        true
+                );
+                
+                flowlineRaster.setStreamOrderClipValues(map.getNumZoomLevels());
+                flowlineRaster.updateFromClipValue(flowlineRaster.getClipValueForZoom(map.zoom));
             
             
             ///map object methods
