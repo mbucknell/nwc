@@ -69,23 +69,26 @@ waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonS
         })
 ]);
 
-waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetMap', '$log',
+waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetMap', '$log', 'mapControlDescriptions',
     NWC.ControllerHelpers.StepController(
         {
             name: 'HUC Selection',
             description: 'Find your Hydrologic Unit of interest.'
         },
-        function ($scope, StoredState, CommonState, WaterBudgetMap, $log) {
+        function ($scope, StoredState, CommonState, WaterBudgetMap, $log, mapControlDescriptions) {
             $scope.StoredState = StoredState;
             $scope.CommonState = CommonState;
             
             var map = WaterBudgetMap.getMap();
-            
-            
-                map.render('hucSelectMap');
-                map.zoomToExtent(map.extent, true);
+
+            map.render('hucSelectMap');
+            map.zoomToExtent(map.extent, true);
         
-            
+            // when there is more than select, logic for additional buttons can go here
+        
+            CommonState.activatedMapControl = 'select';
+            CommonState.mapControlDescription = mapControlDescriptions.select.description;
+            CommonState.mapControlCursor = mapControlDescriptions.select.cursor;
             
             $log.info(CommonState);
         }
