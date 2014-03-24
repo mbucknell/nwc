@@ -2,3 +2,7 @@
 .project
 .settings
 /target
+
+Vagrantfile
+nb-configuration.xml
+nbactions.xml

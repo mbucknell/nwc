@@ -70,10 +70,10 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
 		 * Our Support Resources
 		 */
         final int cachePeriod = Integer.parseInt(env.getProperty("webResourceCachePeriod", "31556926"));
-        registry.addResourceHandler("/favicon.ico").addResourceLocations("/WEB-INF/includes/img/favicon.ico").setCachePeriod(cachePeriod);
-        registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/includes/css/").setCachePeriod(cachePeriod);
-        registry.addResourceHandler("/img/**").addResourceLocations("/WEB-INF/includes/img/").setCachePeriod(cachePeriod);
-        registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/includes/js/", "/js/").setCachePeriod(cachePeriod);
+        registry.addResourceHandler("/favicon.ico").addResourceLocations("/img/favicon.ico").setCachePeriod(cachePeriod);
+        registry.addResourceHandler("/css/**").addResourceLocations("/css/").setCachePeriod(cachePeriod);
+        registry.addResourceHandler("/img/**").addResourceLocations("/img/").setCachePeriod(cachePeriod);
+        registry.addResourceHandler("/js/**").addResourceLocations("js/").setCachePeriod(cachePeriod);
         
         /**
          * External Support Resources (Twitter Bootstrap and JQuery)
@@ -85,7 +85,7 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
         /**
          * Our Bootstrap themes (I separate them from the above so that I know exactly what is what and where)
          */
-        registry.addResourceHandler("/themes/**").addResourceLocations("/WEB-INF/includes/themes/").setCachePeriod(cachePeriod);
+        registry.addResourceHandler("/themes/**").addResourceLocations("/themes/").setCachePeriod(cachePeriod);
         
         /**
          * The Client source
