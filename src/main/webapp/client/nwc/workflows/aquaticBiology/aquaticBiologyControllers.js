@@ -24,6 +24,8 @@
                 map.render('bioSiteSelectMap');
                 map.zoomToExtent(map.extent, true);
                 
+                CommonState.activatedMapControl = 'select';
+                
             }
         )
     ]);
