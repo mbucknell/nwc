@@ -83,11 +83,6 @@
 
                 gageFeatureLayer.id = 'gage-feature-layer';
 
-                var gageData = new OpenLayers.Layer.GageData(
-                    "Gage WMS (Data)",
-                    CONFIG.endpoint.geoserver + 'wms'
-                );
-                gageData.id = 'gage-location-data';
                 var hucLayerOptions = BaseMap.getWorkflowLayerOptions();
                 hucLayerOptions.visibility = false;
 
@@ -104,7 +99,6 @@
                 
                 mapLayers.push(hucLayer);
                 
-                mapLayers.push(gageData);
                 mapLayers.push(gageFeatureLayer);
 
                 mapLayers.push(flowlinesData);
@@ -113,14 +107,14 @@
                 //var waterCensusToolbar = new OpenLayers.Control.WaterCensusToolbar({});
                 //initialControls.push(waterCensusToolbar);
                 initialControls.push(new OpenLayers.Control.Navigation({
-                    id: 'streamflow-navigation'
+                    id: 'nwc-navigation'
                 }));
                 initialControls.push(new OpenLayers.Control.ZoomBox({
-                    id: 'streamflow-zoom'
+                    id: 'nwc-zoom'
                 }));
                 
                 var wmsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
-                    id: 'streamflow-gage-identify-control',
+                    id: 'nwc-streamflow-gage-identify-control',
                     title: 'gage-identify-control',
                     hover: false,
                     autoActivate: false,
@@ -152,7 +146,7 @@
                 initialControls.push(wmsGetFeatureInfoControl);
                 
                 var hucsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
-                    id: 'streamflow-huc-identify-control',
+                    id: 'nwc-streamflow-huc-identify-control',
                     title: 'huc-identify-control',
                     hover: false,
                     layers: [

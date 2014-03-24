@@ -20,9 +20,16 @@
                 bioDataSitesLayer.id = 'biodata-sites-feature-layer';
                 mapLayers.push(bioDataSitesLayer);
                 
-                var waterCensusToolbar = new OpenLayers.Control.WaterCensusToolbar({}, new OpenLayers.Control.BioSitesSelectionTool());
-                initialControls.push(waterCensusToolbar);
-                                var bioDataGetFeatureControl = new OpenLayers.Control.GetFeature({
+//                var waterCensusToolbar = new OpenLayers.Control.WaterCensusToolbar({}, new OpenLayers.Control.BioSitesSelectionTool());
+//                initialControls.push(waterCensusToolbar);
+                initialControls.push(new OpenLayers.Control.Navigation({
+                    id: 'nwc-navigation'
+                }));
+                initialControls.push(new OpenLayers.Control.ZoomBox({
+                    id: 'nwc-zoom'
+                }));
+                var bioDataGetFeatureControl = new OpenLayers.Control.GetFeature({
+                    id: 'nwc-biodata-sites',
                     protocol: new OpenLayers.Protocol.WFS({
                         version: "1.1.0",
                         url: CONFIG.endpoint.geoserver + 'wfs',
@@ -30,8 +37,7 @@
                         featureNS: 'gov.usgs.biodata.aquatic',
                         srsName: 'EPSG:900913'
                     }),
-                    box: true,
-                    id: 'bioDataSites'
+                    box: true
                 });
                 initialControls.push(bioDataGetFeatureControl);
                 bioDataGetFeatureControl.events.register('featuresselected', {}, function (e) {

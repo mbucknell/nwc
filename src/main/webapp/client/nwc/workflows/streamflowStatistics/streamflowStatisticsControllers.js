@@ -45,14 +45,14 @@
                 $scope.$watch('CommonState.activatedMapControl', function(newControl, oldControl) {
                     var controlId;
                     if (newControl === 'zoom') {
-                        controlId = 'streamflow-zoom';
+                        controlId = 'nwc-zoom';
                     } else if (newControl === 'pan') {
-                        controlId = 'streamflow-navigation';
+                        controlId = 'nwc-navigation';
                     } else {
-                        controlId = (StoredState.interestType === 'observed') ? 'streamflow-gage-identify-control' : 'streamflow-huc-identify-control';
+                        controlId = (StoredState.interestType === 'observed') ? 'nwc-streamflow-gage-identify-control' : 'nwc-streamflow-huc-identify-control';
                     }
                     if (newControl !== oldControl) {
-                        var controls = StreamflowMap.getMap().getControlsBy('id', /streamflow.*/);
+                        var controls = StreamflowMap.getMap().getControlsBy('id', /nwc-.*/);
                         angular.forEach(controls, function(control) {
                             control.deactivate();
                         });

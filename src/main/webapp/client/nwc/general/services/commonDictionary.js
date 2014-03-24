@@ -17,6 +17,10 @@
             zoom: {
                 description: "Click and hold to drag a bounding box to zoom.",
                 cursor: {cursor: "crosshair"}
+            },
+            biosites: {
+                description: "Click and hold to drag a bounding box around sites.",
+                cursor: {cursor: "crosshair"}
             }
         };
     }]);
