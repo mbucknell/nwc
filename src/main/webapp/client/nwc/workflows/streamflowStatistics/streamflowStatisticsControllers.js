@@ -1,6 +1,6 @@
 /*global angular*/
 (function () {
-    var streamflowStatistics = angular.module('nwc.controllers.streamflowStatistics', ['nwc.streamStats', 'nwc.wps', 'nwc.streamStats.dictionary']);
+    var streamflowStatistics = angular.module('nwc.controllers.streamflowStatistics', ['nwc.streamStats', 'nwc.wps', 'nwc.dictionary', 'nwc.streamStats.dictionary']);
     streamflowStatistics.controller('StreamflowStatistics', [ '$scope', 'StoredState',
         NWC.ControllerHelpers.WorkflowController(
             {
@@ -12,13 +12,13 @@
             }
         )
     ]);
-    streamflowStatistics.controller('SelectSite', ['$scope', '$document', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap', 'styleDescriptions', 'interestTypeDescriptions', 'mapControlDescriptions',
+    streamflowStatistics.controller('SelectSite', ['$scope', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap', 'styleDescriptions', 'interestTypeDescriptions', 'mapControlDescriptions',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'Select Gage or HUC',
                 description: 'Select a gage or a HUC to retrieve its statistics.'
             },
-            function ($scope, $document, StoredState, CommonState, StoredState, StreamflowMap, styleDescriptions, interestTypeDescriptions, mapControlDescriptions) {
+            function ($scope, StoredState, CommonState, StoredState, StreamflowMap, styleDescriptions, interestTypeDescriptions, mapControlDescriptions) {
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
                 $scope.styleDescriptions = styleDescriptions;
@@ -45,14 +45,14 @@
                 $scope.$watch('CommonState.activatedMapControl', function(newControl, oldControl) {
                     var controlId;
                     if (newControl === 'zoom') {
-                        controlId = 'streamflow-zoom';
+                        controlId = 'nwc-zoom';
                     } else if (newControl === 'pan') {
-                        controlId = 'streamflow-navigation';
+                        controlId = 'nwc-navigation';
                     } else {
-                        controlId = (StoredState.interestType === 'observed') ? 'streamflow-gage-identify-control' : 'streamflow-huc-identify-control';
+                        controlId = (StoredState.interestType === 'observed') ? 'nwc-streamflow-gage-identify-control' : 'nwc-streamflow-huc-identify-control';
                     }
                     if (newControl !== oldControl) {
-                        var controls = StreamflowMap.getMap().getControlsBy('id', /streamflow.*/);
+                        var controls = StreamflowMap.getMap().getControlsBy('id', /nwc-.*/);
                         angular.forEach(controls, function(control) {
                             control.deactivate();
                         });

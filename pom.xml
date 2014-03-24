@@ -112,7 +112,6 @@
         <openlayers-version>2.12</openlayers-version>
 
         <sugar-version>1.3.8</sugar-version>
-                
     </properties>
     <build>
         <plugins>
@@ -131,13 +130,13 @@
                     </filters>
                     <webResources>
                         <!-- Copy configuration properties to WEBINF/classes -->
-                        <resource>
+<!--                        <resource>
                             <directory>conf/logging/</directory>
                             <includes>
                                 <include>**/*.properties</include>
                             </includes>        
                             <targetPath>WEB-INF/classes</targetPath>
-                        </resource>
+                        </resource>-->
                                                 
                         <resource>
                             <directory>src/main/webapp/WEB-INF/tiles/common</directory><!-- no trailing slash -->

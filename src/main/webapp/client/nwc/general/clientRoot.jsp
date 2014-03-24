@@ -45,6 +45,7 @@
 <script type="text/javascript" src="../client/nwc/general/services/DataSeriesStore.js"></script>
 <script type="text/javascript" src="../client/nwc/general/services/SosSources.js"></script>
 <script type="text/javascript" src="../client/nwc/general/services/SosResponseParser.js"></script>
+<script type="text/javascript" src="../client/nwc/general/services/commonDictionary.js"></script>
 
 <script type="text/javascript" src="../client/nwc/state/watchModule.js"></script>
 <script type="text/javascript" src="../client/nwc/state/sharedStateServices.js"></script>

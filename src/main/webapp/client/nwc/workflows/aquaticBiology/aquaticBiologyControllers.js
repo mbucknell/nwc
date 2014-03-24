@@ -12,17 +12,43 @@
             }
         )
     ]);
-    aquaticBiologyControllers.controller('SelectBioDataSite', [ '$scope', 'StoredState', 'AquaticBiologyMap',
+    aquaticBiologyControllers.controller('SelectBioDataSite', [ '$scope', 'StoredState', 'CommonState', 'AquaticBiologyMap', 'mapControlDescriptions',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'Aquatic Biology Site Selection Map',
                 description: 'Via the map interface, explore aquatic biology sites across the nation and select them to pursue further investigation in BioData'
             },
-            function($scope, StoredState, AquaticBiologyMap){
+            function($scope, StoredState, CommonState, AquaticBiologyMap, mapControlDescriptions){
             
                 var map = AquaticBiologyMap.getMap();
                 map.render('bioSiteSelectMap');
                 map.zoomToExtent(map.extent, true);
+                $scope.CommonState = CommonState;
+                
+                $scope.$watch('CommonState.activatedMapControl', function(newControl, oldControl) {
+                    var controlId;
+                    if (newControl === 'zoom') {
+                        controlId = 'nwc-zoom';
+                    } else if (newControl === 'pan') {
+                        controlId = 'nwc-navigation';
+                    } else {
+                        controlId = 'nwc-biodata-sites';
+                    }
+                    if (newControl !== oldControl) {
+                        var controls = AquaticBiologyMap.getMap().getControlsBy('id', /nwc-.*/);
+                        angular.forEach(controls, function(control) {
+                            control.deactivate();
+                        });
+                    }
+                    var activeControl = AquaticBiologyMap.getMap().getControlsBy('id', controlId)[0];
+                    activeControl.activate();
+                    CommonState.mapControlDescription = mapControlDescriptions[newControl].description;
+                    CommonState.mapControlCursor = mapControlDescriptions[newControl].cursor;
+                });
+                
+                CommonState.activatedMapControl = 'biosites';
+                CommonState.mapControlDescription = mapControlDescriptions[CommonState.activatedMapControl].description;
+                CommonState.mapControlCursor = mapControlDescriptions[CommonState.activatedMapControl].cursor;
                 
             }
         )
