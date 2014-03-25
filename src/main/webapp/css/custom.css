@@ -35,12 +35,12 @@
 }
 
 .navigation_panel_heading {
-	background-color: 	#2A4266 !important;
-	border-color: 		#223552 !important;
-	color: 			#fff !important;
-	text-align: 		right;
-	font-size: 		18px;
-	padding-right: 	25px;
+	background-color: #2A4266 !important;
+	border-color:     #223552 !important;
+	color: 			  #fff !important;
+	text-align:       left;
+	font-size:        18px;
+	padding-right: 	  25px;
 }
 
 .navigation_panel_body {
@@ -48,18 +48,19 @@
 }
 
 .navigation_panel_item {
-	width: 			100%;
-	text-align: 		right;
-	margin-left: 		0px !important;
+	width:       100%;
+	text-align:  left;
+	margin-left: 0px !important;
 }
 
 .navigation_panel_item a {
-	color: 			#ddd !important;
+	color: 			  #ddd !important;
+    background-color: #2A4266 !important;
 }
 
 .navigation_panel_item a:hover {
-	color: 			#eee !important;
-	background-color: 	#48638D !important;	
+	color:            #eee !important;
+	background-color: #48638D !important;
 }
 
 .navigation_toggle_a {
