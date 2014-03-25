@@ -26,10 +26,10 @@
                 {{CommonState.gageStyleDescription}}<span> <i class="caret"></i></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a ng-model="StoredState.gageStyle" btn-radio="'default'">{{styleDescriptions.default.description}}</a></li>
-                    <li><a ng-model="StoredState.gageStyle" btn-radio="'active'">{{styleDescriptions.active.description}}</a></li>
-                    <li><a ng-model="StoredState.gageStyle" btn-radio="'reference'">{{styleDescriptions.reference.description}}</a></li>
-                    <li><a ng-model="StoredState.gageStyle" btn-radio="'por'">{{styleDescriptions.por.description}}</a></li>
+                    <li role="menuitem"><a ng-model="StoredState.gageStyle" btn-radio="'default'">{{styleDescriptions.default.description}}</a></li>
+                    <li role="menuitem"><a ng-model="StoredState.gageStyle" btn-radio="'active'">{{styleDescriptions.active.description}}</a></li>
+                    <li role="menuitem"><a ng-model="StoredState.gageStyle" btn-radio="'reference'">{{styleDescriptions.reference.description}}</a></li>
+                    <li role="menuitem"><a ng-model="StoredState.gageStyle" btn-radio="'por'">{{styleDescriptions.por.description}}</a></li>
                 </ul>
             </div>
             Options to filter displayed stream gages from the <a href="http://pubs.er.usgs.gov/publication/70046617">Gages II dataset</a>

@@ -45,14 +45,14 @@
 <script type="text/javascript" src="../client/nwc/general/services/DataSeriesStore.js"></script>
 <script type="text/javascript" src="../client/nwc/general/services/SosSources.js"></script>
 <script type="text/javascript" src="../client/nwc/general/services/SosResponseParser.js"></script>
-<script type="text/javascript" src="../client/nwc/general/services/commonDictionary.js"></script>
+<script type="text/javascript" src="../client/nwc/general/services/CommonDictionary.js"></script>
 
 <script type="text/javascript" src="../client/nwc/state/watchModule.js"></script>
 <script type="text/javascript" src="../client/nwc/state/sharedStateServices.js"></script>
 <script type="text/javascript" src="../client/nwc/state/stateController.js"></script>
 
 <script type="text/javascript" src="../client/nwc/workflows/waterBudget/waterBudgetPlot.js"></script>
-<script type="text/javascript" src="../client/nwc/general/services/baseMap.js"></script>
+<script type="text/javascript" src="../client/nwc/general/services/BaseMap.js"></script>
 <script type="text/javascript" src="../client/nwc/workflows/waterBudget/waterBudgetMap.js"></script>
 <script type="text/javascript" src="../client/nwc/workflows/aquaticBiology/aquaticBiologyMap.js"></script>
 <script type="text/javascript" src="../client/nwc/workflows/streamflowStatistics/streamflowMap.js"></script>

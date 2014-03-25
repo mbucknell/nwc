@@ -4,7 +4,7 @@
  */
 (function () {
     var dictionary = angular.module('nwc.dictionary', []);
-    dictionary.factory("mapControlDescriptions", ['$sce', function($sce) {
+    dictionary.factory("MapControlDescriptions", ['$sce', function($sce) {
         return {
             select: {
                 description: "Single click selects sites or watersheds. Pan by click and drag. Zoom with double click, map buttons or scroll wheel.",
