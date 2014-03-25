@@ -12,18 +12,18 @@
             }
         )
     ]);
-    streamflowStatistics.controller('SelectSite', ['$scope', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap', 'styleDescriptions', 'interestTypeDescriptions', 'mapControlDescriptions',
+    streamflowStatistics.controller('SelectSite', ['$scope', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap', 'styleDescriptions', 'interestTypeDescriptions', 'MapControlDescriptions',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'Select Gage or HUC',
                 description: 'Select a gage or a HUC to retrieve its statistics.'
             },
-            function ($scope, StoredState, CommonState, StoredState, StreamflowMap, styleDescriptions, interestTypeDescriptions, mapControlDescriptions) {
+            function ($scope, StoredState, CommonState, StoredState, StreamflowMap, styleDescriptions, interestTypeDescriptions, MapControlDescriptions) {
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
                 $scope.styleDescriptions = styleDescriptions;
                 $scope.interestTypeDescriptions = interestTypeDescriptions;
-                $scope.mapControlDescriptions = mapControlDescriptions;
+                $scope.MapControlDescriptions = MapControlDescriptions;
                 
                 var mapId = 'siteSelectMap';
                 var map = StreamflowMap.getMap();
@@ -59,8 +59,8 @@
                     }
                     var activeControl = StreamflowMap.getMap().getControlsBy('id', controlId)[0];
                     activeControl.activate();
-                    CommonState.mapControlDescription = mapControlDescriptions[newControl].description;
-                    CommonState.mapControlCursor = mapControlDescriptions[newControl].cursor;
+                    CommonState.mapControlDescription = MapControlDescriptions[newControl].description;
+                    CommonState.mapControlCursor = MapControlDescriptions[newControl].cursor;
                 });
                 $scope.showGageStyleSelector = function() {
                     return StoredState.interestType === 'observed';
@@ -70,8 +70,8 @@
                 StoredState.gageStyle = StoredState.gageStyle || 'blue_circle';
                 CommonState.activatedMapControl = 'select';
                 CommonState.interestTypeDescription = interestTypeDescriptions[StoredState.interestType];
-                CommonState.mapControlDescription = mapControlDescriptions.select.description;
-                CommonState.mapControlCursor = mapControlDescriptions.select.cursor;
+                CommonState.mapControlDescription = MapControlDescriptions.select.description;
+                CommonState.mapControlCursor = MapControlDescriptions.select.cursor;
             }
         )
     ]);

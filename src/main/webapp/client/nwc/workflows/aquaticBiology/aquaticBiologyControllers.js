@@ -12,13 +12,13 @@
             }
         )
     ]);
-    aquaticBiologyControllers.controller('SelectBioDataSite', [ '$scope', 'StoredState', 'CommonState', 'AquaticBiologyMap', 'mapControlDescriptions',
+    aquaticBiologyControllers.controller('SelectBioDataSite', [ '$scope', 'StoredState', 'CommonState', 'AquaticBiologyMap', 'MapControlDescriptions',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'Aquatic Biology Site Selection Map',
                 description: 'Via the map interface, explore aquatic biology sites across the nation and select them to pursue further investigation in BioData'
             },
-            function($scope, StoredState, CommonState, AquaticBiologyMap, mapControlDescriptions){
+            function($scope, StoredState, CommonState, AquaticBiologyMap, MapControlDescriptions){
             
                 var map = AquaticBiologyMap.getMap();
                 map.render('bioSiteSelectMap');
@@ -42,13 +42,13 @@
                     }
                     var activeControl = AquaticBiologyMap.getMap().getControlsBy('id', controlId)[0];
                     activeControl.activate();
-                    CommonState.mapControlDescription = mapControlDescriptions[newControl].description;
-                    CommonState.mapControlCursor = mapControlDescriptions[newControl].cursor;
+                    CommonState.mapControlDescription = MapControlDescriptions[newControl].description;
+                    CommonState.mapControlCursor = MapControlDescriptions[newControl].cursor;
                 });
                 
                 CommonState.activatedMapControl = 'biosites';
-                CommonState.mapControlDescription = mapControlDescriptions[CommonState.activatedMapControl].description;
-                CommonState.mapControlCursor = mapControlDescriptions[CommonState.activatedMapControl].cursor;
+                CommonState.mapControlDescription = MapControlDescriptions[CommonState.activatedMapControl].description;
+                CommonState.mapControlCursor = MapControlDescriptions[CommonState.activatedMapControl].cursor;
                 
             }
         )

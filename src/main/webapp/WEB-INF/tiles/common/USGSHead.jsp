@@ -24,6 +24,7 @@
 
 <!-- Site CSS -->
 <link rel="stylesheet" type="text/css" href="${context}/css/custom.css"/>
+<link rel="stylesheet" type="text/css" href="${context}/webjars/font-awesome/${fontawesome-version}/css/font-awesome.min.css"/>
 
 <!-- Our Bootstrap Theme -->
 <script type="text/javascript" src="${context}/themes/theme1/theme1.js"></script>

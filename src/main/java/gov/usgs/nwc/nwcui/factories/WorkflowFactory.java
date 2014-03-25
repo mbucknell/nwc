@@ -14,10 +14,10 @@ public class WorkflowFactory {
     
     private WorkflowFactory() {
     	WorkflowFactory.workflowMap = new HashMap<String, Workflow>();
-    	workflowMap.put("waterbudget", new Workflow("waterbudget", "Water Budget", "/ang/#/workflow/water-budget/select-huc", "/img/workflow/originals/waterBudget.png"));
-    	workflowMap.put("aquaticbiology", new Workflow("aquaticbiology", "Aquatic Biology", "/ang/#/workflow/aquatic-biology/select-biodata-site", "/img/workflow/originals/acquaticBiodata.png"));
-    	workflowMap.put("streamflowstats", new Workflow("streamflowstats", "Streamflow Stats", "/ang/#/workflow/streamflow-statistics/select-site", "/img/workflow/originals/streamflowStatistics.png"));
-    	workflowMap.put("datadiscovery", new Workflow("datadiscovery", "Data Discovery", "/ang/#/workflow/datadiscovery/", "/img/workflow/originals/acquaticBiodata.png"));
+    	workflowMap.put("waterbudget", new Workflow("waterbudget", "Water Budget", "/ang/#/workflow/water-budget/select-huc", "/img/workflow/originals/watershed.svg"));
+    	workflowMap.put("aquaticbiology", new Workflow("aquaticbiology", "Aquatic Biology", "/ang/#/workflow/aquatic-biology/select-biodata-site", "/img/workflow/originals/shield-01.svg"));
+    	workflowMap.put("streamflowstats", new Workflow("streamflowstats", "Streamflow Stats", "/ang/#/workflow/streamflow-statistics/select-site", "/img/workflow/originals/form-01.svg"));
+    	workflowMap.put("datadiscovery", new Workflow("datadiscovery", "Data Discovery", "/ang/#/workflow/datadiscovery/", "/img/workflow/originals/folder-01.svg"));
     }
     
     public static WorkflowFactory getInstance() {

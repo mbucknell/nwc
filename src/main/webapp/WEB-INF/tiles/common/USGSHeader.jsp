@@ -13,7 +13,7 @@
             </div>
             <div id="ccsa-area">
                 <h4 class="access-help">Top Level USGS Links</h4>
-                <br /><a href="http://www.usgs.gov/" title="Link to main USGS page">USGS Home</a>
+                <a href="http://www.usgs.gov/" title="Link to main USGS page">USGS Home</a>
                 <br /><a href="http://www.usgs.gov/ask/index.html" title="Link to main USGS contact page">Contact USGS</a>
                 <br /><a href="http://search.usgs.gov/" title="Link to main USGS search (not publications search)">Search USGS</a>
             </div>
