@@ -128,7 +128,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
+                <version>2.4</version>
                 <configuration>
                     <warName>${warName}</warName>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
@@ -136,16 +136,7 @@
                     <filters>
                         <filter>pom.xml</filter>
                     </filters>
-                    <webResources>
-                        <!-- Copy configuration properties to WEBINF/classes -->
-<!--                        <resource>
-                            <directory>conf/logging/</directory>
-                            <includes>
-                                <include>**/*.properties</include>
-                            </includes>        
-                            <targetPath>WEB-INF/classes</targetPath>
-                        </resource>-->
-                                                
+                    <webResources>                       
                         <resource>
                             <directory>src/main/webapp/WEB-INF/tiles/common</directory><!-- no trailing slash -->
                             <targetPath>WEB-INF/tiles/common</targetPath><!-- no trailing slash -->
@@ -160,10 +151,8 @@
                             <filtering>true</filtering>
                             <includes>
                                 <include>clientRoot.jsp</include>
-                            </includes>
-                                                    
+                            </includes>                     
                         </resource>
-                                                
                     </webResources>
                 </configuration>
             </plugin>
