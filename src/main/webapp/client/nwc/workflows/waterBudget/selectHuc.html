@@ -1,16 +1,18 @@
-<div class="row spacer spacer_down col-xs-12">
-    Map Controls:
-    <div class="btn-group">
-        <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'select'">Select</button>
-        <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'pan'">Pan</button>
-        <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'zoom'">Zoom</button>
+<div class="well">
+    <div class="row col-xs-12">
+        Map Controls:
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'select'">Select</button>
+            <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'pan'">Pan</button>
+            <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'zoom'">Zoom</button>
+        </div>
+        <span>{{CommonState.mapControlDescription}}</span>
     </div>
-    <span>{{CommonState.mapControlDescription}}</span>
 </div>
 <div id="hucSelectMap" class="row col-xs-12" style="height: 500px;" ng-style="CommonState.mapControlCursor"></div>
 <div style="display:none">
-<nav>
-    <a id="goToDisabiguateClick" ui-sref="^.disambiguateClick">Next</a>
-    <a id="goToNonAmbiguousClick" ui-sref="^.plotData">Next</a>
-</nav>
+    <nav>
+        <a id="goToDisabiguateClick" ui-sref="^.disambiguateClick">Next</a>
+        <a id="goToNonAmbiguousClick" ui-sref="^.plotData">Next</a>
+    </nav>
 </div>
