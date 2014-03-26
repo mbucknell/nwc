@@ -1,0 +1,11 @@
+<h4>Statistics for Selected Site</h4>
+<div ng-hide="!StoredState.gage">
+    <dl>
+        <dt>Gage ID</dt>
+        <dd ng-bind="StoredState.gage.data.STAID"></dd>
+        <dt>Gage Name</dt>
+        <dd ng-bind="StoredState.gage.data.STANAME"></dd>
+        <dt>Drainage Area (km^2)</dt>
+        <dd ng-bind="StoredState.gage.data.DRAIN_SQKM"></dd>
+    </dl>
+</div>

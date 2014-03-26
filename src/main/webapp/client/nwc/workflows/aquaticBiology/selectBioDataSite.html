@@ -1,14 +1,12 @@
-<div class="row">
-    <div class="well">
-        <div class="row spacer col-xs-12">
-            Map Controls:
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'biosites'">Select</button>
-                <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'pan'">Pan</button>
-                <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'zoom'">Zoom</button>
-            </div>
-            <span>{{CommonState.mapControlDescription}}</span>
+<div class="well">
+    <div class="row spacer col-xs-12">
+        Map Controls:
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'biosites'">Select</button>
+            <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'pan'">Pan</button>
+            <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'zoom'">Zoom</button>
         </div>
+        <span>{{CommonState.mapControlDescription}}</span>
     </div>
-    <div id="bioSiteSelectMap" class="row spacer col-xs-12" ng-style="CommonState.mapControlCursor" style="height: 500px;"></div>
 </div>
+<div id="bioSiteSelectMap" class="row spacer col-xs-12" ng-style="CommonState.mapControlCursor" style="height: 500px;"></div>

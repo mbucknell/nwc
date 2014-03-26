@@ -198,6 +198,40 @@
             "flow_15obs"  : "temp"
         };
     }]);
+    dictionary.factory("statGroups", ['$sce', function($sce) {
+        return [
+            {
+                shortName: "magnifSeven",
+                longName: "Magnificent Seven",
+                url: "http://onlinelibrary.wiley.com/doi/10.1002/rra.2710/abstract"
+            },
+            {
+                shortName: "magStat",
+                longName: "Flow Magnitude",
+                url: "http://pubs.er.usgs.gov/publication/ofr20061093"
+            },
+            {
+                shortName: "flowStat",
+                longName: "Flow Frequency",
+                url: "http://pubs.er.usgs.gov/publication/ofr20061093"
+            },
+            {
+                shortName: "durStat",
+                longName: "Flow Duration",
+                url: "http://pubs.er.usgs.gov/publication/ofr20061093"
+            },
+            {
+                shortName: "timStat",
+                longName: "Flow Timing",
+                url: "http://pubs.er.usgs.gov/publication/ofr20061093"
+            },
+            {
+                shortName: "rateStat",
+                longName: "Rate of Change",
+                url: "http://pubs.er.usgs.gov/publication/ofr20061093"
+            }
+        ];
+    }]);
     dictionary.factory("styleDescriptions", ['$sce', function($sce) {
         return {
             default: {
