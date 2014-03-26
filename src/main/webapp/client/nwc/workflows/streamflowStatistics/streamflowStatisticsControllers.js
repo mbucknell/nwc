@@ -202,5 +202,11 @@
             }
         )
     ]);
-
+    // such a minor directive, will move when I make more
+    streamflowStatistics.directive('siteStats', function(){
+       return {
+           restrict: 'E',
+           templateUrl: '../client/nwc/workflows/streamflowStatistics/siteStats.html'
+       };
+    });
 }());
