@@ -95,6 +95,10 @@
     margin-top: 0.5em;
 }
 
+.spacer_down {
+    margin-bottom: 0.5em;
+}
+
 [ng-click],
 [data-ng-click],
 [x-ng-click] {

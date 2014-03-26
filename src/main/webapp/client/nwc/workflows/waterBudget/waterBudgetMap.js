@@ -51,7 +51,7 @@
                     vendorParams: {
                         radius: 5
                     },
-                    id: 'hucs',
+                    id: 'nwc-hucs',
                     autoActivate: true
                 });
                 
@@ -79,6 +79,12 @@
                 };
                 hucsGetFeatureInfoControl.events.register("getfeatureinfo", {}, featureInfoHandler);
                 controls.push(hucsGetFeatureInfoControl);
+                controls.push(new OpenLayers.Control.Navigation({
+                    id: 'nwc-navigation'
+                }));
+                controls.push(new OpenLayers.Control.ZoomBox({
+                    id: 'nwc-zoom'
+                }));
                 
                 var map = BaseMap.new({
                     layers: mapLayers,
