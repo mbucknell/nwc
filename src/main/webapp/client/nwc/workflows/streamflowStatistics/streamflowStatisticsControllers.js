@@ -12,13 +12,13 @@
             }
         )
     ]);
-    streamflowStatistics.controller('SelectSite', ['$scope', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap', 'styleDescriptions', 'interestTypeDescriptions', 'MapControlDescriptions',
+    streamflowStatistics.controller('SelectSite', ['$scope', '$http', 'StoredState', 'CommonState', 'StoredState', 'StreamflowMap', 'styleDescriptions', 'interestTypeDescriptions', 'MapControlDescriptions',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'Select Gage or HUC',
                 description: 'Select a gage or a HUC to retrieve its statistics.'
             },
-            function ($scope, StoredState, CommonState, StoredState, StreamflowMap, styleDescriptions, interestTypeDescriptions, MapControlDescriptions) {
+            function ($scope, $http, StoredState, CommonState, StoredState, StreamflowMap, styleDescriptions, interestTypeDescriptions, MapControlDescriptions) {
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
                 $scope.styleDescriptions = styleDescriptions;
@@ -27,8 +27,41 @@
                 
                 var mapId = 'siteSelectMap';
                 var map = StreamflowMap.getMap();
+                var gagesLayerFromGetCaps = undefined;
                 map.render(mapId);
                 map.zoomToExtent(map.extent, true);
+                
+                var format = new OpenLayers.Format.WMSCapabilities({
+                    version: "1.1.1"
+                });
+                
+                var getCapsSuccess = function(response) {
+                    CommonState.wmsCapabilities = format.read(response.data);
+                    var gagesName = "NWC:gagesII";
+                    gagesLayerFromGetCaps = CommonState.wmsCapabilities.capability.layers.find(function(layer){
+                        return layer['name'] === gagesName;
+                    });
+                    map.switchGageLegend(gagesLayerFromGetCaps.styles[0].legend.href);
+                };
+                
+                var getCapsFailure = function(response) {
+                    var url = response.config.url;
+                    var message = 'An error occurred while retrieving get capabilities document from:\n' +
+                            url + '\n' +
+                            'See browser logs for details';
+                    alert(message);
+                    $log.error('Error while accessing: ' + url + '\n' + response.data);
+                };
+                
+                $http.get(CONFIG.endpoint.geoserver + 'wms',
+                    {
+                        params: {
+                            SERVICE: "WMS",
+                            VERSION: "1.1.1",
+                            REQUEST: "GetCapabilities"
+                        }
+                    }
+                ).then(getCapsSuccess, getCapsFailure);
 
                 $scope.$watch('StoredState.interestType', function(newInterest, oldInterest) {
                     if(newInterest !== oldInterest){
@@ -38,8 +71,22 @@
                 });
                 $scope.$watch('StoredState.gageStyle', function(newStyle, oldStyle) {
                     if(newStyle !== oldStyle) {
-                        StreamflowMap.getMap().switchGageStyle(styleDescriptions[newStyle].styleName);
+                        var style = gagesLayerFromGetCaps.styles.find(function(style) {
+                            return style.name === styleDescriptions[newStyle].styleName;
+                        });
+                        if (style === undefined) {
+                            style = {
+                                name: "blue_circle",
+                                legend: {
+                                    href: ""
+                                }
+                            };
+                        }
+                        StreamflowMap.getMap().switchGageStyle(style.name);
+                        // switch this to style.abstract?
                         CommonState.gageStyleDescription = styleDescriptions[newStyle].description;
+
+                        StreamflowMap.getMap().switchGageLegend(style.legend.href);
                     }
                 });
                 $scope.$watch('CommonState.activatedMapControl', function(newControl, oldControl) {

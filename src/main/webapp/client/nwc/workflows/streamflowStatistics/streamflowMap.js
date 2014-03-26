@@ -11,8 +11,8 @@
                 
                 // ////////////////////////////////////////////// FLOWLINES
                 var flowlinesData = new OpenLayers.Layer.FlowlinesData(
-                        "Flowline WMS (Data)",
-                        CONFIG.endpoint.geoserver + 'gwc/service/wms'
+                    "Flowline WMS (Data)",
+                    CONFIG.endpoint.geoserver + 'gwc/service/wms'
                 );
                 flowlinesData.id = 'nhd-flowlines-data-layer';
 
@@ -23,13 +23,13 @@
                     displayInLayerSwitcher: false
                 });
                 flowlineRaster.id = 'nhd-flowlines-raster-layer';
-                
+
                 // ////////////////////////////////////////////// GAGES
                 var gageFeatureLayer = new OpenLayers.Layer.WMS(
                     "Gage Location",
                     CONFIG.endpoint.geoserver + 'NWC/wms',
                     {
-                        LAYERS: 'NWC:gagesII',
+                        LAYERS: "NWC:gagesII",
                         STYLES: 'blue_circle',
                         format: 'image/png',
                         transparent: true,
@@ -40,8 +40,8 @@
                         displayInLayerSwitcher: false
                     }
                 );
-
                 gageFeatureLayer.id = 'gage-feature-layer';
+                mapLayers.push(gageFeatureLayer);
 
                 var hucLayerOptions = BaseMap.getWorkflowLayerOptions();
                 hucLayerOptions.visibility = false;
@@ -58,20 +58,28 @@
                 hucLayer.id = 'hucs';
                 
                 mapLayers.push(hucLayer);
-                
-                mapLayers.push(gageFeatureLayer);
 
                 mapLayers.push(flowlinesData);
                 mapLayers.push(flowlineRaster);   
                 
-                //var waterCensusToolbar = new OpenLayers.Control.WaterCensusToolbar({});
-                //initialControls.push(waterCensusToolbar);
                 initialControls.push(new OpenLayers.Control.Navigation({
                     id: 'nwc-navigation'
                 }));
                 initialControls.push(new OpenLayers.Control.ZoomBox({
                     id: 'nwc-zoom'
                 }));
+                
+                var wmsGetFeatureInfoHandler = function(responseObject){
+                    if(responseObject.features && responseObject.features.length){
+                        //OpenLayers stores the actual features in a weird spot of the response
+                        if(responseObject.features[0].features && responseObject.features[0].features.length){
+                            var realFeatures = responseObject.features[0].features;
+                            realFeatures = realFeatures.map(util.rejectGeometry);
+                            CommonState.ambiguousGages = realFeatures;//rare instance in which it is ok to write directly to CommonState; we don't need to enable state restoration for ambiguous clicks
+                            $state.go('workflow.streamflowStatistics.disambiguateGages');
+                        }
+                    }
+                };
                 
                 var wmsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
                     id: 'nwc-streamflow-gage-identify-control',
@@ -89,22 +97,10 @@
                         radius: 5
                     }
                 });
-                
-                var wmsGetFeatureInfoHandler = function(responseObject){
-                    if(responseObject.features && responseObject.features.length){
-                        //OpenLayers stores the actual features in a weird spot of the response
-                        if(responseObject.features[0].features && responseObject.features[0].features.length){
-                            var realFeatures = responseObject.features[0].features;
-                            realFeatures = realFeatures.map(util.rejectGeometry);
-                            CommonState.ambiguousGages = realFeatures;//rare instance in which it is ok to write directly to CommonState; we don't need to enable state restoration for ambiguous clicks
-                            $state.go('workflow.streamflowStatistics.disambiguateGages');
-                        }
-                    }
-                };
-                
+
                 wmsGetFeatureInfoControl.events.register("getfeatureinfo", {}, wmsGetFeatureInfoHandler);
                 initialControls.push(wmsGetFeatureInfoControl);
-                
+                    
                 var hucsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
                     id: 'nwc-streamflow-huc-identify-control',
                     title: 'huc-identify-control',
@@ -148,6 +144,9 @@
                 };
                 hucsGetFeatureInfoControl.events.register("getfeatureinfo", {}, featureInfoHandler);
                 initialControls.push(hucsGetFeatureInfoControl);
+                
+                var legend = new OpenLayers.Control.Attribution();
+                initialControls.push(legend);
                 
                 map = BaseMap.new({
                     layers: mapLayers,
@@ -201,6 +200,11 @@
                 };
                 map.switchGageStyle = function(styleName) {
                     gageFeatureLayer.mergeNewParams({STYLES: styleName});
+                };
+                map.switchGageLegend = function(legendUrl) {
+                    gageFeatureLayer.addOptions({attribution: '<img src="' + legendUrl + '"/>'});
+                    // easiest way to redraw legend :(
+                    gageFeatureLayer.mergeNewParams();
                 };
                 return map;
             };

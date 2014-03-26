@@ -184,6 +184,7 @@
                                     CommonState.WaterUsageDataSeries = waterUseDataSeries;
                                     CommonState.newWaterUseData = true;
                                     RunningWatches.remove(countyInfoName);
+                                    $state.go('workflow.waterBudget.plotData');
                                 }
                             };
 

@@ -83,6 +83,27 @@ waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'Common
 
             map.render('hucSelectMap');
             map.zoomToExtent(map.extent, true);
+            
+            $scope.$watch('CommonState.activatedMapControl', function(newControl, oldControl) {
+                var controlId;
+                if (newControl === 'zoom') {
+                    controlId = 'nwc-zoom';
+                } else if (newControl === 'pan') {
+                    controlId = 'nwc-navigation';
+                } else {
+                    controlId = 'nwc-hucs';
+                }
+                if (newControl !== oldControl) {
+                    var controls = WaterBudgetMap.getMap().getControlsBy('id', /nwc-.*/);
+                    angular.forEach(controls, function(control) {
+                        control.deactivate();
+                    });
+                }
+                var activeControl = WaterBudgetMap.getMap().getControlsBy('id', controlId)[0];
+                activeControl.activate();
+                CommonState.mapControlDescription = MapControlDescriptions[newControl].description;
+                CommonState.mapControlCursor = MapControlDescriptions[newControl].cursor;
+            });
         
             // when there is more than select, logic for additional buttons can go here
         
