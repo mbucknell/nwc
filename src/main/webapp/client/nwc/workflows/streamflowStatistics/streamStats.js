@@ -13,8 +13,8 @@
     };
 
 
-    streamStats.service('StreamStats', ['$http', '$log', 'wps', 'statDict',
-        function ($http, $log, wps, statDict) {
+    streamStats.service('StreamStats', ['$http', '$log', 'wps', 'statDict', 'statGroups',
+        function ($http, $log, wps, statDict, statGroups) {
             var resultsCouldNotBeObtained = function (response) {
                 var msg = 'Process Completed, but there was an error retrieving the results';
                 $log.error(msg);
@@ -75,7 +75,7 @@
 
             return {
                 getAllStatTypes: function () {
-                    return ["magnifSeven", "magStat", "flowStat", "durStat", "timStat", "rateStat"];
+                    return statGroups;
                 },
                 /**
                  * 
