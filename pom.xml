@@ -254,6 +254,7 @@
                             consult this file's history for the previous explicitly-ordered list
                         -->
                         <include>${nwcClientBase}/general/**/*.js</include>
+                        <include>${nwcClientBase}/state/**/*.js</include>
                         <!-- controllers -->
                         <include>${nwcClientBase}/workflows/**/*.js</include>
                         <!-- main app-->
