@@ -224,6 +224,7 @@
                         <!--library dependencies -->
                         <include>${webjars.libs}/jquery/${jquery-version}/jquery.js</include>
                         <include>${webjars.libs}/angularjs/${angular-version}/angular.js</include>
+                        <include>${webjars.libs}/angularjs/${angular-version}/angular-mocks.js</include>
                         <include>${webjars.libs}/angular-ui-router/${angular-ui-router-version}/angular-ui-router.js</include>
                         <include>${webjars.libs}/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap.js</include>
                         <include>${webjars.libs}/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap-tpls.js</include>
