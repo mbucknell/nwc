@@ -8,7 +8,7 @@
                 description: 'Retrieve streamflow statistics for streams and gages across the nation'
             },
             function($scope, StoredState){
-
+                
             }
         )
     ]);
@@ -202,11 +202,4 @@
             }
         )
     ]);
-    // such a minor directive, will move when I make more
-    streamflowStatistics.directive('siteStats', function(){
-       return {
-           restrict: 'E',
-           templateUrl: '../client/nwc/workflows/streamflowStatistics/siteStats.html'
-       };
-    });
 }());

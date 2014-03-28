@@ -70,6 +70,9 @@
 <script type="text/javascript" src="../client/nwc/workflows/aquaticBiology/aquaticBiologyControllers.js"></script>
 <script type="text/javascript" src="../client/nwc/workflows/streamflowStatistics/streamflowStatisticsControllers.js"></script>
 
+<!-- directives -->
+<script type="text/javascript" src="../client/nwc/workflows/streamflowStatistics/streamflowStatisticsDirectives.js"></script>
+
 <!-- main app-->
 <script type="text/javascript" src="../client/nwc/general/app.js"></script>
 
