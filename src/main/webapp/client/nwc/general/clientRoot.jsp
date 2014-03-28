@@ -31,7 +31,7 @@
 
 <script type="text/javascript" src="../3rdparty/checklist-model/checklist-model.js"></script>
 <!-- misc -->
-<script type="text/javascript" src="../client/nwc/general/openLayersExtensions/WaterCensusToolbar/js/WaterCensusToolbar.js"></script>
+<script type="text/javascript" src="../client/nwc/general/openLayersExtensions/WaterCensusToolbar/js/WaterCensusControls.js"></script>
 
 <script type="text/javascript" src="../client/nwc/general/openLayersExtensions/FlowlineLayer/FlowlinesData.js"></script>
 <script type="text/javascript" src="../client/nwc/general/openLayersExtensions/FlowlineLayer/FlowlinesRaster.js"></script>
