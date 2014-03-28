@@ -1,33 +1,4 @@
 /*global CONFIG,OpenLayers*/
-OpenLayers.Control.WaterCensusToolbar = OpenLayers.Class(OpenLayers.Control.Panel, {
-    /**
-     * @param {Object} object an optional object whose properties will be used
-     *     to extend the control.
-     */
-    initialize: function (panelOptions, controls) {
-        NWC.loadCSS('../client/nwc/general/openLayersExtensions/WaterCensusToolbar/css/WaterCensusToolbar.css');
-        OpenLayers.Control.Panel.prototype.initialize.apply(this, [panelOptions]);
-        var controlsToAdd = [
-            new OpenLayers.Control.Navigation(),
-            new OpenLayers.Control.ZoomBox()
-        ];
-        if(controls){
-            controlsToAdd = controlsToAdd.concat(controls);
-        }
-        this.addControls(controlsToAdd);
-        // To make the custom navtoolbar use the regular navtoolbar style
-        this.displayClass = 'olControlWaterCensusToolbar';
-    },
-    /**
-     * Method: draw 
-     * calls the default draw, and then activates mouse defaults.
-     */
-    draw: function () {
-        var div = OpenLayers.Control.Panel.prototype.draw.apply(this, arguments);
-        this.defaultControl = this.controls[0];
-        return div;
-    }
-});
 
 OpenLayers.Control.HucSelectionTool = OpenLayers.Class(OpenLayers.Control, (function () {
     var exports = {};

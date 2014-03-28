@@ -8,7 +8,7 @@
                 description: 'Retrieve streamflow statistics for streams and gages across the nation'
             },
             function($scope, StoredState){
-
+                
             }
         )
     ]);
@@ -28,6 +28,7 @@
                 var mapId = 'siteSelectMap';
                 var map = StreamflowMap.getMap();
                 var gagesLayerFromGetCaps = undefined;
+                var legendOptions = "&legend_options=forceLabels:on;fontName:Times New Roman;fontAntiAliasing:true;fontColor:0x000033;fontSize:8px;bgColor:0xFFFFEE;dpi:100";
                 map.render(mapId);
                 map.zoomToExtent(map.extent, true);
                 
@@ -41,7 +42,7 @@
                     gagesLayerFromGetCaps = CommonState.wmsCapabilities.capability.layers.find(function(layer){
                         return layer['name'] === gagesName;
                     });
-                    map.switchGageLegend(gagesLayerFromGetCaps.styles[0].legend.href);
+                    map.switchGageLegend(gagesLayerFromGetCaps.styles[0].legend.href + legendOptions);
                 };
                 
                 var getCapsFailure = function(response) {
@@ -86,7 +87,7 @@
                         // switch this to style.abstract?
                         CommonState.gageStyleDescription = styleDescriptions[newStyle].description;
 
-                        StreamflowMap.getMap().switchGageLegend(style.legend.href);
+                        StreamflowMap.getMap().switchGageLegend(style.legend.href + legendOptions);
                     }
                 });
                 $scope.$watch('CommonState.activatedMapControl', function(newControl, oldControl) {
@@ -202,11 +203,4 @@
             }
         )
     ]);
-    // such a minor directive, will move when I make more
-    streamflowStatistics.directive('siteStats', function(){
-       return {
-           restrict: 'E',
-           templateUrl: '../client/nwc/workflows/streamflowStatistics/siteStats.html'
-       };
-    });
 }());

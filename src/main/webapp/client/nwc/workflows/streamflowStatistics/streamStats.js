@@ -1,6 +1,6 @@
 /*global angular,CONFIG*/
 (function () {
-    var streamStats = angular.module('nwc.streamStats', []);
+    var streamStats = angular.module('nwc.streamStats', ['nwc.streamStats.dictionary']);
     var streamStatsDateFormat = '{yyyy}-{MM}-{dd}';
     var statTypesToString = function (statTypes) {
         return statTypes.join(',');

@@ -1,6 +1,19 @@
 /*global angular*/
 (function () {
-    var watchModule = angular.module('nwc.watch', ['nwc.util', 'nwc.conversion', 'nwc.rdbParser']);
+    var watchModule = angular.module('nwc.watch', [
+        'nwc.util',
+        'nwc.conversion',
+        'nwc.wps',
+        'nwc.rdbParser',
+        'nwc.sharedStateServices',
+        'nwc.sosSources',
+        'nwc.dataSeriesStore',
+        'nwc.sosResponseParser',
+        'nwc.waterBudgetPlot',
+        'nwc.streamStats',
+        'nwc.map.waterBudget',
+        'nwc.map.streamflow',
+        'nwc.map.aquaticBiology']);
 
     //using a map as a set (need fast membership checking later)
     var watchServiceNames = Object.extended();

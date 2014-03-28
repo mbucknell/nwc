@@ -1,6 +1,6 @@
 /*global angular,OpenLayers,CONFIG*/
 (function () {
-    var waterBudgetMap = angular.module('nwc.map.waterBudget', []);
+    var waterBudgetMap = angular.module('nwc.map.waterBudget', ['ui.router', 'nwc.map.base']);
     waterBudgetMap.factory('WaterBudgetMap', [ 'StoredState', 'CommonState', '$state', '$log', 'BaseMap', 'DataSeries',
        function(StoredState, CommonState, $state, $log, BaseMap, DataSeries){
            var privateMap;
