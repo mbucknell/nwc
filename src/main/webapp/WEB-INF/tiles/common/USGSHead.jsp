@@ -12,11 +12,8 @@
 <script type="text/javascript" src="${context}/webjars/jquery/${jquery-version}/jquery.min.js"></script>
 
 <!-- Twitter Bootstrap -->
-<script type="text/javascript" src="${context}/bootstrap/js/bootstrap.min.js"></script>
-<link rel="stylesheet" type="text/css" href="${context}/bootstrap/css/bootstrap.min.css"/>
-
-<!-- Our Javascript -->
-<script type="text/javascript" src="${context}/js/global.js"></script>
+<script type="text/javascript" src="${context}/webjars/bootstrap/${bootstrap-version}/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${context}/webjars/bootstrap/${bootstrap-version}/css/bootstrap.min.css"/>
 
 <!-- USGS CSS -->
 <link rel="stylesheet" type="text/css" href="${context}/css/usgs_common.css"/>

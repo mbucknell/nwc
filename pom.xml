@@ -112,6 +112,7 @@
         <nwcClientBase>src/main/webapp/client/nwc/</nwcClientBase>
         <!-- js lib versions -->
         <jquery-version>1.10.2</jquery-version>
+        <bootstrap-version>3.0.3</bootstrap-version>
         <angular-version>1.2.1</angular-version>
         <angular-ui-router-version>0.2.0</angular-ui-router-version>
         <angular-ui-bootstrap-version>0.9.0</angular-ui-bootstrap-version>
@@ -138,16 +139,16 @@
                     </filters>
                     <webResources>                       
                         <resource>
-                            <directory>src/main/webapp/WEB-INF/tiles/common</directory><!-- no trailing slash -->
-                            <targetPath>WEB-INF/tiles/common</targetPath><!-- no trailing slash -->
+                            <directory>src/main/webapp/WEB-INF/tiles/common</directory> no trailing slash 
+                            <targetPath>WEB-INF/tiles/common</targetPath> no trailing slash 
                             <filtering>true</filtering>
                             <includes>
                                 <include>USGSHead.jsp</include>
                             </includes>
                         </resource>
                         <resource>
-                            <directory>src/main/webapp/client/nwc/general</directory><!-- no trailing slash -->
-                            <targetPath>client/nwc/general</targetPath><!-- no trailing slash -->
+                            <directory>src/main/webapp/client/nwc/general</directory> no trailing slash 
+                            <targetPath>client/nwc/general</targetPath> no trailing slash 
                             <filtering>true</filtering>
                             <includes>
                                 <include>clientRoot.jsp</include>
@@ -258,7 +259,7 @@
                         <!-- controllers -->
                         <include>${nwcClientBase}/workflows/**/*.js</include>
                         <!-- main app-->
-                        <include>${nwcClientBase}/app.js</include>
+                        <include>${nwcClientBase}/general/app.js</include>
                                             
                     </sourceIncludes>
                 </configuration>
@@ -469,6 +470,12 @@
             <groupId>org.webjars</groupId>
             <artifactId>angular-ui-bootstrap</artifactId>
             <version>${angular-ui-bootstrap-version}</version>
+        </dependency>
+        <!-- Declaring bootstrap directly, though angular brings it in transitively -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>${bootstrap-version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
