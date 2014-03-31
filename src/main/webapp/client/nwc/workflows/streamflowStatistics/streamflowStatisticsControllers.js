@@ -148,7 +148,7 @@
                 description: 'Select a subset of the time series for which you would like to calculate various statistics.'
             },
             function ($scope, StoredState, CommonState, StoredState, $state, StreamStats) {
-                CommonState.streamflowStatsParamsReady = false;
+                StoredState.streamflowStatsParamsReady = false;
                 if (!StoredState.gage && !StoredState.streamFlowStatsHuc) {
                     $state.go('^.selectSite');
                 }

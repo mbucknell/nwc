@@ -7,7 +7,6 @@ var storedState = Object.extended({
     _version: 0.1
 });
 
-
 //enable sugarjs instance methods
 var commonState = Object.extended({
     DataSeriesStore: Object.extended(),
@@ -61,7 +60,8 @@ sharedStateServices.factory('StatePersistence', [
                         Object.merge(StoredState, customlyDeserializedState);
                         //now a special case -- 
                         //streamflowStatsParamsReady needs to be loaded *after* siteStatisticsParameters
-                        StoredState.streamflowStatsParamsReady = data.streamflowStatsParamsReady;
+                        //don't re-run stats from restore, require manual click
+                        StoredState.streamflowStatsParamsReady = false; //data.streamflowStatsParamsReady;
                         //let async listeners on StoredState finish before rendering the main ui
                         var checkWatchers = function(){
                             if(RunningWatches.isEmpty()){
@@ -80,7 +80,6 @@ sharedStateServices.factory('StatePersistence', [
                         });
                     });
             };
-            
             
             var geoJsonFormatter = new OpenLayers.Format.GeoJSON();
             
@@ -173,6 +172,4 @@ sharedStateServices.factory('StatePersistence', [
             };
         }
     ]);
-            
-
 }());
