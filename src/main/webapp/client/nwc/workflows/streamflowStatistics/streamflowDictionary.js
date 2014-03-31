@@ -258,7 +258,7 @@
                 description: $sce.trustAsHtml("Observed streamflow from <a href=\"http://waterdata.usgs.gov/nwis\" target=\"_blank\">National Water Information System</a> <i class=\"fa fa-external-link\"></i> Gages.")
             },
             modeled: {
-                description: "Daily streamflow estimates at watershed outlets."
+                description: $sce.trustAsHtml("Modeled streamflow is preliminary and subject to change. <a href=\"#/workflow/streamflow-statistics/model-info\" target=\"_blank\">Documentation in Review.</a> <i class=\"fa fa-external-link\"></i>")
             }
         };
     }]);

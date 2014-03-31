@@ -186,7 +186,7 @@
                     else if('modeled' === interest){
                         
                         gageFeatureLayer.setVisibility(false);
-                        flowlineRaster.setVisibility(false);
+                        flowlineRaster.setVisibility(true);
                         wmsGetFeatureInfoControl.deactivate();
                         StoredState.gage = undefined;
 

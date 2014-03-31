@@ -124,6 +124,10 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     url: '/display-statistics',
                     templateUrl: streamStatsBasePath + 'displayStatistics.html',
                     controller: 'DisplayStatistics'
+                })
+                .state('workflow.streamflowStatistics.modeledInfoPage', {
+                    url: '/model-info',
+                    templateUrl: streamStatsBasePath + 'modeledInfoPage.html'
                 });
     }
 ]);
