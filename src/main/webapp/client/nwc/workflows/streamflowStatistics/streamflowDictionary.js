@@ -255,7 +255,7 @@
     dictionary.factory("interestTypeDescriptions", ['$sce', function($sce) {
         return {
             observed: {
-                description: $sce.trustAsHtml("Observed streamflow from <a href=\"http://waterdata.usgs.gov/nwis\">National Water Information System</a> Gages.")
+                description: $sce.trustAsHtml("Observed streamflow from <a href=\"http://waterdata.usgs.gov/nwis\" target=\"_blank\">National Water Information System</a> <i class=\"fa fa-external-link\"></i> Gages.")
             },
             modeled: {
                 description: "Daily streamflow estimates at watershed outlets."
