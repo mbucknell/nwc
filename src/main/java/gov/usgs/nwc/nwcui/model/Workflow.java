@@ -5,12 +5,14 @@ public class Workflow {
 	private String name;
 	private String URI;
 	private String image;
+    private String description;
 	
-	public Workflow(String id, String name, String URI, String image) {
+	public Workflow(String id, String name, String URI, String image, String description) {
 		this.id = id;
 		this.name = name;
 		this.URI = URI;
 		this.image = image;
+        this.description = description;
 	}
 	
 	public String getId() {
@@ -43,5 +45,14 @@ public class Workflow {
 
 	public void setImage(String image) {
 		this.image = image;
-	}	
+	}
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
 }

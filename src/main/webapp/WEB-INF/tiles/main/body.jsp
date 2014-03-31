@@ -38,16 +38,19 @@
 				
 				<div class="col-xs-6" style="min-width: 346px; padding: 0px;">
 					<div class="panel panel-default" style="margin: 10px;">
+                        <div class="panel-heading" style="text-align: center;">
+							<a href="${context}${workflow.URI}">
+								${workflow.name}
+							</a>
+						</div>
 						<div class="panel-body">
 							<a href="${context}${workflow.URI}">
 								<img src="${context}${workflow.image}" style="width: 400px; margin-left: auto; margin-right: auto;" class="img-responsive" />
 							</a>
 						</div>
-						<div class="panel-heading" style="text-align: center;">
-							<a href="${context}${workflow.URI}">
-								${workflow.name}
-							</a>
-						</div>
+                        <div class="panel-footer">
+                            ${workflow.description}
+                        </div>
 					</div>
 				</div>
 				
