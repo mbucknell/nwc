@@ -148,7 +148,7 @@
                 description: 'Select a subset of the time series for which you would like to calculate various statistics.'
             },
             function ($scope, StoredState, CommonState, StoredState, $state, StreamStats) {
-                CommonState.streamflowStatsParamsReady = false;
+                StoredState.streamflowStatsParamsReady = false;
                 if (!StoredState.gage && !StoredState.streamFlowStatsHuc) {
                     $state.go('^.selectSite');
                 }
@@ -187,13 +187,13 @@
         )
     ]);
     
-    streamflowStatistics.controller('DisplayStatistics', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats',
+    streamflowStatistics.controller('DisplayStatistics', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'View Statistics',
                 description: 'Visualize and export the statistics for the selected site.'
             },
-            function ($scope, StoredState, CommonState, StoredState, $state, StreamStats) {
+            function ($scope, StoredState, CommonState, StoredState, $state) {
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
                 

@@ -136,9 +136,7 @@
                                 }
                             };
                             $q.all(labeledAjaxCalls).then(sosSuccess, sosError);
-                    };
-                    
-                    
+                    };  
                     
                     return {
                         propertyToWatch: hucFeatureName,
@@ -352,7 +350,6 @@
                                     alert(msg);
                                     RunningWatches.remove(streamStatsReadyName);
                                 }
-
                             }
                             else {
                                 RunningWatches.remove(streamStatsReadyName);
