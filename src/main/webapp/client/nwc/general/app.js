@@ -13,6 +13,7 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.controllers.waterBudget',
     'nwc.controllers.aquaticBiology',
     'nwc.controllers.streamflowStatistics',
+    'nwc.directives.streamflowStatistics',
     'ui.router',
     'ui.bootstrap',
     'nwc.waterBudgetPlot',

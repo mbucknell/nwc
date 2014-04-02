@@ -187,13 +187,13 @@
         )
     ]);
     
-    streamflowStatistics.controller('DisplayStatistics', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats',
+    streamflowStatistics.controller('DisplayStatistics', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'View Statistics',
                 description: 'Visualize and export the statistics for the selected site.'
             },
-            function ($scope, StoredState, CommonState, StoredState, $state, StreamStats) {
+            function ($scope, StoredState, CommonState, StoredState, $state) {
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
                 
