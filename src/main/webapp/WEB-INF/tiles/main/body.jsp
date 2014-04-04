@@ -45,7 +45,7 @@
 						</div>
 						<div class="panel-body">
 							<a href="${context}${workflow.URI}">
-								<img src="${context}${workflow.image}" style="width: 400px; margin-left: auto; margin-right: auto;" class="img-responsive" />
+								<img src="${context}${workflow.image}" style="max-width: 60%; margin-left: auto; margin-right: auto;" class="img-responsive" />
 							</a>
 						</div>
                         <div class="panel-footer">

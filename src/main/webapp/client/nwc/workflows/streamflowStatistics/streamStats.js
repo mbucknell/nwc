@@ -68,8 +68,10 @@
                     }
                 };
             };
+            // ~ 1 hr
             var statusOptions = {
-                maxNumberOfPolls: 60,
+                pollFrequency: 5000,
+                maxNumberOfPolls: 720,
                 failure: statusFailure
             };
 
