@@ -9,7 +9,7 @@
     </dl>
 </div>
 
-<h5 ng-hide="CommonState.streamflowStatistics.length">Calculating Statistics...</h5>
+<h4 ng-hide="CommonState.streamflowStatistics.length">Calculating Statistics <i class="fa fa-spinner fa-spin"></i></h4>
 
 <div ng-hide="CommonState.streamflowStatistics.length === 0" class="table-responsive">
         <a ng-href="{{CommonState.streamflowStatisticsUrl}}">Download These Statistics</a>
@@ -31,5 +31,5 @@
 	</table>
 </div>
 <nav>
-    <button class="btn" ui-sref="^.setSiteStatisticsParameters"><span class="glyphicon glyphicon-arrow-left"> </span>Back</button>
+    <button class="btn" ui-sref="^.setSiteStatisticsParameters"><span class="glyphicon glyphicon-arrow-left"></span> Back</button>
 </nav>
