@@ -79,7 +79,8 @@
             layers: mapLayers,
             restrictedExtent: maxExtent,
             projection: WGS84_GOOGLE_MERCATOR,
-            controls: controls
+            controls: controls,
+            numZoomLevels: 13
         };
         return defaultConfig;
     };

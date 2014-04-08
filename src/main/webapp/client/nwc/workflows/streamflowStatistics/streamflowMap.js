@@ -8,22 +8,9 @@
             var initMap = function () {
                 var mapLayers = [];
                 var initialControls = [];
+
+                var flowlineRaster;
                 
-                // ////////////////////////////////////////////// FLOWLINES
-                var flowlinesData = new OpenLayers.Layer.FlowlinesData(
-                    "Flowline WMS (Data)",
-                    CONFIG.endpoint.geoserver + 'gwc/service/wms'
-                );
-                flowlinesData.id = 'nhd-flowlines-data-layer';
-
-                var flowlineRaster = new OpenLayers.Layer.FlowlinesRaster({
-                    name: "NHD Flowlines",
-                    dataLayer: flowlinesData,
-                    streamOrderClipValue: 0,
-                    displayInLayerSwitcher: false
-                });
-                flowlineRaster.id = 'nhd-flowlines-raster-layer';
-
                 // ////////////////////////////////////////////// GAGES
                 var gageFeatureLayer = new OpenLayers.Layer.WMS(
                     "Gage Location",
@@ -58,9 +45,6 @@
                 hucLayer.id = 'hucs';
                 
                 mapLayers.push(hucLayer);
-
-                mapLayers.push(flowlinesData);
-                mapLayers.push(flowlineRaster);   
                 
                 initialControls.push(new OpenLayers.Control.Navigation({
                     id: 'nwc-navigation'
@@ -153,21 +137,105 @@
                     controls: initialControls
                 });
 
-                map.events.register(
-                        'zoomend',
-                        map,
-                        function () {
-                            var zoom = map.zoom;
-                            $log.info('Current map zoom: ' + zoom);
-                            flowlineRaster.updateFromClipValue(flowlineRaster.getClipValueForZoom(zoom));
-                        },
-                        true
-                );
-
                 var mapZoomForExtent = map.getZoomForExtent(map.extent);
                 map.setCenter(map.extent.getCenterLonLat(), mapZoomForExtent);
-                flowlineRaster.setStreamOrderClipValues(map.getNumZoomLevels());
-                flowlineRaster.updateFromClipValue(flowlineRaster.getClipValueForZoom(map.zoom));
+
+                var streamOrderClipValues = [
+                    7, // 0
+                    7,
+                    7,
+                    6,
+                    6,
+                    6, // 5
+                    5,
+                    5,
+                    5,
+                    4,
+                    4, // 10
+                    4,
+                    3,
+                    3,
+                    3,
+                    2, // 15
+                    2,
+                    2,
+                    1,
+                    1,
+                    1 // 20
+                ];
+                var streamOrderClipValue = 0;
+                var flowlineAboveClipPixel;
+                var createFlowlineColor = function(r,g,b,a) {
+                    flowlineAboveClipPixel = (a & 0xff) << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff);
+                };
+                createFlowlineColor(100,100,255,255);
+                var addFlowLinesLayer = function(map) {
+                    streamOrderClipValue = streamOrderClipValues[map.zoom];
+
+                    map.events.register(
+                        'zoomend',
+                        map,
+                        function() {
+                            streamOrderClipValue = streamOrderClipValues[map.zoom];
+                        },
+                        true
+                    );
+
+                    // define per-pixel operation
+                    var flowlineClipOperation = OpenLayers.Raster.Operation.create(function(pixel) {
+                        if (pixel >> 24 === 0) { return 0; }
+                        var value = pixel & 0x00ffffff;
+                        if (value >= streamOrderClipValue && value < 0x00ffffff) {
+                            return flowlineAboveClipPixel;
+                        } else {
+                            return 0;
+                        }
+                    });
+
+                    var flowlineLayer = "NHDPlusFlowlines:PlusFlowlineVAA_NHDPlus-StreamOrder";
+                    var options = {
+                        opacity: 0,
+                        displayInLayerSwitcher: false,
+                        tileOptions: {
+                            crossOriginKeyword: 'anonymous'
+                        }
+                    };
+                    var flowlinesWMSData = new OpenLayers.Layer.FlowlinesData(
+                        "Flowline WMS (Data)",
+                        CONFIG.endpoint.geoserver + 'gwc/service/wms'
+                    );
+                    flowlinesWMSData.id = 'nhd-flowlines-data-layer';
+                    map.addLayer(flowlinesWMSData);
+
+                    // source canvas (writes WMS tiles to canvas for reading)
+                    var flowlineComposite = OpenLayers.Raster.Composite.fromLayer(flowlinesWMSData, {int32: true});
+
+                    // filter source data through per-pixel operation
+                    var flowlineClipOperationData = flowlineClipOperation(flowlineComposite);
+
+                    var flowLayerName = "NHD Flowlines"
+                    flowlineRaster = new OpenLayers.Layer.Raster({
+                        name: flowLayerName,
+                        data: flowlineClipOperationData,
+                        isBaseLayer: false
+                    });
+                    flowlineRaster.visibility = true;
+
+                    // define layer that writes data to a new canvas
+                    flowlineRaster.setData(flowlineClipOperationData);
+
+                    // add the special raster layer to the map viewport
+                    map.addLayer(flowlineRaster);
+
+                    // this prevent the rendering of the lines even if the layer is not checked
+                    map.events.register('changelayer', null, function(evt){
+                        if (evt.property === "visibility"
+                         && evt.layer.name === flowLayerName) {
+                            setLayerVisibility(flowlinesWMSData, evt.layer.visibility);
+                        }
+                    });
+                };
+                addFlowLinesLayer(map);
                 
                 /**
                  * 
