@@ -1,14 +1,20 @@
-/*global angular*/
+/*global angular SCE */
 (function () {
     var streamflowStatistics = angular.module('nwc.controllers.streamflowStatistics', ['nwc.streamStats', 'nwc.wps', 'nwc.dictionary', 'nwc.streamStats.dictionary']);
-    streamflowStatistics.controller('StreamflowStatistics', [ '$scope', 'StoredState',
+    streamflowStatistics.controller('StreamflowStatistics', [ '$scope', 'StoredState', '$sce',
         NWC.ControllerHelpers.WorkflowController(
             {
-                name: 'Streamflow Statistics',
-                description: 'Retrieve streamflow statistics for streams and gages across the nation'
+                name: 'Streamflow Statistics Calculator',
+                description: 'Access streamflow statistics for National Water Information\n\
+                    System gages and modeled daily flow in some regions. Select a gage or\n\
+                    watershed, provide a time period for which statistics are required, and\n\
+                    choose statistics to receive. Software to calculate these statistics is\n\
+                    also available as an open-source package on GitHub:\n\
+                    <a href="https://github.com/USGS-R/EflowStats" target="_blank">\n\
+                    https://github.com/USGS-R/EflowStats <i class="fa fa-external-link"></i></a>.'
             },
-            function($scope, StoredState){
-                
+            function($scope, StoredState, $sce) {
+                $scope.description = $sce.trustAsHtml($scope.description);
             }
         )
     ]);

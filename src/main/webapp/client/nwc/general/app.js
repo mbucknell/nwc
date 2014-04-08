@@ -13,6 +13,7 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.controllers.waterBudget',
     'nwc.controllers.aquaticBiology',
     'nwc.controllers.streamflowStatistics',
+    'nwc.controllers.dataDiscovery',
     'nwc.directives.streamflowStatistics',
     'ui.router',
     'ui.bootstrap',
@@ -129,6 +130,12 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                 .state('workflow.streamflowStatistics.modeledInfoPage', {
                     url: '/model-info',
                     templateUrl: streamStatsBasePath + 'modeledInfoPage.html'
+                });
+            var dataDiscoveryBasePath = workflowsBasePath + 'dataDiscovery/';
+                $stateProvider.state('workflow.dataDiscovery', {
+                    url: '/data-discovery',
+                    templateUrl: dataDiscoveryBasePath + 'dataDiscoveryTemplate.html',
+                    controller: 'DataDiscovery'
                 });
     }
 ]);
