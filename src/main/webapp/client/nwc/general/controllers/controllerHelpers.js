@@ -19,7 +19,7 @@ NWC.ControllerHelpers = {};
             $scope.name = config.name;
             $scope.description = config.description;
 
-            customControllerFunction.apply(arguments);
+            customControllerFunction.apply({}, arguments);
         };
     };
 

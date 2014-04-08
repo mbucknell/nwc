@@ -1,14 +1,22 @@
 /*global angular*/
 (function () {
     var aquaticBiologyControllers = angular.module('nwc.controllers.aquaticBiology', []);
-    aquaticBiologyControllers.controller('AquaticBiology', [ '$scope', 'StoredState',
+    aquaticBiologyControllers.controller('AquaticBiology', [ '$scope', 'StoredState', '$sce',
         NWC.ControllerHelpers.WorkflowController(
             {
-                name: 'Aquatic Biology',
-                description: 'Explore aquatic biology sites across the nation.'
+                name: "Aquatic Biology Data and Related Streamflow Statistics",
+                description: " Access aquatic biology data from the BioData (link)\n\
+                    database and calculate streamflow statistics for near-by stream gages\n\
+                    or model results. Select a collection of aquatic biology sites and\n\
+                    access the data from the BioData system. Coming Soon: Select a collection\n\
+                    of related stream-flow gages, specify a time range of interest, and\n\
+                    choose statistics to receive. Software to calculate these statistics\n\
+                    is also available as an open-source package on GitHub:\n\
+                    <a href=\"https://github.com/USGS-R/EflowStats\" target=\"_blank\">\n\
+                    https://github.com/USGS-R/EflowStats <i class=\"fa fa-external-link\"></i>."
             },
-            function($scope, StoredState){
-                
+            function($scope, StoredState, $sce){
+                $scope.description = $sce.trustAsHtml($scope.description);
             }
         )
     ]);
