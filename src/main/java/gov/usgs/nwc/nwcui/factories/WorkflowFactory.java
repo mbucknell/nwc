@@ -11,7 +11,7 @@ public class WorkflowFactory {
 
     private WorkflowFactory() {
     	WorkflowFactory.workflowList = new LinkedList<>();
-    	workflowList.add(new Workflow("waterbudget", "Water Budget", "/ang/#/workflow/water-budget/select-huc", "/img/workflow/originals/watershed.svg", "Discovery water budget data for watersheds and counties."));
+    	workflowList.add(new Workflow("waterbudget", "Water Budget", "/ang/#/workflow/water-budget/select-huc", "/img/workflow/originals/watershed.svg", "Discover water budget data for watersheds and counties."));
         workflowList.add(new Workflow("streamflowstats", "Streamflow Stats", "/ang/#/workflow/streamflow-statistics/select-site", "/img/workflow/originals/form-01.svg", "Access streamflow statistics for stream gages and model results."));
     	workflowList.add(new Workflow("aquaticbiology", "Aquatic Biology", "/ang/#/workflow/aquatic-biology/select-biodata-site", "/img/workflow/originals/shield-01.svg", "Access aquatic biology data and streamflow statistics for related sites."));    	
     	workflowList.add(new Workflow("datadiscovery", "Data Discovery", "/ang/#/workflow/datadiscovery/", "/img/workflow/originals/folder-01.svg", "Search and browse datasets, publications, and project descriptions."));
