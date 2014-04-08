@@ -2,13 +2,19 @@
 (function(){
     var waterBudgetControllers = angular.module('nwc.controllers.waterBudget', []);
     
-    
-    waterBudgetControllers.controller('WaterBudget', ['$scope',
-        function ($scope) {
-            $scope.name = "Water Budget";
-            $scope.description = "Retrieve water data comprising all components of a water budget.";
-        }
-    ]);
+    waterBudgetControllers.controller('WaterBudget', ['$scope', 'StoredState', '$sce',
+        NWC.ControllerHelpers.WorkflowController(
+            {
+                name: "Available Water Budget Components",
+                description: "Discover and access water budget data for watersheds\n\
+                    and counties. Select a watershed of interest for precipitation and\n\
+                    evapotranspiration data. County water use data for counties intersecting\n\
+                    the watershed is also available."
+            },
+            function ($scope, SharedState, $sce) {
+                $scope.description = $sce.trustAsHtml($scope.description);
+            }
+    )]);
 waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetPlot', 'WaterUsageChart',
     NWC.ControllerHelpers.StepController(
         {
