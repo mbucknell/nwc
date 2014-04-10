@@ -4,17 +4,21 @@
     streamflowStatistics.controller('StreamflowStatistics', [ '$scope', 'StoredState', '$sce',
         NWC.ControllerHelpers.WorkflowController(
             {
-                name: 'Streamflow Statistics Calculator',
-                description: 'Access streamflow statistics for National Water Information\n\
+                name: "Streamflow Statistics Calculator",
+                description: "Access streamflow statistics for National Water Information\n\
                     System gages and modeled daily flow in some regions. Select a gage or\n\
                     watershed, provide a time period for which statistics are required, and\n\
                     choose statistics to receive. Software to calculate these statistics is\n\
                     also available as an open-source package on GitHub:\n\
-                    <a href="https://github.com/USGS-R/EflowStats" target="_blank">\n\
-                    https://github.com/USGS-R/EflowStats <i class="fa fa-external-link"></i></a>.'
+                    <a href=\"https://github.com/USGS-R/EflowStats\" target=\"_blank\">\n\
+                    https://github.com/USGS-R/EflowStats <i class=\"fa fa-external-link\"></i></a>.",
+                disclaimer: "Preliminary Subject to Change"
             },
             function($scope, StoredState, $sce) {
                 $scope.description = $sce.trustAsHtml($scope.description);
+                $scope.observedSelected = function() {
+                    return StoredState.interestType === 'observed';
+                };
             }
         )
     ]);
@@ -116,9 +120,6 @@
                     CommonState.mapControlDescription = MapControlDescriptions[newControl].description;
                     CommonState.mapControlCursor = MapControlDescriptions[newControl].cursor;
                 });
-                $scope.showGageStyleSelector = function() {
-                    return StoredState.interestType === 'observed';
-                };
 
                 StoredState.interestType = StoredState.interestType || 'observed';
                 StoredState.gageStyle = StoredState.gageStyle || 'blue_circle';

@@ -18,6 +18,9 @@ NWC.ControllerHelpers = {};
         return function ($scope, StoredState) {
             $scope.name = config.name;
             $scope.description = config.description;
+            if (config.disclaimer) {
+                $scope.disclaimer = config.disclaimer;
+            }
 
             customControllerFunction.apply({}, arguments);
         };
