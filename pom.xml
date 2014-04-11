@@ -121,6 +121,7 @@
         <openlayers-version>2.12</openlayers-version>
         <fontawesome-version>4.0.3</fontawesome-version>
         <sugar-version>1.4.1</sugar-version>
+        <zeroclipboard-version>1.3.5</zeroclipboard-version>
     </properties>
     <build>
         <plugins>
@@ -241,6 +242,7 @@
                         <include>${webjars.libs}/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap-tpls.js</include>
                         <include>${webjars.libs}/sugar/${sugar-version}/sugar-full.development.js</include>
                         <include>${webjars.libs}/openlayers/${openlayers-version}/OpenLayers.debug.js</include>
+                        <include>${webjars.libs}/zeroclipboard/${zeroclipboard-version}/ZeroClipboard.min.js</include>
                         <include>${thirdParty.libs}/openlayers/extension/Raster.js</include>
                         <include>${thirdParty.libs}/openlayers/extension/Layer/Raster.js</include>
                         <include>${thirdParty.libs}/openlayers/extension/Raster/Grid.js</include>
@@ -541,6 +543,11 @@
             <groupId>org.webjars</groupId>
             <artifactId>ng-grid</artifactId>
             <version>${angular-ui-grid-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>zeroclipboard</artifactId>
+            <version>${zeroclipboard-version}-SNAPSHOT</version>
         </dependency>
         <!-- </webjars> -->
                 

@@ -13,6 +13,7 @@
 <script type="text/javascript" src="../webjars/ng-grid/${angular-ui-grid-version}/ng-grid.js"></script>
 <script type="text/javascript" src="../webjars/sugar/${sugar-version}/sugar-full.development.js"></script>
 <script type="text/javascript" src="../webjars/openlayers/${openlayers-version}/OpenLayers.debug.js"></script>
+<script type="text/javascript" src="../webjars/zeroclipboard/${zeroclipboard-version}/ZeroClipboard.min.js"></script>
 <!--<Order is important> -->
 <script type="text/javascript" src="../gov.usgs.cida.jslibs/openlayers/extension/Raster.js"></script>
 <script type="text/javascript" src="../gov.usgs.cida.jslibs/openlayers/extension/Layer/Raster.js"></script>
@@ -28,6 +29,7 @@
 <script type="text/javascript" src="../webjars/flot/${flotcharts-version}/jquery.flot.stack.js"></script>
 <script type="text/javascript" src="../3rdparty/flot-plugins/jquery.flot.tooltip.js"></script>
 <script type="text/javascript" src="../3rdparty/flot-plugins/jquery.flot.axislabels.js"></script>
+<script type="text/javascript" src="../3rdparty/ng-clip/ngClip.js"></script>
 
 <script type="text/javascript" src="../3rdparty/checklist-model/checklist-model.js"></script>
 <!-- misc -->

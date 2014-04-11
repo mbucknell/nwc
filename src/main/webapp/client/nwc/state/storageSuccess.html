@@ -2,8 +2,8 @@
     <h2>Application State Successfully Saved</h2>
     <p>Share this link with others:</p>
     <div>
-        <input style="width: 75%" type="text" readonly="true" ng-model="uri"/>
-        <a style="width: 20%" class="btn btn-primary" ng-click="goToUri()">Visit Link</a>
+        <input style="width: 65%" type="text" readonly="true" ng-model="uri" />
+        <span ng-show="showButton"><a style="width: 30%" class="btn btn-primary clip_button" clip-copy="copy()" clip-click="close()" clip-show="isFlash()">Copy to clipboard</a></span>
     </div>
     <div class="text-center">
         <button class="btn btn-success" ng-click="close()">OK</button>
