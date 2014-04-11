@@ -13,8 +13,8 @@ var commonState = Object.extended({
     newDataSeriesStore: false,
     activatedMapControl: "select",
     gageStyleDescription: "Gages for Evaluating Streamflow",
-    streamFlowStatMinDate: new Date(),
-    streamFlowStatMaxDate: new Date()
+    streamFlowStatMinDate: Date.create().utc(),
+    streamFlowStatMaxDate: Date.create().utc()
 });
 
 //this factory provides access to the state that is NOT stored to the server, but that
@@ -58,6 +58,7 @@ sharedStateServices.factory('StatePersistence', [
                             }
                         });
                         Object.merge(StoredState, customlyDeserializedState);
+                        CommonState = commonState;
                         //now a special case -- 
                         //streamflowStatsParamsReady needs to be loaded *after* siteStatisticsParameters
                         //don't re-run stats from restore, require manual click
@@ -99,7 +100,7 @@ sharedStateServices.factory('StatePersistence', [
              * @returns {Date}
              */
             var deserializeDate = function(dateStr){
-                var date = new Date(dateStr);
+                var date = Date.create(dateStr).utc();
                 return date;
             };
             /**
@@ -149,10 +150,15 @@ sharedStateServices.factory('StatePersistence', [
             };
 
             var store = function (usersStateObject) {
+                // remove keys with undefined values
+                var stateMinusUndefined = usersStateObject.findAll(function(k, v) {
+                   return v !== undefined; 
+                });
+                
                 var customSerializationProperties = Object.keys(customSerializers);
                 
                 //reject potentially circular properties that have their own serializers
-                var nonCircularState = Object.reject(usersStateObject, customSerializationProperties);
+                var nonCircularState = Object.reject(stateMinusUndefined, customSerializationProperties);
                 
                 customSerializationProperties.each(function (customSerializationProperty) {
                     var customSerializer = customSerializers[customSerializationProperty];

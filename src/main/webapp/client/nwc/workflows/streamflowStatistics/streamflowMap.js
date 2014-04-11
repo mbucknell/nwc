@@ -102,8 +102,8 @@
                     autoActivate: false
                 });
                 
-                var minStatDate = new Date('1980/10/01');
-                var maxStatDate = new Date('2010/09/29');
+                var minStatDate = Date.create('1980/10/01').utc();
+                var maxStatDate = Date.create('2010/09/29').utc();
                 var featureInfoHandler = function (responseObject) {
                     //for some reason the real features are inside an array
                     var actualFeatures = responseObject.features[0].features;
@@ -121,8 +121,8 @@
                         CommonState.streamFlowStatMaxDate = maxStatDate;
                         StoredState.siteStatisticsParameters = {};
                         var statisticsParameters = StoredState.siteStatisticsParameters;
-                        statisticsParameters.startDate = new Date(minStatDate);
-                        statisticsParameters.endDate = new Date(maxStatDate);
+                        statisticsParameters.startDate = Date.create(minStatDate).utc();
+                        statisticsParameters.endDate = Date.create(maxStatDate).utc();
                         $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
                     }
                 };

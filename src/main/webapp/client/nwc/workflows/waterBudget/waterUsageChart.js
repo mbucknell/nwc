@@ -18,7 +18,7 @@
 
             //convert all x values from String to Date
             values = values.map(function (row) {
-                row[dateIndex] = new Date(row[dateIndex]);
+                row[dateIndex] = Date.create(row[dateIndex]).utc();
                 return row;
             });
             //now transform from the parameterized row-oriented parallel array to flotchart's column-oriented array
@@ -85,7 +85,7 @@
                               var offsetIndex = flotItem.datapoint.length - 1;
                               var offset = flotItem.datapoint[offsetIndex];
                               var realValue = yval - offset;
-                              var initialDatumYear = Date.create(xval).format(dateFormat);
+                              var initialDatumYear = Date.create(xval).utc().format(dateFormat);
                               var finalDatumYear = parseInt(initialDatumYear) + numYearsPerDatum;
                               var dateDisplay = initialDatumYear + yearTooltipSeparator + finalDatumYear;
                               var tooltipText = 'Date: ' + dateDisplay + "<br/>" + label + ": " + realValue + " " + waterUsageUnitName;

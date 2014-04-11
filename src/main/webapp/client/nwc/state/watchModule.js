@@ -227,7 +227,7 @@
       return dateStr.replace(/-/g, '/');
     };
     var strToDate = function(dateStr){
-        return new Date(dateStr);
+        return Date.create(dateStr).utc();
     };
     /**
      * On gage change, query nwis for the start and end dates of that gage's relevant data.

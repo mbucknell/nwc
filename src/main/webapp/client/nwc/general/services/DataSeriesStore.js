@@ -36,11 +36,11 @@
               return columnIndices[columnName];  
             };
             self.daily = DataSeries.new();
-            self.monthly = new DataSeries.new();
+            self.monthly = DataSeries.new();
             var addSeriesLabel = function (seriesClass, metadata) {
                 self[seriesClass].metadata.seriesLabels.push(
-                        metadata.seriesName + ' (' + metadata.seriesUnits + ')'
-                        );
+                    metadata.seriesName + ' (' + metadata.seriesUnits + ')'
+                );
             };
             /*
                 daymet comes in daily
@@ -82,7 +82,7 @@
                             etaForCurrentMonth = NaN;
                         }
                     }
-                    var date = new Date(dayMetDateStr);
+                    var date = Date.create(dayMetDateStr).utc();
                     var averageDailyEta = etaForCurrentMonth / date.daysInMonth();
                     var rowToAdd = [];
                     rowToAdd[columnIndices.date] = date;
@@ -145,7 +145,7 @@
                             dayMetValue = dayMetRow[1],
                             dayMetDay = getDayNumberFromDateString(dayMetDateStr);
                     if (undefined === endOfMonth) {
-                        endOfMonth = Date.create(dayMetDateStr).daysInMonth();
+                        endOfMonth = Date.create(dayMetDateStr).utc().daysInMonth();
                         monthDateStr = dayMetDateStr;
                     }
                     monthlyAccumulation = saferAdd(monthlyAccumulation, dayMetValue);
@@ -164,7 +164,7 @@
                         else {
                             etaForCurrentMonth = NaN;
                         }
-                        var date = new Date(monthDateStr);
+                        var date = Date.create(monthDateStr).utc();
                         var rowToAdd = [];
                         rowToAdd[columnIndices.date] = date;
                         rowToAdd[columnIndices.dayMet] = monthlyAccumulation;

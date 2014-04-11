@@ -21,10 +21,10 @@
         //functions to customize the display of dates on the Dygraph
         //these will be attached as public properties of the Graph
         var dateToStringWithoutDay = function (ms) {
-            return new Date(ms).format('{Mon}. {yyyy}');
+            return Date.create(ms).utc().format('{Mon}. {yyyy}');
         };
         var dateToStringMonthOnly = function (ms) {
-            return new Date(ms).format('{Mon}.');
+            return Date.create(ms).utc().format('{Mon}.');
         };
         var opts = {
             labels: labels,

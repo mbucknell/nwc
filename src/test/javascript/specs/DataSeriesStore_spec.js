@@ -2,8 +2,8 @@ describe('DataSeriesStore', function(){
     var $injector = angular.injector(['nwc.dataSeriesStore']);
     var DataSeries = $injector.get('DataSeries');
     var DataSeriesStore = $injector.get('DataSeriesStore');
-    var dateRangeStart = Date.create('March 1951');
-    var dateRangeEnd = Date.create('July 1956').endOfMonth().beginningOfDay();
+    var dateRangeStart = Date.create('March 1951').utc();
+    var dateRangeEnd = Date.create('July 1956').utc().endOfMonth();
     var dateRange = Date.range(
         dateRangeStart,
         dateRangeEnd
@@ -18,6 +18,8 @@ describe('DataSeriesStore', function(){
     var dayMetData = [];
     var dayMetValue = 1.0;
     dateRange.every('day', function(date){
+        // every removes utc
+        date.utc(true);
         var dateStr = formatDate(date);
         dayMetData.push([dateStr, dayMetValue]);
     });
@@ -29,7 +31,7 @@ describe('DataSeriesStore', function(){
     var etaDefaultValue = 1.0;
     var etaOffsetInMonths = 1;
     
-    var etaDateRangeStart = Date.create(dateRangeStart).addMonths(etaOffsetInMonths);
+    var etaDateRangeStart = Date.create(dateRangeStart).utc().addMonths(etaOffsetInMonths);
     //all tests currently presume only 1 month of eta values.
     var etaData = [
         [formatDate(etaDateRangeStart), etaDefaultValue]
@@ -103,7 +105,7 @@ describe('DataSeriesStore', function(){
             'by the number of days in the month and place that value in each day-row of the month', function(){
           
            var expectedDailyEtaValue = etaDefaultValue / numDaysInFirstMonthWithEtaData;
-           var firstMonthOfEtaData = dss.daily.data.from(numDaysBetweenStartOfDataAndStartOfEtaData + 1).to(numDaysInFirstMonthWithEtaData);
+           var firstMonthOfEtaData = dss.daily.data.from(numDaysBetweenStartOfDataAndStartOfEtaData).to(numDaysInFirstMonthWithEtaData);
            firstMonthOfEtaData.each(function(dayRow, index){
               expect(dayRow[etaIndex]).toBe(expectedDailyEtaValue);
            });
@@ -120,9 +122,9 @@ describe('DataSeriesStore', function(){
             
             monthBeforeEtaData.each(assertNanEta);
             //and test after the daymet values end
-            var numDaysInMonthAfterEtaData = Date.create(etaDateRangeStart).addMonths(1).daysInMonth();
+            var numDaysInMonthAfterEtaData = Date.create(etaDateRangeStart).utc().addMonths(1).daysInMonth();
             var numDaysBetweenStartOfDataAndStartOfMonthAfterEtaData = numDaysBetweenStartOfDataAndStartOfEtaData + numDaysInFirstMonthWithEtaData;
-            var monthAfterEtaData = dss.daily.data.from(numDaysBetweenStartOfDataAndStartOfMonthAfterEtaData + 1).to(numDaysInMonthAfterEtaData);
+            var monthAfterEtaData = dss.daily.data.from(numDaysBetweenStartOfDataAndStartOfMonthAfterEtaData).to(numDaysInMonthAfterEtaData);
             monthAfterEtaData.each(assertNanEta);
             
         });
