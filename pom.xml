@@ -120,7 +120,7 @@
         <flotcharts-version>0.8.0</flotcharts-version>
         <openlayers-version>2.12</openlayers-version>
         <fontawesome-version>4.0.3</fontawesome-version>
-        <sugar-version>1.3.8</sugar-version>
+        <sugar-version>1.4.1</sugar-version>
     </properties>
     <build>
         <plugins>
@@ -280,14 +280,6 @@
                 <groupId>com.github.timurstrekalov</groupId>
                 <artifactId>saga-maven-plugin</artifactId>
                 <version>1.5.2</version>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>coverage</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
                     <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
                     <outputDir>${project.build.directory}/coverage</outputDir>

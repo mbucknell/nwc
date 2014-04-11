@@ -227,7 +227,7 @@
       return dateStr.replace(/-/g, '/');
     };
     var strToDate = function(dateStr){
-        return new Date(dateStr);
+        return Date.create(dateStr).utc();
     };
     /**
      * On gage change, query nwis for the start and end dates of that gage's relevant data.
@@ -252,24 +252,9 @@
                         var siteId = newGage.data.STAID;
                         var params = getNwisQueryParams();
                         params.sites = siteId;
-                        //@todo remove this in favor of SugarJS toQueryString method once sugarjs webjar pull request upgrading version is accepted
-                        var queryString = '';
-                        var first = true;
-                        for (var key in params) {
-                            if (params.hasOwnProperty(key)) {
-                                var value = params[key];
-                                var appendVal = '';
-                                if (first) {
-                                    first = false;
-                                } else {
-                                    appendVal += '&';
-                                }
-
-                                appendVal += encodeURIComponent(key) + '=' + encodeURIComponent(value);
-                                queryString += appendVal;
-                            }
-                        }
-                        //var queryString = Object.toQueryString(params);
+                        
+                        var queryString = Object.toQueryString(params);
+                        
                         var url = nwisBaseUrl + queryString;
 
                         var gageInfoFailure = function(response) {
@@ -307,6 +292,8 @@
                             $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
                         };
                         $http.get(url).then(gageInfoSuccess, gageInfoFailure);
+                    } else {
+                        RunningWatches.remove(gageName);
                     }
                     return newGage;
                 }
