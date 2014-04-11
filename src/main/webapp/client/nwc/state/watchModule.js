@@ -292,6 +292,8 @@
                             $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
                         };
                         $http.get(url).then(gageInfoSuccess, gageInfoFailure);
+                    } else {
+                        RunningWatches.remove(gageName);
                     }
                     return newGage;
                 }
