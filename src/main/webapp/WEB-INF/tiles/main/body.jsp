@@ -6,7 +6,7 @@
 
 <div id="main_page" class="page_body_content">
 	<div id="full_dashboard" class="row dashboard navigation_toggle_a">
-		<div id="dashboard_nav" class="col-xs-3" style="min-width: 220px; margin-right: -15px;">
+		<div id="dashboard_nav" class="col-xs-12 col-md-3" style="min-width: 220px; margin-right: -15px;">
 			<div id="dashboard_nav_contents" class="navContents">
 				<div class="panel panel-default navigation_panel">
                     <div class="panel-heading navigation_panel_heading">
@@ -16,7 +16,7 @@
                             </li>
                         </ul>
                     </div>
-					<div id="menuCollapse" class="panel-body navigation_panel_body collapse" style="font-size: 12px;">
+					<div id="menuCollapse" class="panel-body navigation_panel_body" style="font-size: 12px;">
 						<ul class="nav nav-pills">
 							<c:forEach var="workflow" items="${workflows}" varStatus="status">
 								<li class="navigation_panel_item">
@@ -28,7 +28,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="dashboard_container" class="nwc-container col-xs-9" style="min-width: 360px;  margin-left: 15px; padding: 10px; margin-bottom: -10px;">
+		<div id="dashboard_container" class="nwc-container col-xs-12 col-md-9" style="min-width: 220px; margin-left: 15px; padding: 10px; margin-bottom: -10px;">
 			<!-- Dynamically build the dashboard depending on the workflow list -->
 			<c:forEach var="workflow" items="${workflows}" varStatus="status">
 				<!-- Add a new row div if this is an even item -->
@@ -36,7 +36,7 @@
 					<div class="row" style="padding-left: 10px; padding-right: 10px;">
 				</c:if>
 				
-				<div class="col-xs-6" style="min-width: 346px; padding: 0px;">
+				<div class="col-xs-6" style="padding: 0px;">
 					<div class="panel panel-default" style="margin: 10px;">
                         <div class="panel-heading" style="text-align: center;">
 							<a href="${context}${workflow.URI}">
