@@ -107,6 +107,9 @@ sharedStateServices.factory('StatePersistence', [
              * A few objects cannot use the default JSON.stringify serialization because they
              * contain unserializable circular references. These functions catch
              * those objects and customize their serializations.
+             * 
+             * WARNING: SERIALIZATION SHOULD BE DONE ON A CLONE OF THE STATE NOT THE STATE ITSELF
+             * YOU HAVE BEEN WARNED!
              */
             //map of property name to custom serialization function
             var customSerializers = {
