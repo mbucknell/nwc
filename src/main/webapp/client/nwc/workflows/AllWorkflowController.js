@@ -5,10 +5,6 @@
                 '$scope', '$modalInstance', '$window',
         function($scope, $modalInstance, $window){
             $scope.modal = $modalInstance;
-            $scope.goToUri = function(){
-                $scope.close();
-                $window.location.href = $scope.uri;
-            };
             $scope.close = function(){
                 $modalInstance.close();
             };
