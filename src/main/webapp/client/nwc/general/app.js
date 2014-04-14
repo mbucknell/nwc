@@ -23,8 +23,7 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.map.waterBudget',
     'nwc.map.aquaticBiology',
     'nwc.map.streamflow',
-    'checklist-model',
-    'ngClipboard'
+    'checklist-model'
 ]);
 
 nwcApp.config(['$stateProvider', '$urlRouterProvider',
@@ -139,10 +138,7 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     controller: 'DataDiscovery'
                 });
     }
-])
-.config(['ngClipProvider', function(ngClipProvider) {
-    ngClipProvider.setPath("/webjars/zeroclipboard/1.3.5/ZeroClipboard.swf");
-}]);
+]);
 
 //automatically update StoredState object on angular-ui-router state change so that
 //individual controllers and/or services do not have to pass the current state name

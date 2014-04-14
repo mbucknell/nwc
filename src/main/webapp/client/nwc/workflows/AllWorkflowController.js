@@ -1,17 +1,10 @@
 /*global angular*/
 (function () {
-    var allWorkflow = angular.module('nwc.workflows.all', ['ngClipboard']);
+    var allWorkflow = angular.module('nwc.workflows.all', []);
     var modalSuccess = allWorkflow.controller('ModalSuccess', [
-                '$scope', '$modalInstance', '$window', 'ngClipboard',
+                '$scope', '$modalInstance', '$window',
         function($scope, $modalInstance, $window){
             $scope.modal = $modalInstance;
-            $scope.showButton = true;
-            $scope.isFlash = function(show) {
-                $scope.showButton = show;
-            };
-            $scope.copy = function(){
-                return $scope.uri;
-            };
             $scope.close = function(){
                 $modalInstance.close();
             };
