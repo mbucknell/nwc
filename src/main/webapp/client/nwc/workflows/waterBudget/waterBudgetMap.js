@@ -154,14 +154,20 @@
                                 featureType: "US_Historical_Counties",
                                 featureNS: 'http://cida.usgs.gov/nwc',
                                 geometryName: 'the_geom',
-                                srsName: 'EPSG:900913'
+                                srsName: 'EPSG:3857'
                             })
                         }
                 );
                 intersectingCountiesLayer.id = 'counties-feature-layer';
                 map.addLayer(intersectingCountiesLayer);
-                var countiesExtent = intersectingCountiesLayer.getExtent();
-                map.zoomToExtent(countiesExtent);
+                intersectingCountiesLayer.events.register('featuresadded',
+                    intersectingCountiesLayer,
+                    function() {
+                        var countiesExtent = intersectingCountiesLayer.getDataExtent();
+                        StoredState.mapExtent = countiesExtent;
+                        map.zoomToExtent(countiesExtent);
+                    }
+                );
                 return intersectingCountiesLayer;
             };
             /**
@@ -195,6 +201,7 @@
                 var control = new OpenLayers.Control.SelectFeature(
                         selectionLayer,
                         {
+                            id: 'nwc-counties',
                             onSelect: function (feature) {
                                 map.removeControl(control);
                                 hucControl.activate();

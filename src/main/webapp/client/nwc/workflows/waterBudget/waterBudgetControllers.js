@@ -131,15 +131,19 @@ waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'Common
     )
 ]);
 
-waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetMap', 'SosSources', '$http',
+waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetMap', 'MapControlDescriptions',
     NWC.ControllerHelpers.StepController(
             {
                 name: 'County Selection',
                 description: 'Select water use data for a county that intersects with your HUC'
             },
-    function ($scope, StoredState, CommonState, WaterBudgetMap) {
+    function ($scope, StoredState, CommonState, WaterBudgetMap, MapControlDescriptions) {
+        $scope.StoredState = StoredState;
+        $scope.CommonState = CommonState;
+        
         var map = WaterBudgetMap.getMap();
         map.render('hucSelectMap');
+
         var setCountyInfo = function(countyFeature){
             var countyInfo = {};
             countyInfo.offeringId = countyFeature.attributes.FIPS;
@@ -149,6 +153,43 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
             StoredState.countyInfo = countyInfo;
         };
         map.getCountyThatIntersectsWithHucFeature(StoredState.hucFeature, setCountyInfo);
+        
+        map.zoomToExtent(StoredState.mapExtent, true);
+        map.events.register(
+            'moveend',
+            map,
+            function() {
+                StoredState.mapExtent = map.getExtent();
+            },
+            false
+        );
+
+        $scope.$watch('CommonState.activatedMapControl', function(newControl, oldControl) {
+            var controlId;
+            if (newControl === 'zoom') {
+                controlId = 'nwc-zoom';
+            } else if (newControl === 'pan') {
+                controlId = 'nwc-navigation';
+            } else {
+                controlId = 'nwc-counties';
+            }
+            if (newControl !== oldControl) {
+                var controls = WaterBudgetMap.getMap().getControlsBy('id', /nwc-.*/);
+                angular.forEach(controls, function(control) {
+                    control.deactivate();
+                });
+            }
+            var activeControl = WaterBudgetMap.getMap().getControlsBy('id', controlId)[0];
+            activeControl.activate();
+            CommonState.mapControlDescription = MapControlDescriptions[newControl].description;
+            CommonState.mapControlCursor = MapControlDescriptions[newControl].cursor;
+        });
+
+        // when there is more than select, logic for additional buttons can go here
+
+        CommonState.activatedMapControl = 'select';
+        CommonState.mapControlDescription = MapControlDescriptions.select.description;
+        CommonState.mapControlCursor = MapControlDescriptions.select.cursor;
     })
 ]);
 
