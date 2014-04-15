@@ -124,6 +124,7 @@
                 StoredState.interestType = StoredState.interestType || 'observed';
                 StoredState.gageStyle = StoredState.gageStyle || 'blue_circle';
                 CommonState.activatedMapControl = 'select';
+                StreamflowMap.getMap().switchToInterest(StoredState.interestType);
                 CommonState.interestTypeDescription = interestTypeDescriptions[StoredState.interestType];
                 CommonState.mapControlDescription = MapControlDescriptions.select.description;
                 CommonState.mapControlCursor = MapControlDescriptions.select.cursor;

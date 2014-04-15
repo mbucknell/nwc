@@ -24,7 +24,8 @@
                     },
                     {
                         isBaseLayer: false,
-                        displayInLayerSwitcher: false
+                        displayInLayerSwitcher: false,
+                        visibility: false
                     }
                 );
                 gageFeatureLayer.id = 'gage-feature-layer';
