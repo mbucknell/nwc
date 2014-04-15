@@ -7,5 +7,8 @@
         <dd ng-bind="StoredState.gage.data.STANAME"></dd>
         <dt>Drainage Area (km^2)</dt>
         <dd ng-bind="StoredState.gage.data.DRAIN_SQKM"></dd>
+        <dt>Period of Record</dt>
+        <dd>{{CommonState.streamFlowStatMinDate | date : 'yyyy-MM-dd'}}</dd>
+        <dd>{{CommonState.streamFlowStatMaxDate | date : 'yyyy-MM-dd'}}</dd>
     </dl>
 </div>

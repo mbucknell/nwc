@@ -8,6 +8,7 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.dataSeriesStore',
     'nwc.sosSources',
     'nwc.sosResponseParser',
+    'nwc.waterYear',
     'nwc.workflows.all',
     'nwc.controllers.state',
     'nwc.controllers.waterBudget',

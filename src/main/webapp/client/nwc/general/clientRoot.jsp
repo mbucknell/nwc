@@ -62,6 +62,7 @@
 <script type="text/javascript" src="../client/nwc/workflows/streamflowStatistics/streamflowDictionary.js"></script>
 <script type="text/javascript" src="../client/nwc/general/services/WpsClient.js"></script>
 <script type="text/javascript" src="../client/nwc/general/services/RdbParser.js"></script>
+<script type="text/javascript" src="../client/nwc/general/services/WaterYearUtil.js"></script>
 
 <!-- controllers -->
 <script type="text/javascript" src="../client/nwc/general/controllers/controllerHelpers.js"></script>

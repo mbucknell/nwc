@@ -6,29 +6,16 @@
 
 <form name="statsParams" novalidate ng-show="siteStatisticsParameters && siteStatisticsParameters.startDate && siteStatisticsParameters.endDate">
 <div class="row">
-    <h4 class="text-center">Date Range</h4>
+    <h4 class="text-center">Date Range (Water Years)</h4>
     
     <div class="col-md-2"></div>
         <div class="col-md-4">
             <label>From:</label>
-
-            <p class="input-group">
-
-              <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="siteStatisticsParameters.startDate" min="minDate" max="siteStatisticsParameters.endDate" ng-required="true" close-text="Close" is-open="minDateOpened"/>
-              <span class="input-group-btn">
-                <button class="btn btn-default" ng-click="openMinDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-              </span>
-            </p>
+            <select ng-model="startYear" ng-options="y for y in years" class="form-control"></select>
         </div>
         <div class="col-md-4">
             <label>To:</label>
-
-            <p class="input-group">
-              <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="siteStatisticsParameters.endDate" min="siteStatisticsParameters.startDate" max="maxDate"   ng-required="true" close-text="Close" is-open="maxDateOpened"/>
-              <span class="input-group-btn">
-                <button class="btn btn-default" ng-click="openMaxDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-              </span>
-            </p>
+            <select ng-model="endYear" ng-options="y for y in years" class="form-control"></select>
         </div>
         <div class="col-md-2"></div>
 </div>

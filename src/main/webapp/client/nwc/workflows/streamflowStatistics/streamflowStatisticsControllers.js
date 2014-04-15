@@ -1,6 +1,6 @@
 /*global angular SCE */
 (function () {
-    var streamflowStatistics = angular.module('nwc.controllers.streamflowStatistics', ['nwc.streamStats', 'nwc.wps', 'nwc.dictionary', 'nwc.streamStats.dictionary']);
+    var streamflowStatistics = angular.module('nwc.controllers.streamflowStatistics', ['nwc.streamStats', 'nwc.wps', 'nwc.dictionary', 'nwc.streamStats.dictionary', 'nwc.waterYear']);
     streamflowStatistics.controller('StreamflowStatistics', [ '$scope', 'StoredState', '$sce',
         NWC.ControllerHelpers.WorkflowController(
             {
@@ -148,16 +148,17 @@
         )
     ]);
     
-    streamflowStatistics.controller('SetSiteStatisticsParameters', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats',
+    streamflowStatistics.controller('SetSiteStatisticsParameters', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats', 'WaterYearUtil',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'Select Streamflow Statistics Parameters',
                 description: 'Select a subset of the time series for which you would like to calculate various statistics.'
             },
-            function ($scope, StoredState, CommonState, StoredState, $state, StreamStats) {
+            function ($scope, StoredState, CommonState, StoredState, $state, StreamStats, WaterYearUtil) {
                 StoredState.streamflowStatsParamsReady = false;
-                if (!StoredState.gage && !StoredState.streamFlowStatsHuc) {
+                if ((!StoredState.gage && !StoredState.streamFlowStatsHuc) || !CommonState.streamFlowStatMinDate || !CommonState.streamFlowStatMaxDate) {
                     $state.go('^.selectSite');
+                    return;
                 }
                 $scope.streamStatsOptions = StreamStats.getAllStatTypes();
                 $scope.CommonState = CommonState;
@@ -173,19 +174,30 @@
                 $scope.minDate = CommonState.streamFlowStatMinDate;
                 $scope.maxDate = CommonState.streamFlowStatMaxDate;
                 
-                $scope.openMinDatePicker = function($event){
-                    openDatePickerPopup($event, 'minDateOpened');
-                };
-                $scope.openMaxDatePicker = function($event){
-                    openDatePickerPopup($event, 'maxDateOpened');
-                };
-                
-                var openDatePickerPopup = function ($event, openedPropertyName) {
-                    $event.preventDefault();
-                    $event.stopPropagation();
+                var wyRange = WaterYearUtil.waterYearRange(Date.range($scope.minDate, $scope.maxDate));
+                $scope.years = WaterYearUtil.yearsAsArray(wyRange);
+                $scope.startYear = $scope.years.first();
+                $scope.endYear = $scope.years.last();
 
-                    $scope[openedPropertyName] = true;
-                };
+                $scope.$watch('startYear', function(newValue, oldValue) {
+                    if (newValue !== oldValue) {
+                        siteStatisticsParameters.startDate = WaterYearUtil.waterYearStart(newValue);
+                        if (newValue > $scope.endYear) {
+                            alert('Start cannot be after end');
+                            $scope.startYear = oldValue;
+                        }
+                    }
+                });
+                $scope.$watch('endYear', function(newValue, oldValue) {
+                    if (newValue !== oldValue) {
+                        siteStatisticsParameters.endDate = WaterYearUtil.waterYearEnd(newValue);
+                        if (newValue < $scope.startYear) {
+                            alert('End cannot be before start');
+                            $scope.endYear = oldValue;
+                        }
+                    }
+                });
+                    
                 $scope.calculateStats = function () {
                   StoredState.streamflowStatsParamsReady = true;
                   $state.go('^.displayStatistics');
