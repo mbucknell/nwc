@@ -1,7 +1,7 @@
 describe('WaterYear', function () {
     
     var $injector = angular.injector(['nwc.waterYear']);
-    var util = $injector.get('waterYearUtil');
+    var util = $injector.get('WaterYearUtil');
 
     describe('WaterYear.dateToWaterYear', function () {
         it('should convert date to correct water year', function () {
@@ -39,11 +39,11 @@ describe('WaterYear', function () {
         it('should have 5 years', function() {
             expect(util.yearsAsArray(util.waterYearRange(Date.range('1973/01/01', '1979/01/01'))).length).toBe(5);
         });
-        it('reversed should have 1974 as 2nd element', function() {
-            expect(util.yearsAsArray(util.waterYearRange(Date.range('1973/01/01', '1979/01/01')))[1]).toBe(1974);
+        it('reversed should have 1975 as 2nd element', function() {
+            expect(util.yearsAsArray(util.waterYearRange(Date.range('1973/01/01', '1979/01/01')))[1]).toBe(1975);
         });
-        it('reversed should have 1974 as 4th element', function() {
-            expect(util.yearsAsArray(util.waterYearRange(Date.range('1973/01/01', '1979/01/01')), true)[3]).toBe(1974);
+        it('reversed should have 1975 as 4th element', function() {
+            expect(util.yearsAsArray(util.waterYearRange(Date.range('1973/01/01', '1979/01/01')), true)[3]).toBe(1975);
         });
     });
 });
