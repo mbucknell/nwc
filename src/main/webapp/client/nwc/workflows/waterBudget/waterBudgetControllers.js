@@ -88,7 +88,16 @@ waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'Common
             var map = WaterBudgetMap.getMap();
 
             map.render('hucSelectMap');
-            map.zoomToExtent(map.extent, true);
+            StoredState.mapExtent = StoredState.mapExtent || map.getMaxExtent();
+            map.zoomToExtent(StoredState.mapExtent, true);
+            map.events.register(
+                'moveend',
+                map,
+                function() {
+                    StoredState.mapExtent = map.getExtent();
+                },
+                false
+            );
             
             $scope.$watch('CommonState.activatedMapControl', function(newControl, oldControl) {
                 var controlId;

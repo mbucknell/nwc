@@ -30,7 +30,17 @@
             
                 var map = AquaticBiologyMap.getMap();
                 map.render('bioSiteSelectMap');
-                map.zoomToExtent(map.extent, true);
+                StoredState.mapExtent = StoredState.mapExtent || map.getMaxExtent();
+                map.zoomToExtent(StoredState.mapExtent, true);
+                map.events.register(
+                    'moveend',
+                    map,
+                    function() {
+                        StoredState.mapExtent = map.getExtent();
+                    },
+                    false
+                );
+        
                 $scope.CommonState = CommonState;
                 
                 $scope.$watch('CommonState.activatedMapControl', function(newControl, oldControl) {

@@ -128,6 +128,15 @@ sharedStateServices.factory('StatePersistence', [
                         clone.endDate = serializeDate(clone.endDate);
                     }
                     return clone;
+                },
+                'mapExtent': function(extent) {
+                    var bbox = {
+                        left: extent.left,
+                        bottom: extent.bottom,
+                        right: extent.right,
+                        top: extent.top
+                    };
+                    return bbox;
                 }
             };
             //map of property name to custom deserialization function
@@ -149,6 +158,9 @@ sharedStateServices.factory('StatePersistence', [
                 'streamflowStatsParamsReady': function(ready){
                     //do not initially include this value in the object
                     return undefined;
+                },
+                'mapExtent': function(bbox) {
+                    return new OpenLayers.Bounds(bbox.left, bbox.bottom, bbox.right, bbox.top);
                 }
             };
 

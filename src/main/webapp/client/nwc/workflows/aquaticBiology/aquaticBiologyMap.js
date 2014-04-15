@@ -54,7 +54,7 @@
                         version: "1.1.0",
                         url: CONFIG.endpoint.geoserver + 'wfs',
                         featureType: 'SiteInfo',
-                        featureNS: 'gov.usgs.biodata.aquatic',
+                        featureNS: 'http://cida.usgs.gov/BioData',
                         srsName: 'EPSG:900913'
                     }),
                     box: true
