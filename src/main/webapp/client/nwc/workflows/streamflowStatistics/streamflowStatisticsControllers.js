@@ -40,8 +40,17 @@
                 var gagesLayerFromGetCaps = undefined;
                 var legendOptions = "&legend_options=forceLabels:on;fontName:Times New Roman;fontAntiAliasing:true;fontColor:0x000033;fontSize:8px;bgColor:0xFFFFEE;dpi:100";
                 map.render(mapId);
-                map.zoomToExtent(map.extent, true);
-                
+                StoredState.mapExtent = StoredState.mapExtent || map.getMaxExtent();
+                map.zoomToExtent(StoredState.mapExtent, true);
+                map.events.register(
+                    'moveend',
+                    map,
+                    function() {
+                        StoredState.mapExtent = map.getExtent();
+                    },
+                    false
+                );
+        
                 var format = new OpenLayers.Format.WMSCapabilities({
                     version: "1.1.1"
                 });
