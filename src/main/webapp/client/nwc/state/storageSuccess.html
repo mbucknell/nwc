@@ -1,10 +1,12 @@
 <div style="padding: 1em;">
     <h2>Application State Successfully Saved</h2>
     <p>Share this link with others:</p>
-    <div>
-        <input type="text" style="width: 100%" readonly="true" ng-model="uri" />
+    <div class="row">
+        <div class="col-xs-12">
+            <input type="text" class="text-center form-control" readonly="true" ng-model="uri" />
+        </div>
     </div>
-    <div class="text-center">
+    <div class="text-center row spacer">
         <button class="btn btn-success" ng-click="close()">OK</button>
     </div>
 </div>

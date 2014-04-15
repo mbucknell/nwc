@@ -117,3 +117,12 @@
 [x-ng-click] {
     cursor: pointer;
 }
+
+input[disabled],
+select[disabled],
+textarea[disabled],
+input[readonly],
+select[readonly],
+textarea[readonly] {
+    cursor: text !important;
+}
