@@ -52,7 +52,7 @@
                         stack: stack,
                         bars: {
                             show: bars,
-                            barWidth: 157766400000
+                            barWidth: 31536000000
                             /*
                              *  #ms in 5 years = (#ms in 4 non-leap years) + (#ms in 1 leap year)   =   157766400000
                              *      #ms in 4 non-leap years = 4 * #ms one leap year                 =   126144000000
@@ -68,12 +68,22 @@
                         tickLength: 10,
                         color: "black",
                         axisLabel: "Year",
-                        axisLabelPadding: 10
+                        axisLabelPadding: 10,
+                        font: {
+                            size: 12,
+                            family: "sans-serif",
+                            color: "#000000"
+                        }
                     },
                     yaxis: {
                         color: "black",
                         axisLabel: waterUsageUnitName,
-                        axisLabelPadding: 3
+                        axisLabelPadding: 3,
+                        font: {
+                            size: 12,
+                            family: "sans-serif",
+                            color: "#000000"
+                        }
                     },
                     grid: {
                         hoverable: true,
