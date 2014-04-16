@@ -2,12 +2,7 @@
 <p ng-bind="description"></p>
 
 <site-stats></site-stats>
-<div ng-hide="!StoredState.streamFlowStatsHuc">
-    <dl>
-        <dt>HUC ID</dt>
-        <dd ng-bind="StoredState.streamFlowStatsHuc.data.HUC12"></dd>
-    </dl>
-</div>
+<huc-stats></huc-stats>
 
 <h4 ng-hide="CommonState.streamflowStatistics.length">Calculating Statistics <i class="fa fa-spinner fa-spin"></i></h4>
 
