@@ -101,7 +101,19 @@
 }
 
 .axisLabels {
-    font-size: 1.5em;
+    font-size: 20px;
+}
+
+.dygraph-axis-label {
+    font-size: 12px;
+}
+
+.dygraph-ylabel {
+    font-size: 20px;
+}
+
+.dygraph-xlabel {
+    font-size: 20px;
 }
 
 .spacer {
