@@ -64,10 +64,10 @@
                     },
                     xaxis: {
                         mode: "time",
-                        tickSize: [1, "year"],
+                        tickSize: [5, "year"],
                         tickLength: 10,
                         color: "black",
-                        axisLabel: "Year",
+                        axisLabel: "Date",
                         axisLabelPadding: 10,
                         font: {
                             size: 12,
