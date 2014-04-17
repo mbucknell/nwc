@@ -31,7 +31,7 @@
             connectSeparatedPoints: true,
             showRangeSelector: true,
             highlightCircleSize: 0,
-            ylabel: 'Precipitation (mm)',
+            ylabel: 'mm',
             xlabel: 'Date',
             labelsDiv: legendElt,
             labelsSeparateLines: true,
