@@ -324,7 +324,7 @@
         <dependency>
             <groupId>gov.usgs.cida.jslibs</groupId>
             <artifactId>openlayers-raster-jar</artifactId>
-            <version>2.12-10-SNAPSHOT</version>
+            <version>2.12-9</version>
         </dependency>
         <!-- JUnit dependencies -->
         <!-- ================================================================== -->
