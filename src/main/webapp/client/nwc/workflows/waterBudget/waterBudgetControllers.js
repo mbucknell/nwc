@@ -68,6 +68,10 @@ waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonS
                 }
             });
             
+            $scope.hideUse = function () {
+                return (!CommonState.WaterUsageDataSeries) || !(CommonState.WaterUsageDataSeries.data) || !(CommonState.WaterUsageDataSeries.data.length);
+            };
+            
             $scope.CommonState = CommonState;
             $scope.StoredState = StoredState;
         })
