@@ -150,7 +150,7 @@
                     <webResources>                       
                         <resource>
                             <directory>src/main/webapp/WEB-INF/tiles/common</directory> no trailing slash 
-                            <targetPath>WEB-INF/tiles/common</targetPath> no trailing slash 
+                            <targetPath>WEB-INF/tiles/common</targetPath> no trailing slash  
                             <filtering>true</filtering>
                             <includes>
                                 <include>USGSHead.jsp</include>
@@ -488,6 +488,12 @@
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-request-servlet</artifactId>
             <version>1.0.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>gov.usgs.cida</groupId>
+            <artifactId>proxy-utils</artifactId>
+            <version>1.0.6</version>
         </dependency>
         <!-- ================================================================== -->
                 
