@@ -121,7 +121,6 @@
                         xmlString = doc.xml;
                     } else {
                         // code for Mozilla, Firefox, Opera, etc.
-
                         xmlString = (new XMLSerializer()).serializeToString(doc);
                     }
 
