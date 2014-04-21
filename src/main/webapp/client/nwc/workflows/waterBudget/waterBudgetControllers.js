@@ -65,8 +65,6 @@ waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonS
                     chartWaterUsage();
                     //hack: non-obviously trigger re-rendering of the other graph
                     CommonState.newDataSeriesStore = true;
-                    
-                   
                 }
             });
             

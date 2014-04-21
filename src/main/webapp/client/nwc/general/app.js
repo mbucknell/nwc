@@ -16,6 +16,7 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.controllers.streamflowStatistics',
     'nwc.controllers.dataDiscovery',
     'nwc.directives.streamflowStatistics',
+    'nwc.directives.downloadData',
     'ui.router',
     'ui.bootstrap',
     'nwc.waterBudgetPlot',

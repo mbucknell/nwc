@@ -74,6 +74,7 @@
 
 <!-- directives -->
 <script type="text/javascript" src="../client/nwc/workflows/streamflowStatistics/streamflowStatisticsDirectives.js"></script>
+<script type="text/javascript" src="../client/nwc/general/directives/downloadDataDirective.js"></script>
 
 <!-- main app-->
 <script type="text/javascript" src="../client/nwc/general/app.js"></script>
