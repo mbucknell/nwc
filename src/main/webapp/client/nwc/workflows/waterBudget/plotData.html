@@ -32,11 +32,29 @@
             <div id="waterBudgetLegend" class="col-xs-12"></div>
         </div>
     </div>
+    <div class="row spacer"></div>
     <div class="row spacer">
-        <div class="col-xs-12">
-            <download-data-button filename="getName('eta')" type="'text/csv'" data="CommonState.eta.toCSV()" title="'Download Evapotranspiration'"></download-data-button>
-            <download-data-button filename="getName('dayMet')" type="'text/csv'" data="CommonState.dayMet.toCSV()" title="'Download Precipitation'"></download-data-button>
-            <download-data-button ng-hide="hideUse()" filename="getName('water use')" type="'text/csv'" data="CommonState.WaterUsageDataSeries.toCSV()" title="'Download Water Use'"></download-data-button>
+        <div class="col-xs-4">
+            <download-data-button filename="getHucFilename('eta')"
+                                  type="'text/csv'"
+                                  data="CommonState.eta.toCSV()"
+                                  title="'Download Evapotranspiration'">
+            </download-data-button>
+        </div>
+        <div class="col-xs-4">
+            <download-data-button filename="getHucFilename('dayMet')"
+                                  type="'text/csv'"
+                                  data="CommonState.dayMet.toCSV()"
+                                  title="'Download Precipitation'">
+            </download-data-button>
+        </div>
+        <div class="col-xs-4">
+            <download-data-button ng-if="!hideUse()"
+                                  filename="getCntyFilename('water use')"
+                                  type="'text/csv'"
+                                  data="CommonState.WaterUsageDataSeries.toCSV()"
+                                  title="'Download Water Use'">
+            </download-data-button>
         </div>
     </div>
 </div>

@@ -51,9 +51,11 @@
             self.monthly = DataSeries.new();
             
             var addSeriesLabel = function (seriesClass, metadata) {
-                self[seriesClass].metadata.seriesLabels.push(
-                    DataSeries.createSeriesLabel(metadata)
-                );
+                /* we are doing union to only get Date once,
+                 * basically we union the series so we need to union the labels
+                 */
+                var labels = self[seriesClass].metadata.seriesLabels;
+                self[seriesClass].metadata.seriesLabels = labels.union(metadata.seriesLabels);
             };
 
             /*
