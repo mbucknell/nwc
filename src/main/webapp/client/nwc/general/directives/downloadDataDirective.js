@@ -11,7 +11,7 @@
                 data: '=data',
                 title: '=title'
             },
-            templateUrl: '../client/nwc/general/directives/downloadDataTemplate.html'
+            templateUrl: '../client/nwc/general/templates/downloadDataTemplate.html'
         };
     });
     
