@@ -65,10 +65,40 @@ waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonS
                     chartWaterUsage();
                     //hack: non-obviously trigger re-rendering of the other graph
                     CommonState.newDataSeriesStore = true;
-                    
-                   
                 }
             });
+            
+            $scope.hideUse = function () {
+                return (!CommonState.WaterUsageDataSeries) || !(CommonState.WaterUsageDataSeries.data) || !(CommonState.WaterUsageDataSeries.data.length);
+            };
+            
+            var buildName = function(selectionName, selectionId, series) {
+                var filename = selectionName;
+                filename += '_' + selectionId;
+                filename += '_' + series;
+                filename += '.csv';
+                filename = filename.replace(/ /g, '_');
+                filename = escape(filename);
+                return filename;
+            };
+            
+            $scope.getHucFilename = function (series) {
+                var filename = 'data.csv';
+                if (StoredState.hucFeature) {
+                    filename = buildName(StoredState.hucFeature.data.HU_12_NAME,
+                        StoredState.hucFeature.data.HUC_12, series);
+                }
+                return filename;
+            };
+            
+            $scope.getCntyFilename = function (series) {
+                var filename = 'data.csv';
+                if (StoredState.countyInfo) {
+                    filename = buildName(StoredState.countyInfo.name,
+                        StoredState.countyInfo.offeringId, series);
+                }
+                return filename;
+            };
             
             $scope.CommonState = CommonState;
             $scope.StoredState = StoredState;

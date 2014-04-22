@@ -66,7 +66,7 @@
                     StoredState.selectedAquaticBiologySites = [];
                     
                     //let user pick between sites in the dragged box
-                    CommonState.aquaticBiologySites = e.features;
+                    StoredState.aquaticBiologySites = e.features;
                     $state.go('workflow.aquaticBiology.showSelectedBioDataSites');
                     $log.info(CommonState);
                 });

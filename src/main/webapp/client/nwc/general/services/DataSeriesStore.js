@@ -3,14 +3,26 @@
     var dataSeriesStoreModule = angular.module('nwc.dataSeriesStore', ['nwc.sosSources']);
 
     var DataSeriesMaker = function () {
-        return{
+        return {
             new : function () {
                 return {
                     metadata: {
                         seriesLabels: ['Date']
                     },
-                    data: []
+                    data: [],
+                    toCSV: function() {
+                        var csvHeader = this.metadata.seriesLabels.join(",") + "\n";
+                        var csvValues = "";
+                        this.data.each(function(row) {
+                            csvValues += row.join(",") + "\n";
+                        });
+                        return escape(csvHeader + csvValues);
+                    }, 
+                    
                 };
+            },
+            createSeriesLabel: function (metadata) {
+                return metadata.seriesName + ' (' + metadata.seriesUnits + ')';
             }
         };
     };
@@ -37,11 +49,15 @@
             };
             self.daily = DataSeries.new();
             self.monthly = DataSeries.new();
+            
             var addSeriesLabel = function (seriesClass, metadata) {
-                self[seriesClass].metadata.seriesLabels.push(
-                    metadata.seriesName + ' (' + metadata.seriesUnits + ')'
-                );
+                /* we are doing union to only get Date once,
+                 * basically we union the series so we need to union the labels
+                 */
+                var labels = self[seriesClass].metadata.seriesLabels;
+                self[seriesClass].metadata.seriesLabels = labels.union(metadata.seriesLabels);
             };
+
             /*
                 daymet comes in daily
                 eta comes in monthly
@@ -181,6 +197,7 @@
                 addSeriesLabel('monthly', dayMetSeries.metadata);
                 addSeriesLabel('monthly', etaSeries.metadata);
             };
+            
             /**
              * @param {Map<String, DataSeries>} nameToSeriesMap A map of series id to
              * DataSeries objects

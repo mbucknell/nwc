@@ -1,4 +1,4 @@
-<div class="row col-xs-12" ng-hide="(!CommonState.WaterUsageDataSeries) || !(CommonState.WaterUsageDataSeries.data) || !(CommonState.WaterUsageDataSeries.data.length)">
+<div class="row col-xs-12" ng-hide="hideUse()">
     <h4 ng-bind=" 'Water Use for ' + StoredState.countyInfo.name + ' County'"></h4>
     <em>Area Averaged Withdrawal Estimates, Use with Caution!</em>
     <p>Water use by county area is represented as evenly distributed across the
@@ -32,8 +32,33 @@
             <div id="waterBudgetLegend" class="col-xs-12"></div>
         </div>
     </div>
+    <div class="row spacer"></div>
+    <div class="row spacer">
+        <div class="col-xs-4">
+            <download-data-button filename="getHucFilename('eta')"
+                                  type="'text/csv'"
+                                  data="CommonState.eta.toCSV()"
+                                  title="'Download Evapotranspiration'">
+            </download-data-button>
+        </div>
+        <div class="col-xs-4">
+            <download-data-button filename="getHucFilename('dayMet')"
+                                  type="'text/csv'"
+                                  data="CommonState.dayMet.toCSV()"
+                                  title="'Download Precipitation'">
+            </download-data-button>
+        </div>
+        <div class="col-xs-4">
+            <download-data-button ng-if="!hideUse()"
+                                  filename="getCntyFilename('water use')"
+                                  type="'text/csv'"
+                                  data="CommonState.WaterUsageDataSeries.toCSV()"
+                                  title="'Download Water Use'">
+            </download-data-button>
+        </div>
+    </div>
 </div>
-<div class="row col-xs-12">
+<div class="row col-xs-12 spacer">
     <nav>
         <button class="btn" ui-sref="^.selectHuc"><span class="glyphicon glyphicon-arrow-left"></span> Back</button>
         <button class="btn" ui-sref="^.selectCounty">Plot Nearby Water Use Data <span class="glyphicon glyphicon-arrow-right"></span></button>
