@@ -124,6 +124,10 @@
     margin-bottom: 0.5em;
 }
 
+.big_spacer {
+    margin-top: 1.5em;
+}
+
 [ng-click],
 [data-ng-click],
 [x-ng-click] {
