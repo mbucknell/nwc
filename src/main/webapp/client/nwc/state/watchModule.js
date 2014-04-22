@@ -98,8 +98,7 @@
                             var sosSuccess = function (allAjaxResponseArgs) {
                                 var self = this,
                                         errorsFound = false,
-                                        labeledResponses = {},
-                                        labeledRawValues = {};
+                                        labeledResponses = {};
                                 $.each(allAjaxResponseArgs, function (index, ajaxResponseArgs) {
                                     var response = ajaxResponseArgs.data;
                                     if (!response || !response.length) {
@@ -113,15 +112,18 @@
                                         var label = ajaxResponseArgs.config.label;
                                         var rawValues = SosResponseParser.getValuesFromSosResponse(response);
                                         var parsedValues = SosResponseParser.parseSosResponseValues(rawValues);
-                                        labeledRawValues[label] = rawValues;
-                                        var labeledResponse = {
-                                            metadata: {
+                                        
+                                        var labeledDataSeries = DataSeries.new();
+                                        labeledDataSeries.metadata.seriesLabels.push(DataSeries.createSeriesLabel(
+                                            {
                                                 seriesName: SosSources[label].observedProperty,
                                                 seriesUnits: SosSources[label].units
-                                            },
-                                            data: parsedValues
-                                        };
-                                        labeledResponses[label] = labeledResponse;
+                                            }
+                                        ));
+                                        labeledDataSeries.data = parsedValues;
+                                        
+                                        labeledResponses[label] = labeledDataSeries;
+                                        CommonState[label] = labeledDataSeries;
                                     }
                                 });
                                 if (errorsFound) {

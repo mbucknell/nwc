@@ -17,8 +17,12 @@
                             csvValues += row.join(",") + "\n";
                         });
                         return escape(csvHeader + csvValues);
-                    }
+                    }, 
+                    
                 };
+            },
+            createSeriesLabel: function (metadata) {
+                return metadata.seriesName + ' (' + metadata.seriesUnits + ')';
             }
         };
     };
@@ -45,14 +49,10 @@
             };
             self.daily = DataSeries.new();
             self.monthly = DataSeries.new();
-                        
-            self.createSeriesLabel = function (seriesClass, metadata) {
-                return metadata.seriesName + ' (' + metadata.seriesUnits + ')';
-            };
             
             var addSeriesLabel = function (seriesClass, metadata) {
                 self[seriesClass].metadata.seriesLabels.push(
-                    self.createSeriesLabel(seriesClass, metadata)
+                    DataSeries.createSeriesLabel(metadata)
                 );
             };
 

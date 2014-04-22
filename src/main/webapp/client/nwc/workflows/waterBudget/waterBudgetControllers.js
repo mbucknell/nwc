@@ -72,6 +72,15 @@ waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonS
                 return (!CommonState.WaterUsageDataSeries) || !(CommonState.WaterUsageDataSeries.data) || !(CommonState.WaterUsageDataSeries.data.length);
             };
             
+            $scope.getName = function (series) {
+                var filename = 'huc name';
+                filename += '_' + series;
+                filename += '.csv';
+                filename = filename.replace(/ /g, '_');
+                filename = escape(filename);
+                return filename;
+            };
+            
             $scope.CommonState = CommonState;
             $scope.StoredState = StoredState;
         })

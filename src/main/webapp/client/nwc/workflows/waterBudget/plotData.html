@@ -34,9 +34,9 @@
     </div>
     <div class="row spacer">
         <div class="col-xs-12">
-            <download-data-button filename="'test.csv'" type="'text/csv'" data="CommonState.DataSeriesStore.monthly.toCSV()" title="'Download Evapotranspiration'"></download-data-button>
-            <download-data-button filename="'test.csv'" type="'text/csv'" data="CommonState.DataSeriesStore.daily.toCSV()" title="'Download Precipitation'"></download-data-button>
-            <download-data-button ng-hide="hideUse()" filename="'test.csv'" type="'text/csv'" data="CommonState.WaterUsageDataSeries.toCSV()" title="'Download Water Use'"></download-data-button>
+            <download-data-button filename="getName('eta')" type="'text/csv'" data="CommonState.eta.toCSV()" title="'Download Evapotranspiration'"></download-data-button>
+            <download-data-button filename="getName('dayMet')" type="'text/csv'" data="CommonState.dayMet.toCSV()" title="'Download Precipitation'"></download-data-button>
+            <download-data-button ng-hide="hideUse()" filename="getName('water use')" type="'text/csv'" data="CommonState.WaterUsageDataSeries.toCSV()" title="'Download Water Use'"></download-data-button>
         </div>
     </div>
 </div>
