@@ -63,7 +63,7 @@
             watchModule.factory(finalName, dependencyArray);
         }
     };
-    var hucFeatureName = 'hucFeature';
+    var hucFeatureName = 'waterBudgetHucFeature';
     registerWatchFactory(hucFeatureName,
             ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q', '$log', 'DataSeries', 'WaterBudgetMap', 'RunningWatches',
                 function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q, $log, DataSeries, WaterBudgetMap, RunningWatches) {
@@ -315,7 +315,7 @@
                                 CommonState.streamflowStatistics = [];
 
                                 var newGage = StoredState.gage;
-                                var newHuc = StoredState.streamFlowStatsHuc;
+                                var newHuc = StoredState.streamFlowStatHucFeature;
                                 var startDate = StoredState.siteStatisticsParameters.startDate;
                                 var endDate = StoredState.siteStatisticsParameters.endDate;
                                 var callback = function(statistics, resultsUrl){
@@ -335,7 +335,7 @@
                                 }
                                 else{
                                     var msg = 'Error: Neither a HUC nor a gage is defined. Cannot continue computing statistics.';
-                                    $log.error(StoredState.streamFlowStatsHuc);
+                                    $log.error(StoredState.streamFlowStatHucFeature);
                                     alert(msg);
                                     RunningWatches.remove(streamStatsReadyName);
                                 }

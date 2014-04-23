@@ -1,14 +1,13 @@
-<div ng-hide="!StoredState.gage">
-    <h4>Statistics for Selected Site</h4>
+<div>
     <dl>
         <dt>Gage ID</dt>
-        <dd ng-bind="StoredState.gage.data.STAID"></dd>
+        <dd ng-bind="info.gageId"></dd>
         <dt>Gage Name</dt>
-        <dd ng-bind="StoredState.gage.data.STANAME"></dd>
+        <dd ng-bind="info.gageName"></dd>
         <dt>Drainage Area (km^2)</dt>
-        <dd ng-bind="StoredState.gage.data.DRAIN_SQKM"></dd>
+        <dd ng-bind="info.drainageArea"></dd>
         <dt>Period of Record</dt>
-        <dd>{{CommonState.streamFlowStatMinDate | date : 'yyyy-MM-dd'}}</dd>
-        <dd>{{CommonState.streamFlowStatMaxDate | date : 'yyyy-MM-dd'}}</dd>
+        <dd>{{info.minDate | date : 'yyyy-MM-dd'}}</dd>
+        <dd>{{info.maxDate | date : 'yyyy-MM-dd'}}</dd>
     </dl>
 </div>

@@ -15,13 +15,23 @@
                 $scope.description = $sce.trustAsHtml($scope.description);
             }
     )]);
-waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonState', 'WaterBudgetPlot', 'WaterUsageChart',
+waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState', 'CommonState', 'WaterBudgetPlot', 'WaterUsageChart',
     NWC.ControllerHelpers.StepController(
         {
             name: 'Plot Water Budget Data',
             description: 'Visualize the data for your HUC of interest.'
         },
-        function ($scope, StoredState, CommonState, WaterBudgetPlot, WaterUsageChart) {
+        function ($scope, $state, StoredState, CommonState, WaterBudgetPlot, WaterUsageChart) {
+            var selectionInfo = {}
+            if (StoredState.waterBudgetHucFeature) {
+                selectionInfo.hucId = StoredState.waterBudgetHucFeature.data.HUC_12;
+                selectionInfo.hucName = StoredState.waterBudgetHucFeature.data.HU_12_NAME;
+                selectionInfo.drainageArea = "NA";
+            } else {
+                $state.go("^.selectHuc");
+                return;
+            }
+            $scope.selectionInfo = selectionInfo;
             var plotDivSelector = '#waterBudgetPlot';
             var legendDivSelector = '#waterBudgetLegend';
             StoredState.plotTimeDensity  = StoredState.plotTimeDensity || 'daily';
@@ -84,9 +94,9 @@ waterBudgetControllers.controller('PlotData', ['$scope', 'StoredState', 'CommonS
             
             $scope.getHucFilename = function (series) {
                 var filename = 'data.csv';
-                if (StoredState.hucFeature) {
-                    filename = buildName(StoredState.hucFeature.data.HU_12_NAME,
-                        StoredState.hucFeature.data.HUC_12, series);
+                if (StoredState.waterBudgetHucFeature) {
+                    filename = buildName(StoredState.waterBudgetHucFeature.data.HU_12_NAME,
+                        StoredState.waterBudgetHucFeature.data.HUC_12, series);
                 }
                 return filename;
             };
@@ -182,7 +192,7 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
             
             StoredState.countyInfo = countyInfo;
         };
-        map.getCountyThatIntersectsWithHucFeature(StoredState.hucFeature, setCountyInfo);
+        map.getCountyThatIntersectsWithHucFeature(StoredState.waterBudgetHucFeature, setCountyInfo);
         
         map.zoomToExtent(StoredState.mapExtent, true);
         map.events.register(
@@ -236,7 +246,7 @@ waterBudgetControllers.controller('DisambiguateClick', ['$scope', 'StoredState',
              * @param {OpenLayers.Feature} huc
              */
             $scope.setHuc = function (huc) {
-                StoredState.hucFeature = huc;
+                StoredState.waterBudgetHucFeature = huc;
                 $state.go('^.plotData');
             };
 			

@@ -104,7 +104,7 @@
                 });
                 
                 var minStatDate = Date.create('1980/10/01').utc();
-                var maxStatDate = Date.create('2010/09/29').utc();
+                var maxStatDate = Date.create('2010/09/30').utc();
                 var featureInfoHandler = function (responseObject) {
                     //for some reason the real features are inside an array
                     var actualFeatures = responseObject.features[0].features;
@@ -117,7 +117,7 @@
                         var sortedFeatures = actualFeatures.sort(function(a, b){
                             return b.data.mi2 - a.data.mi2;
                         });
-                        StoredState.streamFlowStatsHuc = sortedFeatures[0];
+                        StoredState.streamFlowStatHucFeature = sortedFeatures[0];
                         CommonState.streamFlowStatMinDate = minStatDate;
                         CommonState.streamFlowStatMaxDate = maxStatDate;
                         StoredState.siteStatisticsParameters = {};
@@ -246,7 +246,7 @@
                     if('observed' === interest){
                         hucsGetFeatureInfoControl.deactivate();
                         hucLayer.setVisibility(false);
-                        StoredState.streamFlowStatsHuc = undefined;
+                        StoredState.streamFlowStatHucFeature = undefined;
                         
                         gageFeatureLayer.setVisibility(true);
                         flowlineRaster.setVisibility(true);

@@ -166,10 +166,29 @@
             },
             function ($scope, StoredState, CommonState, StoredState, $state, StreamStats, WaterYearUtil) {
                 StoredState.streamflowStatsParamsReady = false;
-                if ((!StoredState.gage && !StoredState.streamFlowStatsHuc) || !CommonState.streamFlowStatMinDate || !CommonState.streamFlowStatMaxDate) {
+                
+                var selectionInfo = {};
+                if (CommonState.streamFlowStatMinDate && CommonState.streamFlowStatMaxDate) {
+                    if(StoredState.gage){
+                        selectionInfo.gageId = StoredState.gage.data.STAID;
+                        selectionInfo.gageName = StoredState.gage.data.STANAME;
+                        selectionInfo.drainageArea = StoredState.gage.data.DRAIN_SQKM;
+                        selectionInfo.minDate = CommonState.streamFlowStatMinDate;
+                        selectionInfo.maxDate = CommonState.streamFlowStatMaxDate;
+                    } else if (StoredState.streamFlowStatHucFeature) {
+                        selectionInfo.hucId = StoredState.streamFlowStatHucFeature.data.HUC12;
+                        selectionInfo.hucName = StoredState.streamFlowStatHucFeature.data.HU_12_NAME;
+                        selectionInfo.drainageArea = StoredState.streamFlowStatHucFeature.data.DRAIN_SQKM;
+                    } else {
+                        $state.go('^.selectSite');
+                        return;
+                    }
+                } else {
                     $state.go('^.selectSite');
                     return;
                 }
+                
+                $scope.selectionInfo = selectionInfo;
                 $scope.streamStatsOptions = StreamStats.getAllStatTypes();
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
@@ -225,10 +244,22 @@
             function ($scope, StoredState, CommonState, StoredState, $state) {
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
+                var selectionInfo = {};
                 
-                if(!StoredState.gage && !StoredState.streamFlowStatsHuc){
+                if(StoredState.gage){
+                    selectionInfo.gageId = StoredState.gage.data.STAID;
+                    selectionInfo.gageName = StoredState.gage.data.STANAME;
+                    selectionInfo.drainageArea = StoredState.gage.data.DRAIN_SQKM;
+                    selectionInfo.minDate = CommonState.streamFlowStatMinDate;
+                    selectionInfo.maxDate = CommonState.streamFlowStatMaxDate;
+                } else if (StoredState.streamFlowStatHucFeature) {
+                    selectionInfo.hucId = StoredState.streamFlowStatHucFeature.data.HUC12;
+                    selectionInfo.hucName = StoredState.streamFlowStatHucFeature.data.HU_12_NAME;
+                    selectionInfo.drainageArea = StoredState.streamFlowStatHucFeature.data.DRAIN_SQKM;
+                } else {
                     $state.go('^.selectSite');
                 }
+                $scope.selectionInfo = selectionInfo;
             }
         )
     ]);

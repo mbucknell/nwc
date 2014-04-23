@@ -1,8 +1,8 @@
 <h4 ng-bind="name"></h4>
 <p ng-bind="description"></p>
 
-<site-stats></site-stats>
-<huc-stats></huc-stats>
+<site-stats ng-hide="!StoredState.gage" info="selectionInfo"></site-stats>
+<huc-stats ng-hide="!StoredState.streamFlowStatHucFeature" info="selectionInfo"></huc-stats>
 
 <h4 ng-hide="CommonState.streamflowStatistics.length">Calculating Statistics <i class="fa fa-spinner fa-spin"></i></h4>
 

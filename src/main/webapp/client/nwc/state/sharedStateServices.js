@@ -113,7 +113,11 @@ sharedStateServices.factory('StatePersistence', [
              */
             //map of property name to custom serialization function
             var customSerializers = {
-                'hucFeature' : function(hucFeature){
+                'waterBudgetHucFeature' : function(hucFeature){
+                    var serializedHuc = geoJsonFormatter.write(hucFeature);
+                    return serializedHuc;
+                },
+                'streamFlowStatHucFeature' : function(hucFeature){
                     var serializedHuc = geoJsonFormatter.write(hucFeature);
                     return serializedHuc;
                 },
@@ -142,7 +146,11 @@ sharedStateServices.factory('StatePersistence', [
             //map of property name to custom deserialization function
             //use string literals for keys so that they do not get minified away
             var customDeserializers = {
-                'hucFeature': function(hucFeatureString){
+                'waterBudgetHucFeature': function(hucFeatureString){
+                    var deserializedHucArray = geoJsonFormatter.read(hucFeatureString);
+                    return deserializedHucArray[0];
+                },
+                'streamFlowStatHucFeature': function(hucFeatureString){
                     var deserializedHucArray = geoJsonFormatter.read(hucFeatureString);
                     return deserializedHucArray[0];
                 },

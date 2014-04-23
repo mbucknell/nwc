@@ -1,11 +1,10 @@
-<div ng-hide="!StoredState.streamFlowStatsHuc">
-    <h4>Statistics for Selected HUC</h4>
+<div>
     <dl>
         <dt>Hydrologic Unit Code</dt>
-        <dd ng-bind="StoredState.streamFlowStatsHuc.data.HUC12"></dd>
+        <dd ng-bind="info.hucId"></dd>
         <dt>HUC Name</dt>
-        <dd ng-bind="StoredState.streamFlowStatsHuc.data.HU_12_NAME"></dd>
+        <dd ng-bind="info.hucName"></dd>
         <dt>Drainage Area (km^2)</dt>
-        <dd ng-bind="StoredState.streamFlowStatsHuc.data.DRAIN_SQKM"></dd>
+        <dd ng-bind="info.drainageArea"></dd>
     </dl>
 </div>
