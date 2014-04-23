@@ -73,7 +73,7 @@
 <script type="text/javascript" src="../client/nwc/workflows/dataDiscovery/dataDiscoveryControllers.js"></script>
 
 <!-- directives -->
-<script type="text/javascript" src="../client/nwc/workflows/streamflowStatistics/streamflowStatisticsDirectives.js"></script>
+<script type="text/javascript" src="../client/nwc/general/directives/selectionInfoDirectives.js"></script>
 <script type="text/javascript" src="../client/nwc/general/directives/downloadDataDirective.js"></script>
 
 <!-- main app-->

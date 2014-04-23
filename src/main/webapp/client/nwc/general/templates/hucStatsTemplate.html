@@ -1,0 +1,12 @@
+<div>
+    <dl>
+        <dt>Hydrologic Unit Code</dt>
+        <dd ng-bind="info.hucId"></dd>
+        <dt>HUC Name</dt>
+        <dd ng-bind="info.hucName"></dd>
+        <div ng-if="info.drainageArea">
+            <dt>Drainage Area (km^2)</dt>
+            <dd ng-bind="info.drainageArea"></dd>
+        </div>
+    </dl>
+</div>

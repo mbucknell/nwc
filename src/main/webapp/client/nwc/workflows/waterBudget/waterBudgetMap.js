@@ -66,7 +66,7 @@
                     else if (1 === hucCount) {
                         var actualFeature = actualFeatures[0];
                         var fid = actualFeature.fid;
-                        StoredState.hucFeature = actualFeature;
+                        StoredState.waterBudgetHucFeature = actualFeature;
                         CommonState.WaterUsageDataSeries = DataSeries.new();
                         $state.go('workflow.waterBudget.plotData');
                     }

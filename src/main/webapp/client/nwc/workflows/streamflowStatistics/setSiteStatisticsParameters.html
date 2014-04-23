@@ -2,8 +2,8 @@
 <h4 ng-bind="name"></h4>
 <p ng-bind="description"></p>
 
-<site-stats></site-stats>
-<huc-stats></huc-stats>
+<site-stats ng-if="StoredState.gage" info="selectionInfo"></site-stats>
+<huc-stats ng-if="StoredState.streamFlowStatHucFeature" info="selectionInfo"></huc-stats>
 
 <form name="statsParams" novalidate ng-show="siteStatisticsParameters && siteStatisticsParameters.startDate && siteStatisticsParameters.endDate">
 <div class="row">
