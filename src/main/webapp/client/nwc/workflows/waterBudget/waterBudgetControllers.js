@@ -25,8 +25,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             var selectionInfo = {}
             if (StoredState.waterBudgetHucFeature) {
                 selectionInfo.hucId = StoredState.waterBudgetHucFeature.data.HUC_12;
-                selectionInfo.hucName = StoredState.waterBudgetHucFeature.data.HU_12_NAME;
-                selectionInfo.drainageArea = "NA";
+                selectionInfo.hucName = StoredState.waterBudgetHucFeature.data.HU_10_NAME;
             } else {
                 $state.go("^.selectHuc");
                 return;
