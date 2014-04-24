@@ -114,12 +114,12 @@
                                         var parsedValues = SosResponseParser.parseSosResponseValues(rawValues);
                                         
                                         var labeledDataSeries = DataSeries.new();
-                                        labeledDataSeries.metadata.seriesLabels.push(DataSeries.createSeriesLabel(
+                                        labeledDataSeries.metadata.seriesLabels.push(
                                             {
                                                 seriesName: SosSources[label].observedProperty,
                                                 seriesUnits: SosSources[label].units
                                             }
-                                        ));
+                                        );
                                         labeledDataSeries.data = parsedValues;
                                         
                                         labeledResponses[label] = labeledDataSeries;
@@ -191,8 +191,12 @@
 
                                     //use the series metadata as labels
                                     var additionalSeriesLabels = SosSources.countyWaterUse.observedProperty.split(',');
-                                    var waterUseValueLabelsOnly = waterUseDataSeries.metadata.seriesLabels.from(1);//skip the initial 'Date' label
-                                    waterUseDataSeries.metadata.seriesLabels = waterUseValueLabelsOnly.concat(additionalSeriesLabels);
+                                    additionalSeriesLabels.each(function(label) {
+                                        waterUseDataSeries.metadata.seriesLabels.push({
+                                            seriesName: label,
+                                            seriesUnits: "mm per day"
+                                        });
+                                    });
 
                                     CommonState.WaterUsageDataSeries = waterUseDataSeries;
                                     CommonState.newWaterUseData = true;

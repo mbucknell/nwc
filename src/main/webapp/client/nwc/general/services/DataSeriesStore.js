@@ -1,33 +1,48 @@
 /*global angular*/
 (function () {
-    var dataSeriesStoreModule = angular.module('nwc.dataSeriesStore', ['nwc.sosSources']);
+    var dataSeriesStoreModule = angular.module('nwc.dataSeriesStore', ['nwc.sosSources', 'nwc.conversion']);
 
-    var DataSeriesMaker = function () {
-        return {
-            new : function () {
-                return {
-                    metadata: {
-                        seriesLabels: ['Date']
-                    },
-                    data: [],
-                    toCSV: function() {
-                        var csvHeader = this.metadata.seriesLabels.join(",") + "\n";
-                        var csvValues = "";
-                        this.data.each(function(row) {
-                            csvValues += row.join(",") + "\n";
-                        });
-                        return escape(csvHeader + csvValues);
-                    }, 
-                    
-                };
-            },
-            createSeriesLabel: function (metadata) {
+    dataSeriesStoreModule.service('DataSeries', ['SosSources', 'Units',
+        function (SosSources, Units) {
+            var createSeriesLabel = function (metadata) {
                 return metadata.seriesName + ' (' + metadata.seriesUnits + ')';
-            }
-        };
-    };
-    dataSeriesStoreModule.service('DataSeries', ['SosSources',
-        DataSeriesMaker
+            };
+            return {
+                new : function () {
+                    return {
+                        metadata: {
+                            seriesLabels: [{
+                                seriesName: 'Date',
+                                seriesUnits: ''
+                            }]
+                        },
+                        data: [],
+                        toCSV: function() {
+                            var csvHeader = this.metadata.seriesLabels.join(",") + "\n";
+                            var csvValues = "";
+                            this.data.each(function(row) {
+                                csvValues += row.join(",") + "\n";
+                            });
+                            return escape(csvHeader + csvValues);
+                        },
+                        getDataAs: function(measurementSystem, measure) {
+                            var convert = Units[measurementSystem][measure].conversionFromBase;
+                            return this.data.map(function(arr) {
+                                // Assume All series have untouchable date
+                                var date = arr[0];
+                                return [date].concat(arr.from(1).map(convert));
+                            });
+                        },
+                        getSeriesLabelsAs: function(measurementSystem, measure, timeGranularity) {
+                            return this.metadata.seriesLabels.map(function(label) {
+                                label.seriesUnits = Units[measurementSystem][measure][timeGranularity];
+                                return createSeriesLabel(label);
+                            });
+                        }
+                    };
+                }
+            };
+        }
     ]);
 
     /**

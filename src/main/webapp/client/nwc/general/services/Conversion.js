@@ -13,6 +13,7 @@
     var mgdToMmAcresPerDay = function (mgd) {
         return mgd * mgdToMmAcresPerDayConversionFactor;
     };
+    
     /**
      * This function converts each entry of a table from million gallons per day per county to 
      * millimeter*acres per day and then scales by the number of acres in the county
@@ -47,14 +48,65 @@
     var squareMilesToAcres = function (squareMiles) {
         return squareMiles * squareMilesToAcresConversionFactor;
     };
+    
+    //conversion factor per http://en.wikipedia.org/wiki/Inch#Equivalence_to_other_units_of_length
+    var mmToInchesConversionFactor = 0.03937;
+    var mmToInches = function (millimeters) {
+        return millimeters * mmToInchesConversionFactor;
+    };
+
     Conversion.service('Convert', [
         function () {
-            return{
+            return {
                 mgdToMmAcresPerDay: mgdToMmAcresPerDay,
                 mgdTableToMmPerDayTable: mgdTableToMmPerDayTable,
-                squareMilesToAcres: squareMilesToAcres
+                squareMilesToAcres: squareMilesToAcres,
+                mmToInches: mmToInches
             };
         }
     ]);
+    
+    Conversion.factory("Units", ['Convert', function(Convert) {
+        return {
+            metric: {
+                normalizedWater: {
+                    unit: {
+                        short: "mm",
+                        long: "millimeters"
+                    },
+                    daily: "mm per day",
+                    monthly: "mm per month",
+                    yearly: "mm per year",
+                    conversionFromBase: function(val) {return val;}
+                },
+                totalWater: {
+                    unit: {
+                        short: "",
+                        long: ""
+                    },
+                    conversionFromBase: function(val) {return val;}
+                }
+            },
+            imperial: {
+                normalizedWater: {
+                    unit: {
+                        short: "in",
+                        long: "inches",
+                    },
+                    daily: "in per day",
+                    monthly: "in per month",
+                    yearly: "in per year",
+                    conversionFromBase: Convert.mmToInches
+                },
+                totalWater: {
+                    unit: {
+                        short: "mgd",
+                        long: "millions of gallons per day"
+                    },
+                    conversionFromBase: function(val) {return val;}
+                }
+            }
+        };
+    }]);
 
 }());

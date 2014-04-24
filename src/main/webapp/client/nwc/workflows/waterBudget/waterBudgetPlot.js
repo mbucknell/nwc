@@ -12,7 +12,7 @@
      * @param {array<array>} values - the values to plot
      * @param {array<string>} labels - the labels for the series
      */
-    var setPlot = function (graphEltSelector, legendEltSelector, values, labels) {
+    var setPlot = function (graphEltSelector, legendEltSelector, values, labels, ylabel) {
         privateGraphEltSelector = graphEltSelector;
         privateLegendEltSelector = legendEltSelector;
         $([graphEltSelector, legendEltSelector]).addClass('generous_left_margin');
@@ -31,7 +31,7 @@
             connectSeparatedPoints: true,
             showRangeSelector: true,
             highlightCircleSize: 0,
-            ylabel: 'mm',
+            ylabel: ylabel,
             xlabel: 'Date',
             labelsDiv: legendElt,
             labelsSeparateLines: true,
@@ -47,9 +47,9 @@
     var getPlot = function () {
         return privatePlot;
     };
-    var updateSeries = function (values, labels) {
+    var updateSeries = function (values, labels, ylabel) {
         if (privateGraphEltSelector && privateLegendEltSelector) {
-            return setPlot(privateGraphEltSelector, privateLegendEltSelector, values, labels);
+            return setPlot(privateGraphEltSelector, privateLegendEltSelector, values, labels, ylabel);
         }
         else {
             throw new Error("Cannot update plot - plot not yet constructed.");

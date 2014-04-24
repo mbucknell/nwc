@@ -1,6 +1,6 @@
 /*global angular,NWC,OpenLayers,$,CONFIG*/
 (function(){
-    var waterBudgetControllers = angular.module('nwc.controllers.waterBudget', []);
+    var waterBudgetControllers = angular.module('nwc.controllers.waterBudget', ['nwc.conversion']);
     
     waterBudgetControllers.controller('WaterBudget', ['$scope', 'StoredState', '$sce',
         NWC.ControllerHelpers.WorkflowController(
@@ -15,13 +15,13 @@
                 $scope.description = $sce.trustAsHtml($scope.description);
             }
     )]);
-waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState', 'CommonState', 'WaterBudgetPlot', 'WaterUsageChart',
+waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState', 'CommonState', 'WaterBudgetPlot', 'WaterUsageChart', 'Units', 'Convert',
     NWC.ControllerHelpers.StepController(
         {
             name: 'Plot Water Budget Data',
             description: 'Visualize the data for your HUC of interest.'
         },
-        function ($scope, $state, StoredState, CommonState, WaterBudgetPlot, WaterUsageChart) {
+        function ($scope, $state, StoredState, CommonState, WaterBudgetPlot, WaterUsageChart, Units, Convert) {
             var selectionInfo = {}
             if (StoredState.waterBudgetHucFeature) {
                 selectionInfo.hucId = StoredState.waterBudgetHucFeature.data.HUC_12;
@@ -34,6 +34,13 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             var plotDivSelector = '#waterBudgetPlot';
             var legendDivSelector = '#waterBudgetLegend';
             StoredState.plotTimeDensity  = StoredState.plotTimeDensity || 'daily';
+            StoredState.measurementSystem = StoredState.measurementSystem || 'metric';
+            $scope.$watch('StoredState.measurementSystem', function(newValue, oldValue){
+                if(newValue !== oldValue) {
+                    plotPTandETaData(StoredState.plotTimeDensity);
+                    chartWaterUse();
+                }
+            });
             $scope.$watch('StoredState.plotTimeDensity', function(newValue, oldValue){
                 if(newValue !== oldValue){
                     plotPTandETaData(newValue);
@@ -43,9 +50,11 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
              * {String} category the category of data to plot (daily or monthly)
              */
             var plotPTandETaData = function(category){
-                var values = CommonState.DataSeriesStore[category].data;
-                var labels = CommonState.DataSeriesStore[category].metadata.seriesLabels;
-                WaterBudgetPlot.setPlot(plotDivSelector, legendDivSelector, values, labels);
+                var values = CommonState.DataSeriesStore[category].getDataAs(StoredState.measurementSystem, "normalizedWater");
+                var labels = CommonState.DataSeriesStore[category].getSeriesLabelsAs(
+                        StoredState.measurementSystem, "normalizedWater", category);
+                var ylabel = Units[StoredState.measurementSystem].normalizedWater[category];
+                WaterBudgetPlot.setPlot(plotDivSelector, legendDivSelector, values, labels, ylabel);
             };
             //boolean property is cheaper to watch than deep object comparison
             $scope.$watch('CommonState.newDataSeriesStore', function(newValue, oldValue){
@@ -61,17 +70,20 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             
             var chartDivSelector = '#waterUsageChart';
             
-            var chartWaterUsage= function(){
-                var values = CommonState.WaterUsageDataSeries.data;
-                var labels = CommonState.WaterUsageDataSeries.metadata.seriesLabels;
-                WaterUsageChart.setChart(chartDivSelector, values, labels);
+            var chartWaterUse= function(){
+                var values = CommonState.WaterUsageDataSeries.getDataAs(StoredState.measurementSystem, "normalizedWater");
+                // get modified Series labels and throw away "Date"
+                var labels = CommonState.WaterUsageDataSeries.getSeriesLabelsAs(
+                        StoredState.measurementSystem, "normalizedWater", "daily").from(1);
+                var ylabel = Units[StoredState.measurementSystem].normalizedWater.yearly;
+                WaterUsageChart.setChart(chartDivSelector, values, labels, ylabel);
             };
             
             //boolean property is cheaper to watch than deep object comparison
             $scope.$watch('CommonState.newWaterUseData', function(newValue, oldValue){
                 if(newValue){
                     CommonState.newWaterUseData = false;
-                    chartWaterUsage();
+                    chartWaterUse();
                     //hack: non-obviously trigger re-rendering of the other graph
                     CommonState.newDataSeriesStore = true;
                 }
