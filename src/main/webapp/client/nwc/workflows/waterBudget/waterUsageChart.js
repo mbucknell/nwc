@@ -2,14 +2,14 @@
 (function () {
     var waterUsageChart = angular.module('nwc.waterUsageChart', []);
     var privateChart = {};
-    var setChart = function(chartEltSelector, values, labels) {
+    var setChart = function(chartEltSelector, values, labels, ylabel) {
             if(!values || !values.length){
                 if(privateChart.shutdown){
                     privateChart.shutdown()
                 }
                 return;
             }
-            var waterUsageUnitName = 'mm per day'; 
+
             var dateFormat = '{yyyy}';
             var dateIndex = 0;
 
@@ -77,7 +77,7 @@
                     },
                     yaxis: {
                         color: "black",
-                        axisLabel: waterUsageUnitName,
+                        axisLabel: ylabel,
                         axisLabelPadding: 3,
                         font: {
                             size: 12,
