@@ -5,7 +5,11 @@
     dataSeriesStoreModule.service('DataSeries', ['SosSources', 'Units',
         function (SosSources, Units) {
             var createSeriesLabel = function (metadata) {
-                return metadata.seriesName + ' (' + metadata.seriesUnits + ')';
+                var label = metadata.seriesName;
+                if (metadata.seriesUnits.length !== 0) {
+                    label += ' (' + metadata.seriesUnits + ')';
+                }
+                return label;
             };
             return {
                 new : function () {
@@ -18,7 +22,9 @@
                         },
                         data: [],
                         toCSV: function() {
-                            var csvHeader = this.metadata.seriesLabels.join(",") + "\n";
+                            var csvHeader = this.metadata.seriesLabels.map(function(label) {
+                                return createSeriesLabel(label);
+                            }).join(",") + "\n";
                             var csvValues = "";
                             this.data.each(function(row) {
                                 csvValues += row.join(",") + "\n";
@@ -35,8 +41,9 @@
                         },
                         getSeriesLabelsAs: function(measurementSystem, measure, timeGranularity) {
                             return this.metadata.seriesLabels.map(function(label) {
-                                label.seriesUnits = Units[measurementSystem][measure][timeGranularity];
-                                return createSeriesLabel(label);
+                                var seriesMetadata = Object.clone(label);
+                                seriesMetadata.seriesUnits = Units[measurementSystem][measure][timeGranularity];
+                                return createSeriesLabel(seriesMetadata);
                             });
                         }
                     };

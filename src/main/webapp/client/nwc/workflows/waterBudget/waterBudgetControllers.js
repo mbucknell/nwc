@@ -75,7 +75,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 // get modified Series labels and throw away "Date"
                 var labels = CommonState.WaterUsageDataSeries.getSeriesLabelsAs(
                         StoredState.measurementSystem, "normalizedWater", "daily").from(1);
-                var ylabel = Units[StoredState.measurementSystem].normalizedWater.yearly;
+                var ylabel = Units[StoredState.measurementSystem].normalizedWater.daily;
                 WaterUsageChart.setChart(chartDivSelector, values, labels, ylabel);
             };
             
