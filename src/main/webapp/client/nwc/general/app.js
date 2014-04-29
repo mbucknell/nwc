@@ -6,6 +6,7 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.util',
     'nwc.watch',
     'nwc.dataSeriesStore',
+    'nwc.plotter',
     'nwc.sosSources',
     'nwc.sosResponseParser',
     'nwc.waterYear',
@@ -17,6 +18,7 @@ var nwcApp = angular.module('nwcApp', [
     'nwc.controllers.dataDiscovery',
     'nwc.directives.selectionInfo',
     'nwc.directives.downloadData',
+    'nwc.directives.streamflowStatistics',
     'ui.router',
     'ui.bootstrap',
     'nwc.waterBudgetPlot',
@@ -128,6 +130,11 @@ nwcApp.config(['$stateProvider', '$urlRouterProvider',
                     url: '/display-statistics',
                     templateUrl: streamStatsBasePath + 'displayStatistics.html',
                     controller: 'DisplayStatistics'
+                })
+                .state('workflow.streamflowStatistics.plotData', {
+                    url: '/plot-data',
+                    templateUrl: streamStatsBasePath + 'plotData.html',
+                    controller: 'PlotData'
                 })
                 .state('workflow.streamflowStatistics.modeledInfoPage', {
                     url: '/model-info',
