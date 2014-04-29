@@ -46,8 +46,8 @@
             });
             var yearTooltipSeparator = ' - ';
             var numYearsPerDatum = 5;
-            function plotWithOptions () {
-                var plot = $.plot(chartEltSelector, data, {
+            (function plotWithOptions () {
+                $.plot(chartEltSelector, data, {
                     series: {
                         stack: stack,
                         bars: {
@@ -98,22 +98,20 @@
                               var initialDatumYear = Date.create(xval).utc().format(dateFormat);
                               var finalDatumYear = parseInt(initialDatumYear) + numYearsPerDatum;
                               var dateDisplay = initialDatumYear + yearTooltipSeparator + finalDatumYear;
-                              var grabUnitsFromLabel = function(label) {
+                              var waterUsageUnitName = (function grabUnitsFromLabel (label) {
                                   var result = null;
                                   var regex = /\((.*)\)/;
                                   if (regex.test(label)) {
                                       result = regex.exec(label)[1];
                                   }
                                   return result;
-                              }
-                              var waterUsageUnitName = grabUnitsFromLabel(label);
+                              })(label);
                               var tooltipText = 'Date: ' + dateDisplay + "<br/>" + label + ": " + realValue + " " + waterUsageUnitName;
                               return tooltipText;
                           }
                     }
                 });
-            }
-            plotWithOptions();
+            })();
             
     };
     waterUsageChart.service('WaterUsageChart', [
