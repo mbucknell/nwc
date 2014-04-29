@@ -22,7 +22,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             description: 'Visualize the data for your HUC of interest.'
         },
         function ($scope, $state, StoredState, CommonState, WaterBudgetPlot, WaterUsageChart, Units, Convert) {
-            var selectionInfo = {}
+            var selectionInfo = {};
             if (StoredState.waterBudgetHucFeature) {
                 selectionInfo.hucId = StoredState.waterBudgetHucFeature.data.HUC_12;
                 selectionInfo.hucName = StoredState.waterBudgetHucFeature.data.HU_10_NAME;
@@ -48,6 +48,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             });
             /**
              * {String} category the category of data to plot (daily or monthly)
+             * TODO: should be able to delete WaterBudgetPlot and move to nwc.plotter
              */
             var plotPTandETaData = function(category){
                 var values = CommonState.DataSeriesStore[category].getDataAs(StoredState.measurementSystem, "normalizedWater");

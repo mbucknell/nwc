@@ -11,6 +11,7 @@ var storedState = Object.extended({
 var commonState = Object.extended({
     DataSeriesStore: Object.extended(),
     newDataSeriesStore: false,
+    newModeledHucData: false,
     activatedMapControl: "select",
     gageStyleDescription: "Gages for Evaluating Streamflow",
     streamFlowStatMinDate: Date.create().utc(),

@@ -354,6 +354,75 @@
             ]
     );
     
+    var modeledQName = "readyForModeledQ";
+    registerWatchFactory(modeledQName,
+                        ['$http', '$log', '$rootScope', '$state', 'CommonState', 'StoredState', 'RunningWatches', 'SosUrlBuilder', 'SosSources', 'SosResponseParser', 'DataSeries',
+                function ($http, $log, $rootScope, $state, CommonState, StoredState, RunningWatches, SosUrlBuilder, SosSources, SosResponseParser, DataSeries) {
+                    return {
+                        propertyToWatch: 'readyForModeledQ',
+                        watchFunction: function (prop, oldValue, readyForModeledQ) {
+                            RunningWatches.add(modeledQName);
+                            
+                            if (readyForModeledQ && StoredState.streamFlowStatHucFeature) {
+                                var offeringId = StoredState.streamFlowStatHucFeature.data.site_no;
+
+                                var sosUrl = SosUrlBuilder.buildSosUrlFromSource(offeringId, SosSources.modeledQ);
+
+                                var modeledFailure = function (response) {
+                                    var url = response.config.url;
+                                    var message = 'An error occurred while retrieving water use data from:\n' +
+                                            url + '\n' +
+                                            'See browser logs for details';
+                                    alert(message);
+                                    $log.error('Error while accessing: ' + url + '\n' + response.data);
+                                    RunningWatches.remove(modeledQName);
+                                };
+
+                                var modeledSuccess = function (response) {
+                                    var data = response.data;
+                                    if (!data || data.has('exception') || data.has('error')) {
+                                        modeledFailure(response);
+                                    } else {
+                                        var parsedTable = SosResponseParser.parseSosResponse(data);
+                                        var convertedTable = parsedTable.map(function(row) {
+                                            return row.map(function(column, index){
+                                                var val = column;
+                                                if (index === 0) {
+                                                    val = strToDate(column);
+                                                }
+                                                return val;
+                                            });
+                                        });
+
+                                        var modeledDataSeries = DataSeries.new();
+                                        modeledDataSeries.data = convertedTable;
+
+                                        //use the series metadata as labels
+                                        var additionalSeriesLabels = SosSources.modeledQ.observedProperty.split(',');
+                                        additionalSeriesLabels.each(function(label) {
+                                            modeledDataSeries.metadata.seriesLabels.push({
+                                                seriesName: label,
+                                                seriesUnits: SosSources.modeledQ.units
+                                            });
+                                        });
+
+                                        CommonState.ModeledHucDataSeries = modeledDataSeries;
+                                        CommonState.newModeledHucData = true;
+                                        RunningWatches.remove(modeledQName);
+                                    }
+                                };
+
+                                $http.get(sosUrl).then(modeledSuccess, modeledFailure);
+                            } else {
+                                RunningWatches.remove(modeledQName);
+                            }
+                            return readyForModeledQ;
+                        }
+                    };
+                }
+            ]
+    );
+    
     var allWatchServiceNames = watchServiceNames.keys();
     var dependencies = ['StoredState'].concat(allWatchServiceNames);
 
