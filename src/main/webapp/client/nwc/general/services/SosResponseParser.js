@@ -11,8 +11,8 @@
              */
             self.parseSosResponse = function (response) {
                 return self.parseSosResponseValues(
-                        self.getValuesFromSosResponse(response)
-                        );
+                    self.getValuesFromSosResponse(response)
+                );
             };
             /**
              * 

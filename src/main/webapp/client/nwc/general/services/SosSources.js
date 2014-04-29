@@ -21,6 +21,12 @@
                 dataset: 'county_data',
                 fileName: 'AWUDS.nc',
                 defaultTimeIncrement: '5 years'
+            },
+            modeledQ: {
+                observedProperty: 'MEAN_streamflow',
+                units: 'ft^3/s',
+                dataset: 'HUC12_data',
+                fileName: 'HUC12_Q.nc'
             }
         };
     });

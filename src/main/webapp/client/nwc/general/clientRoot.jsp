@@ -63,6 +63,7 @@
 <script type="text/javascript" src="../client/nwc/general/services/WpsClient.js"></script>
 <script type="text/javascript" src="../client/nwc/general/services/RdbParser.js"></script>
 <script type="text/javascript" src="../client/nwc/general/services/WaterYearUtil.js"></script>
+<script type="text/javascript" src="../client/nwc/general/services/Plotter.js"></script>
 
 <!-- controllers -->
 <script type="text/javascript" src="../client/nwc/general/controllers/controllerHelpers.js"></script>
@@ -75,6 +76,7 @@
 <!-- directives -->
 <script type="text/javascript" src="../client/nwc/general/directives/selectionInfoDirectives.js"></script>
 <script type="text/javascript" src="../client/nwc/general/directives/downloadDataDirective.js"></script>
+<script type="text/javascript" src="../client/nwc/workflows/streamflowStatistics/streamflowStatisticsDirectives.js"></script>
 
 <!-- main app-->
 <script type="text/javascript" src="../client/nwc/general/app.js"></script>

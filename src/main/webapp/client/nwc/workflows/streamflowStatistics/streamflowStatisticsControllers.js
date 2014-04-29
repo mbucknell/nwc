@@ -1,6 +1,6 @@
 /*global angular SCE */
 (function () {
-    var streamflowStatistics = angular.module('nwc.controllers.streamflowStatistics', ['nwc.streamStats', 'nwc.wps', 'nwc.dictionary', 'nwc.streamStats.dictionary', 'nwc.waterYear']);
+    var streamflowStatistics = angular.module('nwc.controllers.streamflowStatistics', ['nwc.streamStats', 'nwc.wps', 'nwc.dictionary', 'nwc.streamStats.dictionary', 'nwc.waterYear', 'nwc.plotter', 'nwc.conversion']);
     streamflowStatistics.controller('StreamflowStatistics', [ '$scope', 'StoredState', '$sce',
         NWC.ControllerHelpers.WorkflowController(
             {
@@ -179,6 +179,7 @@
                         selectionInfo.hucId = StoredState.streamFlowStatHucFeature.data.HUC12;
                         selectionInfo.hucName = StoredState.streamFlowStatHucFeature.data.HU_12_NAME;
                         selectionInfo.drainageArea = StoredState.streamFlowStatHucFeature.data.DRAIN_SQKM;
+                        StoredState.readyForModeledQ = true;
                     } else {
                         $state.go('^.selectSite');
                         return;
@@ -256,11 +257,14 @@
                     selectionInfo.hucId = StoredState.streamFlowStatHucFeature.data.HUC12;
                     selectionInfo.hucName = StoredState.streamFlowStatHucFeature.data.HU_12_NAME;
                     selectionInfo.drainageArea = StoredState.streamFlowStatHucFeature.data.DRAIN_SQKM;
+                    StoredState.readyForModeledQ = true;
                 } else {
                     $state.go('^.selectSite');
                 }
                 $scope.selectionInfo = selectionInfo;
+
             }
         )
     ]);
+
 }());
