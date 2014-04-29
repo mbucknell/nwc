@@ -54,6 +54,10 @@
     var mmToInches = function (millimeters) {
         return millimeters * mmToInchesConversionFactor;
     };
+    
+    var noop = function(val) {
+        return val;
+    };
 
     Conversion.service('Convert', [
         function () {
@@ -61,7 +65,8 @@
                 mgdToMmAcresPerDay: mgdToMmAcresPerDay,
                 mgdTableToMmPerDayTable: mgdTableToMmPerDayTable,
                 squareMilesToAcres: squareMilesToAcres,
-                mmToInches: mmToInches
+                mmToInches: mmToInches,
+                noop: noop
             };
         }
     ]);
@@ -77,14 +82,27 @@
                     daily: "mm per day",
                     monthly: "mm per month",
                     yearly: "mm per year",
-                    conversionFromBase: function(val) {return val;}
+                    conversionFromBase: Convert.noop
                 },
                 totalWater: {
                     unit: {
                         short: "",
                         long: ""
                     },
-                    conversionFromBase: function(val) {return val;}
+                    daily: "",
+                    monthly: "",
+                    yearly: "",
+                    conversionFromBase: Convert.noop
+                },
+                streamflow: {
+                    unit: {
+                        short: "",
+                        long: ""
+                    },
+                    daily: "",
+                    monthly: "",
+                    yearly: "",
+                    conversionFromBase: Convert.noop
                 }
             },
             imperial: {
@@ -103,7 +121,20 @@
                         short: "mgd",
                         long: "millions of gallons per day"
                     },
-                    conversionFromBase: function(val) {return val;}
+                    daily: "mgd",
+                    monthly: "mgd",
+                    yearly: "mgd",
+                    conversionFromBase: Convert.noop
+                },
+                streamflow: {
+                    unit: {
+                        short: "ft^3/sec",
+                        long: "cubic feet per second"
+                    },
+                    daily: "ft^3/sec",
+                    monthly: "ft^3/sec",
+                    yearly: "ft^3/sec",
+                    conversionFromBase: Convert.noop
                 }
             }
         };
