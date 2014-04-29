@@ -98,6 +98,15 @@
                               var initialDatumYear = Date.create(xval).utc().format(dateFormat);
                               var finalDatumYear = parseInt(initialDatumYear) + numYearsPerDatum;
                               var dateDisplay = initialDatumYear + yearTooltipSeparator + finalDatumYear;
+                              var grabUnitsFromLabel = function(label) {
+                                  var result = null;
+                                  var regex = /\((.*)\)/;
+                                  if (regex.test(label)) {
+                                      result = regex.exec(label)[1];
+                                  }
+                                  return result;
+                              }
+                              var waterUsageUnitName = grabUnitsFromLabel(label);
                               var tooltipText = 'Date: ' + dateDisplay + "<br/>" + label + ": " + realValue + " " + waterUsageUnitName;
                               return tooltipText;
                           }
