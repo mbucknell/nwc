@@ -191,7 +191,7 @@
                                     additionalSeriesLabels.each(function(label) {
                                         waterUseDataSeries.metadata.seriesLabels.push({
                                             seriesName: label,
-                                            seriesUnits: SosSources.countyWaterUse.units //TODO[Sibley] THIS ISNT USED?
+                                            seriesUnits: SosSources.countyWaterUse.units
                                         });
                                     });
 

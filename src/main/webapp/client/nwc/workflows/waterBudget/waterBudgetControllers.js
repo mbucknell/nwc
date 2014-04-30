@@ -18,7 +18,7 @@
 waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState', 'CommonState', 'WaterBudgetPlot', 'WaterUsageChart', 'Units', 'Convert',
     NWC.ControllerHelpers.StepController(
         {
-            name: 'Plot Water Budget Data', //TODO[Sibley] Where are these used?
+            name: 'Plot Water Budget Data',
             description: 'Visualize the data for your HUC of interest.'
         },
         function ($scope, $state, StoredState, CommonState, WaterBudgetPlot, WaterUsageChart, Units, Convert) {
@@ -43,35 +43,32 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             });
             $scope.$watch('StoredState.measurementSystem', function(newValue, oldValue){
                 if(newValue !== oldValue) {
-                    plotPTandETaData(StoredState.plotTimeDensity);
+                    plotPTandETaData();
                     chartWaterUse();
                 }
             });
             $scope.$watch('StoredState.plotTimeDensity', function(newValue, oldValue){
                 if(newValue !== oldValue){
-                    plotPTandETaData(newValue);
+                    plotPTandETaData();
                 }
             });
             /**
              * {String} category the category of data to plot (daily or monthly)
              * TODO: should be able to delete WaterBudgetPlot and move to nwc.plotter
              */
-            //TODO[Sibley] Do you need category to be passed in? You rely on CommonState and StoredState to be available.
-            //Consider moving that out, or the other calls to scoped objects being passed in.
-            //TODO[Sibley] How does normalization fit in to this?
-            var plotPTandETaData = function(category){
+            var plotPTandETaData = function(){
                 var normalization = 'normalizedWater';
-                var values = CommonState.DataSeriesStore[category].getDataAs(StoredState.measurementSystem, normalization);
-                var labels = CommonState.DataSeriesStore[category].getSeriesLabelsAs(
-                        StoredState.measurementSystem, normalization, category);
-                var ylabel = Units[StoredState.measurementSystem][normalization][category];
+                var values = CommonState.DataSeriesStore[StoredState.plotTimeDensity].getDataAs(StoredState.measurementSystem, normalization);
+                var labels = CommonState.DataSeriesStore[StoredState.plotTimeDensity].getSeriesLabelsAs(
+                        StoredState.measurementSystem, normalization, StoredState.plotTimeDensity);
+                var ylabel = Units[StoredState.measurementSystem][normalization][StoredState.plotTimeDensity];
                 WaterBudgetPlot.setPlot(plotDivSelector, legendDivSelector, values, labels, ylabel);
             };
             //boolean property is cheaper to watch than deep object comparison
             $scope.$watch('CommonState.newDataSeriesStore', function(newValue, oldValue){
                 if(newValue){
                     CommonState.newDataSeriesStore = false;
-                    plotPTandETaData(StoredState.plotTimeDensity);
+                    plotPTandETaData();
                     //hack: non-obviously trigger re-rendering of the other graph
                     if(CommonState.WaterUsageDataSeries){
                        CommonState.newWaterUseData = true;
