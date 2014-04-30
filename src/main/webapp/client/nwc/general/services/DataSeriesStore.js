@@ -33,7 +33,7 @@
                         },
                         getDataAs: function(measurementSystem, measure, normalizationFn) {
                             var convert = Units[measurementSystem][measure].conversionFromBase;
-							var normalize = normalizationFn || Convert.noop;
+                            var normalize = normalizationFn || Convert.noop;
                             return this.data.map(function(arr) {
                                 // Assume All series have untouchable date
                                 var date = arr[0];

@@ -9,8 +9,8 @@
      * _______________  *   _________   *   _______________ *   _____________   *   ________    = 935.395 mm*acres/day
      *      day             1 million       264.172 gallons     4046.86 m^2           1 m                     
      */
-	var gallonsToCubicMetersConversionFactor = (1/264.172);
-	var squareMetersToAcresConversionFactor = (1/4046.86);
+    var gallonsToCubicMetersConversionFactor = (1/264.172);
+    var squareMetersToAcresConversionFactor = (1/4046.86);
     var mgdToMmAcresPerDayConversionFactor = (1) * (1000000/1) * gallonsToCubicMetersConversionFactor * squareMetersToAcresConversionFactor * (1000/1);
     var mgdToMmAcresPerDay = function (mgd) {
         return mgd * mgdToMmAcresPerDayConversionFactor;
@@ -27,28 +27,28 @@
     var mmToInches = function (millimeters) {
         return millimeters * mmToInchesConversionFactor;
     };
-	
-	/**
+
+    /**
      * Dimensional analysis for conversion factor //TODO[Sibley] Review this Blodgett
      * 
      * Million Gallons      1 000 000           1 m^3              365 day   
      * _______________  *   _________   *   _______________ *   _____________   = 1,381,675.575 m^3/year
      *      day             1 million       264.172 gallons         1 year            
      */
-	var mgdToCubicMetersPerYearConversionFactor =  (1) * (1000000/1) * gallonsToCubicMetersConversionFactor * (365/1);
-	var mgdToCubicMetersPerYear = function(mgd) {
-		var result = mgd * mgdToCubicMetersPerYearConversionFactor;
-		return result;
-	};
-	
-	//go from Millions of Gallons per time to Millimeters per time
-	var normalize = function(val, areaAcres) {
-		var result = val;
-		
-		result = mgdToMmAcresPerDay(val) / areaAcres;
-		
-		return result;
-	};
+    var mgdToCubicMetersPerYearConversionFactor = (1) * (1000000 / 1) * gallonsToCubicMetersConversionFactor * (365 / 1);
+    var mgdToCubicMetersPerYear = function(mgd) {
+        var result = mgd * mgdToCubicMetersPerYearConversionFactor;
+        return result;
+    };
+
+    //go from Millions of Gallons per time to Millimeters per time
+    var normalize = function(val, areaAcres) {
+        var result = val;
+
+        result = mgdToMmAcresPerDay(val) / areaAcres;
+
+        return result;
+    };
     
     var noop = function(val) {
         return val;
@@ -60,8 +60,8 @@
                 mgdToMmAcresPerDay: mgdToMmAcresPerDay,
                 squareMilesToAcres: squareMilesToAcres,
                 mmToInches: mmToInches,
-				mgdToCubicMetersPerYear : mgdToCubicMetersPerYear,
-				normalize: normalize,
+				mgdToCubicMetersPerYear: mgdToCubicMetersPerYear,
+                normalize: normalize,
                 noop: noop
             };
         }

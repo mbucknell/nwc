@@ -33,7 +33,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             $scope.selectionInfo = selectionInfo;
             var plotDivSelector = '#waterBudgetPlot';
             var legendDivSelector = '#waterBudgetLegend';
-			StoredState.plotNormalization = StoredState.plotNormalization || 'totalWater';
+            StoredState.plotNormalization = StoredState.plotNormalization || 'totalWater';
             StoredState.plotTimeDensity  = StoredState.plotTimeDensity || 'daily';
             StoredState.measurementSystem = StoredState.measurementSystem || 'imperial';
             $scope.$watch('StoredState.plotNormalization', function(newValue, oldValue){
@@ -56,11 +56,11 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
              * {String} category the category of data to plot (daily or monthly)
              * TODO: should be able to delete WaterBudgetPlot and move to nwc.plotter
              */
-			//TODO[Sibley] Do you need category to be passed in? You rely on CommonState and StoredState to be available.
-			//Consider moving that out, or the other calls to scoped objects being passed in.
-			//TODO[Sibley] How does normalization fit in to this?
+            //TODO[Sibley] Do you need category to be passed in? You rely on CommonState and StoredState to be available.
+            //Consider moving that out, or the other calls to scoped objects being passed in.
+            //TODO[Sibley] How does normalization fit in to this?
             var plotPTandETaData = function(category){
-				var normalization = 'normalizedWater';
+                var normalization = 'normalizedWater';
                 var values = CommonState.DataSeriesStore[category].getDataAs(StoredState.measurementSystem, normalization);
                 var labels = CommonState.DataSeriesStore[category].getSeriesLabelsAs(
                         StoredState.measurementSystem, normalization, category);
@@ -81,15 +81,15 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             
             var chartDivSelector = '#waterUsageChart';
             
-            var chartWaterUse= function(){
-				var normalizationFn = Convert.noop;
-				if ('normalizedWater' === StoredState.plotNormalization) {
-					normalizationFn = Convert.normalize.fill(undefined, StoredState.countyInfo.area);
-				}
+            var chartWaterUse = function() {
+                var normalizationFn = Convert.noop;
+                if ('normalizedWater' === StoredState.plotNormalization) {
+                    normalizationFn = Convert.normalize.fill(undefined, StoredState.countyInfo.area);
+                }
                 var values = CommonState.WaterUsageDataSeries.getDataAs(StoredState.measurementSystem, StoredState.plotNormalization, normalizationFn);
                 // get modified Series labels and throw away "Date"
                 var labels = CommonState.WaterUsageDataSeries.getSeriesLabelsAs(
-                        StoredState.measurementSystem, StoredState.plotNormalization, StoredState.plotTimeDensity).from(1);
+                    StoredState.measurementSystem, StoredState.plotNormalization, StoredState.plotTimeDensity).from(1);
                 var ylabel = Units[StoredState.measurementSystem][StoredState.plotNormalization].daily;
                 WaterUsageChart.setChart(chartDivSelector, values, labels, ylabel);
             };

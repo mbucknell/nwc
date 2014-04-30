@@ -184,7 +184,7 @@
                                     var parsedTable = SosResponseParser.parseSosResponse(data);
                                     
                                     var waterUseDataSeries = DataSeries.new();
-									waterUseDataSeries.data = parsedTable;
+                                    waterUseDataSeries.data = parsedTable;
 
                                     //use the series metadata as labels
                                     var additionalSeriesLabels = SosSources.countyWaterUse.observedProperty.split(',');
