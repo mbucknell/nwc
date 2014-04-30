@@ -35,7 +35,8 @@
             xlabel: 'Date',
             labelsDiv: legendElt,
             labelsSeparateLines: true,
-            legend: 'always'
+            legend: 'always',
+            yAxisLabelWidth: 100
         };
         privatePlot = new Dygraph(graphElt, values, opts);
         //attach some additional properties

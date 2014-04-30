@@ -44,7 +44,7 @@
         <button ng-disabled="statsParams.$invalid || !StoredState.siteStatisticsParameters.statGroups.length" class="btn btn-success" ng-click="calculateStats()">Calculate Statistics</button>
     </div>
 </form>
-<div ng-show="CommonState.ModeledHucDataSeries">
+<div ng-show="CommonState.ModeledHucDataSeries" class="row">
     <plot-data></plot-data>
 </div>
 <nav>
