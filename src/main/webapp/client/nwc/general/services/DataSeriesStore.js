@@ -2,8 +2,8 @@
 (function () {
     var dataSeriesStoreModule = angular.module('nwc.dataSeriesStore', ['nwc.sosSources', 'nwc.conversion']);
 
-    dataSeriesStoreModule.service('DataSeries', ['SosSources', 'Units',
-        function (SosSources, Units) {
+    dataSeriesStoreModule.service('DataSeries', ['SosSources', 'Units', 'Convert',
+        function (SosSources, Units, Convert) {
             var createSeriesLabel = function (metadata) {
                 var label = metadata.seriesName;
                 if (metadata.seriesUnits.length !== 0) {
@@ -31,12 +31,13 @@
                             });
                             return escape(csvHeader + csvValues);
                         },
-                        getDataAs: function(measurementSystem, measure) {
+                        getDataAs: function(measurementSystem, measure, normalizationFn) {
                             var convert = Units[measurementSystem][measure].conversionFromBase;
+							var normalize = normalizationFn || Convert.noop;
                             return this.data.map(function(arr) {
                                 // Assume All series have untouchable date
                                 var date = arr[0];
-                                return [date].concat(arr.from(1).map(convert));
+                                return [date].concat(arr.from(1).map(normalize).map(convert));
                             });
                         },
                         getSeriesLabelsAs: function(measurementSystem, measure, timeGranularity) {

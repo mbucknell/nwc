@@ -182,19 +182,16 @@
                                     waterUseFailure(response);
                                 } else {
                                     var parsedTable = SosResponseParser.parseSosResponse(data);
-                                    var countyAreaSqMiles = newCountyInfo.area;
-                                    var countyAreaAcres = Convert.squareMilesToAcres(countyAreaSqMiles);
-                                    var convertedTable = Convert.mgdTableToMmPerDayTable(parsedTable, countyAreaAcres);
                                     
                                     var waterUseDataSeries = DataSeries.new();
-                                    waterUseDataSeries.data = convertedTable;
+									waterUseDataSeries.data = parsedTable;
 
                                     //use the series metadata as labels
                                     var additionalSeriesLabels = SosSources.countyWaterUse.observedProperty.split(',');
                                     additionalSeriesLabels.each(function(label) {
                                         waterUseDataSeries.metadata.seriesLabels.push({
                                             seriesName: label,
-                                            seriesUnits: "mm per day"
+                                            seriesUnits: SosSources.countyWaterUse.units //TODO[Sibley] THIS ISNT USED?
                                         });
                                     });
 

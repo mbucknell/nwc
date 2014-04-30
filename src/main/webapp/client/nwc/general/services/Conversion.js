@@ -9,38 +9,11 @@
      * _______________  *   _________   *   _______________ *   _____________   *   ________    = 935.395 mm*acres/day
      *      day             1 million       264.172 gallons     4046.86 m^2           1 m                     
      */
-    var mgdToMmAcresPerDayConversionFactor = 935.395;
+	var gallonsToCubicMetersConversionFactor = (1/264.172);
+	var squareMetersToAcresConversionFactor = (1/4046.86);
+    var mgdToMmAcresPerDayConversionFactor = (1) * (1000000/1) * gallonsToCubicMetersConversionFactor * squareMetersToAcresConversionFactor * (1000/1);
     var mgdToMmAcresPerDay = function (mgd) {
         return mgd * mgdToMmAcresPerDayConversionFactor;
-    };
-    
-    /**
-     * This function converts each entry of a table from million gallons per day per county to 
-     * millimeter*acres per day and then scales by the number of acres in the county
-     * to yield a table whose entries are all millimeters per day.
-     * 
-     * original table entry : (million gallons / day county)
-     * final table entry : (mm / day)
-     * 
-     * @param {Array<Array>} table A table whose entries are in million gallons per day
-     * @param {Number} acres The area of the county.
-     * @returns {Array<Array>} the converted table
-     */
-    var mgdTableToMmPerDayTable = function (table, acres) {
-        var convertRow = function (row) {
-            return row.map(function (mgdOrDate, index) {
-                var potentiallyConvertedResult;
-                //if it's a date
-                if (0 === index) {
-                    potentiallyConvertedResult = mgdOrDate;
-                } else {
-                    //if it's an mgd
-                    potentiallyConvertedResult = mgdToMmAcresPerDay(mgdOrDate) / acres;
-                }
-                return potentiallyConvertedResult;
-            });
-        };
-        return table.map(convertRow);
     };
 
     //conversion factor per http://en.wikipedia.org/wiki/Acre#Description
@@ -54,6 +27,28 @@
     var mmToInches = function (millimeters) {
         return millimeters * mmToInchesConversionFactor;
     };
+	
+	/**
+     * Dimensional analysis for conversion factor //TODO[Sibley] Review this Blodgett
+     * 
+     * Million Gallons      1 000 000           1 m^3              365 day   
+     * _______________  *   _________   *   _______________ *   _____________   = 1,381,675.575 m^3/year
+     *      day             1 million       264.172 gallons         1 year            
+     */
+	var mgdToCubicMetersPerYearConversionFactor =  (1) * (1000000/1) * gallonsToCubicMetersConversionFactor * (365/1);
+	var mgdToCubicMetersPerYear = function(mgd) {
+		var result = mgd * mgdToCubicMetersPerYearConversionFactor;
+		return result;
+	};
+	
+	//go from Millions of Gallons per time to Millimeters per time
+	var normalize = function(val, areaAcres) {
+		var result = val;
+		
+		result = mgdToMmAcresPerDay(val) / areaAcres;
+		
+		return result;
+	};
     
     var noop = function(val) {
         return val;
@@ -63,9 +58,10 @@
         function () {
             return {
                 mgdToMmAcresPerDay: mgdToMmAcresPerDay,
-                mgdTableToMmPerDayTable: mgdTableToMmPerDayTable,
                 squareMilesToAcres: squareMilesToAcres,
                 mmToInches: mmToInches,
+				mgdToCubicMetersPerYear : mgdToCubicMetersPerYear,
+				normalize: normalize,
                 noop: noop
             };
         }
@@ -86,13 +82,13 @@
                 },
                 totalWater: {
                     unit: {
-                        short: "",
-                        long: ""
+                        short: "m^3/year",
+                        long: "Cubic Meters per Year"
                     },
-                    daily: "",
-                    monthly: "",
-                    yearly: "",
-                    conversionFromBase: Convert.noop
+                    daily: "m^3/year",
+                    monthly: "m^3/year",
+                    yearly: "m^3/year",
+                    conversionFromBase: Convert.mgdToCubicMetersPerYear
                 },
                 streamflow: {
                     unit: {
