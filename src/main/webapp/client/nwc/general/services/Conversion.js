@@ -60,7 +60,7 @@
                 mgdToMmAcresPerDay: mgdToMmAcresPerDay,
                 squareMilesToAcres: squareMilesToAcres,
                 mmToInches: mmToInches,
-				mgdToCubicMetersPerYear: mgdToCubicMetersPerYear,
+                mgdToCubicMetersPerYear: mgdToCubicMetersPerYear,
                 normalize: normalize,
                 noop: noop
             };
