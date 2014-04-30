@@ -24,7 +24,7 @@
             },
             modeledQ: {
                 observedProperty: 'MEAN_streamflow',
-                units: 'ft^3/s',
+                units: 'ft&sup3;/s',
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_Q.nc'
             }
