@@ -11,7 +11,7 @@
      */
     var gallonsToCubicMetersConversionFactor = (1/264.172);
     var squareMetersToAcresConversionFactor = (1/4046.86);
-    var mgdToMmAcresPerDayConversionFactor = (1) * (1000000/1) * gallonsToCubicMetersConversionFactor * squareMetersToAcresConversionFactor * (1000/1);
+    var mgdToMmAcresPerDayConversionFactor = (1000000/1) * gallonsToCubicMetersConversionFactor * squareMetersToAcresConversionFactor * (1000/1);
     var mgdToMmAcresPerDay = function (mgd) {
         return mgd * mgdToMmAcresPerDayConversionFactor;
     };
@@ -29,24 +29,21 @@
     };
 
     /**
-     * Dimensional analysis for conversion factor //TODO[Sibley] Review this Blodgett
+     * Dimensional analysis for conversion factor
      * 
-     * Million Gallons      1 000 000           1 m^3              365 day   
-     * _______________  *   _________   *   _______________ *   _____________   = 1,381,675.575 m^3/year
-     *      day             1 million       264.172 gallons         1 year            
+     * Million Gallons          1 m^3              365 day   
+     * _______________  *   _______________ *   _____________   = 1.381675575 m^3/year
+     *      day             264.172 gallons         1 year            
      */
-    var mgdToCubicMetersPerYearConversionFactor = (1) * (1000000 / 1) * gallonsToCubicMetersConversionFactor * (365 / 1);
-    var mgdToCubicMetersPerYear = function(mgd) {
-        var result = mgd * mgdToCubicMetersPerYearConversionFactor;
+    var mgdToMillionCubicMetersPerYearConversionFactor = gallonsToCubicMetersConversionFactor * (365 / 1);
+    var mgdToMillionCubicMetersPerYear = function(mgd) {
+        var result = mgd * mgdToMillionCubicMetersPerYearConversionFactor;
         return result;
     };
 
     //go from Millions of Gallons per time to Millimeters per time
     var normalize = function(val, areaAcres) {
-        var result = val;
-
-        result = mgdToMmAcresPerDay(val) / areaAcres;
-
+        var result = mgdToMmAcresPerDay(val) / areaAcres;
         return result;
     };
     
@@ -60,7 +57,7 @@
                 mgdToMmAcresPerDay: mgdToMmAcresPerDay,
                 squareMilesToAcres: squareMilesToAcres,
                 mmToInches: mmToInches,
-                mgdToCubicMetersPerYear: mgdToCubicMetersPerYear,
+                mgdToMillionCubicMetersPerYear: mgdToMillionCubicMetersPerYear,
                 normalize: normalize,
                 noop: noop
             };
@@ -82,13 +79,13 @@
                 },
                 totalWater: {
                     unit: {
-                        short: "m^3/year",
-                        long: "Cubic Meters per Year"
+                        short: "millions of m&sup3; per year",
+                        long: "millions of cubic meters per year"
                     },
-                    daily: "m^3/year",
-                    monthly: "m^3/year",
-                    yearly: "m^3/year",
-                    conversionFromBase: Convert.mgdToCubicMetersPerYear
+                    daily: "millions of m&sup3; per year",
+                    monthly: "millions of m&sup3; per year",
+                    yearly: "millions of m&sup3; per year",
+                    conversionFromBase: Convert.mgdToMillionCubicMetersPerYear
                 },
                 streamflow: {
                     unit: {
@@ -105,7 +102,7 @@
                 normalizedWater: {
                     unit: {
                         short: "in",
-                        long: "inches",
+                        long: "inches"
                     },
                     daily: "in per day",
                     monthly: "in per month",
@@ -124,12 +121,12 @@
                 },
                 streamflow: {
                     unit: {
-                        short: "ft^3/sec",
+                        short: "ft&sup3; per sec",
                         long: "cubic feet per second"
                     },
-                    daily: "ft^3/sec",
-                    monthly: "ft^3/sec",
-                    yearly: "ft^3/sec",
+                    daily: "ft&sup3; per sec",
+                    monthly: "ft&sup3; per sec",
+                    yearly: "ft&sup3; per sec",
                     conversionFromBase: Convert.noop
                 }
             }

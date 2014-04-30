@@ -47,19 +47,20 @@
             var yearTooltipSeparator = ' - ';
             var numYearsPerDatum = 5;
             (function plotWithOptions () {
+                /*
+                 *  #ms in 5 years = (#ms in 4 non-leap years) + (#ms in 1 leap year)   =   157766400000
+                 *  #ms in 4 non-leap years = 4 * #ms one leap year                 =   126144000000
+                 *  #ms in 1 leap year = #ms one non-leap year + #ms in one day     =   31622400000
+                 *  #ms in one non-leap year = 365 * #ms in one day                 =   31536000000
+                 *  #ms in one day = 1000 * 60 * 60 * 24                            =   86400000
+                 */
+                var yearInMilliseconds = 1000 * 60 * 60 * 24 * 365; // 31536000000
                 $.plot(chartEltSelector, data, {
                     series: {
                         stack: stack,
                         bars: {
                             show: bars,
-                            barWidth: 31536000000
-                            /*
-                             *  #ms in 5 years = (#ms in 4 non-leap years) + (#ms in 1 leap year)   =   157766400000
-                             *      #ms in 4 non-leap years = 4 * #ms one leap year                 =   126144000000
-                             *      #ms in 1 leap year = #ms one non-leap year + #ms in one day     =   31622400000
-                             *      #ms in one non-leap year = 365 * #ms in one day                 =   31536000000
-                             *      #ms in one day = 1000 * 60 * 60 * 24                            =   86400000
-                             */
+                            barWidth: yearInMilliseconds
                         }
                     },
                     xaxis: {
