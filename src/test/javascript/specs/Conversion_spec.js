@@ -50,7 +50,7 @@ describe('Convert', function() {
             expect(Convert.normalize).toBeDefined();
         });
         it('should convert units correctly', function() {
-            var expected = 935.395;
+            var expected = 1.462;
             var actual = Convert.normalize(incomingValue, incomingValue);
             expect(actual).toBeCloseTo(expected, decimalPlaces);
         });

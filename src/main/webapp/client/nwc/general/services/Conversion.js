@@ -42,8 +42,8 @@
     };
 
     //go from Millions of Gallons per time to Millimeters per time
-    var normalize = function(val, areaAcres) {
-        var result = mgdToMmAcresPerDay(val) / areaAcres;
+    var normalize = function(val, areaSqMiles) {
+        var result = mgdToMmAcresPerDay(val) / squareMilesToAcres(areaSqMiles);
         return result;
     };
     
