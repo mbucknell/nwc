@@ -121,12 +121,12 @@
                 },
                 streamflow: {
                     unit: {
-                        short: "ft&sup3; per sec",
+                        short: "cfs",
                         long: "cubic feet per second"
                     },
-                    daily: "ft&sup3; per sec",
-                    monthly: "ft&sup3; per sec",
-                    yearly: "ft&sup3; per sec",
+                    daily: "cfs",
+                    monthly: "cfs",
+                    yearly: "cfs",
                     conversionFromBase: Convert.noop
                 }
             }
