@@ -1,7 +1,7 @@
 /*global angular*/
 (function () {
-    var sosSourcesModule = angular.module('nwc.sosSources', []);
-    var SosSources = sosSourcesModule.service('SosSources', function () {
+    var sosSourcesModule = angular.module('nwc.sosSources', ['nwc.waterUseLookup']);
+    var SosSources = sosSourcesModule.service('SosSources', ['CountyWaterUseProperties',function (CountyWaterUseProperties) {
         return {
             dayMet: {
                 observedProperty: 'MEAN_prcp',
@@ -16,7 +16,7 @@
                 fileName: 'HUC12_eta_fixed.ncml'
             },
             countyWaterUse: {
-                observedProperty: 'PS-WFrTo,DO-WFrTo,IN-WTotl,MI-WTotl',
+                observedProperty: CountyWaterUseProperties.getObservedProperties(),
                 units: 'Mgal/d',
                 dataset: 'county_data',
                 fileName: 'AWUDS.nc',
@@ -29,7 +29,7 @@
                 fileName: 'HUC12_Q.nc'
             }
         };
-    });
+    }]);
 
     sosSourcesModule.service('SosUrlBuilder', [
         function () {
