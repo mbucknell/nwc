@@ -11,7 +11,7 @@
             },
             eta: {
                 observedProperty: 'MEAN_et',
-                units: 'mm/day',
+                units: 'mm/month',
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_eta_fixed.ncml'
             },
@@ -24,7 +24,7 @@
             },
             modeledQ: {
                 observedProperty: 'MEAN_streamflow',
-                units: 'ft&sup3;/s',
+                units: 'cfs',
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_Q.nc'
             }
