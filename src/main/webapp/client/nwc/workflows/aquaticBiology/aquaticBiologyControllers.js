@@ -5,7 +5,8 @@
         NWC.ControllerHelpers.WorkflowController(
             {
                 name: "Aquatic Biology Data and Related Streamflow Statistics",
-                description: " Access aquatic biology data from the BioData (link)\n\
+                description: " Access aquatic biology data from the \n\
+                    <a href=\"https://aquatic.biodata.usgs.gov\" target=\"_blank\">BioData</a> \n\
                     database and calculate streamflow statistics for near-by stream gages\n\
                     or model results. Select a collection of aquatic biology sites and\n\
                     access the data from the BioData system. Coming Soon: Select a collection\n\
