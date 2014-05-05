@@ -33,16 +33,23 @@
             }
             
             labels.each(function(label, labelIndex){
-               var column = {label:label};
+                var column = {label:label};
                 //date column offesets index calculation by one
                 var valueIndex = labelIndex + 1;
-               column.data = values.map(function(row){
-                       var newRow = [];
-                       newRow.push(row[dateIndex]);
-                       newRow.push(row[valueIndex]);
-                       return newRow;
+                column.data = values.map(function(row){
+                    var newRow = null;
+                    
+                    if (row[valueIndex] || 0 === row[valueIndex]) {
+                        newRow = [
+                            row[dateIndex],
+                            row[valueIndex]
+                        ];
+                    }
+                    
+                    return newRow;
                 });
-               data.push(column);
+                column.data = column.data.compact();
+                data.push(column);
             });
             var yearTooltipSeparator = ' - ';
             var numYearsPerDatum = 5;
