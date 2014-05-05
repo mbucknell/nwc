@@ -1,7 +1,9 @@
 /*global angular*/
 (function () {
-    var sosSourcesModule = angular.module('nwc.sosSources', ['nwc.waterUseLookup']);
+    var sosSourcesModule = angular.module('nwc.sosSources', ['nwc.waterBudgetServices']);
     var SosSources = sosSourcesModule.service('SosSources', ['CountyWaterUseProperties',function (CountyWaterUseProperties) {
+        //TODO[Sibley]  TODO for Code Review, lets look over whether we want these configs here, or we want to
+        // pull them into their workflow module.
         return {
             dayMet: {
                 observedProperty: 'MEAN_prcp',

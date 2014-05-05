@@ -1,14 +1,14 @@
 /*global angular*/
 (function () {
-    var WaterUseLookup = angular.module('nwc.waterUseLookup', []);
+    var WaterUseLookup = angular.module('nwc.waterBudgetServices', []);
     
     WaterUseLookup.factory('CountyWaterUseProperties', [function() {
             var choppedLiver = 'PS-WFrTo,DO-WFrTo,IN-WTotl,MI-WTotl';
             return {
                 getObservedProperties : function() {
-                    return choppedLiver
+                    return choppedLiver;
                 } 
             };
-    }])
-})
+    }]);
+})();
 
