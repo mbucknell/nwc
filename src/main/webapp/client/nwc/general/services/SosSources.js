@@ -5,24 +5,28 @@
         return {
             dayMet: {
                 observedProperty: 'MEAN_prcp',
+                propertyLongName: 'Area Weighted Mean Precipitation',
                 units: Units.metric.normalizedWater.daily,
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_daymet.nc'
             },
             eta: {
                 observedProperty: 'MEAN_et',
+                propertyLongName: 'Area Weighted Mean Actual Evapotranspiration',
                 units: Units.metric.normalizedWater.monthly,
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_eta_fixed.ncml'
             },
             countyWaterUse: {
                 observedProperty: 'PS-WFrTo,DO-WFrTo,IN-WTotl,MI-WTotl',
+                propertyLongName: 'PS-WFrTo,DO-WFrTo,IN-WTotl,MI-WTotl',
                 units: Units.imperial.totalWater.yearly,
                 dataset: 'county_data',
                 fileName: 'AWUDS.nc'
             },
             modeledQ: {
                 observedProperty: 'MEAN_streamflow',
+                propertyLongName: 'Modeled Streamflow',
                 units: Units.imperial.streamflow.daily,
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_Q.nc'
