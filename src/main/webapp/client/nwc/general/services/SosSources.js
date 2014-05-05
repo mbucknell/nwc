@@ -1,35 +1,34 @@
 /*global angular*/
 (function () {
-    var sosSourcesModule = angular.module('nwc.sosSources', []);
-    var SosSources = sosSourcesModule.service('SosSources', function () {
+    var sosSourcesModule = angular.module('nwc.sosSources', ['nwc.conversion']);
+    var SosSources = sosSourcesModule.service('SosSources', ['Units', function (Units) {
         return {
             dayMet: {
                 observedProperty: 'MEAN_prcp',
-                units: 'mm/day',
+                units: Units.metric.normalizedWater.daily,
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_daymet.nc'
             },
             eta: {
                 observedProperty: 'MEAN_et',
-                units: 'mm/month',
+                units: Units.metric.normalizedWater.monthly,
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_eta_fixed.ncml'
             },
             countyWaterUse: {
                 observedProperty: 'PS-WFrTo,DO-WFrTo,IN-WTotl,MI-WTotl',
-                units: 'Mgal/d',
+                units: Units.imperial.totalWater.yearly,
                 dataset: 'county_data',
-                fileName: 'AWUDS.nc',
-                defaultTimeIncrement: '5 years'
+                fileName: 'AWUDS.nc'
             },
             modeledQ: {
                 observedProperty: 'MEAN_streamflow',
-                units: 'cfs',
+                units: Units.imperial.streamflow.daily,
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_Q.nc'
             }
         };
-    });
+    }]);
 
     sosSourcesModule.service('SosUrlBuilder', [
         function () {
