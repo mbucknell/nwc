@@ -21,15 +21,21 @@
                             }]
                         },
                         data: [],
-                        toCSV: function() {
-                            var csvHeader = this.metadata.seriesLabels.map(function(label) {
+                        toCSV: function(metadata) {
+                            var csvHeader = "";
+                            if (metadata) {
+                                metadata.lines(function(line) {
+                                    csvHeader += "#" + line + "\n";
+                                });
+                            }
+                            csvHeader += this.metadata.seriesLabels.map(function(label) {
                                 return createSeriesLabel(label);
                             }).join(",") + "\n";
                             var csvValues = "";
                             this.data.each(function(row) {
                                 csvValues += row.join(",") + "\n";
                             });
-                            return escape(csvHeader + csvValues);
+                            return encodeURIComponent(csvHeader + csvValues);
                         },
                         getDataAs: function(measurementSystem, measure, normalizationFn) {
                             var convert = Units[measurementSystem][measure].conversionFromBase;

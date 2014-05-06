@@ -1,6 +1,6 @@
 /*global angular,NWC,OpenLayers,$,CONFIG*/
 (function(){
-    var waterBudgetControllers = angular.module('nwc.controllers.waterBudget', ['nwc.conversion']);
+    var waterBudgetControllers = angular.module('nwc.controllers.waterBudget', ['nwc.conversion', 'nwc.dictionary']);
     
     waterBudgetControllers.controller('WaterBudget', ['$scope', 'StoredState', '$sce',
         NWC.ControllerHelpers.WorkflowController(
@@ -15,13 +15,14 @@
                 $scope.description = $sce.trustAsHtml($scope.description);
             }
     )]);
-waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState', 'CommonState', 'WaterBudgetPlot', 'WaterUsageChart', 'Units', 'Convert',
+waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState', 'CommonState', 
+    'WaterBudgetPlot', 'WaterUsageChart', 'Units', 'Convert', 'DownloadMetadata',
     NWC.ControllerHelpers.StepController(
         {
             name: 'Plot Water Budget Data',
             description: 'Visualize the data for your HUC of interest.'
         },
-        function ($scope, $state, StoredState, CommonState, WaterBudgetPlot, WaterUsageChart, Units, Convert) {
+        function ($scope, $state, StoredState, CommonState, WaterBudgetPlot, WaterUsageChart, Units, Convert, DownloadMetadata) {
             var selectionInfo = {};
             if (StoredState.waterBudgetHucFeature) {
                 selectionInfo.hucId = StoredState.waterBudgetHucFeature.data.HUC_12;
@@ -31,6 +32,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 return;
             }
             $scope.selectionInfo = selectionInfo;
+            $scope.downloadMetadata = DownloadMetadata
             var plotDivSelector = '#waterBudgetPlot';
             var legendDivSelector = '#waterBudgetLegend';
             StoredState.plotNormalization = StoredState.plotNormalization || 'totalWater';
