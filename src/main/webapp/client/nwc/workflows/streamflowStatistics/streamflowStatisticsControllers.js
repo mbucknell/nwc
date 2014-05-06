@@ -23,20 +23,19 @@
         )
     ]);
     streamflowStatistics.controller('SelectSite', ['$scope', '$http', 'StoredState', 'CommonState', 'StoredState',
-        'StreamflowMap', 'styleDescriptions', 'interestTypeDescriptions', 'MapControlDescriptions', 'DownloadMetadata',
+        'StreamflowMap', 'styleDescriptions', 'interestTypeDescriptions', 'MapControlDescriptions',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'Select Gage or HUC',
                 description: 'Select a gage or a HUC to retrieve its statistics.'
             },
             function ($scope, $http, StoredState, CommonState, StoredState, StreamflowMap, styleDescriptions,
-            interestTypeDescriptions, MapControlDescriptions, DownloadMetadata) {
+            interestTypeDescriptions, MapControlDescriptions) {
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
                 $scope.styleDescriptions = styleDescriptions;
                 $scope.interestTypeDescriptions = interestTypeDescriptions;
                 $scope.MapControlDescriptions = MapControlDescriptions;
-                $scope.downloadMetadata = DownloadMetadata;
                 
                 var mapId = 'siteSelectMap';
                 var map = StreamflowMap.getMap();

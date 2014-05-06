@@ -24,14 +24,4 @@
             }
         };
     }]);
-    dictionary.factory("DownloadMetadata", ['$sce', function($sce) {
-        return {
-            // may need to do $sce.trustAsHTML() if there are any special characters
-            example: "This should be a single string\nNewlines are allowed\nSo are urls http://cida.usgs.gov/nwc",
-            eta: "",
-            precip: "",
-            waterUse: "",
-            streamflow: ""
-        };
-    }]);
 }());

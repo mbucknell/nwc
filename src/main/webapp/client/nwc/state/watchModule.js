@@ -120,6 +120,7 @@
                                                 seriesUnits: SosSources[label].units
                                             }
                                         );
+                                        labeledDataSeries.metadata.downloadHeader = SosSources[label].downloadMetadata;
                                         labeledDataSeries.data = parsedValues;
                                         
                                         labeledResponses[label] = labeledDataSeries;
@@ -194,6 +195,7 @@
                                             seriesUnits: SosSources.countyWaterUse.units
                                         });
                                     });
+                                    waterUseDataSeries.metadata.downloadHeader = SosSources.countyWaterUse.downloadMetadata;
 
                                     CommonState.WaterUsageDataSeries = waterUseDataSeries;
                                     CommonState.newWaterUseData = true;
@@ -402,6 +404,7 @@
                                                 seriesUnits: SosSources.modeledQ.units
                                             });
                                         });
+                                        modeledDataSeries.metadata.downloadHeader = SosSources.modeledQ.downloadMetadata;
 
                                         CommonState.ModeledHucDataSeries = modeledDataSeries;
                                         CommonState.newModeledHucData = true;
