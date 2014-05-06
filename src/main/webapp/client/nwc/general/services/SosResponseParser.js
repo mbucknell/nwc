@@ -1,6 +1,120 @@
 /*global angular*/
+/*global $*/
 (function () {
     var sosResponseParserModule = angular.module('nwc.sosResponseParser', []);
+    var realSosResponseParserService = sosResponseParserModule.service('RealSosResponseParser', [function() {
+            var self = this;
+
+            //parses an individual token
+            var parseToken = function (token) {
+                var value = parseFloat(token);
+                return value;
+            };
+
+            var handleRow = function (row) {
+                var result = null;
+                var tokens = row.split(',');
+
+                var dateStr = tokens[0].to(tokens[0].indexOf('T'));
+                dateStr = dateStr.replace(/-/g, '/');
+                dateStr = dateStr.trim();
+                var values = [];
+
+                //start iteration through each token array at 1 because date is in token[0]
+                values = tokens.slice(1).map(parseToken);
+
+                result = [dateStr].concat(values);
+                return result;
+            };
+
+            var parseSosResponseValues = function (valuesTxt) {
+                valuesTxt = valuesTxt.trim();//kill terminal space and newline (' \n')
+                var rows = valuesTxt.split(/\s+/);
+                return rows;
+            };
+
+            var getValuesFromSosResponse = function (response) {
+                var valuesTxt = $(response).find('swe\\:values').text();
+                if (0 === valuesTxt.length) {
+                    valuesTxt = $(response).find('values').text();
+                }
+                return valuesTxt;
+            };
+
+            self.parseSosResponse = function (response) {
+                var result = null;
+                if (response) {
+                    var innerData = getValuesFromSosResponse(response);
+                    var rows = parseSosResponseValues(innerData);
+
+                    result = rows.map(handleRow);
+                }
+                return result;
+            };
+
+            self.methodsForTesting = {
+                parseToken : parseToken,
+                handleRow : handleRow,
+                parseSosResponseValues : parseSosResponseValues,
+                getValuesFromSosResponse : getValuesFromSosResponse
+            };
+    }]);
+    var sosResponseCleanerService = sosResponseParserModule.service('SosResponseCleaner', [function(){
+            var self = this;
+            self.emptyValues = [9.96921e+36, -999];//these values will be considered NaN's 
+            
+            var getNumberOfValuesInRow = function (row) {
+                var numberOfDatesPerRow = 1;//just one at the beginning
+                var numberOfValuesInRow = row.length - numberOfDatesPerRow;
+                return numberOfValuesInRow;
+            };
+            
+            var cleanRow = function(row) {
+                var result = row;
+                
+                if (row) {
+                    result = row.reduce(function(prev, value) {
+                        var next = prev;
+                        if (null !== prev) {
+                            if (!isNaN(value) && !self.emptyValues.any(value)) {
+                                next.push(value);
+                            } else {
+                                next = null;
+                            }
+                        }
+                        return next;
+                    }, []);
+                }
+                
+                return result;
+            };
+            
+            var cleanRows = function(rows) {
+                var result = rows;
+                
+                if (rows) {
+                    result = rows.map(cleanRow).compact();  //TODO this isn't right
+                }
+                
+                return result;
+            };
+            
+            self.parseAndCleanSosResponse = function(response) {
+                var result = null;
+                var rows = parseSosResponse(response);
+                
+                if (rows) {
+                    result = cleanRows(rows);
+                }
+                
+                return result;
+            };
+            
+            self.methodsForTesting = {
+                cleanRow : cleanRow,
+                cleanRows : cleanRows
+            };
+    }]);
     var sosResponseParserService = sosResponseParserModule.service('SosResponseParser', [function(){
             var self = this;
             self.emptyValues = [9.96921e+36, -999];//these values will be considered NaN's    

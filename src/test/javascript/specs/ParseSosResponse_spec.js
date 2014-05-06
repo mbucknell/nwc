@@ -1,12 +1,16 @@
 describe('SosResponseParser', function(){
     var $injector = angular.injector(['nwc.sosResponseParser']);
-    var SosResponseParser = $injector.get('SosResponseParser');
+    var SosResponseParser = $injector.get('RealSosResponseParser');
+    var SosResponseCleaner = $injector.get('SosResponseCleaner');
     //testing constants:
     var numLeadingNans = 3;//update this if you change the test data
     
     //wrapper for tested function
     var parse = function(data){
-        return SosResponseParser.parseSosResponseValues(data);
+        var rows = SosResponseParser.methodsForTesting.parseSosResponseValues(data);
+        var handled = rows.map(SosResponseParser.methodsForTesting.handleRows);
+        var cleaned = SosResponseCleaner.methodsForTesting.cleanRows(handled);
+        return cleaned;
     };
     var countPureNaNRows = function(results){
         return results.filter(isPureNanRow).length;
@@ -19,16 +23,16 @@ describe('SosResponseParser', function(){
     var countNaNsInResults = function(results){
         var numNans = 0;
         results.each(function(row){
-            if(isNaN(row[1])){
+            if(isNaN(row[1])){  //TODO[Sibley]  This doesn't actually check NaNs, it only expects one column besides time.
                 numNans++;
             }
         });
         return numNans;
-    }
+    };
     
     var verifyResultsContainNoNaNs = function(results){
         expect(countNaNsInResults(results)).toBe(0);
-    }   
+    };
     
     it('should implement the parseSosResponse function', function(){
        expect(SosResponseParser.parseSosResponse).toBeDefined();

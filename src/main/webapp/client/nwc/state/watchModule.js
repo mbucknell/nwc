@@ -110,8 +110,7 @@
                                         //the object has been augmented with a label property
                                         //by makeLabeledAjaxCall
                                         var label = ajaxResponseArgs.config.label;
-                                        var rawValues = SosResponseParser.getValuesFromSosResponse(response);
-                                        var parsedValues = SosResponseParser.parseSosResponseValues(rawValues);
+                                        var parsedValues = SosResponseParser.parseSosResponse(response);
                                         
                                         var labeledDataSeries = DataSeries.new();
                                         labeledDataSeries.metadata.seriesLabels.push(
