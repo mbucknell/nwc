@@ -8,28 +8,32 @@
                 propertyLongName: 'Area Weighted Mean Precipitation',
                 units: Units.metric.normalizedWater.daily,
                 dataset: 'HUC12_data',
-                fileName: 'HUC12_daymet.nc'
+                fileName: 'HUC12_daymet.nc',
+                downloadMetadata: "This should be a single string\nNewlines are allowed\nSo are urls http://cida.usgs.gov/nwc"
             },
             eta: {
                 observedProperty: 'MEAN_et',
                 propertyLongName: 'Area Weighted Mean Actual Evapotranspiration',
                 units: Units.metric.normalizedWater.monthly,
                 dataset: 'HUC12_data',
-                fileName: 'HUC12_eta_fixed.ncml'
+                fileName: 'HUC12_eta_fixed.ncml',
+                downloadMetadata: "This should be a single string\nNewlines are allowed\nSo are urls http://cida.usgs.gov/nwc"
             },
             countyWaterUse: {
                 observedProperty: 'PS-WFrTo,DO-WFrTo,IN-WTotl,MI-WTotl',
                 propertyLongName: 'PS-WFrTo,DO-WFrTo,IN-WTotl,MI-WTotl',
                 units: Units.imperial.totalWater.yearly,
                 dataset: 'county_data',
-                fileName: 'AWUDS.nc'
+                fileName: 'AWUDS.nc',
+                downloadMetadata: "This should be a single string\nNewlines are allowed\nSo are urls http://cida.usgs.gov/nwc"
             },
             modeledQ: {
                 observedProperty: 'MEAN_streamflow',
                 propertyLongName: 'Modeled Streamflow',
                 units: Units.imperial.streamflow.daily,
                 dataset: 'HUC12_data',
-                fileName: 'HUC12_Q.nc'
+                fileName: 'HUC12_Q.nc',
+                downloadMetadata: "This should be a single string\nNewlines are allowed\nSo are urls http://cida.usgs.gov/nwc"
             }
         };
     }]);

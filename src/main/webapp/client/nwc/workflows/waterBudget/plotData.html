@@ -66,14 +66,14 @@
         <div class="col-xs-4">
             <download-data-button filename="getHucFilename('eta')"
                                   type="'text/csv'"
-                                  data="CommonState.eta.toCSV(downloadMetadata.eta)"
+                                  data="CommonState.eta.toCSV()"
                                   title="'Download Evapotranspiration'">
             </download-data-button>
         </div>
         <div class="col-xs-4">
             <download-data-button filename="getHucFilename('dayMet')"
                                   type="'text/csv'"
-                                  data="CommonState.dayMet.toCSV(downloadMetadata.precip)"
+                                  data="CommonState.dayMet.toCSV()"
                                   title="'Download Precipitation'">
             </download-data-button>
         </div>
@@ -81,7 +81,7 @@
             <download-data-button ng-if="!hideUse()"
                                   filename="getCntyFilename('water use')"
                                   type="'text/csv'"
-                                  data="CommonState.WaterUsageDataSeries.toCSV(downloadMetadata.waterUse)"
+                                  data="CommonState.WaterUsageDataSeries.toCSV()"
                                   title="'Download Water Use'">
             </download-data-button>
         </div>
