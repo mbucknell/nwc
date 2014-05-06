@@ -90,8 +90,10 @@
     </div>
 </div>
 <div class="row col-xs-12 spacer">
-    <nav>
+    <div class="row col-xs-12" ng-hide="!hideUse()">
+        <button class="btn btn-primary" ui-sref="^.selectCounty">Plot Nearby Water Use Data <span class="glyphicon glyphicon-arrow-right"></span></button>
+    </div>
+    <nav class="spacer">
         <button class="btn" ui-sref="^.selectHuc"><span class="glyphicon glyphicon-arrow-left"></span> Back</button>
-        <button class="btn" ui-sref="^.selectCounty">Plot Nearby Water Use Data <span class="glyphicon glyphicon-arrow-right"></span></button>
     </nav>
 </div>
