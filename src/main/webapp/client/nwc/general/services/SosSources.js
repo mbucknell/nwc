@@ -9,7 +9,7 @@
                 units: Units.metric.normalizedWater.daily,
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_daymet.nc',
-                downloadMetadata: "This should be a single string\nNewlines are allowed\nSo are urls http://cida.usgs.gov/nwc"
+                downloadMetadata: "Data derived by sampling the DayMet precipitation variable to NHD+ Version II 12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal. http://daymet.ornl.gov/ http://cida.usgs.gov/gdp/ http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php"
             },
             eta: {
                 observedProperty: 'MEAN_et',
@@ -17,7 +17,7 @@
                 units: Units.metric.normalizedWater.monthly,
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_eta_fixed.ncml',
-                downloadMetadata: "This should be a single string\nNewlines are allowed\nSo are urls http://cida.usgs.gov/nwc"
+                downloadMetadata: "Data derived by sampling the SSEBop Actual Evapotranspiration dataset to NHD+ Version II 12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal. http://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly http://cida.usgs.gov/gdp/ http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php"
             },
             countyWaterUse: {
                 observedProperty: 'PS-WFrTo,DO-WFrTo,IN-WTotl,MI-WTotl',
@@ -25,7 +25,7 @@
                 units: Units.imperial.totalWater.yearly,
                 dataset: 'county_data',
                 fileName: 'AWUDS.nc',
-                downloadMetadata: "This should be a single string\nNewlines are allowed\nSo are urls http://cida.usgs.gov/nwc"
+                downloadMetadata: "Data derived from the Aggregate Water Use Dataset, Also available from NWIS Web. http://waterdata.usgs.gov/nwis/wu"
             },
             modeledQ: {
                 observedProperty: 'MEAN_streamflow',
@@ -33,7 +33,7 @@
                 units: Units.imperial.streamflow.daily,
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_Q.nc',
-                downloadMetadata: "This should be a single string\nNewlines are allowed\nSo are urls http://cida.usgs.gov/nwc"
+                downloadMetadata: "Data provided by a USGS research study that is in review. This information is preliminary and is subject to revision. It is being provided to meet the need for timely \"best science\" information. The assessment is provided on the condition that neither the U.S. Geological Survey nor the United States Government may be held liable for any damages resulting from the authorized or unauthorized use of the assessment. Documentation can be found here: http://cida.usgs.gov/nwc/ang/#/workflow/streamflow-statistics/model-info"
             }
         };
     }]);
