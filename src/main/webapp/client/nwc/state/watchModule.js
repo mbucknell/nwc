@@ -156,8 +156,8 @@
             ]);
     var countyInfoName = 'countyInfo';
     registerWatchFactory(countyInfoName,
-            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', 'Convert', 'DataSeries', 'WaterBudgetPlot', 'StoredState', '$state', '$log', 'RunningWatches',
-                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, Convert, DataSeries, WaterBudgetPlot, StoredState, $state, $log, RunningWatches) {
+            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'SosResponseParser', 'DataSeries', '$state', '$log', 'RunningWatches',
+                function ($http, CommonState, SosSources, SosUrlBuilder, SosResponseParser, DataSeries, $state, $log, RunningWatches) {
                     return {
                         propertyToWatch: countyInfoName,
                         watchFunction: function (prop, oldCountyInfo, newCountyInfo) {

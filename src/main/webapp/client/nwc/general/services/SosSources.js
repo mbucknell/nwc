@@ -21,7 +21,7 @@
             },
             countyWaterUse: {
                 observedProperty: CountyWaterUseProperties.getObservedProperties(),
-                propertyLongName: 'PS-WFrTo,DO-WFrTo,IN-WTotl,MI-WTotl',
+                propertyLongName: CountyWaterUseProperties.getPropertyLongName(),
                 units: Units.imperial.totalWater.yearly,
                 dataset: 'county_data',
                 fileName: 'AWUDS.nc'
