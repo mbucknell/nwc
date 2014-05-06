@@ -1,32 +1,35 @@
 /*global angular*/
 (function () {
-    var sosSourcesModule = angular.module('nwc.sosSources', ['nwc.waterBudgetServices']);
-    var SosSources = sosSourcesModule.service('SosSources', ['CountyWaterUseProperties',function (CountyWaterUseProperties) {
+    var sosSourcesModule = angular.module('nwc.sosSources', ['nwc.waterBudgetServices', 'nwc.conversion']);
+    var SosSources = sosSourcesModule.service('SosSources', ['CountyWaterUseProperties','Units',function (CountyWaterUseProperties,Units) {
         //TODO[Sibley]  TODO for Code Review, lets look over whether we want these configs here, or we want to
         // pull them into their workflow module.
         return {
             dayMet: {
                 observedProperty: 'MEAN_prcp',
-                units: 'mm/day',
+                propertyLongName: 'Area Weighted Mean Precipitation',
+                units: Units.metric.normalizedWater.daily,
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_daymet.nc'
             },
             eta: {
                 observedProperty: 'MEAN_et',
-                units: 'mm/day',
+                propertyLongName: 'Area Weighted Mean Actual Evapotranspiration',
+                units: Units.metric.normalizedWater.monthly,
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_eta_fixed.ncml'
             },
             countyWaterUse: {
                 observedProperty: CountyWaterUseProperties.getObservedProperties(),
-                units: 'Mgal/d',
+                propertyLongName: 'PS-WFrTo,DO-WFrTo,IN-WTotl,MI-WTotl',
+                units: Units.imperial.totalWater.yearly,
                 dataset: 'county_data',
-                fileName: 'AWUDS.nc',
-                defaultTimeIncrement: '5 years'
+                fileName: 'AWUDS.nc'
             },
             modeledQ: {
                 observedProperty: 'MEAN_streamflow',
-                units: 'ft&sup3;/s',
+                propertyLongName: 'Modeled Streamflow',
+                units: Units.imperial.streamflow.daily,
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_Q.nc'
             }

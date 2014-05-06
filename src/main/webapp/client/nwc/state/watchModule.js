@@ -116,7 +116,7 @@
                                         var labeledDataSeries = DataSeries.new();
                                         labeledDataSeries.metadata.seriesLabels.push(
                                             {
-                                                seriesName: SosSources[label].observedProperty,
+                                                seriesName: SosSources[label].propertyLongName,
                                                 seriesUnits: SosSources[label].units
                                             }
                                         );
@@ -187,7 +187,7 @@
                                     waterUseDataSeries.data = parsedTable;
 
                                     //use the series metadata as labels
-                                    var additionalSeriesLabels = SosSources.countyWaterUse.observedProperty.split(',');
+                                    var additionalSeriesLabels = SosSources.countyWaterUse.propertyLongName.split(',');
                                     additionalSeriesLabels.each(function(label) {
                                         waterUseDataSeries.metadata.seriesLabels.push({
                                             seriesName: label,
@@ -395,7 +395,7 @@
                                         modeledDataSeries.data = convertedTable;
 
                                         //use the series metadata as labels
-                                        var additionalSeriesLabels = SosSources.modeledQ.observedProperty.split(',');
+                                        var additionalSeriesLabels = SosSources.modeledQ.propertyLongName.split(',');
                                         additionalSeriesLabels.each(function(label) {
                                             modeledDataSeries.metadata.seriesLabels.push({
                                                 seriesName: label,
