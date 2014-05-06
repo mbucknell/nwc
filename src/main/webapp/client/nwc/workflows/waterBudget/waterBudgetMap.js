@@ -152,7 +152,7 @@
                                 version: '1.0.0',
                                 url: CONFIG.endpoint.geoserver + 'ows',
                                 featureType: "US_Historical_Counties",
-                                featureNS: 'http://cida.usgs.gov/nwc',
+                                featureNS: 'http://cida.usgs.gov/NWC',
                                 geometryName: 'the_geom',
                                 srsName: 'EPSG:3857'
                             })
