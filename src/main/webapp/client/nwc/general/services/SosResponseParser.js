@@ -46,18 +46,16 @@
                 }
                 
                 return result;
-            }
+            };
             
             self.parseCSVData = function(data) {
                 var result = [];
-                
                 if (data) {
                     var rows = getRowStringsFromCSV(data);
                     result = rows.map(breakRowStringsIntoColumns);
                 }
-                
                 return result;
-            }
+            };
             
             self.parseSosResponse = function (response) {
                 var result = null;
@@ -125,11 +123,9 @@
             
             var fillRow = function(fillLength, fillVal, row) {
                 var result = row.clone();
-                
                 while (result.length - numberOfDatesPerRow < fillLength) {
                     result.push(fillVal);
                 }
-                
                 return result;
             };
             
@@ -138,7 +134,6 @@
                 
                 if (rows) {
                     var cleanedRows = rows.map(cleanRow);
-                    
                     var trimmedRows = trimRows(cleanedRows);
                     
                     if (trimmedRows.length > 0) {
@@ -148,7 +143,6 @@
                     } else {
                         result = trimmedRows;
                     }
-                    
                 }
                 
                 return result;
@@ -167,7 +161,7 @@
                 result = cleaned;
                 
                 return result;
-            }
+            };
             
             /**
              * 
