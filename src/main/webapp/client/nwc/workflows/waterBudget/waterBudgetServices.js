@@ -24,7 +24,7 @@
                         }
                     });
                     result = props.join();
-                    return choppedLiver;
+                    return result;
                 },
                 getPropertyLongName : function() {
                     var result = '';
@@ -35,7 +35,7 @@
                         }
                     });
                     result = props.join();
-                    return choppedLiver;
+                    return result;
                 }
             };
     }]);

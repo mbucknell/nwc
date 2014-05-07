@@ -156,8 +156,8 @@
             ]);
     var countyInfoName = 'countyInfo';
     registerWatchFactory(countyInfoName,
-            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'SosResponseFormatter', 'DataSeries', '$state', '$log', 'RunningWatches',
-                function ($http, CommonState, SosSources, SosUrlBuilder, SosResponseFormatter, DataSeries, $state, $log, RunningWatches) {
+            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'SosResponseParser', 'DataSeries', '$state', '$log', 'RunningWatches',
+                function ($http, CommonState, SosSources, SosUrlBuilder, SosResponseParser, DataSeries, $state, $log, RunningWatches) {
                     return {
                         propertyToWatch: countyInfoName,
                         watchFunction: function (prop, oldCountyInfo, newCountyInfo) {
@@ -181,7 +181,7 @@
                                 if (!data || data.has('exception') || data.has('error')) {
                                     waterUseFailure(response);
                                 } else {
-                                    var parsedTable = SosResponseFormatter.formatSosResponse(data);
+                                    var parsedTable = SosResponseParser.parseSosResponse(data);
                                     
                                     var waterUseDataSeries = DataSeries.new();
                                     waterUseDataSeries.data = parsedTable;

@@ -23,7 +23,7 @@
             },
             countyWaterUse: {
                 observedProperty: CountyWaterUseProperties.getObservedProperties(),
-                propertyLongName: CountyWaterUseProperties.getPropertyLongName(),
+                propertyLongName: CountyWaterUseProperties.getObservedProperties(),
                 units: Units.imperial.totalWater.yearly,
                 dataset: 'county_data',
                 fileName: 'AWUDS.nc',
