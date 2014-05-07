@@ -65,8 +65,8 @@
     };
     var hucFeatureName = 'waterBudgetHucFeature';
     registerWatchFactory(hucFeatureName,
-            ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseParser', '$q', '$log', 'DataSeries', 'WaterBudgetMap', 'RunningWatches',
-                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseParser, $q, $log, DataSeries, WaterBudgetMap, RunningWatches) {
+            ['$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'DataSeriesStore', 'SosResponseFormatter', '$q', '$log', 'DataSeries', 'WaterBudgetMap', 'RunningWatches',
+                function ($http, CommonState, SosSources, SosUrlBuilder, DataSeriesStore, SosResponseFormatter, $q, $log, DataSeries, WaterBudgetMap, RunningWatches) {
                     /**
                      * @param {String} huc 12 digit identifier for the hydrologic unit
                      */
@@ -110,7 +110,7 @@
                                         //the object has been augmented with a label property
                                         //by makeLabeledAjaxCall
                                         var label = ajaxResponseArgs.config.label;
-                                        var parsedValues = SosResponseParser.parseSosResponse(response);
+                                        var parsedValues = SosResponseFormatter.formatSosResponse(response);
                                         
                                         var labeledDataSeries = DataSeries.new();
                                         labeledDataSeries.metadata.seriesLabels.push(
@@ -156,8 +156,8 @@
             ]);
     var countyInfoName = 'countyInfo';
     registerWatchFactory(countyInfoName,
-            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'SosResponseParser', 'DataSeries', '$state', '$log', 'RunningWatches',
-                function ($http, CommonState, SosSources, SosUrlBuilder, SosResponseParser, DataSeries, $state, $log, RunningWatches) {
+            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'SosResponseFormatter', 'DataSeries', '$state', '$log', 'RunningWatches',
+                function ($http, CommonState, SosSources, SosUrlBuilder, SosResponseFormatter, DataSeries, $state, $log, RunningWatches) {
                     return {
                         propertyToWatch: countyInfoName,
                         watchFunction: function (prop, oldCountyInfo, newCountyInfo) {
@@ -181,7 +181,7 @@
                                 if (!data || data.has('exception') || data.has('error')) {
                                     waterUseFailure(response);
                                 } else {
-                                    var parsedTable = SosResponseParser.parseSosResponse(data);
+                                    var parsedTable = SosResponseFormatter.formatSosResponse(data);
                                     
                                     var waterUseDataSeries = DataSeries.new();
                                     waterUseDataSeries.data = parsedTable;
@@ -354,8 +354,8 @@
     
     var modeledQName = "readyForModeledQ";
     registerWatchFactory(modeledQName,
-                        ['$http', '$log', '$rootScope', '$state', 'CommonState', 'StoredState', 'RunningWatches', 'SosUrlBuilder', 'SosSources', 'SosResponseParser', 'DataSeries',
-                function ($http, $log, $rootScope, $state, CommonState, StoredState, RunningWatches, SosUrlBuilder, SosSources, SosResponseParser, DataSeries) {
+                        ['$http', '$log', '$rootScope', '$state', 'CommonState', 'StoredState', 'RunningWatches', 'SosUrlBuilder', 'SosSources', 'SosResponseFormatter', 'DataSeries',
+                function ($http, $log, $rootScope, $state, CommonState, StoredState, RunningWatches, SosUrlBuilder, SosSources, SosResponseFormatter, DataSeries) {
                     return {
                         propertyToWatch: 'readyForModeledQ',
                         watchFunction: function (prop, oldValue, readyForModeledQ) {
@@ -381,7 +381,7 @@
                                     if (!data || data.has('exception') || data.has('error')) {
                                         modeledFailure(response);
                                     } else {
-                                        var parsedTable = SosResponseParser.parseSosResponse(data);
+                                        var parsedTable = SosResponseFormatter.formatSosResponse(data);
                                         var convertedTable = parsedTable.map(function(row) {
                                             return row.map(function(column, index){
                                                 var val = column;

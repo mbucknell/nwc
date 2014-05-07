@@ -2,7 +2,7 @@
 /*global $*/
 (function () {
     var sosResponseParserModule = angular.module('nwc.sosResponseParser', []);
-    sosResponseParserModule.service('RealSosResponseParser', [function() {
+    sosResponseParserModule.service('SosResponseParser', [function() {
             var self = this;
 
             //parses an individual token
@@ -11,7 +11,7 @@
                 return value;
             };
 
-            var handleRow = function (row) {
+            var breakRowStringsIntoColumns = function (row) {
                 var result = null;
                 var tokens = row.split(',');
 
@@ -27,12 +27,6 @@
                 return result;
             };
 
-            var parseSosResponseValues = function (valuesTxt) {
-                valuesTxt = valuesTxt.trim();//kill terminal space and newline (' \n')
-                var rows = valuesTxt.split(/\s+/);
-                return rows;
-            };
-
             var getValuesFromSosResponse = function (response) {
                 var valuesTxt = $(response).find('swe\\:values').text();
                 if (0 === valuesTxt.length) {
@@ -40,26 +34,46 @@
                 }
                 return valuesTxt;
             };
-
+            
+            var getRowStringsFromCSV = function(data) {
+                var result = [];
+                
+                if (data) {
+                    var trimmedData = data.trim();//kill terminal space and newline (' \n')
+                    if (trimmedData) {
+                        result = trimmedData.split(/\s+/);
+                    }
+                }
+                
+                return result;
+            }
+            
+            self.parseCSVData = function(data) {
+                var result = [];
+                
+                if (data) {
+                    var rows = getRowStringsFromCSV(data);
+                    result = rows.map(breakRowStringsIntoColumns);
+                }
+                
+                return result;
+            }
+            
             self.parseSosResponse = function (response) {
                 var result = null;
                 if (response) {
                     var innerData = getValuesFromSosResponse(response);
-                    var rows = parseSosResponseValues(innerData);
-
-                    result = rows.map(handleRow);
+                    result = self.parseCSVData(innerData);
                 }
                 return result;
             };
 
             self.methodsForTesting = {
                 parseToken : parseToken,
-                handleRow : handleRow,
-                parseSosResponseValues : parseSosResponseValues,
-                getValuesFromSosResponse : getValuesFromSosResponse
+                breakRowStringsIntoColumns : breakRowStringsIntoColumns
             };
     }]);
-    sosResponseParserModule.service('SosResponseCleaner', ['RealSosResponseParser', function(RealSosResponseParser){
+    sosResponseParserModule.service('SosResponseCleaner', [function(){
             var self = this;
             
             var emptyValues = [9.96921e+36, -999];//these values will be considered NaN's
@@ -69,7 +83,7 @@
                 var result = row;
                 
                 if (row) {
-                    var date = row.slice(0, numberOfDatesPerRow);
+                    var dates = row.slice(0, numberOfDatesPerRow);
                     var values = row.slice(numberOfDatesPerRow);
                     var reducedVals = values.reduce(function(prev, value) {
                         var next = prev;
@@ -84,9 +98,9 @@
                     }, []);
                     
                     if (reducedVals) {
-                        result = date.concat(reducedVals);
+                        result = dates.concat(reducedVals);
                     } else {
-                        result = date;
+                        result = dates;
                     }
                 }
                 
@@ -119,7 +133,7 @@
                 return result;
             };
             
-            var cleanRows = function(rows) {
+            self.cleanRows = function(rows) {
                 var result = rows;
                 
                 if (rows) {
@@ -140,31 +154,35 @@
                 return result;
             };
             
-            self.parseAndCleanSosResponse = function(response) {
+    }]);
+    sosResponseParserModule.service('SosResponseFormatter', ['SosResponseParser', 'SosResponseCleaner', function(SosResponseParser, SosResponseCleaner){
+            var self = this;
+            
+            self.formatCSVData = function(data) {
                 var result = null;
-                var rows = RealSosResponseParser.parseSosResponse(response);
                 
-                if (rows) {
-                    result = cleanRows(rows);
-                }
+                var rows = SosResponseParser.parseCSVData(data);
+                var cleaned = SosResponseCleaner.cleanRows(rows);
+                
+                result = cleaned;
                 
                 return result;
-            };
+            }
             
-            self.methodsForTesting = {
-                cleanRow : cleanRow,
-                cleanRows : cleanRows
-            };
-    }]);
-    sosResponseParserModule.service('SosResponseParser', ['SosResponseCleaner', function(SosResponseCleaner){
-            var self = this;
             /**
              * 
              * @param {XMLHttpResponse} response Sos GetObservation ajax response
              * @returns {Array} a table of native data type results
              */
-            self.parseSosResponse = function (response) {
-                return SosResponseCleaner.parseAndCleanSosResponse(response);
+            self.formatSosResponse = function (response) {
+                var result = null;
+                
+                var rows = SosResponseParser.parseSosResponse(response);
+                var cleaned = SosResponseCleaner.cleanRows(rows);
+                
+                result = cleaned;
+                
+                return result;
             };
         }]);
 }());

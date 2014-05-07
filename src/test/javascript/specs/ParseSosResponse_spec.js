@@ -1,16 +1,14 @@
 describe('SosResponseParser', function(){
     var $injector = angular.injector(['nwc.sosResponseParser']);
-    var SosResponseParser = $injector.get('RealSosResponseParser');
+    var SosResponseFormatter = $injector.get('SosResponseFormatter');
+    var SosResponseParser = $injector.get('SosResponseParser');
     var SosResponseCleaner = $injector.get('SosResponseCleaner');
     //testing constants:
     var numLeadingNans = 3;//update this if you change the test data
     
     //wrapper for tested function
     var parse = function(data){
-        var rows = SosResponseParser.methodsForTesting.parseSosResponseValues(data);
-        var handled = rows.map(SosResponseParser.methodsForTesting.handleRow);
-        var cleaned = SosResponseCleaner.methodsForTesting.cleanRows(handled);
-        return cleaned;
+        return SosResponseFormatter.formatCSVData(data);
     };
     var countPureNaNRows = function(results){
         return results.filter(isPureNanRow).length;
@@ -34,8 +32,8 @@ describe('SosResponseParser', function(){
         expect(countNaNsInResults(results)).toBe(0);
     };
     
-    it('should implement the parseSosResponse function', function(){
-       expect(SosResponseParser.parseSosResponse).toBeDefined();
+    it('should implement the formatSosResponse function', function(){
+       expect(SosResponseFormatter.formatSosResponse).toBeDefined();
     });
     
     it('should not insert NaNs into the result when the incoming data has no NaNs', function(){
