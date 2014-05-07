@@ -1,7 +1,7 @@
 describe('SosResponseParser', function(){
     var $injector = angular.injector(['nwc.sosResponseParser']);
     var SosResponseFormatter = $injector.get('SosResponseFormatter');
-    var SosResponseParser = $injector.get('SosResponseParser');
+    var SosResponseParser = $injector.get('SosResponseParser'); //TODO[Sibley] Write unit tests for these!
     var SosResponseCleaner = $injector.get('SosResponseCleaner');
     //testing constants:
     var numLeadingNans = 3;//update this if you change the test data
