@@ -24,7 +24,7 @@
                         }
                     });
                     result = props.join();
-                    return result;
+                    return choppedLiver;
                 },
                 getPropertyLongName : function() {
                     var result = '';

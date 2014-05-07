@@ -8,7 +8,7 @@ describe('SosResponseParser', function(){
     //wrapper for tested function
     var parse = function(data){
         var rows = SosResponseParser.methodsForTesting.parseSosResponseValues(data);
-        var handled = rows.map(SosResponseParser.methodsForTesting.handleRows);
+        var handled = rows.map(SosResponseParser.methodsForTesting.handleRow);
         var cleaned = SosResponseCleaner.methodsForTesting.cleanRows(handled);
         return cleaned;
     };
