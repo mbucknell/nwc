@@ -37,7 +37,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             var legendDivSelector = '#waterBudgetLegend';
             StoredState.plotNormalization = StoredState.plotNormalization || 'totalWater';
             StoredState.plotTimeDensity  = StoredState.plotTimeDensity || 'daily';
-            StoredState.measurementSystem = StoredState.measurementSystem || 'imperial';
+            StoredState.measurementSystem = StoredState.measurementSystem || 'usCustomary';
             $scope.$watch('StoredState.plotNormalization', function(newValue, oldValue){
                 if(newValue !== oldValue) {
                     chartWaterUse();

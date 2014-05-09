@@ -6,7 +6,7 @@
             var plotDivSelector = '#modeledQPlot';
             var legendDivSelector = '#modeledQLegend';
             var plotTimeDensity  = 'daily';
-            var measurementSystem = 'imperial';
+            var measurementSystem = 'usCustomary';
 
             /**
              * {String} category the category of data to plot (daily or monthly)
