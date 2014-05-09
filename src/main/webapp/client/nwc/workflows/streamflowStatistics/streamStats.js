@@ -93,16 +93,17 @@
                     var siteIdsString = siteIdsToString(hucIds);
                     var startDateString = dateToString(startDate);
                     var endDateString = dateToString(endDate);
-
+                    
+                    // need to add the http: back in
                     var doc = wps.createWpsExecuteRequestDocument('org.n52.wps.server.r.stats_huc12_modeled',
                                     {
                                         'sites': siteIdsString,
                                         'startdate': startDateString,
                                         'enddate': endDateString,
                                         'stats': statTypesString,
-                                        'sos': CONFIG.endpoint.thredds + 'HUC12_data/HUC12_Q.nc',
+                                        'sos': "http:" + CONFIG.endpoint.thredds + 'HUC12_data/HUC12_Q.nc',
                                         'observedProperty': 'MEAN_streamflow',
-                                        'wfsUrl': CONFIG.endpoint.geoserver + 'NWC/ows',
+                                        'wfsUrl': "http:" + CONFIG.endpoint.geoserver + 'NWC/ows',
                                         'wfsTypename': 'NWC:huc12_SE_Basins_v2',
                                         'wfsFilterProperty': 'NWC:HUC12',
                                         'wfsAreaPropertyname': 'NWC:mi2'

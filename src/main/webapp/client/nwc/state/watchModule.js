@@ -1,4 +1,4 @@
-/*global angular*/
+/*global angular,CONFIG*/
 (function () {
     var watchModule = angular.module('nwc.watch', [
         'nwc.util',
@@ -210,7 +210,7 @@
                     };
                 }
             ]);
-    var nwisBaseUrl = 'http://waterservices.usgs.gov/nwis/site/?';
+    var nwisBaseUrl = CONFIG.endpoint.nwis;
     var getNwisQueryParams = function () {
         return {
             'format': 'rdb',
