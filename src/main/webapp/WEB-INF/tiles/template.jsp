@@ -27,12 +27,13 @@
                         CONFIG.endpoint.geoserver = '<%= props.getProperty("nwc.endpoint.geoserver", "http://cida-eros-wsdev.er.usgs.gov:8081/geoserver/")%>';
                         CONFIG.endpoint.thredds = '<%= props.getProperty("nwc.endpoint.thredds", "http://cida-eros-wsdev.er.usgs.gov:8081/thredds/sos/watersmart/")%>';
                         CONFIG.endpoint.wps = '<%= props.getProperty("nwc.endpoint.wps", "http://cida-eros-wsdev.er.usgs.gov:8081/wps")%>';
+                        CONFIG.endpoint.nwis = '<%= props.getProperty("nwc.enpoint.nwis", "http://waterservices.usgs.gov/nwis/site/?")%>';
                         
                         // Swap out the protocol for use within javascript
                         CONFIG.endpoint.geoserver = CONFIG.endpoint.geoserver.substr(CONFIG.endpoint.geoserver.indexOf("/"));
                         CONFIG.endpoint.thredds = CONFIG.endpoint.thredds.substr(CONFIG.endpoint.thredds.indexOf("/"));
                         CONFIG.endpoint.wps = CONFIG.endpoint.wps.substr(CONFIG.endpoint.wps.indexOf("/"));
-                        
+                        CONFIG.endpoint.nwis = CONFIG.endpoint.nwis.substr(CONFIG.endpoint.nwis.indexOf("/"));
                     }());
                 </script>
                         
