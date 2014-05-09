@@ -28,6 +28,11 @@
                         CONFIG.endpoint.thredds = '<%= props.getProperty("nwc.endpoint.thredds", "http://cida-eros-wsdev.er.usgs.gov:8081/thredds/sos/watersmart/")%>';
                         CONFIG.endpoint.wps = '<%= props.getProperty("nwc.endpoint.wps", "http://cida-eros-wsdev.er.usgs.gov:8081/wps")%>';
                         
+                        // Swap out the protocol for use within javascript
+                        CONFIG.endpoint.geoserver = CONFIG.endpoint.geoserver.substr(CONFIG.endpoint.geoserver.indexOf("/"));
+                        CONFIG.endpoint.thredds = CONFIG.endpoint.thredds.substr(CONFIG.endpoint.thredds.indexOf("/"));
+                        CONFIG.endpoint.wps = CONFIG.endpoint.wps.substr(CONFIG.endpoint.wps.indexOf("/"));
+                        
                     }());
                 </script>
                         
