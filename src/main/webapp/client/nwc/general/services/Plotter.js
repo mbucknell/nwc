@@ -12,7 +12,7 @@
      * @param {array<array>} values - the values to plot
      * @param {array<string>} labels - the labels for the series
      */
-    var setPlot = function (graphEltSelector, legendEltSelector, values, labels, ylabel) {
+    var setPlot = function (graphEltSelector, legendEltSelector, values, labels, ylabel, title) {
         privateGraphEltSelector = graphEltSelector;
         privateLegendEltSelector = legendEltSelector;
         $([graphEltSelector, legendEltSelector]).addClass('generous_left_margin');
@@ -27,6 +27,7 @@
             return Date.create(ms).utc().format('{Mon}.');
         };
         var opts = {
+            title: title,
             labels: labels,
             connectSeparatedPoints: true,
             showRangeSelector: true,
