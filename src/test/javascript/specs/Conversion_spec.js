@@ -25,6 +25,23 @@ describe('Convert', function() {
             expect(actual).toBeCloseTo(expected, decimalPlaces);
         });
     });
+    describe('acresToSquareKilometers', function() {
+        it('should be there', function() {
+            expect(Convert.acresToSquareKilometers).toBeDefined();
+        });
+        it('should convert units correctly', function() {
+            var expected = 0.5;
+            var actual = Convert.acresToSquareKilometers(incomingValue);
+            expect(actual).toBeCloseTo(expected, decimalPlaces);
+        });
+    });
+    describe('squareMilesToSquareKilometers', function() {
+        it('should convert units correctly', function() {
+            var expected = 2000;
+            var actual = Convert.acresToSquareKilometers(Convert.squareMilesToAcres(772.2));
+            expect(actual).toBeCloseTo(expected, 1);
+        });
+    });
     describe('mmToInches', function() {
         it('should be there', function() {
             expect(Convert.mmToInches).toBeDefined();
