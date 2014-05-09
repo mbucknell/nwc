@@ -111,12 +111,12 @@
                 },
                 totalWater: {
                     unit: {
-                        short: "mgd",
-                        long: "millions of gallons per day"
+                        short: "million gallons per day",
+                        long: "million of gallons per day"
                     },
-                    daily: "mgd",
-                    monthly: "mgd",
-                    yearly: "mgd",
+                    daily: "million gallons per day",
+                    monthly: "million gallons per day",
+                    yearly: "million gallons per day",
                     conversionFromBase: Convert.noop
                 },
                 streamflow: {
