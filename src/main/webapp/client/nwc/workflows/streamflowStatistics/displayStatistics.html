@@ -4,13 +4,16 @@
 <site-stats ng-hide="!StoredState.gage" info="selectionInfo"></site-stats>
 <huc-stats ng-hide="!StoredState.streamFlowStatHucFeature" info="selectionInfo"></huc-stats>
 
-<div ng-show="CommonState.ModeledHucDataSeries" class="row">
+<div ng-hide="!StoredState.streamFlowStatHucFeature" class="row col-xs-12 text-center">
+        <button type="button" class="btn btn-success" ng-model="CommonState.showStreamflowPlot" btn-checkbox>Streamflow Data Plot</button>
+</div>
+<div ng-show="CommonState.ModeledHucDataSeries && CommonState.showStreamflowPlot" class="row col-xs-12">
     <plot-data></plot-data>
 </div>
 
 <h4 ng-hide="CommonState.streamflowStatistics.length">Calculating Statistics <i class="fa fa-spinner fa-spin"></i></h4>
 
-<div ng-hide="CommonState.streamflowStatistics.length === 0" class="table-responsive">
+<div ng-hide="CommonState.streamflowStatistics.length === 0" class="row col-xs-12 table-responsive">
         <a ng-href="{{CommonState.streamflowStatisticsUrl}}">Download These Statistics</a>
 	<table class="table table-striped huc_table">
             <thead>
