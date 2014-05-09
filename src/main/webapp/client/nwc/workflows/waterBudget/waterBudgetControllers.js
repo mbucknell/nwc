@@ -141,9 +141,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             
             $scope.getCombinedWaterUse = function(dataSeries) {
                 var result = Object.clone(dataSeries);
-                
                 result.data = WaterUsageChart.combineData(result.data);
-                
                 return result;
             };
             
