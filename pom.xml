@@ -216,7 +216,7 @@
                 </executions>
                 <configuration>
                     <version>1.9.2</version>
-					<baseUrl>http://internal.cida.usgs.gov/~dmsibley/</baseUrl>
+                    <baseUrl>http://internal.cida.usgs.gov/~dmsibley/</baseUrl>
                 </configuration>
             </plugin>
             <plugin>
