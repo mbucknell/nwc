@@ -1,12 +1,72 @@
 /*global angular*/
 (function() {
     var waterUsageChart = angular.module('nwc.waterUsageChart', ['nwc.waterBudgetServices']);
+    var numberOfDatesPerRow = 1; //TODO[Sibley] Copy paste from SosResponseParser, figure out a better place for this
 
-    waterUsageChart.factory('WaterUsageChart', [
-        function() {
+    waterUsageChart.factory('WaterUsageChart', ['CountyWaterUseProperties',
+        function(CountyWaterUseProperties) {
+            var splitRow = function(row) {
+                var result = null;
+                if (row) {
+                    result = {
+                        dates : row.slice(0, numberOfDatesPerRow),
+                        values : row.slice(numberOfDatesPerRow)
+                    };
+                }
+                return result;
+            };
+            
+            var combineDataRow = function(row, inLabels, outLabels, lookup) {
+                var result = null;
+                var segregatedValueHolder = outLabels.reduce(function(prev, curr) {
+                    prev[curr] = [];
+                    return prev;
+                }, {});
+                
+                row.forEach(function(el, index) {
+                   segregatedValueHolder[lookup[inLabels[index]]].push(el); 
+                });
+                
+                result = outLabels.map(function(outLabel) {
+                    return segregatedValueHolder[outLabel].reduce(function(a, b) {
+                        var c = a;
+                        if (b || 0 === b) {
+                            if (a || 0 === a) {
+                                c = a + b;
+                            } else {
+                                c = b;
+                            }
+                        }
+                        return c;
+                    }, null);
+                });
+                
+                return result;
+            };
+            
+            var combineData = function(rows) {
+                var result = [];
+                
+                if (rows) {
+                    var splitRows = rows.map(function(row) {
+                        return splitRow(row);
+                    });
+                    
+                    var inLabels = CountyWaterUseProperties.getObservedProperties();
+                    var outLabels = CountyWaterUseProperties.getPropertyLongNames();
+                    var lookup = CountyWaterUseProperties.propertyLongNameLookup();
+                    
+                    result = splitRows.map(function(row) {
+                        return row.dates.concat(combineDataRow(row.values, inLabels, outLabels, lookup));
+                    });
+                }
+                
+                return result;
+            };
+            
             var privateChart = {};
-            var setChart = function(chartEltSelector, values, labels, ylabel) {
-                if (!values || !values.length) {
+            var setChart = function(chartEltSelector, inputData, labels, ylabel) {
+                if (!inputData || !inputData.length) {
                     if (privateChart.shutdown) {
                         privateChart.shutdown()
                     }
@@ -18,16 +78,18 @@
 
                 var stack = true,
                     bars = true;
-
+                
+                var combinedData = combineData(inputData);
+                
                 //convert all x values from String to Date
-                values = values.map(function(row) {
+                combinedData = combinedData.map(function(row) {
                     row[dateIndex] = Date.create(row[dateIndex]).utc();
                     return row;
                 });
                 //now transform from the parameterized row-oriented parallel array to flotchart's column-oriented array
                 var data = [];
                 //first check row length
-                var dataRowLength = values[0].length - 1;//ignore date column
+                var dataRowLength = combinedData[0].length - numberOfDatesPerRow;
 
                 if (dataRowLength !== labels.length) {
                     var errMsg = 'Water Usage labels and data differ in length';
@@ -39,7 +101,7 @@
                     var column = {label: label};
                     //date column offesets index calculation by one
                     var valueIndex = labelIndex + 1;
-                    column.data = values.map(function(row) {
+                    column.data = combinedData.map(function(row) {
                         var newRow = null;
 
                         if (row[valueIndex] || 0 === row[valueIndex]) {
@@ -126,6 +188,9 @@
             };
 
             return {
+                splitRow : splitRow,
+                combineDataRow : combineDataRow,
+                combineData : combineData,
                 setChart: setChart,
                 getChart: function() {
                     return privateChart;

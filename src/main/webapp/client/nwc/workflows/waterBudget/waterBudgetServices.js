@@ -13,30 +13,40 @@
                 'Mining' : ["MI-WGWFr", "MI-WGWSa", "MI-WSWFr", "MI-WSWSa"]
             });
             
-            var choppedLiver = 'PS-WFrTo,DO-WFrTo,IN-WTotl,MI-WTotl';
+            var choppedLiver = ['PS-WFrTo','DO-WFrTo','IN-WTotl','MI-WTotl'];
             return {
-                getObservedProperties : function() {
-                    var result = '';
-                    var props = [];
+                getObservedProperties : (function() {
+                    var result = [];
                     groupings.values(function(el) {
                         if (el) {
-                            props.add(el);
+                            result.add(el);
                         }
                     });
-                    result = props.join();
                     return result;
-                },
-                getPropertyLongName : function() {
-                    var result = '';
-                    var props = [];
+                }).once(),
+                getPropertyLongNames : (function() {
+                    var result = [];
                     groupings.keys(function(key) {
                         if (key) {
-                            props.add(key)
+                            result.add(key)
                         }
                     });
-                    result = props.join();
                     return result;
-                }
+                }).once(),
+                observedPropertiesLookup : (function() {
+                    return groupings.clone(true);
+                }).once(),
+                propertyLongNameLookup : (function() {
+                    var result = {};
+                    
+                    groupings.keys(function(longName, properties) {
+                        properties.each(function(property) {
+                            result[property] = longName;
+                        })
+                    });
+                    
+                    return result;
+                }).once()
             };
     }]);
 })();
