@@ -16,6 +16,10 @@
                 return result;
             };
             
+            var isSomeData = function(val) {
+                return (val || 0 === val);
+            };
+            
             var combineDataRow = function(row, inLabels, outLabels, lookup) {
                 var result = null;
                 var segregatedValueHolder = outLabels.reduce(function(prev, curr) {
@@ -28,16 +32,16 @@
                 });
                 
                 result = outLabels.map(function(outLabel) {
-                    return segregatedValueHolder[outLabel].reduce(function(a, b) {
-                        var c = a;
-                        if (b || 0 === b) {
-                            if (a || 0 === a) {
-                                c = a + b;
+                    return segregatedValueHolder[outLabel].reduce(function(runningTotal, nextValue) {
+                        var result = runningTotal;
+                        if (isSomeData(nextValue)) {
+                            if (isSomeData(runningTotal)) {
+                                result = runningTotal + nextValue;
                             } else {
-                                c = b;
+                                result = nextValue;
                             }
                         }
-                        return c;
+                        return result;
                     }, null);
                 });
                 
