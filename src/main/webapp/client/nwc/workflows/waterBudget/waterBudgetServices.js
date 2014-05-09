@@ -13,7 +13,6 @@
                 'Mining' : ["MI-WGWFr", "MI-WGWSa", "MI-WSWFr", "MI-WSWSa"]
             });
             
-            var choppedLiver = ['PS-WFrTo','DO-WFrTo','IN-WTotl','MI-WTotl'];
             return {
                 getObservedProperties : (function() {
                     var result = [];
