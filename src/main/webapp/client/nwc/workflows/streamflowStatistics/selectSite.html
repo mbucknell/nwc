@@ -4,7 +4,7 @@
         <button type="button" class="btn btn-primary" ng-model="StoredState.interestType" btn-radio="'observed'">Observed</button>
         <button type="button" class="btn btn-primary" ng-model="StoredState.interestType" btn-radio="'modeled'">Modeled</button>
     </div>
-    <span ng-bind-html="CommonState.interestTypeDescription.description"></span>
+    <span ng-bind-html="CommonState.interestTypeDescription.description" ng-show="observedSelected()"></span>
 </div>
 
 <div class="row spacer col-xs-12">

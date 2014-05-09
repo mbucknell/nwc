@@ -98,7 +98,7 @@
                     conversionFromBase: Convert.noop
                 }
             },
-            imperial: {
+            usCustomary: {
                 normalizedWater: {
                     unit: {
                         short: "in",

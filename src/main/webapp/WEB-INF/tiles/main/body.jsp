@@ -5,6 +5,9 @@
 <%@include file="/WEB-INF/base.jsp"%>
 
 <div id="main_page" class="page_body_content">
+    <div class="row betatext well col-xs-12">
+        Notice: This web page is in a beta state. It should be considered provisional and subject to change. If you find any issues or have suggestions, please contact <a href="mailto:dblodgett@usgs.gov?Subject=NWC Portal">dblodgett@usgs.gov</a>. This web page is most compatible with the Chrome and Firefox browsers. Internet Explorer 9 through 11 will be supported soon.
+    </div>
 	<div id="full_dashboard" class="row dashboard navigation_toggle_a">
 		<div id="dashboard_nav" class="dashboard_nav col-xs-12 col-md-3">
             <div class="panel panel-default navigation_panel">

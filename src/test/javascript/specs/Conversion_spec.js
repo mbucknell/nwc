@@ -72,9 +72,9 @@ describe('Units', function() {
     var Units = $injector.get('Units');
     
     describe('measurementSystem', function() {
-        it('should have metric and imperial', function() {
+        it('should have metric and us customary', function() {
             expect(Units.metric).toBeDefined();
-            expect(Units.imperial).toBeDefined();
+            expect(Units.usCustomary).toBeDefined();
         });
     });
     

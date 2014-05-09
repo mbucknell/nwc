@@ -57,6 +57,7 @@
 <script type="text/javascript" src="../client/nwc/workflows/aquaticBiology/aquaticBiologyMap.js"></script>
 <script type="text/javascript" src="../client/nwc/workflows/streamflowStatistics/streamflowMap.js"></script>
 <script type="text/javascript" src="../client/nwc/general/services/Conversion.js"></script>
+<script type="text/javascript" src="../client/nwc/workflows/waterBudget/waterBudgetServices.js"></script>
 <script type="text/javascript" src="../client/nwc/workflows/waterBudget/waterUsageChart.js"></script>
 <script type="text/javascript" src="../client/nwc/workflows/streamflowStatistics/streamStats.js"></script>
 <script type="text/javascript" src="../client/nwc/workflows/streamflowStatistics/streamflowDictionary.js"></script>

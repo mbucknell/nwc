@@ -147,18 +147,18 @@
                     <filters>
                         <filter>pom.xml</filter>
                     </filters>
-                    <webResources>                       
+                    <webResources>
                         <resource>
-                            <directory>src/main/webapp/WEB-INF/tiles/common</directory> no trailing slash 
-                            <targetPath>WEB-INF/tiles/common</targetPath> no trailing slash  
+                            <directory>src/main/webapp/WEB-INF/tiles/common</directory>
+                            <targetPath>WEB-INF/tiles/common</targetPath>
                             <filtering>true</filtering>
                             <includes>
                                 <include>USGSHead.jsp</include>
                             </includes>
                         </resource>
                         <resource>
-                            <directory>src/main/webapp/client/nwc/general</directory> no trailing slash 
-                            <targetPath>client/nwc/general</targetPath> no trailing slash 
+                            <directory>src/main/webapp/client/nwc/general</directory> 
+                            <targetPath>client/nwc/general</targetPath>
                             <filtering>true</filtering>
                             <includes>
                                 <include>clientRoot.jsp</include>
@@ -319,7 +319,7 @@
         <dependency>
             <groupId>gov.usgs.cida</groupId>
             <artifactId>dynamicProperties</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>gov.usgs.cida.jslibs</groupId>
