@@ -3,7 +3,7 @@
 
     <groupId>gov.usgs.cida.nwc</groupId>
     <artifactId>nwc</artifactId>
-    <version>0.0.15</version>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>NWCUI</name>
