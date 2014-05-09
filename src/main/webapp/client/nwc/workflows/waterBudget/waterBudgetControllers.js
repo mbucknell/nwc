@@ -107,6 +107,10 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 return (!CommonState.WaterUsageDataSeries) || !(CommonState.WaterUsageDataSeries.data) || !(CommonState.WaterUsageDataSeries.data.length);
             };
             
+            $scope.hideNormalizationWarning = function() {
+                return (StoredState.plotNormalization !== 'normalizedWater')
+            }
+            
             var buildName = function(selectionName, selectionId, series) {
                 var filename = selectionName;
                 filename += '_' + selectionId;
