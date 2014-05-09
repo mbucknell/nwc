@@ -53,11 +53,11 @@ describe('DataSeriesStore', function(){
     var dateIndex = DataSeriesStore.getIndexOfColumnNamed('date');
 
     beforeEach(function (){
-        dss = dss;
+        dss = dss;  //TODO[Sibley] Weird Assignment. Why are we doing this?
         nameToSeriesMap=nameToSeriesMap;
         dateRangeStart = dateRangeStart;
         dateRangeEnd = dateRangeEnd;
-    });    
+    });
     describe('DataSeriesStore.updateMonthlyHucSeries', function(){
         it('should include the correct number of months', function(){
             expect(dss.monthly.data.length).toBe(monthsInDateRange);

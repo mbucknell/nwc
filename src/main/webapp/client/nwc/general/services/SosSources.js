@@ -1,7 +1,7 @@
 /*global angular*/
 (function () {
     var sosSourcesModule = angular.module('nwc.sosSources', ['nwc.waterBudgetServices', 'nwc.conversion']);
-    var SosSources = sosSourcesModule.service('SosSources', ['CountyWaterUseProperties','Units',function (CountyWaterUseProperties,Units) {
+    sosSourcesModule.service('SosSources', ['CountyWaterUseProperties','Units',function (CountyWaterUseProperties,Units) {
         //TODO[Sibley]  TODO for Code Review, lets look over whether we want these configs here, or we want to
         // pull them into their workflow module.
         return {
@@ -22,8 +22,8 @@
                 downloadMetadata: "Data derived by sampling the SSEBop Actual Evapotranspiration dataset to NHD+\nVersion II 12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly\nhttp://cida.usgs.gov/gdp/ http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php"
             },
             countyWaterUse: {
-                observedProperty: CountyWaterUseProperties.getObservedProperties(),
-                propertyLongName: CountyWaterUseProperties.getObservedProperties(),
+                observedProperty: CountyWaterUseProperties.getObservedProperties().join(),
+                propertyLongName: CountyWaterUseProperties.getPropertyLongNames().join(),
                 units: Units.usCustomary.totalWater.yearly,
                 dataset: 'county_data',
                 fileName: 'AWUDS.nc',
