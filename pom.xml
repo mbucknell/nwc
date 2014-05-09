@@ -150,7 +150,7 @@
                     <webResources>
                         <resource>
                             <directory>src/main/webapp/WEB-INF/tiles/common</directory>
-		        <targetPath>WEB-INF/tiles/common</targetPath>
+                            <targetPath>WEB-INF/tiles/common</targetPath>
                             <filtering>true</filtering>
                             <includes>
                                 <include>USGSHead.jsp</include>
