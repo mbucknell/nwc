@@ -139,6 +139,14 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 return filename;
             };
             
+            $scope.getCombinedWaterUse = function(dataSeries) {
+                var result = Object.clone(dataSeries);
+                
+                result.data = WaterUsageChart.combineData(result.data);
+                
+                return result;
+            };
+            
             $scope.CommonState = CommonState;
             $scope.StoredState = StoredState;
         })

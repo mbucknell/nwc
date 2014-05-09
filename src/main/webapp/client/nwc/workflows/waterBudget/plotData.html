@@ -83,7 +83,7 @@
             <download-data-button ng-if="!hideUse()"
                                   filename="getCntyFilename('water use')"
                                   type="'text/csv'"
-                                  data="CommonState.WaterUsageDataSeries.toCSV()"
+                                  data="getCombinedWaterUse(CommonState.WaterUsageDataSeries).toCSV()"
                                   title="'Download Water Use'">
             </download-data-button>
         </div>
