@@ -1,8 +1,8 @@
 /*global angular,OpenLayers,CONFIG*/
 (function () {
-    var streamflowMap = angular.module('nwc.map.streamflow', ['nwc.util']);
-    streamflowMap.factory('StreamflowMap', ['StoredState', 'CommonState', '$state', 'BaseMap', '$log', 'util',
-        function (StoredState, CommonState, $state, BaseMap, $log, util) {
+    var streamflowMap = angular.module('nwc.map.streamflow', ['nwc.util', 'nwc.conversion']);
+    streamflowMap.factory('StreamflowMap', ['StoredState', 'CommonState', '$state', 'BaseMap', '$log', 'util', 'Convert',
+        function (StoredState, CommonState, $state, BaseMap, $log, util, Convert) {
             var map;
             
             var initMap = function () {
@@ -123,7 +123,13 @@
                         var statisticsParameters = StoredState.siteStatisticsParameters;
                         statisticsParameters.startDate = Date.create(minStatDate).utc();
                         statisticsParameters.endDate = Date.create(maxStatDate).utc();
-                        $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
+                        var km2 = Convert.acresToSquareKilometers(
+                                Convert.squareMilesToAcres(StoredState.streamFlowStatHucFeature.data.mi2));
+                        if (km2 > 2000) {
+                            alert("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km^2), please choose a smaller watershed.");
+                        } else {
+                            $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
+                        }
                     }
                 };
                 hucsGetFeatureInfoControl.events.register("getfeatureinfo", {}, featureInfoHandler);

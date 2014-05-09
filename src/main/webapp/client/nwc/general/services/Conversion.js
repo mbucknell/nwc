@@ -22,6 +22,12 @@
         return squareMiles * squareMilesToAcresConversionFactor;
     };
     
+    // conversion from google
+    var acresToSquareKilometersConversionFactor = 0.00404686;
+    var acresToSquareKilometers = function(acres) {
+        return acres * acresToSquareKilometersConversionFactor;
+    };
+    
     //conversion factor per http://en.wikipedia.org/wiki/Inch#Equivalence_to_other_units_of_length
     var mmToInchesConversionFactor = 0.03937;
     var mmToInches = function (millimeters) {
@@ -56,6 +62,7 @@
             return {
                 mgdToMmAcresPerDay: mgdToMmAcresPerDay,
                 squareMilesToAcres: squareMilesToAcres,
+                acresToSquareKilometers: acresToSquareKilometers,
                 mmToInches: mmToInches,
                 mgdToMillionCubicMetersPerYear: mgdToMillionCubicMetersPerYear,
                 normalize: normalize,
