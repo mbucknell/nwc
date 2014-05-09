@@ -22,7 +22,7 @@
         return squareMiles * squareMilesToAcresConversionFactor;
     };
     
-    /* 775 */
+    // conversion from google
     var acresToSquareKilometersConversionFactor = 0.00404686;
     var acresToSquareKilometers = function(acres) {
         return acres * acresToSquareKilometersConversionFactor;
@@ -46,7 +46,6 @@
         var result = mgd * mgdToMillionCubicMetersPerYearConversionFactor;
         return result;
     };
-
 
     //go from Millions of Gallons per time to Millimeters per time
     var normalize = function(val, areaSqMiles) {
