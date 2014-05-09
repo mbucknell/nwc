@@ -16,6 +16,7 @@
                 var labels = CommonState.ModeledHucDataSeries.getSeriesLabelsAs(
                         measurementSystem, "streamflow", plotTimeDensity);
                 var ylabel = Units[measurementSystem].streamflow[plotTimeDensity];
+                var title = "Modeled Streamflow for the (HUC Name) Watershed.";
                 Plotter.setPlot(plotDivSelector, legendDivSelector, values, labels, ylabel);
             };
 
@@ -46,6 +47,12 @@
                     scope.$watch('CommonState.newModeledHucData', function(newValue, oldValue){
                         if(newValue){
                             CommonState.newModeledHucData = false;
+                            plotModeledQ(scope);
+                        }
+                    });
+                    
+                    scope.$watch('CommonState.showStreamflowPlot', function(newValue, oldValue) {
+                        if (newValue) {
                             plotModeledQ(scope);
                         }
                     });

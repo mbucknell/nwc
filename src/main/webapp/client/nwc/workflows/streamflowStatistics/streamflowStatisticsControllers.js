@@ -139,6 +139,7 @@
                 CommonState.interestTypeDescription = interestTypeDescriptions[StoredState.interestType];
                 CommonState.mapControlDescription = MapControlDescriptions.select.description;
                 CommonState.mapControlCursor = MapControlDescriptions.select.cursor;
+                CommonState.showStreamflowPlot = CommonState.showStreamflowPlot || false;
             }
         )
     ]);
@@ -168,6 +169,7 @@
             },
             function ($scope, StoredState, CommonState, StoredState, $state, StreamStats, WaterYearUtil) {
                 StoredState.streamflowStatsParamsReady = false;
+                CommonState.showStreamflowPlot = CommonState.showStreamflowPlot || false;
                 
                 var selectionInfo = {};
                 if (CommonState.streamFlowStatMinDate && CommonState.streamFlowStatMaxDate) {
@@ -247,6 +249,7 @@
             function ($scope, StoredState, CommonState, StoredState, $state) {
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
+                CommonState.showStreamflowPlot = CommonState.showStreamflowPlot || false;
                 var selectionInfo = {};
                 
                 if(StoredState.gage){
