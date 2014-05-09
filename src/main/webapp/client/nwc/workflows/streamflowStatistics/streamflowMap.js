@@ -114,7 +114,7 @@
                     }
                     else {
                         var sortedFeatures = actualFeatures.sort(function(a, b){
-                            return b.data.mi2 - a.data.mi2;
+                            return a.data.mi2 - b.data.mi2;
                         });
                         StoredState.streamFlowStatHucFeature = sortedFeatures[0];
                         CommonState.streamFlowStatMinDate = minStatDate;
