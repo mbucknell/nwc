@@ -16,8 +16,8 @@
                 var labels = CommonState.ModeledHucDataSeries.getSeriesLabelsAs(
                         measurementSystem, "streamflow", plotTimeDensity);
                 var ylabel = Units[measurementSystem].streamflow[plotTimeDensity];
-                var title = "Modeled Streamflow for the (HUC Name) Watershed.";
-                Plotter.setPlot(plotDivSelector, legendDivSelector, values, labels, ylabel);
+                var title = "Modeled Streamflow for the " + StoredState.streamFlowStatHucFeature.data.HU_12_NAME + " Watershed.";
+                Plotter.setPlot(plotDivSelector, legendDivSelector, values, labels, ylabel, title);
             };
 
             var buildName = function(selectionName, selectionId, series) {
