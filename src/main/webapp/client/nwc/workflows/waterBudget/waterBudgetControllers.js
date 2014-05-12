@@ -215,6 +215,7 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
     function ($scope, StoredState, CommonState, WaterBudgetMap, MapControlDescriptions) {
         $scope.StoredState = StoredState;
         $scope.CommonState = CommonState;
+        $scope.showCountyCitation = true;
         
         var map = WaterBudgetMap.getMap();
         map.render('hucSelectMap');
