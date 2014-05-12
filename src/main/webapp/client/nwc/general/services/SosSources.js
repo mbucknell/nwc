@@ -11,7 +11,7 @@
                 units: Units.metric.normalizedWater.daily,
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_daymet.nc',
-                downloadMetadata: '"Data derived by sampling the DayMet precipitation variable to NHD+ Version II"\n"12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal."\n"http://daymet.ornl.gov/ http://cida.usgs.gov/gdp/"\n"http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php"'
+                downloadMetadata: 'Data derived by sampling the DayMet precipitation variable to NHD+ Version II\n12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://daymet.ornl.gov/ http://cida.usgs.gov/gdp/\nhttp://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
             },
             eta: {
                 observedProperty: 'MEAN_et',
@@ -19,7 +19,7 @@
                 units: Units.metric.normalizedWater.monthly,
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_eta_fixed.ncml',
-                downloadMetadata: '"Data derived by sampling the SSEBop Actual Evapotranspiration dataset to NHD+"\n"Version II 12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal."\n"http://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly"\n"http://cida.usgs.gov/gdp/ http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php"'
+                downloadMetadata: 'Data derived by sampling the SSEBop Actual Evapotranspiration dataset to NHD+\nVersion II 12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly\nhttp://cida.usgs.gov/gdp/ http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
             },
             countyWaterUse: {
                 observedProperty: CountyWaterUseProperties.getObservedProperties().join(),
@@ -27,7 +27,7 @@
                 units: Units.usCustomary.totalWater.yearly,
                 dataset: 'county_data',
                 fileName: 'AWUDS.nc',
-                downloadMetadata: '"Data derived from the Aggregate Water Use Dataset, Also available from NWIS Web."\n"Data plotted by the nwc web page (http://cida.usgs.gov/nwc/) was calculated as:"\n"Public Supply,PS-WGWFr,PS-WGWSa,PS-WSWFr,PS-WSWSa"\n"Domestic,DO-WGWFr,DO-WGWSa,DO-WSWFr,DO-WSWSa"\n"Irrigation,IT-WGWFr,IT-WGWSa,IT-WSWFr,IT-WSWSa"\n"Thermoelectric Power,PF-WGWFr,PF-WGWSa,PF-WSWFr,PF-WSWSa,PG-WGWFr,PG-WGWSa,PG-WSWFr,PG-WSWSa,PN-WGWFr,PN-WGWSa,PN-WSWFr,PN-WSWSa,PO-WGWFr,PO-WGWSa,PO-WSWFr,PO-WSWSa,PC-WGWFr,PC-WGWSa,PC-WSWFr,PC-WSWSa"\n"Livestock and Aquaculture,LS-WGWFr,LS-WGWSa,LS-WSWFr,LS-WSWSa,LI-WGWFr,LI-WSWFr,LA-WGWFr,LA-WGWSa,LA-WSWFr,LA-WSWSa,AQ-WGWFr,AQ-WGWSa,AQ-WSWFr,AQ-WSWSa"\n"Industrial,IN-WGWFr,IN-WGWSa,IN-WSWFr,IN-WSWSa"\n"Mining,MI-WGWFr,MI-WGWSa,MI-WSWFr,MI-WSWSa"\n"These categories, for which the last set of estimates were made in 1995, are not included:"\n"Hydroelectric Power (HY)"\n"Commercial (CO)"\n"Wastewater Treatment (return flow) (WW)"\n"also not including consumptive use (CU) for any categories"\n"A summary of water-use category changed can be found at: http://water.usgs.gov/watuse/WU-Category-Changes.html"\n"Data for the specific codes above can be found at: http://waterdata.usgs.gov/nwis/wu"\n"Empty fields in the table below represent fields where data is not available."'
+                downloadMetadata: 'Data derived from the Aggregate Water Use Data System. Also available from NWIS Web. http://waterdata.usgs.gov/nwis/wu\n\nData plotted by the nwc web page (http://cida.usgs.gov/nwc/) was calculated as the sum of the codes after the name below:\nPublic Supply: PS-WGWFr, PS-WGWSa, PS-WSWFr, PS-WSWSa\nDomestic: DO-WGWFr, DO-WGWSa, DO-WSWFr, DO-WSWSa\nIrrigation" IT-WGWFr, IT-WGWSa, IT-WSWFr, IT-WSWSa\nThermoelectric Power: PF-WGWFr, PF-WGWSa, PF-WSWFr, PF-WSWSa, PG-WGWFr, PG-WGWSa, PG-WSWFr, PG-WSWSa, PN-WGWFr, PN-WGWSa, PN-WSWFr, PN-WSWSa, PO-WGWFr, PO-WGWSa, PO-WSWFr, PO-WSWSa, PC-WGWFr, PC-WGWSa, PC-WSWFr, PC-WSWSa\nLivestock and Aquaculture: LS-WGWFr, LS-WGWSa, LS-WSWFr, LS-WSWSa, LI-WGWFr, LI-WSWFr, LA-WGWFr, LA-WGWSa, LA-WSWFr, LA-WSWSa, AQ-WGWFr, AQ-WGWSa, AQ-WSWFr, AQ-WSWSa\nIndustrial: IN-WGWFr, IN-WGWSa, IN-WSWFr, IN-WSWSa\nMining: MI-WGWFr, MI-WGWSa, MI-WSWFr, MI-WSWSa\n\nPF, PG, PN, PO, and PC stand for: Thermoelectric Power Fossil-Fuel, Geothermal, Nuclear, Once-Through Cooling, and Closed-Loop Cooling, respectively.\nLS, LI, LA, and AQ stand for: Livestock Stock, Livestock (general), Livestock Animal Specialties, and Aquaculture respectively.\nWGW and WSW stand for: Withdrawals from Groundwater and Surface Water, respectively.\nFr and Sa stand for: Freshwater and Saline Water, respectively.\n\nA summary of water-use category changed can be found at: http://water.usgs.gov/watuse/WU-Category-Changes.html\n\nEmpty fields in the table below represent fields where data is not available and/or was not estimated.'
             },
             modeledQ: {
                 observedProperty: 'MEAN_streamflow',
@@ -35,7 +35,7 @@
                 units: Units.usCustomary.streamflow.daily,
                 dataset: 'HUC12_data',
                 fileName: 'HUC12_Q.nc',
-                downloadMetadata: '"Data provided by a USGS research study that is in review. This information is"\n"preliminary and is subject to revision. It is being provided to meet the need for"\n"timely \"best science\" information. The assessment is provided on the condition that"\n"neither the U.S. Geological Survey nor the United States Government may be"\n"held liable for any damages resulting from the authorized or unauthorized use of"\n"the assessment. Documentation can be found here:"\n"http://cida.usgs.gov/nwc/ang/#/workflow/streamflow-statistics/model-info"'
+                downloadMetadata: 'Data provided by a USGS research study that is in review. This information is\npreliminary and is subject to revision. It is being provided to meet the need for\ntimely \"best science\" information. The assessment is provided on the condition that\nneither the U.S. Geological Survey nor the United States Government may be\nheld liable for any damages resulting from the authorized or unauthorized use of\nthe assessment. Documentation can be found here:\nhttp://cida.usgs.gov/nwc/ang/#/workflow/streamflow-statistics/model-info'
             }
         };
     }]);
