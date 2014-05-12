@@ -70,7 +70,7 @@
             };
             
             var privateChart = {};
-            var setChart = function(chartEltSelector, inputData, labels, ylabel) {
+            var setChart = function(chartEltSelector, inputData, labels, ylabel, precision) {
                 if (!inputData || !inputData.length) {
                     if (privateChart.shutdown) {
                         privateChart.shutdown()
@@ -173,6 +173,7 @@
                                 var offsetIndex = flotItem.datapoint.length - 1;
                                 var offset = flotItem.datapoint[offsetIndex];
                                 var realValue = yval - offset;
+                                var roundedValue = realValue.round(precision);
                                 var initialDatumYear = Date.create(xval).utc().format(dateFormat);
                                 var finalDatumYear = parseInt(initialDatumYear) + numYearsPerDatum;
                                 var dateDisplay = initialDatumYear + yearTooltipSeparator + finalDatumYear;
@@ -184,7 +185,7 @@
                                     }
                                     return result;
                                 })(label);
-                                var tooltipText = 'Date: ' + dateDisplay + "<br/>" + label + ": " + realValue + " " + waterUsageUnitName;
+                                var tooltipText = 'Date: ' + dateDisplay + "<br/>" + label + ": " + roundedValue + " " + waterUsageUnitName;
                                 return tooltipText;
                             }
                         }

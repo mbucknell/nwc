@@ -82,7 +82,8 @@
                     daily: "mm per day",
                     monthly: "mm per month",
                     yearly: "mm per year",
-                    conversionFromBase: Convert.noop
+                    conversionFromBase: Convert.noop,
+                    precision: 5
                 },
                 totalWater: {
                     unit: {
@@ -92,7 +93,8 @@
                     daily: "millions of m&sup3; per year",
                     monthly: "millions of m&sup3; per year",
                     yearly: "millions of m&sup3; per year",
-                    conversionFromBase: Convert.mgdToMillionCubicMetersPerYear
+                    conversionFromBase: Convert.mgdToMillionCubicMetersPerYear,
+                    precision: 2
                 },
                 streamflow: {
                     unit: {
@@ -102,7 +104,8 @@
                     daily: "",
                     monthly: "",
                     yearly: "",
-                    conversionFromBase: Convert.noop
+                    conversionFromBase: Convert.noop,
+                    precision: 2
                 }
             },
             usCustomary: {
@@ -114,7 +117,8 @@
                     daily: "in per day",
                     monthly: "in per month",
                     yearly: "in per year",
-                    conversionFromBase: Convert.mmToInches
+                    conversionFromBase: Convert.mmToInches,
+                    precision: 6
                 },
                 totalWater: {
                     unit: {
@@ -124,7 +128,8 @@
                     daily: "million gallons per day",
                     monthly: "million gallons per day",
                     yearly: "million gallons per day",
-                    conversionFromBase: Convert.noop
+                    conversionFromBase: Convert.noop,
+                    precision: 2
                 },
                 streamflow: {
                     unit: {
@@ -134,7 +139,8 @@
                     daily: "cfs",
                     monthly: "cfs",
                     yearly: "cfs",
-                    conversionFromBase: Convert.noop
+                    conversionFromBase: Convert.noop,
+                    precision: 2
                 }
             }
         };
