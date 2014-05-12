@@ -42,10 +42,6 @@
                             }
                         }
                         
-                        if (result) {
-                            result = result.round(2);
-                        }
-                        
                         return result;
                     }, null);
                 });
