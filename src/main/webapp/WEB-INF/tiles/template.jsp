@@ -2,7 +2,8 @@
 <%@page import="org.slf4j.LoggerFactory"%>
 <%@page import="gov.usgs.cida.config.DynamicReadOnlyProperties"%>
 <!DOCTYPE HTML>
-<%!    private static final Logger log = LoggerFactory.getLogger("index.jsp");
+<%!    
+    private static final Logger log = LoggerFactory.getLogger("index.jsp");
     protected DynamicReadOnlyProperties props = new DynamicReadOnlyProperties();
 
     {
@@ -34,6 +35,8 @@
                         CONFIG.endpoint.thredds = CONFIG.endpoint.thredds.substr(CONFIG.endpoint.thredds.indexOf("/"));
                         CONFIG.endpoint.wps = CONFIG.endpoint.wps.substr(CONFIG.endpoint.wps.indexOf("/"));
                         CONFIG.endpoint.nwis = CONFIG.endpoint.nwis.substr(CONFIG.endpoint.nwis.indexOf("/"));
+                        
+                        CONFIG.development = <%= development %>;
                     }());
                 </script>
                         

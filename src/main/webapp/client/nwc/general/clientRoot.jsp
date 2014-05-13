@@ -1,18 +1,39 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="org.slf4j.Logger"%>
+<%@page import="org.slf4j.LoggerFactory"%>
+<%@page import="gov.usgs.cida.config.DynamicReadOnlyProperties"%>
 <%-- 
     Place any dependencies specific to the entire angular app here.
     Step-specific or workflow-specific dependencies can be loaded in the 
     templates for those steps or workflows.
 --%>
-<!--library dependencies -->
-<script type="text/javascript" src="../webjars/angularjs/${angular-version}/angular.js"></script>
-<script type="text/javascript" src="../webjars/angular-ui-router/${angular-ui-router-version}/angular-ui-router.js"></script>
-<script type="text/javascript" src="../webjars/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap.js"></script>
-<script type="text/javascript" src="../webjars/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap-tpls.js"></script>
+<%! 
+    private static final Logger log = LoggerFactory.getLogger("index.jsp");
+    protected DynamicReadOnlyProperties props = new DynamicReadOnlyProperties();
 
-<script type="text/javascript" src="../webjars/ng-grid/${angular-ui-grid-version}/ng-grid.js"></script>
-<script type="text/javascript" src="../webjars/sugar/${sugar-version}/sugar-full.development.js"></script>
-<script type="text/javascript" src="../webjars/openlayers/${openlayers-version}/OpenLayers.debug.js"></script>
+    {
+        try {
+            props = props.addJNDIContexts(new String[0]);
+        } catch (Exception e) {
+            log.error("Could not find JNDI");
+        }
+    }
+    boolean development = Boolean.parseBoolean(props.getProperty("nwc.development"));
+    String minStr = (development) ? "" : ".min";
+    String sugarStr = (development) ? ".development" : ".min";
+    String olStr = (development) ? ".debug" : "";
+    String dygraphStr = (development) ? "-dev" : "-combined";
+%>
+
+<!--library dependencies -->
+<script type="text/javascript" src="../webjars/angularjs/${angular-version}/angular<%=minStr%>.js"></script>
+<script type="text/javascript" src="../webjars/angular-ui-router/${angular-ui-router-version}/angular-ui-router<%=minStr%>.js"></script>
+<script type="text/javascript" src="../webjars/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap<%=minStr%>.js"></script>
+<script type="text/javascript" src="../webjars/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap-tpls<%=minStr%>.js"></script>
+
+<script type="text/javascript" src="../webjars/ng-grid/${angular-ui-grid-version}/ng-grid<%=minStr%>.js"></script>
+<script type="text/javascript" src="../webjars/sugar/${sugar-version}/sugar-full<%=sugarStr%>.js"></script>
+<script type="text/javascript" src="../webjars/openlayers/${openlayers-version}/OpenLayers<%=olStr%>.js"></script>
 <!--<Order is important> -->
 <script type="text/javascript" src="../gov.usgs.cida.jslibs/openlayers/extension/Raster.js"></script>
 <script type="text/javascript" src="../gov.usgs.cida.jslibs/openlayers/extension/Layer/Raster.js"></script>
@@ -21,11 +42,11 @@
 <script type="text/javascript" src="../gov.usgs.cida.jslibs/openlayers/extension/Raster/Composite.js"></script>
 <!--</Order is important> -->
 
-<script type="text/javascript" src="../3rdparty/dygraphs/dygraph-dev.js"></script>
-<script type="text/javascript" src="../webjars/flot/${flotcharts-version}/jquery.flot.js"></script>
-<script type="text/javascript" src="../webjars/flot/${flotcharts-version}/jquery.flot.resize.js"></script>
-<script type="text/javascript" src="../webjars/flot/${flotcharts-version}/jquery.flot.time.js"></script>
-<script type="text/javascript" src="../webjars/flot/${flotcharts-version}/jquery.flot.stack.js"></script>
+<script type="text/javascript" src="../3rdparty/dygraphs/dygraph<%=dygraphStr%>.js"></script>
+<script type="text/javascript" src="../webjars/flot/${flotcharts-version}/jquery.flot<%=minStr%>.js"></script>
+<script type="text/javascript" src="../webjars/flot/${flotcharts-version}/jquery.flot.resize<%=minStr%>.js"></script>
+<script type="text/javascript" src="../webjars/flot/${flotcharts-version}/jquery.flot.time<%=minStr%>.js"></script>
+<script type="text/javascript" src="../webjars/flot/${flotcharts-version}/jquery.flot.stack<%=minStr%>.js"></script>
 <script type="text/javascript" src="../3rdparty/flot-plugins/jquery.flot.tooltip.js"></script>
 <script type="text/javascript" src="../3rdparty/flot-plugins/jquery.flot.axislabels.js"></script>
 

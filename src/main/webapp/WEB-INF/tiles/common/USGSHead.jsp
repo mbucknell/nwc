@@ -1,7 +1,27 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
+<%@page import="org.slf4j.Logger"%>
+<%@page import="org.slf4j.LoggerFactory"%>
+<%@page import="gov.usgs.cida.config.DynamicReadOnlyProperties"%>
 <%@include file="/WEB-INF/base.jsp"%>
+
+<%! 
+    private static final Logger log = LoggerFactory.getLogger("index.jsp");
+    protected DynamicReadOnlyProperties props = new DynamicReadOnlyProperties();
+
+    {
+        try {
+            props = props.addJNDIContexts(new String[0]);
+        } catch (Exception e) {
+            log.error("Could not find JNDI");
+        }
+    }
+    boolean development = Boolean.parseBoolean(props.getProperty("nwc.development"));
+    String minStr = (development) ? "" : ".min";
+    String sugarStr = (development) ? ".development" : ".min";
+    String olStr = (development) ? ".debug" : "";
+    String dygraphStr = (development) ? "-dev" : "-combined";
+%>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
@@ -9,11 +29,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <!-- JQuery -->
-<script type="text/javascript" src="${context}/webjars/jquery/${jquery-version}/jquery.min.js"></script>
+<script type="text/javascript" src="${context}/webjars/jquery/${jquery-version}/jquery<%=minStr%>.js"></script>
 
 <!-- Twitter Bootstrap -->
-<script type="text/javascript" src="${context}/webjars/bootstrap/${bootstrap-version}/js/bootstrap.min.js"></script>
-<link rel="stylesheet" type="text/css" href="${context}/webjars/bootstrap/${bootstrap-version}/css/bootstrap.min.css"/>
+<script type="text/javascript" src="${context}/webjars/bootstrap/${bootstrap-version}/js/bootstrap<%=minStr%>.js"></script>
+<link rel="stylesheet" type="text/css" href="${context}/webjars/bootstrap/${bootstrap-version}/css/bootstrap<%=minStr%>.css"/>
 
 <!-- USGS CSS -->
 <link rel="stylesheet" type="text/css" href="${context}/css/usgs_common.css"/>
@@ -21,7 +41,7 @@
 
 <!-- Site CSS -->
 <link rel="stylesheet" type="text/css" href="${context}/css/custom.css"/>
-<link rel="stylesheet" type="text/css" href="${context}/webjars/font-awesome/${fontawesome-version}/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="${context}/webjars/font-awesome/${fontawesome-version}/css/font-awesome<%=minStr%>.css"/>
 
 <!-- Our Bootstrap Theme -->
 <script type="text/javascript" src="${context}/themes/theme1/theme1.js"></script>
