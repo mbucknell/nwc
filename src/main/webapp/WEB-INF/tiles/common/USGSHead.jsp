@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
 <%@include file="/WEB-INF/base.jsp"%>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -9,11 +8,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <!-- JQuery -->
-<script type="text/javascript" src="${context}/webjars/jquery/${jquery-version}/jquery.min.js"></script>
+<script type="text/javascript" src="${context}/webjars/jquery/${jqueryVersion}/jquery${jsMin}.js"></script>
 
 <!-- Twitter Bootstrap -->
-<script type="text/javascript" src="${context}/webjars/bootstrap/${bootstrap-version}/js/bootstrap.min.js"></script>
-<link rel="stylesheet" type="text/css" href="${context}/webjars/bootstrap/${bootstrap-version}/css/bootstrap.min.css"/>
+<script type="text/javascript" src="${context}/webjars/bootstrap/${bootstrapVersion}/js/bootstrap${jsMin}.js"></script>
+<link rel="stylesheet" type="text/css" href="${context}/webjars/bootstrap/${bootstrapVersion}/css/bootstrap${jsMin}.css"/>
 
 <!-- USGS CSS -->
 <link rel="stylesheet" type="text/css" href="${context}/css/usgs_common.css"/>
@@ -21,7 +20,7 @@
 
 <!-- Site CSS -->
 <link rel="stylesheet" type="text/css" href="${context}/css/custom.css"/>
-<link rel="stylesheet" type="text/css" href="${context}/webjars/font-awesome/${fontawesome-version}/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="${context}/webjars/font-awesome/${fontawesomeVersion}/css/font-awesome${jsMin}.css"/>
 
 <!-- Our Bootstrap Theme -->
 <script type="text/javascript" src="${context}/themes/theme1/theme1.js"></script>
@@ -30,7 +29,6 @@
 <% 
     String gaAccountCode = request.getParameter("google-analytics-account-code");
     String[] gaCommandList = request.getParameterValues("google-analytics-command-set");
-    Boolean development = Boolean.parseBoolean(request.getParameter("development"));
     
     if (gaAccountCode != null && !gaAccountCode.trim().isEmpty()) { 
 %>
