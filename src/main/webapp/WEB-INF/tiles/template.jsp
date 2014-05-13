@@ -1,21 +1,5 @@
-<%@page import="org.slf4j.Logger"%>
-<%@page import="org.slf4j.LoggerFactory"%>
-<%@page import="gov.usgs.cida.config.DynamicReadOnlyProperties"%>
 <!DOCTYPE HTML>
-<%!    
-    private static final Logger log = LoggerFactory.getLogger("index.jsp");
-    protected DynamicReadOnlyProperties props = new DynamicReadOnlyProperties();
-
-    {
-        try {
-            props = props.addJNDIContexts(new String[0]);
-        } catch (Exception e) {
-            log.error("Could not find JNDI");
-        }
-    }
-    boolean development = Boolean.parseBoolean(props.getProperty("nwc.development"));
-%>
-
+<%@include file="/WEB-INF/base.jsp"%>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 
 <html>
@@ -35,8 +19,6 @@
                         CONFIG.endpoint.thredds = CONFIG.endpoint.thredds.substr(CONFIG.endpoint.thredds.indexOf("/"));
                         CONFIG.endpoint.wps = CONFIG.endpoint.wps.substr(CONFIG.endpoint.wps.indexOf("/"));
                         CONFIG.endpoint.nwis = CONFIG.endpoint.nwis.substr(CONFIG.endpoint.nwis.indexOf("/"));
-                        
-                        CONFIG.development = <%= development %>;
                     }());
                 </script>
                         
