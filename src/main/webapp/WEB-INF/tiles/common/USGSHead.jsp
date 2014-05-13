@@ -50,7 +50,6 @@
 <% 
     String gaAccountCode = request.getParameter("google-analytics-account-code");
     String[] gaCommandList = request.getParameterValues("google-analytics-command-set");
-    Boolean development = Boolean.parseBoolean(request.getParameter("development"));
     
     if (gaAccountCode != null && !gaAccountCode.trim().isEmpty()) { 
 %>
