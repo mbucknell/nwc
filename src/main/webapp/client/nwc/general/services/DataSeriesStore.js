@@ -26,7 +26,7 @@
                             var csvHeader = "";
                             if (this.metadata.downloadHeader && this.metadata.downloadHeader.length !== 0) {
                                 this.metadata.downloadHeader.lines(function(line) {
-                                    csvHeader += "# " + line + "\n";
+                                    csvHeader += "\"# " + line + "\"\n";
                                 });
                             }
                             csvHeader += this.metadata.seriesLabels.map(function(label) {
