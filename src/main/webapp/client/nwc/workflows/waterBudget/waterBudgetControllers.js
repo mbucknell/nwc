@@ -90,7 +90,8 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 var labels = CommonState.WaterUsageDataSeries.getSeriesLabelsAs(
                     StoredState.measurementSystem, StoredState.plotNormalization, StoredState.plotTimeDensity).from(1);
                 var ylabel = Units[StoredState.measurementSystem][StoredState.plotNormalization].daily;
-                WaterUsageChart.setChart(chartDivSelector, values, labels, ylabel);
+                WaterUsageChart.setChart(chartDivSelector, values, labels, ylabel, 
+                    Units[StoredState.measurementSystem][StoredState.plotNormalization].precision);
             };
             
             //boolean property is cheaper to watch than deep object comparison
