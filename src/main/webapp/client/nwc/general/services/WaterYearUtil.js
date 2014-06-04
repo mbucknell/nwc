@@ -43,9 +43,11 @@
                 },
                 yearsAsArray: function(range, descending) {
                     var years = [];
-                    range.every('year', function(d) {
-                        (descending) ? years.unshift(dateToWaterYear(d)) : years.push(dateToWaterYear(d));
-                    });
+                    if (range && range.start < range.end) {
+                        range.every('year', function(d) {
+                            (descending) ? years.unshift(dateToWaterYear(d)) : years.push(dateToWaterYear(d));
+                        });
+                    }
                     return years;
                 }
             };
