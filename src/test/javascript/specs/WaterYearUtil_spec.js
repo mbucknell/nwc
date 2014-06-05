@@ -36,6 +36,18 @@ describe('WaterYear', function () {
         });
     });
     describe('WaterYear.yearsAsArray', function() {
+        it('should give you empty array on null input', function() {
+            var expected = [];
+            var actual = util.yearsAsArray(null);
+            expect(actual).toBeDefined();
+            expect(actual).toEqual(expected);
+        });
+        it('should give you empty array when range is backward', function() {
+            var expected = [];
+            var actual = util.yearsAsArray(util.waterYearRange(Date.range('1979/01/01', '1973/01/01')));
+            expect(actual).toBeDefined();
+            expect(actual).toEqual(expected);
+        });
         it('should have 5 years', function() {
             expect(util.yearsAsArray(util.waterYearRange(Date.range('1973/01/01', '1979/01/01'))).length).toBe(5);
         });
