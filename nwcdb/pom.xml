@@ -1,0 +1,54 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>nwcdb</artifactId>
+	<parent>
+		<artifactId>nwc-parent</artifactId>
+		<groupId>gov.usgs.cida.nwc</groupId>
+		<version>0.1.3-SNAPSHOT</version>
+	</parent>
+    <packaging>jar</packaging>
+	
+    <name>NWC - Database</name>
+    
+	<dependencies>
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-maven-plugin</artifactId>
+			<version>3.0.7</version>
+		</dependency>
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+	</dependencies>
+	
+	<profiles>
+		<profile>
+			<id>liquibase</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.liquibase</groupId>
+						<artifactId>liquibase-maven-plugin</artifactId>
+						<configuration>
+							<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+							<changeLogFile>src/main/resources/changelog-persistance-table.xml</changeLogFile>
+							<driver>org.postgresql.Driver</driver>
+							<url>${db.url}</url>
+							<username>${db.username}</username>
+							<password>${db.password}</password>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>process-resources</phase>
+								<goals>
+									<goal>update</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>
