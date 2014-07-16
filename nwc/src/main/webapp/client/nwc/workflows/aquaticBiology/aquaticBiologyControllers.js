@@ -83,6 +83,33 @@
                 $scope.StoredState = StoredState;
                 StoredState.selectedAquaticBiologySites = StoredState.selectedAquaticBiologySites || [];
 
+				//processing select all checkbox	
+				$scope.processSelectAll = function () {
+				
+					//default is to clear selection
+					StoredState.selectedAquaticBiologySites = [];
+					
+					//if select all is checked then push whole list to selected
+					if ($scope.allSelected) {
+						angular.forEach(StoredState.aquaticBiologySites, function (cb, index) {
+							StoredState.selectedAquaticBiologySites.push(cb.attributes.SiteNumber);	
+						});
+					} 				
+				};
+				
+				//control select all checkbox based on current list selections
+				 $scope.$watch('StoredState.selectedAquaticBiologySites', function(list) { 
+					//if total list and selected list are different uncheck select all
+					if (list.length != StoredState.aquaticBiologySites.length) {		
+						$scope.allSelected = false;
+					}
+					//assume everything is selected so check select all box
+					else {
+						$scope.allSelected = true;
+					}
+				 }, true);
+
+
                 $scope.noSitesSelected = function () {
                     //boolean cast
                     return StoredState.selectedAquaticBiologySites.length === 0;
