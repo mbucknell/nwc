@@ -1,6 +1,8 @@
 /*global angular,OpenLayers,CONFIG*/
 (function () {
     var waterBudgetMap = angular.module('nwc.map.waterBudget', ['ui.router', 'nwc.map.base']);
+	var myHucLayerName = "National WBD Snapshot";
+	
     waterBudgetMap.factory('WaterBudgetMap', [ 'StoredState', 'CommonState', '$state', '$log', 'BaseMap', 'DataSeries',
        function(StoredState, CommonState, $state, $log, BaseMap, DataSeries){
            var privateMap;
@@ -10,7 +12,7 @@
             var controls = [];
 			var hucLayerOptions = BaseMap.getWorkflowLayerOptions();
                 hucLayerOptions.visibility = false;
-            var hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
+            var hucLayer = new OpenLayers.Layer.WMS(myHucLayerName,
                     CONFIG.endpoint.geoserver + 'ows?',
                     {
                         layers: 'NHDPlusHUCs:NationalWBDSnapshot',
@@ -256,8 +258,11 @@
         };
         return {
             initMap: initMap,
-            getMap: getMap
+            getMap: getMap,
+			hucLayerName: myHucLayerName
+			
         };
+		
        } 
     ]);
     

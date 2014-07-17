@@ -16,13 +16,16 @@
 				
 				//get map and layer info
 				var map = WaterBudgetMap.getMap();
+				var hucLayerName = WaterBudgetMap.hucLayerName;
 				
 				//function for toggling HUC layer
 				$scope.toggleHUC = function () {
-						var layer = map.getLayersByName("National WBD Snapshot")[0];
+						var layer = map.getLayersByName(hucLayerName)
+						console.log(layer);
 
 						var currentVisibility = layer.getVisibility();
 						layer.setVisibility(!currentVisibility);
+						
 					};
             }
     )]);
