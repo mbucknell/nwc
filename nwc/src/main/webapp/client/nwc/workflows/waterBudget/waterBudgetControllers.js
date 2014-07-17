@@ -2,7 +2,7 @@
 (function(){
     var waterBudgetControllers = angular.module('nwc.controllers.waterBudget', ['nwc.conversion']);
     
-    waterBudgetControllers.controller('WaterBudget', ['$scope', 'StoredState', '$sce', 'WaterBudgetMap', 'BaseMap',
+    waterBudgetControllers.controller('WaterBudget', ['$scope', 'StoredState', '$sce', 'WaterBudgetMap',
         NWC.ControllerHelpers.WorkflowController(
             {
                 name: "Available Water Budget Components",
@@ -11,55 +11,21 @@
                     evapotranspiration data. County water use data for counties intersecting\n\
                     the watershed is also available."
             },
-            function ($scope, SharedState, $sce, WaterBudgetMap, BaseMap) {
+            function ($scope, SharedState, $sce, WaterBudgetMap) {
                 $scope.description = $sce.trustAsHtml($scope.description);
 				
 				//get map and layer info
 				var map = WaterBudgetMap.getMap();
-				var hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
-                    CONFIG.endpoint.geoserver + 'ows?',
-                    {
-                        layers: 'NHDPlusHUCs:NationalWBDSnapshot',
-                        transparent: true,
-                        styles: ['polygon'],
-                        tiled: true
-                    },
-					BaseMap.getWorkflowLayerOptions()
-                );
 				
 				//function for toggling HUC layer
 				$scope.toggleHUC = function () {
+						var layer = map.getLayersByName("National WBD Snapshot")[0];
 
-						//only add if not already on the map
-						if (map.getLayersByName("National WBD Snapshot").length == 0) {
-							map.addLayer(hucLayer);
-						}
-						else {
-							map.removeLayer(hucLayer);
-						}
+						var currentVisibility = layer.getVisibility();
+						layer.setVisibility(!currentVisibility);
 					};
             }
     )]);
-/* tried to do this in a seperate controller but failed
-
-	waterBudgetControllers.controller('ToggleHUC', ['$scope', 'StoredState', 'CommonState', 'StoredState',
-			NWC.ControllerHelpers.WorkflowController(
-				{
-					name: 'Water Budget HUC toggle',
-					description: 'Turns HUC layer on and off'
-				},
-				function ($scope, StoredState, CommonState, StoredState) {
-					
-					console.log("in toggleHUC controller");
-					
-					$scope.toggleHUC = function () {
-						console.log("in toggleHUC2");
-						
-						map.addLayer(hucLayer);
-					};
-				}
-	)]);
-*/
 
 waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState', 'CommonState', 
     'WaterBudgetPlot', 'WaterUsageChart', 'Units', 'Convert',

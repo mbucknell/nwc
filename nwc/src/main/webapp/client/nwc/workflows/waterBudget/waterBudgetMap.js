@@ -8,6 +8,8 @@
         var initMap = function () {
             var mapLayers = [];
             var controls = [];
+			var hucLayerOptions = BaseMap.getWorkflowLayerOptions();
+                hucLayerOptions.visibility = false;
             var hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
                     CONFIG.endpoint.geoserver + 'ows?',
                     {
@@ -16,11 +18,9 @@
                         styles: ['polygon'],
                         tiled: true
                     },
-            BaseMap.getWorkflowLayerOptions()
+            hucLayerOptions
                     );
-			/* commented out added huc control		
             mapLayers.push(hucLayer);
-			*/
             
             // ////////////////////////////////////////////// FLOWLINES
             var flowlinesData = new OpenLayers.Layer.FlowlinesData(
