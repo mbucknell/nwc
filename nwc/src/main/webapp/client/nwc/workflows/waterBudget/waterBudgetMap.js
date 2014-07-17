@@ -18,7 +18,9 @@
                     },
             BaseMap.getWorkflowLayerOptions()
                     );
+			/* commented out added huc control		
             mapLayers.push(hucLayer);
+			*/
             
             // ////////////////////////////////////////////// FLOWLINES
             var flowlinesData = new OpenLayers.Layer.FlowlinesData(
