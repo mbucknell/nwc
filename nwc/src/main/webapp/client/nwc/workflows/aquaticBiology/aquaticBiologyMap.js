@@ -95,7 +95,7 @@
                 return privateMap;
             };
             var getMap = function () {
-                if (!privateMap) {
+                if (!privateMap || !privateMap.viewPortDiv.parentNode) {
                     initMap();
                 }
                 return privateMap;

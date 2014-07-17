@@ -290,7 +290,7 @@
                 return map;
             };
             var getMap = function () {
-                if (!map) {
+                if (!map  || !map.viewPortDiv.parentNode) {
                     initMap();
                 }
                 return map;

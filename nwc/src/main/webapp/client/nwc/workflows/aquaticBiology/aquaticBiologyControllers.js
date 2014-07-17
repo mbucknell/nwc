@@ -100,7 +100,7 @@
 				//control "select all" checkbox based on current list selections
 				 $scope.$watch('StoredState.selectedAquaticBiologySites', function(list) { 
 					//if total list and selected list are different uncheck "select all"
-					if (list.length != StoredState.aquaticBiologySites.length) {		
+					if (StoredState.aquaticBiologySites && list.length != StoredState.aquaticBiologySites.length) {		
 						$scope.allSelected = false;
 					}
 					//assume everything is selected so check "select all" box
