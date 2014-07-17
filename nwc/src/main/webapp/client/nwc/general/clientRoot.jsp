@@ -14,6 +14,24 @@
 <script type="text/javascript" src="${context}/webjars/ng-grid/${angularUiGridVersion}/ng-grid${jsMin}.js"></script>
 <script type="text/javascript" src="${context}/webjars/sugar/${sugarVersion}/sugar-full${sugarMin}.js"></script>
 <script type="text/javascript" src="${context}/webjars/openlayers/${openlayersVersion}/OpenLayers${openlayersMin}.js"></script>
+<!-- IE11 serializes the WFS call and adds an extra empty namespace attribute (NS1), this override strips it out -->
+<script type="text/javascript"> 
+(function() {
+	var _class = OpenLayers.Format.XML;
+	var originalWriteFunction = _class.prototype.write;
+	var patchedWriteFunction = function()
+	{
+		var child = originalWriteFunction.apply( this, arguments );
+		
+		// NOTE: Remove the rogue namespaces as one block of text.
+		//       The second fragment "NS1:" is too small on its own and could cause valid text (in, say, ogc:Literal elements) to be erroneously removed.
+		child = child.replace( new RegExp( 'xmlns:NS1="" NS1:', 'g' ), '' );
+		
+		return child;
+	}
+	_class.prototype.write = patchedWriteFunction;
+}());
+</script>
 <!--<Order is important> -->
 <script type="text/javascript" src="${context}/gov.usgs.cida.jslibs/openlayers/extension/Raster.js"></script>
 <script type="text/javascript" src="${context}/gov.usgs.cida.jslibs/openlayers/extension/Layer/Raster.js"></script>
