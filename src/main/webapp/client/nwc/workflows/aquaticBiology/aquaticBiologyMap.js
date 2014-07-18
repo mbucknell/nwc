@@ -19,6 +19,14 @@
                         },
                         BaseMap.getWorkflowLayerOptions()
                 );
+			
+				// WATERSMART-398 - Due to page shifting on load, the streamgage locations shift and the 
+				// click event doesn't seem to line up with where the gages actually are. Updating the map's size
+				// after the layer loads fixes the issue
+				bioDataSitesLayer.events.register('loadend', {}, function (event) {
+					event.object.map.updateSize();
+				});
+				
                 bioDataSitesLayer.id = 'biodata-sites-feature-layer';
                 mapLayers.push(bioDataSitesLayer);
                 
