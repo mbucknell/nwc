@@ -1,0 +1,37 @@
+<h4 ng-bind="name"></h4>
+<p ng-bind="description"></p>
+
+<site-stats ng-hide="!StoredState.gage" info="selectionInfo"></site-stats>
+<huc-stats ng-hide="!StoredState.streamFlowStatHucFeature" info="selectionInfo"></huc-stats>
+
+<div ng-hide="!StoredState.streamFlowStatHucFeature" class="row col-xs-12 text-center">
+        <button type="button" class="btn btn-success" ng-model="CommonState.showStreamflowPlot" btn-checkbox>Streamflow Data Plot</button>
+</div>
+<div ng-show="CommonState.ModeledHucDataSeries && CommonState.showStreamflowPlot" class="row col-xs-12">
+    <plot-data></plot-data>
+</div>
+
+<h4 ng-hide="CommonState.streamflowStatistics.length">Calculating Statistics <i class="fa fa-spinner fa-spin"></i></h4>
+
+<div ng-hide="CommonState.streamflowStatistics.length === 0" class="row col-xs-12 table-responsive">
+        <a ng-href="{{CommonState.streamflowStatisticsUrl}}">Download These Statistics</a>
+	<table class="table table-striped huc_table">
+            <thead>
+			<tr>
+				<th>Name</th>
+				<th>Value</th>
+                <th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="stat in CommonState.streamflowStatistics">
+				<td ng-bind="stat.name"></td>
+				<td ng-bind="stat.value"></td>
+                <td ng-bind="stat.desc"></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<nav>
+    <button class="btn" ui-sref="^.setSiteStatisticsParameters"><span class="glyphicon glyphicon-arrow-left"></span> Back</button>
+</nav>

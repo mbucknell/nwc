@@ -1,0 +1,24 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th><input type="checkbox" ng-model="allSelected" ng-change="processSelectAll()"/>
+			&nbsp;Select
+			</th>
+            <th>Site Id</th>
+            <th>Site Name</th>
+        </tr>
+    </thead>
+    <tbody ng-repeat="site in StoredState.aquaticBiologySites">
+        <tr>
+            <td class="xs-col-2">
+                <input type="checkbox" checklist-model="StoredState.selectedAquaticBiologySites" checklist-value="site.attributes.SiteNumber"/>
+            </td>
+            <td class="xs-col-4" ng-bind="site.attributes.SiteNumber"></td>
+            <td class="xs-col-6" ng-bind="site.attributes.SiteName"></td>
+        </tr>
+    </tbody>
+</table>
+<nav>
+    <button class="btn" ui-sref="^.selectBioDataSites"><span class="glyphicon glyphicon-arrow-left"></span> Back</button>
+    <button class="btn" ui-sref="^.sendToBioData" ng-disabled="noSitesSelected()">Explore Selected Sites In Biodata <span class="glyphicon glyphicon-arrow-right"></span></button>
+</nav>

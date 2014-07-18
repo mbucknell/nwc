@@ -1,0 +1,56 @@
+<h4 ng-if="StoredState.streamFlowStatHucFeature" ng-hide="CommonState.ModeledHucDataSeries.data.length">Loading data <i class="fa fa-spinner fa-spin"></i></h4>
+
+<h4 ng-bind="name"></h4>
+<p ng-bind="description"></p>
+
+<site-stats ng-if="StoredState.gage" info="selectionInfo"></site-stats>
+<huc-stats ng-if="StoredState.streamFlowStatHucFeature" info="selectionInfo"></huc-stats>
+
+<form name="statsParams" novalidate ng-show="siteStatisticsParameters && siteStatisticsParameters.startDate && siteStatisticsParameters.endDate">
+<div class="row">
+    <h4 class="text-center">Date Range (Water Years)</h4>
+    
+    <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <label>From:</label>
+            <select ng-model="startYear" ng-options="y for y in years" class="form-control"></select>
+        </div>
+        <div class="col-md-4">
+            <label>To:</label>
+            <select ng-model="endYear" ng-options="y for y in years" class="form-control"></select>
+        </div>
+        <div class="col-md-2"></div>
+</div>
+<div class="row col-xs-12">
+    <h4 class="text-center">Statistic Groups</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Select</th>
+                <th>Statistic Group Name</th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="statGroup in streamStatsOptions">
+            <tr>
+                <td class="xs-col-2">
+                    <input type="checkbox" name="statGroup.shortName" checklist-model="StoredState.siteStatisticsParameters.statGroups" checklist-value="statGroup.shortName"/>
+                </td>
+                <td class="xs-col-4"><a href="{{statGroup.url}}" target="_blank">{{statGroup.longName}} <i class="fa fa-external-link"></i></a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+    
+    <div class="row col-xs-12 text-center">
+        <button ng-disabled="statsParams.$invalid || !StoredState.siteStatisticsParameters.statGroups.length" class="btn btn-success" ng-click="calculateStats()">Calculate Statistics</button>
+    </div>
+</form>
+<div ng-hide="!StoredState.streamFlowStatHucFeature" class="row col-xs-12 text-center spacer">
+        <button type="button" class="btn btn-success" ng-model="CommonState.showStreamflowPlot" btn-checkbox>Streamflow Data Plot</button>
+</div>
+<div ng-show="CommonState.ModeledHucDataSeries && CommonState.showStreamflowPlot" class="row col-xs-12">
+    <plot-data></plot-data>
+</div>
+<nav>
+    <button class="btn" ui-sref="^.selectSite"><span class="glyphicon glyphicon-arrow-left"></span> Back</button>
+</nav>
