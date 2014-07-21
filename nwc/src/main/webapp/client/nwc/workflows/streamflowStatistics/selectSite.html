@@ -10,9 +10,9 @@
 <div class="row spacer col-xs-12">
     Map Controls:
     <div class="btn-group">
-        <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'select'">Select</button>
-        <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'pan'">Pan</button>
-        <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'zoom'">Zoom</button>
+        <button type="button" class="btn btn-primary" ng-repeat="mode in ['Select', 'Pan', 'Zoom']" ng-model="CommonState.activatedMapControl" btn-radio="'{{mode | lowercase}}'">
+            {{mode}}
+        </button>
     </div>
     <span>{{CommonState.mapControlDescription}}</span>
 </div>
