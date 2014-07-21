@@ -1,8 +1,9 @@
 <div class="row col-xs-12">
     Streamflow Type:
     <div class="btn-group">
-        <button type="button" class="btn btn-primary" ng-model="StoredState.interestType" btn-radio="'observed'">Observed</button>
-        <button type="button" class="btn btn-primary" ng-model="StoredState.interestType" btn-radio="'modeled'">Modeled</button>
+        <button type="button" class="btn btn-primary" ng-repeat="mode in ['Observed', 'Modeled']" ng-model="StoredState.interestType" btn-radio="'{{mode | lowercase}}'">
+            {{mode}}
+        </button>
     </div>
     <span ng-bind-html="CommonState.interestTypeDescription.description" ng-show="observedSelected()"></span>
 </div>
