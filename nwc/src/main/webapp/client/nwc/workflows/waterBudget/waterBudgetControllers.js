@@ -17,16 +17,13 @@
 				//get map and layer info
 				var map = WaterBudgetMap.getMap();
 				var hucLayerName = WaterBudgetMap.hucLayerName;
-				
+				var layer = map.getLayersByName(hucLayerName)[0];
+					
 				//function for toggling HUC layer
 				$scope.toggleHUC = function () {
-						var layer = map.getLayersByName(hucLayerName)
-						console.log(layer);
-
-						var currentVisibility = layer.getVisibility();
-						layer.setVisibility(!currentVisibility);
-						
-					};
+					var currentVisibility = layer.getVisibility();
+					layer.setVisibility(!currentVisibility);
+				};
             }
     )]);
 
