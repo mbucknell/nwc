@@ -1,3 +1,14 @@
+<div class="row col-xs-12">
+    Site Type:
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary" ng-model="StoredState.biositesActivatedSites" btn-radio="'nwis'">NWIS</button>
+        <button type="button" class="btn btn-primary" ng-model="StoredStateStoredState.biositesActivatedSites" btn-radio="'huc12'">SE HUC12</button>
+        <button type="button" class="btn btn-primary" ng-model="StoredState.biositesActivatedSites" btn-radio="'both'">Both</button>
+        <button type="button" class="btn btn-primary" ng-model="StoredState.biositesActivatedSites" btn-radio="'none'">None</button>
+    </div>
+    <span ng-bind-html="CommonState.biositesActivatedSites.description" ng-show="observedSelected()"></span>
+</div>
+
 <div class="row spacer spacer_down col-xs-12">
     Map Controls:
     <div class="btn-group">
