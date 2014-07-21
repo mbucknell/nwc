@@ -32,7 +32,7 @@
 						<artifactId>liquibase-maven-plugin</artifactId>
 						<configuration>
 							<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-							<changeLogFile>src/main/resources/changelog-persistance-table.xml</changeLogFile>
+							<changeLogFile>src/main/resources/changelog-master.xml</changeLogFile>
 							<driver>org.postgresql.Driver</driver>
 							<url>${db.url}</url>
 							<username>${db.username}</username>
