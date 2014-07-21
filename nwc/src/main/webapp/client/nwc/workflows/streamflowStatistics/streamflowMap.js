@@ -35,7 +35,7 @@
                 gageFeatureLayer.events.register('loadend', {}, function(event) {
                     event.object.map.updateSize();
                 });
-				
+                
                 mapLayers.push(gageFeatureLayer);
 
                 var hucLayerOptions = BaseMap.getWorkflowLayerOptions();
@@ -303,11 +303,17 @@
                 return map;
             };
             
-            
+            var updateMapSize = function() {
+                if (!map || !map.viewPortDiv.parentNode) {
+                    initMap();
+                }
+                map.updateSize();
+            };
             
             return {
                 initMap: initMap,
-                getMap: getMap
+                getMap: getMap,
+                updateMapSize: updateMapSize
             };
         }
     ]);
