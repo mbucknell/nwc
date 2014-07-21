@@ -66,6 +66,14 @@
             <timezone>-6</timezone>
         </developer>
         <developer>
+            <id>isuftin</id>
+            <name>Ivan Suftin</name>
+            <email>isuftin@usgs.gov</email>
+            <organization>Center for Integrated Data Analytics</organization>
+            <organizationUrl>http://cida.usgs.gov</organizationUrl>
+            <timezone>-6</timezone>
+        </developer>
+        <developer>
             <id>dmsibley</id>
             <name>David M Sibley</name>
             <email>dmsibley@usgs.gov</email>
