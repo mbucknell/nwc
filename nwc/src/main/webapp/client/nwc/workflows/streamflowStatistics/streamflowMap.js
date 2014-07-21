@@ -244,7 +244,8 @@
                     map.events.register('changelayer', null, function(evt){
                         if (evt.property === "visibility"
                          && evt.layer.name === flowLayerName) {
-                            setLayerVisibility(flowlinesWMSData, evt.layer.visibility);
+							evt.layer.setVisibility(evt.layer.visibility);
+                            //setLayerVisibility(flowlinesWMSData, evt.layer.visibility);
                         }
                     });
                 };
