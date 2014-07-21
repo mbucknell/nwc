@@ -5,7 +5,14 @@
         <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'pan'">Pan</button>
         <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'zoom'">Zoom</button>
     </div>
-    <span>{{CommonState.mapControlDescription}}</span>
+	<span>{{CommonState.mapControlDescription}}</span>
+	</br>HUC Controls:
+    <div class="btn-group">
+        <a class="btn btn-primary" ng-class="[!toggleHucLayer]" data-toggle="button" ng-click="toggleHucLayer = !toggleHucLayer; toggleHUC();">Turn HUC layer {{!toggleHucLayer && 'On' || 'Off'}}</a>
+		<a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_documentation.php" class="btn btn-primary" target="_blank">NHD Plus information</a>
+    </div>
+	<span>Turn on/off map-display of Watershed Boundary Dataset for which water budget information is available.</span>
+    
 </div>
 <div id="hucSelectMap" class="row col-xs-12" style="height: 500px;" ng-style="CommonState.mapControlCursor"></div>
 <div class="row col-xs-12" ng-if="showCountyCitation">
