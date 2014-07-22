@@ -240,12 +240,6 @@
                     // add the special raster layer to the map viewport
                     map.addLayer(flowlineRaster);
 
-                    // this prevent the rendering of the lines even if the layer is not checked
-                    map.events.register('changelayer', null, function(evt){
-                        if (evt.property === "visibility"
-                         && evt.layer.name === flowLayerName) {
-                        }
-                    });
                 };
                 addFlowLinesLayer(map);
                 
