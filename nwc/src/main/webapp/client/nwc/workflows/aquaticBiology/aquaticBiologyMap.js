@@ -22,6 +22,38 @@
                 bioDataSitesLayer.id = 'biodata-sites-feature-layer';
                 mapLayers.push(bioDataSitesLayer);
                 
+                // ////////////////////////////////////////////// GAGES
+                var gageFeatureLayer = new OpenLayers.Layer.WMS(
+                        "Gage Location",
+                        CONFIG.endpoint.geoserver + 'NWC/wms',
+                        {
+                            LAYERS: "NWC:gagesII",
+                            STYLES: 'blue_circle',
+                            format: 'image/png',
+                            transparent: true,
+                            tiled: true
+                        },
+                {
+                    isBaseLayer: false,
+                    displayInLayerSwitcher: false,
+                    visibility: CommonState.activatedStreamflowTypes.nwis
+                });
+                gageFeatureLayer.id = 'gage-feature-layer';
+                
+                // ////////////////////////////////////////////// SE HUC12 BASINS
+                var hucLayerOptions = BaseMap.getWorkflowLayerOptions();
+                hucLayerOptions.visibility = CommonState.activatedStreamflowTypes.sehuc12;
+                var hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
+                        CONFIG.endpoint.geoserver + 'gwc/service/wms',
+                        {
+                            layers: 'NWC:huc12_SE_Basins_v2',
+                            transparent: true,
+                            styles: ['polygon']
+                        },
+                hucLayerOptions
+                        );
+                hucLayer.id = 'hucs';
+                
                 // ////////////////////////////////////////////// FLOWLINES
                 var flowlinesData = new OpenLayers.Layer.FlowlinesData(
                         "Flowline WMS (Data)",
@@ -39,6 +71,8 @@
                 
                 mapLayers.push(flowlinesData);
                 mapLayers.push(flowlineRaster);
+                mapLayers.push(gageFeatureLayer);
+                mapLayers.push(hucLayer);
                 
 //                var waterCensusToolbar = new OpenLayers.Control.WaterCensusToolbar({}, new OpenLayers.Control.BioSitesSelectionTool());
 //                initialControls.push(waterCensusToolbar);
@@ -60,8 +94,8 @@
                     box: true
                 });
                 initialControls.push(bioDataGetFeatureControl);
+                
                 bioDataGetFeatureControl.events.register('featuresselected', {}, function (e) {
-                    
                     //reset user selections to 0
                     StoredState.selectedAquaticBiologySites = [];
                     
@@ -102,7 +136,13 @@
             };
             
             var toggleSiteType = function(siteTypeObject) {
+                var nwisTypeActive = siteTypeObject.nwis;
+                var sehuc12TypeActive = siteTypeObject.sehuc12;
+                var gageLayer = privateMap.getLayersByName('Gage Location')[0];
+                var hucLayer = privateMap.getLayersByName('National WBD Snapshot')[0];
                 
+                gageLayer.setVisibility(nwisTypeActive);
+                hucLayer.setVisibility(sehuc12TypeActive);
             };
             
             return {
