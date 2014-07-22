@@ -161,6 +161,7 @@
                 initMap: initMap,
                 getMap: getMap,
                 toggleSiteType : toggleSiteType
+                updateMapSize: updateMapSize
             };
         }
     ]);
