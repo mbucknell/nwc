@@ -108,9 +108,15 @@
                 }
                 return privateMap;
             };
+            
+            var toggleSiteType = function(siteTypeObject) {
+                
+            };
+            
             return {
                 initMap: initMap,
-                getMap: getMap
+                getMap: getMap,
+                toggleSiteType : toggleSiteType
             };
         }
     ]);
