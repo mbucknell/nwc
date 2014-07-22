@@ -16,7 +16,7 @@ var commonState = Object.extended({
     gageStyleDescription: "Gages for Evaluating Streamflow",
     streamFlowStatMinDate: Date.create().utc(),
     streamFlowStatMaxDate: Date.create().utc(),
-    biositesActivatedSites: {
+    activatedStreamflowTypes: {
         nwis : false,
         sehuc12 : false
     }
