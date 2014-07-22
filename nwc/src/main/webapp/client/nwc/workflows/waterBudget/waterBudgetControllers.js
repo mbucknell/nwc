@@ -2,7 +2,7 @@
 (function(){
     var waterBudgetControllers = angular.module('nwc.controllers.waterBudget', ['nwc.conversion']);
     
-    waterBudgetControllers.controller('WaterBudget', ['$scope', 'StoredState', '$sce',
+    waterBudgetControllers.controller('WaterBudget', ['$scope', 'StoredState', '$sce', 'WaterBudgetMap',
         NWC.ControllerHelpers.WorkflowController(
             {
                 name: "Available Water Budget Components",
@@ -11,10 +11,22 @@
                     evapotranspiration data. County water use data for counties intersecting\n\
                     the watershed is also available."
             },
-            function ($scope, SharedState, $sce) {
+            function ($scope, SharedState, $sce, WaterBudgetMap) {
                 $scope.description = $sce.trustAsHtml($scope.description);
+				
+				//get map and layer info
+				var map = WaterBudgetMap.getMap();
+				var hucLayerName = WaterBudgetMap.hucLayerName;
+				var layer = map.getLayersByName(hucLayerName)[0];
+					
+				//function for toggling HUC layer
+				$scope.toggleHUC = function () {
+					var currentVisibility = layer.getVisibility();
+					layer.setVisibility(!currentVisibility);
+				};
             }
     )]);
+
 waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState', 'CommonState', 
     'WaterBudgetPlot', 'WaterUsageChart', 'Units', 'Convert',
     NWC.ControllerHelpers.StepController(
