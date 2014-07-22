@@ -44,6 +44,7 @@
                 );
         
                 $scope.CommonState = CommonState;
+                $scope.MapControlDescriptions = MapControlDescriptions;
 
             // Is triggered when either the "Both" or "None" buttons are pressed for Site Type in the aquatic biology area
             $scope.toggleActivatedStreamflowTypes = function(bool) {

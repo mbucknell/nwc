@@ -1,11 +1,13 @@
 <div class="row col-xs-12">
-    Site Type:
+    Streamflow Type:
     <div class="btn-group">
-        <label type="button" class="btn btn-primary" ng-model="CommonState.activatedStreamflowTypes.nwis" btn-checkbox>NWIS</label>
-        <label type="button" class="btn btn-primary" ng-model="CommonState.activatedStreamflowTypes.sehuc12" btn-checkbox>SE HUC12</label>
+        <label type="button" class="btn btn-primary" ng-model="CommonState.activatedStreamflowTypes.nwis" btn-checkbox>Observed</label>
+        <label type="button" class="btn btn-primary" ng-model="CommonState.activatedStreamflowTypes.sehuc12" btn-checkbox>Modeled</label>
     </div>
     <button type="button" class="btn btn-primary" ng-click="toggleActivatedStreamflowTypes(true)">Both</button>
     <button type="button" class="btn btn-primary" ng-click="toggleActivatedStreamflowTypes(false)">None</button>
+    <div ng-hide="!CommonState.activatedStreamflowTypes.nwis" ng-bind-html="MapControlDescriptions.observed.description"></div>
+    <div ng-hide="!CommonState.activatedStreamflowTypes.sehuc12" ng-bind-html="MapControlDescriptions.modeled.description"></div>
 </div>
 
 <div class="row spacer spacer_down col-xs-12">
