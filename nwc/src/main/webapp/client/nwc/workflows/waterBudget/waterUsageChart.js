@@ -140,6 +140,8 @@
                                 barWidth: yearInMilliseconds
                             }
                         },
+						//insert USGS web safe color scheme
+						colors: ["#66CCFF", "#003366", "#990099", "#FF9900", "#FF0033", "#006699", "#999999"],
                         xaxis: {
                             mode: "time",
                             tickSize: [5, "year"],
