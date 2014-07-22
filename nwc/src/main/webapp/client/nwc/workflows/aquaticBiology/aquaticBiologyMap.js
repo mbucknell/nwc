@@ -147,12 +147,19 @@
                 return privateMap;
             };
             
+            var updateMapSize = function() {
+                if (!privateMap || !privateMap.viewPortDiv.parentNode) {
+                    initMap();
+                }
+                privateMap.updateSize();
+            };
+            
             var toggleSiteType = function(siteTypeObject) {
                 var nwisTypeActive = siteTypeObject.nwis;
                 var sehuc12TypeActive = siteTypeObject.sehuc12;
                 var gageLayer = privateMap.getLayersByName(LAYER_NAME_GAGE)[0];
                 var hucLayer = privateMap.getLayersByName(LAYER_NAME_HUC12)[0];
-                
+
                 gageLayer.setVisibility(nwisTypeActive);
                 hucLayer.setVisibility(sehuc12TypeActive);
             };
@@ -160,7 +167,7 @@
             return {
                 initMap: initMap,
                 getMap: getMap,
-                toggleSiteType : toggleSiteType
+                toggleSiteType : toggleSiteType,
                 updateMapSize: updateMapSize
             };
         }
