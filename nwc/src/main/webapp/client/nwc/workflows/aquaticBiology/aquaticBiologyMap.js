@@ -108,9 +108,18 @@
                 }
                 return privateMap;
             };
+            
+            var updateMapSize = function() {
+                if (!privateMap || !privateMap.viewPortDiv.parentNode) {
+                    initMap();
+                }
+                privateMap.updateSize();
+            };
+            
             return {
                 initMap: initMap,
-                getMap: getMap
+                getMap: getMap,
+                updateMapSize: updateMapSize
             };
         }
     ]);
