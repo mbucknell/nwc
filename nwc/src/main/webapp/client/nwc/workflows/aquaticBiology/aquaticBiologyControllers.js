@@ -44,18 +44,24 @@
                 );
         
                 $scope.CommonState = CommonState;
+
+            // Is triggered when either the "Both" or "None" buttons are pressed for Site Type in the aquatic biology area
+            $scope.toggleActivatedStreamflowTypes = function(bool) {
+                CommonState.activatedStreamflowTypes.nwis = bool;
+                CommonState.activatedStreamflowTypes.sehuc12 = bool;
+            };
                 
-                // I tried $watchCollection here since it's supposed to be used to watch arrays and objects but in this version
-                // of AngularJS, newObject and oldObject are always the same coming through. This bug is noted here:
-                // https://github.com/angular/angular.js/issues/2621
-                // The workaround is using a boolean true as the third param into thr $watch function. According to the docs
-                // at https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$watch this should not be used on complex
-                // objects
-                $scope.$watch('CommonState.biositesActivatedSites', function(newObject, oldObject) {
-                    if (newObject !== oldObject) {
-                        AquaticBiologyMap.toggleSiteType(newObject);
-                    }
-                }, true);
+            // I tried $watchCollection here since it's supposed to be used to watch arrays and objects but in this version
+            // of AngularJS, newObject and oldObject are always the same coming through. This bug is noted here:
+            // https://github.com/angular/angular.js/issues/2621
+            // The workaround is using a boolean true as the third param into thr $watch function. According to the docs
+            // at https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$watch this should not be used on complex
+            // objects
+            $scope.$watch('CommonState.activatedStreamflowTypes', function(newObject, oldObject) {
+                if (newObject !== oldObject) {
+                    AquaticBiologyMap.toggleSiteType(newObject);
+                }
+            }, true);
                 
                 $scope.$watch('CommonState.activatedMapControl', function(newControl, oldControl) {
                     var controlId;

@@ -1,11 +1,11 @@
 <div class="row col-xs-12">
     Site Type:
     <div class="btn-group">
-        <label type="button" class="btn btn-primary" ng-model="CommonState.biositesActivatedSites.nwis" btn-checkbox>NWIS</label>
-        <label type="button" class="btn btn-primary" ng-model="CommonState.biositesActivatedSites.sehuc12" btn-checkbox>SE HUC12</label>
+        <label type="button" class="btn btn-primary" ng-model="CommonState.activatedStreamflowTypes.nwis" btn-checkbox>NWIS</label>
+        <label type="button" class="btn btn-primary" ng-model="CommonState.activatedStreamflowTypes.sehuc12" btn-checkbox>SE HUC12</label>
     </div>
-    <button type="button" class="btn btn-primary" ng-click="CommonState.biositesActivatedSites.nwis = true;CommonState.biositesActivatedSites.sehuc12 = true;">Both</button>
-    <button type="button" class="btn btn-primary" ng-click="CommonState.biositesActivatedSites.nwis = false;CommonState.biositesActivatedSites.sehuc12 = false;">None</button>
+    <button type="button" class="btn btn-primary" ng-click="toggleActivatedStreamflowTypes(true)">Both</button>
+    <button type="button" class="btn btn-primary" ng-click="toggleActivatedStreamflowTypes(false)">None</button>
 </div>
 
 <div class="row spacer spacer_down col-xs-12">
