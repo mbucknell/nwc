@@ -85,17 +85,18 @@
 <script type="text/javascript" src="${context}/client/nwc/general/services/WaterYearUtil.js"></script>
 <script type="text/javascript" src="${context}/client/nwc/general/services/Plotter.js"></script>
 
+<!-- directives -->
+<script type="text/javascript" src="${context}/client/nwc/general/directives/selectionInfoDirectives.js"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/directives/downloadDataDirective.js"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowStatisticsDirectives.js"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/directives/GageList/GageList.js"></script>
+
 <!-- controllers -->
 <script type="text/javascript" src="${context}/client/nwc/general/controllers/controllerHelpers.js"></script>
 <script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetControllers.js"></script>
 <script type="text/javascript" src="${context}/client/nwc/workflows/aquaticBiology/aquaticBiologyControllers.js"></script>
 <script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowStatisticsControllers.js"></script>
 <script type="text/javascript" src="${context}/client/nwc/workflows/dataDiscovery/dataDiscoveryControllers.js"></script>
-
-<!-- directives -->
-<script type="text/javascript" src="${context}/client/nwc/general/directives/selectionInfoDirectives.js"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/directives/downloadDataDirective.js"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowStatisticsDirectives.js"></script>
 
 <!-- main app-->
 <script type="text/javascript" src="${context}/client/nwc/app.js"></script>

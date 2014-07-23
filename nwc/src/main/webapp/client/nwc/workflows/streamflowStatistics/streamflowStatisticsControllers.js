@@ -144,21 +144,19 @@
         )
     ]);
     streamflowStatistics.controller('DisambiguateGages', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state',
-        NWC.ControllerHelpers.StepController(
-            {
-                name: 'Disambiguate Stream Gages',
-                description: 'Your selection landed near multiple gages. Select one of the following gages to proceed.'
-            },
-            function ($scope, StoredState, CommonState, StoredState, $state) {
-                $scope.CommonState = CommonState;
-                $scope.StoredState = StoredState;
-                $scope.gages = CommonState.ambiguousGages;
-                $scope.affirmGage = function(gage){
-                    StoredState.gage = gage;
-                    StoredState.siteStatisticsParameters = {};
-                };
-            }
-        )
+        function ($scope, StoredState, CommonState, StoredState, $state) {
+	    	//set up scope fields for nwcGageList directive (see GageList.js for directive information)
+    		NWC.directive.GageList.setScopeParams(
+    			$scope,
+    			'Disambiguate Stream Gages',
+    			'Your selection landed near multiple gages. Select one of the following gages to proceed.',
+    			CommonState.ambiguousGages, 
+    	        function(gage) {
+    	    		StoredState.gage = gage; //this triggers the next workflow step, watched by nwc.watch
+    	    		StoredState.siteStatisticsParameters = {};
+    	    	}	
+    		);
+        }
     ]);
     
     streamflowStatistics.controller('SetSiteStatisticsParameters', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'StreamStats', 'WaterYearUtil',
