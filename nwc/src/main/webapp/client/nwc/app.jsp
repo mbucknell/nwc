@@ -87,7 +87,6 @@
 
 <!-- controllers -->
 <script type="text/javascript" src="${context}/client/nwc/general/controllers/controllerHelpers.js"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/AllWorkflowController.js"></script>
 <script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetControllers.js"></script>
 <script type="text/javascript" src="${context}/client/nwc/workflows/aquaticBiology/aquaticBiologyControllers.js"></script>
 <script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowStatisticsControllers.js"></script>
@@ -99,7 +98,7 @@
 <script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowStatisticsDirectives.js"></script>
 
 <!-- main app-->
-<script type="text/javascript" src="${context}/client/nwc/general/app.js"></script>
+<script type="text/javascript" src="${context}/client/nwc/app.js"></script>
 
 
 

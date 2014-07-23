@@ -259,7 +259,7 @@
                         
                         var queryString = Object.toQueryString(params);
                         
-                        var url = nwisBaseUrl + queryString;
+                        var url = nwisBaseUrl + "?" + queryString;
 
                         var gageInfoFailure = function(response) {
                             var msg = 'An error occurred while asking NWIS web for the period of record for the selected site';

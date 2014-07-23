@@ -3,11 +3,7 @@
     var aquaticBiologyMap = angular.module('nwc.map.aquaticBiology', []);
     aquaticBiologyMap.factory('AquaticBiologyMap', ['StoredState', 'CommonState', '$state', 'BaseMap', '$log',
         function (StoredState, CommonState, $state, BaseMap, $log) {
-            var privateMap,
-                    LAYER_NAME_BIODATA_SITES = "BioData Sites",
-                    LAYER_NAME_GAGE =  "Gage Location",
-                    LAYER_NAME_FLOWLINE =  "Flowline WMS (Data)",
-                    LAYER_NAME_HUC12 = "National WBD Snapshot";
+            var privateMap;
 
             var initMap = function () {
                 var mapLayers = [];
@@ -15,7 +11,7 @@
                 
                 // ///////////////////////////////////////// BIODATA SITES
                 var bioDataSitesLayer = new OpenLayers.Layer.WMS(
-                        LAYER_NAME_BIODATA_SITES,
+                        "BioData Sites",
                         CONFIG.endpoint.geoserver + 'wms',
                         {
                             layers: 'BioData:SiteInfo',
@@ -36,7 +32,7 @@
                 
                 // ////////////////////////////////////////////// GAGES
                 var gageFeatureLayer = new OpenLayers.Layer.WMS(
-                       LAYER_NAME_GAGE,
+                        "Gage Location",
                         CONFIG.endpoint.geoserver + 'NWC/wms',
                         {
                             LAYERS: "NWC:gagesII",
@@ -55,7 +51,7 @@
                 // ////////////////////////////////////////////// SE HUC12 BASINS
                 var hucLayerOptions = BaseMap.getWorkflowLayerOptions();
                 hucLayerOptions.visibility = CommonState.activatedStreamflowTypes.sehuc12;
-                var hucLayer = new OpenLayers.Layer.WMS(LAYER_NAME_HUC12,
+                var hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
                         CONFIG.endpoint.geoserver + 'gwc/service/wms',
                         {
                             layers: 'NWC:huc12_SE_Basins_v2',
@@ -68,7 +64,7 @@
                 
                 // ////////////////////////////////////////////// FLOWLINES
                 var flowlinesData = new OpenLayers.Layer.FlowlinesData(
-                       LAYER_NAME_FLOWLINE,
+                        "Flowline WMS (Data)",
                         CONFIG.endpoint.geoserver + 'gwc/service/wms'
                 );
                 flowlinesData.id = 'nhd-flowlines-data-layer';
@@ -147,19 +143,12 @@
                 return privateMap;
             };
             
-            var updateMapSize = function() {
-                if (!privateMap || !privateMap.viewPortDiv.parentNode) {
-                    initMap();
-                }
-                privateMap.updateSize();
-            };
-            
             var toggleSiteType = function(siteTypeObject) {
                 var nwisTypeActive = siteTypeObject.nwis;
                 var sehuc12TypeActive = siteTypeObject.sehuc12;
-                var gageLayer = privateMap.getLayersByName(LAYER_NAME_GAGE)[0];
-                var hucLayer = privateMap.getLayersByName(LAYER_NAME_HUC12)[0];
-
+                var gageLayer = privateMap.getLayersByName('Gage Location')[0];
+                var hucLayer = privateMap.getLayersByName('National WBD Snapshot')[0];
+                
                 gageLayer.setVisibility(nwisTypeActive);
                 hucLayer.setVisibility(sehuc12TypeActive);
             };
@@ -167,8 +156,7 @@
             return {
                 initMap: initMap,
                 getMap: getMap,
-                toggleSiteType : toggleSiteType,
-                updateMapSize: updateMapSize
+                toggleSiteType : toggleSiteType
             };
         }
     ]);

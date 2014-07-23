@@ -1,9 +1,8 @@
 <div class="row col-xs-12">
     Streamflow Type:
     <div class="btn-group">
-        <button type="button" class="btn btn-primary" ng-repeat="mode in ['Observed', 'Modeled']" ng-model="StoredState.interestType" btn-radio="'{{mode | lowercase}}'">
-            {{mode}}
-        </button>
+        <button type="button" class="btn btn-primary" ng-model="StoredState.interestType" btn-radio="'observed'">Observed</button>
+        <button type="button" class="btn btn-primary" ng-model="StoredState.interestType" btn-radio="'modeled'">Modeled</button>
     </div>
     <span ng-bind-html="CommonState.interestTypeDescription.description" ng-show="observedSelected()"></span>
 </div>
@@ -11,9 +10,9 @@
 <div class="row spacer col-xs-12">
     Map Controls:
     <div class="btn-group">
-        <button type="button" class="btn btn-primary" ng-repeat="mode in ['Select', 'Pan', 'Zoom']" ng-model="CommonState.activatedMapControl" btn-radio="'{{mode | lowercase}}'">
-            {{mode}}
-        </button>
+        <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'select'">Select</button>
+        <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'pan'">Pan</button>
+        <button type="button" class="btn btn-primary" ng-model="CommonState.activatedMapControl" btn-radio="'zoom'">Zoom</button>
     </div>
     <span>{{CommonState.mapControlDescription}}</span>
 </div>
@@ -25,9 +24,10 @@
         {{CommonState.gageStyleDescription}}<span> <i class="caret"></i></span>
         </button>
         <ul class="dropdown-menu" role="menu">
-            <li ng-repeat="(styleDescriptionKey, styleDescription) in styleDescriptions" role="menuitem">
-                <a ng-model="StoredState.gageStyle" btn-radio="'{{styleDescriptionKey}}'">{{styleDescription.description}}</a>
-            </li>
+            <li role="menuitem"><a ng-model="StoredState.gageStyle" btn-radio="'default'">{{styleDescriptions.default.description}}</a></li>
+            <li role="menuitem"><a ng-model="StoredState.gageStyle" btn-radio="'active'">{{styleDescriptions.active.description}}</a></li>
+            <li role="menuitem"><a ng-model="StoredState.gageStyle" btn-radio="'reference'">{{styleDescriptions.reference.description}}</a></li>
+            <li role="menuitem"><a ng-model="StoredState.gageStyle" btn-radio="'por'">{{styleDescriptions.por.description}}</a></li>
         </ul>
     </div>
     Options to filter displayed stream gages from the <a href="http://pubs.er.usgs.gov/publication/70046617" target="_blank">Gages II dataset <i class="fa fa-external-link"></i></a>
