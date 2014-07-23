@@ -15,7 +15,11 @@ var commonState = Object.extended({
     activatedMapControl: "select",
     gageStyleDescription: "Gages for Evaluating Streamflow",
     streamFlowStatMinDate: Date.create().utc(),
-    streamFlowStatMaxDate: Date.create().utc()
+    streamFlowStatMaxDate: Date.create().utc(),
+    activatedStreamflowTypes: {
+        nwis : false,
+        sehuc12 : false
+    }
 });
 
 //this factory provides access to the state that is NOT stored to the server, but that
