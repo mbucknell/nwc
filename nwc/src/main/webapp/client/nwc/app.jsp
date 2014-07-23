@@ -90,6 +90,7 @@
 <script type="text/javascript" src="${context}/client/nwc/general/directives/downloadDataDirective.js"></script>
 <script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowStatisticsDirectives.js"></script>
 <script type="text/javascript" src="${context}/client/nwc/general/directives/GageList/GageList.js"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/directives/HucList/HucList.js"></script>
 
 <!-- controllers -->
 <script type="text/javascript" src="${context}/client/nwc/general/controllers/controllerHelpers.js"></script>

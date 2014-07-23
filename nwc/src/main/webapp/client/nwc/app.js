@@ -28,7 +28,8 @@
 			 'nwc.map.aquaticBiology',
 			 'nwc.map.streamflow',
 			 'checklist-model',
-			 'nwc.directive.GageList'
+			 'nwc.directive.GageList',
+			 'nwc.directive.HucList'
 			 ]);
 
 	nwcApp.config(['$stateProvider', '$urlRouterProvider',

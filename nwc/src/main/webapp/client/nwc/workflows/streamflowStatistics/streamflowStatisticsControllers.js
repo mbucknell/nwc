@@ -166,6 +166,7 @@
                 description: 'Select a subset of the time series for which you would like to calculate various statistics.'
             },
             function ($scope, StoredState, CommonState, StoredState, $state, StreamStats, WaterYearUtil) {
+            	$scope.previousStateTarget = CommonState.streamflowStatsParamsReturnTarget;
                 StoredState.streamflowStatsParamsReady = false;
                 CommonState.showStreamflowPlot = CommonState.showStreamflowPlot || false;
                 
