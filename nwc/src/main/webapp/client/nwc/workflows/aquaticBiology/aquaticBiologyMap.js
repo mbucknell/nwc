@@ -90,28 +90,78 @@
                 initialControls.push(new OpenLayers.Control.ZoomBox({
                     id: 'nwc-zoom'
                 }));
+                
+
+                var biodataProtocol  = new OpenLayers.Protocol.WFS({
+                    version: "1.1.0",
+                    url: CONFIG.endpoint.geoserver + 'wfs',
+                    featureType: 'SiteInfo',
+                    featureNS: 'http://cida.usgs.gov/BioData',
+                    srsName: 'EPSG:900913'
+                });
+                
+                var gageProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(gageFeatureLayer, {
+                    url : CONFIG.endpoint.geoserver + "wfs",
+                    srsName : "EPSG:3857",
+                    propertyNames: ["STAID","STANAME","CLASS","AGGECOREGI",
+                        "DRAIN_SQKM","HUC02","LAT_GAGE","LNG_GAGE","STATE",
+                        "HCDN_2009","ACTIVE09","FLYRS1900","FLYRS1950","FLYRS1990"]
+                });
+                
+                var hucProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(hucLayer, {
+                    url : CONFIG.endpoint.geoserver + "wfs",
+                    srsName : "EPSG:3857",
+                    //TODO! I really don't like this. I'd like to only ask for what I need at this moment, but
+                    //this is given to the next step of the workflow, so it relys on this...
+                    propertyNames : ["OBJECTID","HUC12","mi2","DRAIN_SQKM",
+                        "SLOPE_PCT","RFACT","SILTAVE","ROCKDEPAVE","PPTAVG_BAS",
+                        "PLANTNLCD0","HUC4","Outlet_X","Outlet_Y","Centroid_X",
+                        "Centroid_Y","Shape_Leng","Shape_Area","site_no","HU_12_NAME"]
+                });
+                
+                //TODO create a subclass of protocol
+                //set up protocols based on map layer selections
+                var joinedProtocol = new (function(protocols) {
+                    this.protocols = protocols;
+                    this.read = function(request) {
+                        console.log("read joined called");
+                        this.protocols.each(function(el) {
+                            console.log("Calling read");
+                            el.read(request);
+                        });
+                    };
+                    this.abort = function(abortParam) {
+                        console.log("abort joined called");
+                        this.protocols.each(function(el) {
+                            console.log("Calling abort");
+                            el.abort(abortParam);
+                        });
+                    };
+                })([gageProtocol, hucProtocol, biodataProtocol]);
+                
+
+                var featuresSelected = function (e) {
+                	console.log(e);
+                	//TODO This gets called 3 times if all three layers find features,
+                	//if any of hte features does not find a feature, I only get 2 calls.
+                	
+                	//Wait for all 3 calls to return, then move onto next state.
+//                    //reset user selections to 0
+//                    StoredState.selectedAquaticBiologySites = [];
+//                    
+//                    //let user pick between sites in the dragged box
+//                    StoredState.aquaticBiologySites = e.features;
+//                    $state.go('workflow.aquaticBiology.showSelectedBioDataSites');
+//                    $log.info(CommonState);
+                };
+                
                 var bioDataGetFeatureControl = new OpenLayers.Control.GetFeature({
                     id: 'nwc-biodata-sites',
-                    protocol: new OpenLayers.Protocol.WFS({
-                        version: "1.1.0",
-                        url: CONFIG.endpoint.geoserver + 'wfs',
-                        featureType: 'SiteInfo',
-                        featureNS: 'http://cida.usgs.gov/BioData',
-                        srsName: 'EPSG:900913'
-                    }),
+                    protocol: joinedProtocol,
                     box: true
                 });
                 initialControls.push(bioDataGetFeatureControl);
-                
-                bioDataGetFeatureControl.events.register('featuresselected', {}, function (e) {
-                    //reset user selections to 0
-                    StoredState.selectedAquaticBiologySites = [];
-                    
-                    //let user pick between sites in the dragged box
-                    StoredState.aquaticBiologySites = e.features;
-                    $state.go('workflow.aquaticBiology.showSelectedBioDataSites');
-                    $log.info(CommonState);
-                });
+                bioDataGetFeatureControl.events.register('featuresselected', {}, featuresSelected);
                 
                 var map = BaseMap.new({
                     layers: mapLayers,
