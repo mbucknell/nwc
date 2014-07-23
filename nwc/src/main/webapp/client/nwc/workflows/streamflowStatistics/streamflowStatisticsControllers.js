@@ -1,6 +1,6 @@
 /*global angular SCE */
 (function () {
-    var streamflowStatistics = angular.module('nwc.controllers.streamflowStatistics', ['nwc.streamStats', 'nwc.wps', 'nwc.dictionary', 'nwc.streamStats.dictionary', 'nwc.waterYear', 'nwc.plotter', 'nwc.conversion']);
+    var streamflowStatistics = angular.module('nwc.controllers.streamflowStatistics', ['nwc.streamStats', 'nwc.wps', 'nwc.dictionary', 'nwc.streamStats.dictionary', 'nwc.waterYear', 'nwc.plotter', 'nwc.conversion', 'nwc.directive.GageList']);
     streamflowStatistics.controller('StreamflowStatistics', [ '$scope', 'StoredState', '$sce',
         NWC.ControllerHelpers.WorkflowController(
             {
@@ -143,10 +143,10 @@
             }
         )
     ]);
-    streamflowStatistics.controller('DisambiguateGages', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state',
-        function ($scope, StoredState, CommonState, StoredState, $state) {
+    streamflowStatistics.controller('DisambiguateGages', ['$scope', 'StoredState', 'CommonState', 'StoredState', '$state', 'GageListService',
+        function ($scope, StoredState, CommonState, StoredState, $state, gageListService) {
 	    	//set up scope fields for nwcGageList directive (see GageList.js for directive information)
-    		NWC.directive.GageList.setScopeParams(
+    		gageListService.setScopeParams(
     			$scope,
     			'Disambiguate Stream Gages',
     			'Your selection landed near multiple gages. Select one of the following gages to proceed.',
