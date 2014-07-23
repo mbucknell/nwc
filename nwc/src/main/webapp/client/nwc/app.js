@@ -47,8 +47,8 @@
 		$stateProvider
 		.state('workflow', {
 			url: '/workflow',
-			templateUrl: clientBasePath + '/app.html',
-			controller: 'nwcApp.controller.Main',
+			templateUrl: stateBasePath + '/storeStateWrapper.html',
+			controller: 'StoreState',
 			abstract: true
 		});
 		var waterBudgetBasePath = workflowsBasePath + 'waterBudget/';
@@ -149,49 +149,16 @@
 	}
 	]);
 
-
-	nwcApp.controller('nwcApp.controller.ModalSuccess', ['$scope', '$modalInstance', '$window', function($scope, $modalInstance, $window){
-		$scope.modal = $modalInstance;
-		$scope.close = function(){
-			$modalInstance.close();
-		};
-	}
-	]);
-	
-	nwcApp.controller('nwcApp.controller.Main', ['$scope', 'StoredState', 'StatePersistence', '$modal',
-	                                        function($scope, StoredState, StatePersistence, $modal){
-		$scope.storeState = function(){
-			StatePersistence.store(StoredState).success(function (stateId) {
-				//construct a url for the base of the single-page app
-				//do NOT include the current fragment identifer (stuff after the '#')
-				var loc = document.location;
-				var fullUri = loc.protocol + '//' + loc.host + loc.pathname;
-				fullUri += '#/state/restore/' + stateId;
-				$scope.uri = fullUri;
-				$modal.open({
-					templateUrl: '../client/nwc/state/storageSuccess.html',
-					controller: 'nwcApp.controller.ModalSuccess',
-					scope: $scope
-				});
-			})
-			.error(function () {
-				$modal.open({
-					template: 'Error Storing State'
-				});
-			});;
-		};
-	}
-	]);
-
 	//automatically update StoredState object on angular-ui-router state change so that
 	//individual controllers and/or services do not have to pass the current state name
 	//and parameters into StatePersistence methods.
 	nwcApp.run(['$rootScope', 'StoredState', 
-	            function($rootScope, StoredState){
-		$rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-			StoredState.stateName = toState.name;
-			StoredState.stateParams = toParams;
-		});
-	}]);
+		function($rootScope, StoredState){
+			$rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+				StoredState.stateName = toState.name;
+				StoredState.stateParams = toParams;
+			});
+		}
+	]);
 
 }());
