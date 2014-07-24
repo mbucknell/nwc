@@ -147,6 +147,7 @@
                 var getFeatureResponse = function (e) {
                 	if(CommonState.biodataGetFeatureResponses.length==0){ //on first click, always reset state
                         StoredState.selectedAquaticBiologySites = [];
+	                    StoredState.aquaticBiologySites = null;
                         StoredState.bioNearbyStreamGages = null;
                 		StoredState.bioNearbyHucs = null;
                 	}
@@ -169,8 +170,12 @@
 	            	//wait for all calls before processing
 	            	if(CommonState.biodataGetFeatureResponses.length >= getFeatureProtocolList.length) {
                 		CommonState.biodataGetFeatureResponses = [];
-	            		$state.go('workflow.aquaticBiology.showSelectedBioDataSites');
-	                    $log.info(CommonState);
+                		if(StoredState.aquaticBiologySites ||
+                			StoredState.bioNearbyStreamGages ||
+                			StoredState.bioNearbyHucs) {
+		            		$state.go('workflow.aquaticBiology.showSelectedBioDataSites');
+		                    $log.info(CommonState);
+                		}
 	            	}
                 };
                 
