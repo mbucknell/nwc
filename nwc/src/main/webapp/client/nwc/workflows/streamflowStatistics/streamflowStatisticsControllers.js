@@ -121,6 +121,9 @@
                         controlId = (StoredState.interestType === 'observed') ? 'nwc-streamflow-gage-identify-control' : 'nwc-streamflow-huc-identify-control';
                     }
                     if (newControl !== oldControl) {
+                        // WATERSMART-398 - Due to page shifting on button press, the streamgage locations shift and the 
+                        // click event doesn't seem to line up with where the gages actually are. Updating the map's size fixes the issue
+                        StreamflowMap.updateMapSize();
                         var controls = StreamflowMap.getMap().getControlsBy('id', /nwc-.*/);
                         angular.forEach(controls, function(control) {
                             control.deactivate();

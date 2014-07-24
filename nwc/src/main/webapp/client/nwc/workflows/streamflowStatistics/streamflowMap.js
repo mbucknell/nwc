@@ -305,11 +305,18 @@
                 return map;
             };
             
+            var updateMapSize = function() {
+                if (!map || !map.viewPortDiv.parentNode) {
+                    initMap();
+                }
+                map.updateSize();
+            };
             
             
             return {
                 initMap: initMap,
-                getMap: getMap
+                getMap: getMap,
+                updateMapSize: updateMapSize
             };
         }
     ]);
