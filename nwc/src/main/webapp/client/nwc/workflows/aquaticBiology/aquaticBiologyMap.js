@@ -223,10 +223,18 @@
                 hucLayer.setVisibility(sehuc12TypeActive);
             };
             
+            var updateMapSize = function() {
+                if (!privateMap || !privateMap.viewPortDiv.parentNode) {
+                    initMap();
+                }
+                privateMap.updateSize();
+            };
+            
             return {
                 initMap: initMap,
                 getMap: getMap,
-                toggleSiteType : toggleSiteType
+                toggleSiteType : toggleSiteType,
+                updateMapSize: updateMapSize
             };
         }
     ]);
