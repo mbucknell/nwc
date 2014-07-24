@@ -1,6 +1,6 @@
 /*global angular*/
 (function () {
-    var aquaticBiologyControllers = angular.module('nwc.controllers.aquaticBiology', []);
+    var aquaticBiologyControllers = angular.module('nwc.controllers.aquaticBiology', ['nwc.conversion', 'nwc.directive.GageList', 'nwc.directive.HucList']);
     aquaticBiologyControllers.controller('AquaticBiology', [ '$scope', 'StoredState', '$sce',
         NWC.ControllerHelpers.WorkflowController(
             {
@@ -92,15 +92,60 @@
             }
         )
     ]);
-    aquaticBiologyControllers.controller('ShowSelectedBioDataSites', ['$scope', 'StoredState', 'CommonState', 'StoredState',
+    aquaticBiologyControllers.controller('ShowSelectedBioDataSites', ['$scope', 'StoredState', 'CommonState', 'StoredState', 'GageListService', 'HucListService', 'Convert', '$state',
         NWC.ControllerHelpers.StepController(
             {
                 name: 'Aquatic Biology Site Selection List',
                 description: 'Select which sites to explore in BioShare'
             },
-            function ($scope, StoredState, CommonState, StoredState) {
+            function ($scope, StoredState, CommonState, StoredState, gageListService, hucListService, Convert, $state) {
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
+                
+                //if WFS call found stream gages, set up the directive
+                $scope.streamGages = StoredState.bioNearbyStreamGages;
+    	    	//set up scope fields for nwcGageList directive (see GageList.js for directive information)
+                gageListService.setScopeParams(
+        			$scope,
+        			'Stream Gages',
+        			'Your selection landed near multiple stream gages. Select a gage to calculate streamflow statistics.',
+        			$scope.streamGages, 
+        	        function(gage) {
+        				CommonState.streamflowStatsParamsReturnTarget = 'workflow.aquaticBiology.showSelectedBioDataSites';
+        	    		StoredState.gage = gage; //this triggers the next workflow step, watched by nwc.watch
+        	    		StoredState.siteStatisticsParameters = {};
+        	    	}	
+        		);
+        		
+                //if WFS found HUCS, set up directing
+                $scope.hucs = StoredState.bioNearbyHucs;
+                hucListService.setScopeParams(
+            			$scope,
+            			'Watersheds',
+            			'Your selection landed near multiple watersheds. Select a HUC to calculate modeled streamflow statistics.',
+            			$scope.hucs, 
+            	        function(huc) {
+            				CommonState.streamflowStatsParamsReturnTarget = 'workflow.aquaticBiology.showSelectedBioDataSites';
+            				//TODO this was copy/pasted from streamflowMap.js, need to DRY out
+                            var minStatDate = Date.create('1980/10/01').utc();
+                            var maxStatDate = Date.create('2010/09/30').utc();
+                            StoredState.streamFlowStatHucFeature = huc;
+                            CommonState.streamFlowStatMinDate = minStatDate;
+                            CommonState.streamFlowStatMaxDate = maxStatDate;
+                            StoredState.siteStatisticsParameters = {};
+                            var statisticsParameters = StoredState.siteStatisticsParameters;
+                            statisticsParameters.startDate = Date.create(minStatDate).utc();
+                            statisticsParameters.endDate = Date.create(maxStatDate).utc();
+                            var km2 = Convert.acresToSquareKilometers(
+                                    Convert.squareMilesToAcres(StoredState.streamFlowStatHucFeature.data.mi2));
+                            if (km2 > 2000) {
+                                alert("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km^2), please choose a smaller watershed.");
+                            } else {
+                                $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
+                            }
+            	    	}	
+            		);
+                
                 StoredState.selectedAquaticBiologySites = StoredState.selectedAquaticBiologySites || [];
 
 				//process "select all" checkbox	

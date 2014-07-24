@@ -68,6 +68,7 @@
                             var realFeatures = responseObject.features[0].features;
                             realFeatures = realFeatures.map(util.rejectGeometry);
                             CommonState.ambiguousGages = realFeatures;//rare instance in which it is ok to write directly to CommonState; we don't need to enable state restoration for ambiguous clicks
+                            CommonState.streamflowStatsParamsReturnTarget = '^.selectSite';
                             $state.go('workflow.streamflowStatistics.disambiguateGages');
                         }
                     }
@@ -140,6 +141,7 @@
                         if (km2 > 2000) {
                             alert("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km^2), please choose a smaller watershed.");
                         } else {
+                        	CommonState.streamflowStatsParamsReturnTarget = '^.selectSite';
                             $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
                         }
                     }
