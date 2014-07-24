@@ -86,7 +86,7 @@ public class SpringInitializer implements WebApplicationInitializer {
         threddsParams.put("forward-url", threddsUrl);
         thredds.setInitParameters(threddsParams);
         
-	    String wpsUrl = props.getProperty("nwc.endpoint.wps", "http://cida-eros-wsdev.er.usgs.gov:8081/wps");
+	    String wpsUrl = props.getProperty("nwc.endpoint.wps", "http://cida-eros-wsdev.er.usgs.gov:8081/wps/");
         Dynamic wps = servletContext.addServlet("wps", new AlternateProxyServlet());
         wps.addMapping("/wps/*");
         wps.setLoadOnStartup(5);
