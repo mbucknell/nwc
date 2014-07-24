@@ -91,7 +91,6 @@
                     id: 'nwc-zoom'
                 }));
                 
-
                 var biodataProtocol  = new OpenLayers.Protocol.WFS({
                     version: "1.1.0",
                     url: CONFIG.endpoint.geoserver + 'wfs',
@@ -119,6 +118,7 @@
                         "Centroid_Y","Shape_Leng","Shape_Area","site_no","HU_12_NAME"]
                 });
                 
+                var getFeatureProtocolList = [gageProtocol, hucProtocol, biodataProtocol];
                 //TODO create a subclass of protocol
                 //set up protocols based on map layer selections
                 var joinedProtocol = new (function(protocols) {
@@ -137,22 +137,41 @@
                             el.abort(abortParam);
                         });
                     };
-                })([gageProtocol, hucProtocol, biodataProtocol]);
+                })(getFeatureProtocolList);
                 
 
-                var featuresSelected = function (e) {
-                	console.log(e);
-                	//TODO This gets called 3 times if all three layers find features,
-                	//if any of hte features does not find a feature, I only get 2 calls.
-                	
-                	//Wait for all 3 calls to return, then move onto next state.
-//                    //reset user selections to 0
-//                    StoredState.selectedAquaticBiologySites = [];
-//                    
-//                    //let user pick between sites in the dragged box
-//                    StoredState.aquaticBiologySites = e.features;
-//                    $state.go('workflow.aquaticBiology.showSelectedBioDataSites');
-//                    $log.info(CommonState);
+                //TODO major abuse of CommonState and StoredState here, refactor
+                //this handler is a hack an relies on the clickout event to detect a "no features found" state
+                //also a hack, tracks how many responses we got
+        		CommonState.biodataGetFeatureResponses = [];
+                var getFeatureResponse = function (e) {
+                	if(CommonState.biodataGetFeatureResponses.length==0){ //on first click, always reset state
+                        StoredState.selectedAquaticBiologySites = [];
+                        StoredState.bioNearbyStreamGages = null;
+                		StoredState.bioNearbyHucs = null;
+                	}
+            		CommonState.biodataGetFeatureResponses.push(e); //Hack, used to count how many responses we got
+            		
+            		if(e.features && e.features.length > 0) {
+	                	if(e.features[0].fid && e.features[0].fid.indexOf('SiteInfo') >=0 ) { //TODO(BRITTLE) SiteInfo is not guaranteed
+		                    //let user pick between sites in the dragged box
+		                    StoredState.aquaticBiologySites = e.features;
+		                    console.log(StoredState.aquaticBiologySites)
+	                	} else if(CommonState.activatedStreamflowTypes.nwis &&
+	                			e.features[0].fid && e.features[0].fid.indexOf('gagesII')>=0 ) {//TODO(BRITTLE), gagesII is not guaranteed
+	                		StoredState.bioNearbyStreamGages = e.features;
+	                	} else if(CommonState.activatedStreamflowTypes.sehuc12 && 
+	                			e.features[0].fid && e.features[0].fid.indexOf('huc12')>=0 ) {//TODO(BRITTLE), huc12 is not guaranteed
+	                		StoredState.bioNearbyHucs = e.features;
+	                	}
+                	}
+            		
+	            	//wait for all calls before processing
+	            	if(CommonState.biodataGetFeatureResponses.length >= getFeatureProtocolList.length) {
+                		CommonState.biodataGetFeatureResponses = [];
+	            		$state.go('workflow.aquaticBiology.showSelectedBioDataSites');
+	                    $log.info(CommonState);
+	            	}
                 };
                 
                 var bioDataGetFeatureControl = new OpenLayers.Control.GetFeature({
@@ -161,7 +180,8 @@
                     box: true
                 });
                 initialControls.push(bioDataGetFeatureControl);
-                bioDataGetFeatureControl.events.register('featuresselected', {}, featuresSelected);
+                bioDataGetFeatureControl.events.register('featuresselected', {}, getFeatureResponse);
+                bioDataGetFeatureControl.events.register('clickout', {}, getFeatureResponse);
                 
                 var map = BaseMap.new({
                     layers: mapLayers,

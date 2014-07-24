@@ -103,7 +103,7 @@
                 $scope.StoredState = StoredState;
                 
                 //if WFS call found stream gages, set up the directive
-                $scope.streamGages = CommonState.bioNearbyStreamGages;
+                $scope.streamGages = StoredState.bioNearbyStreamGages;
     	    	//set up scope fields for nwcGageList directive (see GageList.js for directive information)
                 gageListService.setScopeParams(
         			$scope,
@@ -118,7 +118,7 @@
         		);
         		
                 //if WFS found HUCS, set up directing
-                $scope.hucs = CommonState.bioNearbyHucs;
+                $scope.hucs = StoredState.bioNearbyHucs;
                 hucListService.setScopeParams(
             			$scope,
             			'Watersheds',
