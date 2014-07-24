@@ -61,6 +61,9 @@
             $scope.$watch('CommonState.activatedStreamflowTypes', function(newObject, oldObject) {
                 if (newObject !== oldObject) {
                     AquaticBiologyMap.toggleSiteType(newObject);
+                    // WATERSMART-398 - Due to page shifting on button press, the streamgage locations shift and the 
+                    // click event doesn't seem to line up with where the gages actually are. Updating the map's size fixes the issue
+                    AquaticBiologyMap.updateMapSize();
                 }
             }, true);
                 
@@ -74,6 +77,9 @@
                         controlId = 'nwc-biodata-sites';
                     }
                     if (newControl !== oldControl) {
+                        // WATERSMART-398 - Due to page shifting on button press, the streamgage locations shift and the 
+                        // click event doesn't seem to line up with where the gages actually are. Updating the map's size fixes the issue
+                        AquaticBiologyMap.updateMapSize();
                         var controls = AquaticBiologyMap.getMap().getControlsBy('id', /nwc-.*/);
                         angular.forEach(controls, function(control) {
                             control.deactivate();
