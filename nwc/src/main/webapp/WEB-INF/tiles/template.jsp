@@ -13,7 +13,7 @@
                         //point to local proxies
                         CONFIG.endpoint.geoserver = '${context}/geoserver/';
                         CONFIG.endpoint.thredds = '${context}/thredds/';
-                        CONFIG.endpoint.wps = '${context}/wps/';
+                        CONFIG.endpoint.wps = '${context}/wps/WebProcessingService'; //TODO inconsistant use of of URL resources
                         CONFIG.endpoint.nwis = '${context}/nwis/';
                     }());
                 </script>
