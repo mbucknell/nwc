@@ -17,10 +17,10 @@
 				CONFIG.endpoint.wps = '${context}/proxy/wps/WebProcessingService'; //TODO inconsistant use of of URL resources
 				CONFIG.endpoint.nwis = '${context}/proxy/nwis/';
 				
-				CONFIG.endpoint.direct.geoserver = ${directGeoserverEndpoint};
-				CONFIG.endpoint.direct.thredds = ${directThreddsEndpoint};
-				CONFIG.endpoint.direct.wps = ${directWpsEndpoint};
-				CONFIG.endpoint.direct.nwis = ${directNwisEndpoint};
+				CONFIG.endpoint.direct.geoserver = '${directGeoserverEndpoint}';
+				CONFIG.endpoint.direct.thredds = '${directThreddsEndpoint}';
+				CONFIG.endpoint.direct.wps = '${directWpsEndpoint}';
+				CONFIG.endpoint.direct.nwis = '${directNwisEndpoint}';
 			}());
 		</script>
 
