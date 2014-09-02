@@ -40,6 +40,11 @@
     request.setAttribute("openlayersVersion", props.get("openlayers.version"));
     request.setAttribute("fontawesomeVersion", props.get("fontawesome.version"));
     request.setAttribute("sugarVersion", props.get("sugar.version"));
+
+    request.setAttribute("directGeoserverEndpoint", props.get("nwc.endpoint.geoserver"));
+    request.setAttribute("directThreddsEndpoint", props.get("nwc.endpoint.thredds"));
+    request.setAttribute("directWpsEndpoint", props.get("nwc.endpoint.wps"));
+    request.setAttribute("directNwisEndpoint", props.get("nwc.endpoint.nwis"));
 %>
 
 <!-- Lets set the context path lookup to a variable for ease of use  -->
