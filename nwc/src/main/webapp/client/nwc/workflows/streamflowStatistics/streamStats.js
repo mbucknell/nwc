@@ -101,9 +101,9 @@
                                         'startdate': startDateString,
                                         'enddate': endDateString,
                                         'stats': statTypesString,
-                                        'sos': "http:" + CONFIG.endpoint.thredds + 'HUC12_data/HUC12_Q.nc',
+                                        'sos': CONFIG.endpoint.direct.thredds + 'HUC12_data/HUC12_Q.nc',
                                         'observedProperty': 'MEAN_streamflow',
-                                        'wfsUrl': "http:" + CONFIG.endpoint.geoserver + 'NWC/ows',
+                                        'wfsUrl': CONFIG.endpoint.direct.geoserver + 'NWC/ows',
                                         'wfsTypename': 'NWC:huc12_SE_Basins_v2',
                                         'wfsFilterProperty': 'NWC:HUC12',
                                         'wfsAreaPropertyname': 'NWC:mi2'

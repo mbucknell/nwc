@@ -5,19 +5,25 @@
 <html>
 	<head>
 		<tiles:insertAttribute name="meta" />
-                <script type="text/javascript">
-                    (function(){
-                        window.CONFIG = {};
-                        CONFIG.endpoint = {};
-                        
-                        //point to local proxies
-                        CONFIG.endpoint.geoserver = '${context}/proxy/geoserver/';
-                        CONFIG.endpoint.thredds = '${context}/proxy/thredds/';
-                        CONFIG.endpoint.wps = '${context}/proxy/wps/WebProcessingService'; //TODO inconsistant use of of URL resources
-                        CONFIG.endpoint.nwis = '${context}/proxy/nwis/';
-                    }());
-                </script>
-                        
+		<script type="text/javascript">
+			(function(){
+				window.CONFIG = {};
+				CONFIG.endpoint = {};
+				CONFIG.endpoint.direct = {};
+
+				//point to local proxies
+				CONFIG.endpoint.geoserver = '${context}/proxy/geoserver/';
+				CONFIG.endpoint.thredds = '${context}/proxy/thredds/';
+				CONFIG.endpoint.wps = '${context}/proxy/wps/WebProcessingService'; //TODO inconsistant use of of URL resources
+				CONFIG.endpoint.nwis = '${context}/proxy/nwis/';
+				
+				CONFIG.endpoint.direct.geoserver = '${directGeoserverEndpoint}';
+				CONFIG.endpoint.direct.thredds = '${directThreddsEndpoint}';
+				CONFIG.endpoint.direct.wps = '${directWpsEndpoint}';
+				CONFIG.endpoint.direct.nwis = '${directNwisEndpoint}';
+			}());
+		</script>
+
 	</head>
 	<body>
 		<div class="container site_body_content">

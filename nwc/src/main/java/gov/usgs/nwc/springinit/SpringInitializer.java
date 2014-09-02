@@ -95,7 +95,7 @@ public class SpringInitializer implements WebApplicationInitializer {
         wpsParams.put("forward-url", wpsUrl);
         wps.setInitParameters(wpsParams);
         
-	    String nwisUrl = props.getProperty("nwc.enpoint.nwis", "http://waterservices.usgs.gov/nwis/site/");
+	    String nwisUrl = props.getProperty("nwc.endpoint.nwis", "http://waterservices.usgs.gov/nwis/site/");
         Dynamic nwis = servletContext.addServlet("nwis", new AlternateProxyServlet());
         nwis.addMapping("/proxy/nwis/*");
         nwis.setLoadOnStartup(6);
