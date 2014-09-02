@@ -2,11 +2,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>gov.usgs.cida.nwc</groupId>
-    <artifactId>nwc</artifactId>
-    <version>0.1.3-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <artifactId>nwc-parent</artifactId>
+    <version>0.1.5-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-    <name>NWCUI</name>
+    <name>NWC</name>
     <url>http://cida.usgs.gov/</url>
 
     <inceptionYear>2013</inceptionYear>
@@ -61,6 +61,14 @@
             <id>jiwalker</id>
             <name>Jordan Walker</name>
             <email>jiwalker@usgs.gov</email>
+            <organization>Center for Integrated Data Analytics</organization>
+            <organizationUrl>http://cida.usgs.gov</organizationUrl>
+            <timezone>-6</timezone>
+        </developer>
+        <developer>
+            <id>isuftin</id>
+            <name>Ivan Suftin</name>
+            <email>isuftin@usgs.gov</email>
             <organization>Center for Integrated Data Analytics</organization>
             <organizationUrl>http://cida.usgs.gov</organizationUrl>
             <timezone>-6</timezone>
@@ -130,444 +138,305 @@
         <fontawesome.version>4.0.3</fontawesome.version>
         <sugar.version>1.4.1</sugar.version>
     </properties>
+	
+	<modules>
+		<module>nwc</module>
+	</modules>
+	
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>application.properties</include>
-                </includes>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                    <goal>process-resources</goal>
-                </configuration>
-            </plugin>
-            <!-- Need to remove the requirement of the web.xml since	-->
-            <!-- 	we are now using SpringConfig (no more xml yay!)	-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <warName>${warName}</warName>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.8</version>
-                <executions>
-                    <execution>
-                        <id>unpack webjars</id>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeGroupIds>org.webjars</includeGroupIds>
-                            <outputDirectory>${webjars.base}</outputDirectory>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>unpack cida jslibs</id>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeGroupIds>gov.usgs.cida.jslibs</includeGroupIds>
-                            <outputDirectory>${thirdParty.base}</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.github.klieber</groupId>
-                <artifactId>phantomjs-maven-plugin</artifactId>
-                <version>0.2.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>install</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <version>1.9.2</version>
-                    <baseUrl>http://internal.cida.usgs.gov/~dmsibley/</baseUrl>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.github.searls</groupId>
-                <artifactId>jasmine-maven-plugin</artifactId>
-                <version>1.3.1.2</version>
-                <extensions>true</extensions>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <keepServerAlive>true</keepServerAlive>
-                    <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
-                    <webDriverCapabilities>
-                        <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
-                    </webDriverCapabilities>
-                    <jsSrcDir>${basedir}</jsSrcDir>
-                    <jsTestSrcDir>${basedir}/src/test/javascript/specs</jsTestSrcDir>
-                    <sourceIncludes>
-                        <!--library dependencies -->
-                        <include>${webjars.libs}/jquery/${jquery.version}/jquery.js</include>
-                        <include>${webjars.libs}/angularjs/${angular.version}/angular.js</include>
-                        <include>${webjars.libs}/angularjs/${angular.version}/angular-mocks.js</include>
-                        <include>${webjars.libs}/angular-ui-router/${angular-ui-router.version}/angular-ui-router.js</include>
-                        <include>${webjars.libs}/angular-ui-bootstrap/${angular-ui-bootstrap.version}/ui-bootstrap.js</include>
-                        <include>${webjars.libs}/angular-ui-bootstrap/${angular-ui-bootstrap.version}/ui-bootstrap-tpls.js</include>
-                        <include>${webjars.libs}/sugar/${sugar.version}/sugar-full.development.js</include>
-                        <include>${webjars.libs}/openlayers/${openlayers.version}/OpenLayers.debug.js</include>
-                        <include>${thirdParty.libs}/openlayers/extension/Raster.js</include>
-                        <include>${thirdParty.libs}/openlayers/extension/Layer/Raster.js</include>
-                        <include>${thirdParty.libs}/openlayers/extension/Raster/Grid.js</include>
-                        <include>${thirdParty.libs}/openlayers/extension/Raster/Operation.js</include>
-                        <include>${thirdParty.libs}/openlayers/extension/Raster/Composite.js</include>
-                        <include>${thirdParty.base}/dygraphs/dygraph-dev.js</include>
-                        <include>${webjars.libs}/flot/${flotcharts.version}/jquery.flot.js</include>
-                        <include>${webjars.libs}/flot/${flotcharts.version}/jquery.flot.resize.js</include>
-                        <include>${webjars.libs}/flot/${flotcharts.version}/jquery.flot.time.js</include>
-                        <include>${webjars.libs}/flot/${flotcharts.version}/jquery.flot.stack.js</include>
-
-                        <include>${thirdParty.base}/flot-plugins/jquery.flot.tooltip.js</include>
-                        <include>${thirdParty.base}/flot-plugins/jquery.flot.axislabels.js</include>
-
-                        <include>${thirdParty.base}/checklist-model/checklist-model.js</include>
-
-                        <!-- misc -->
-                        <include>${nwcClientBase}/general/openLayersExtensions/WaterCensusToolbar/js/WaterCensusToolbar.js</include>
-
-                        <!--services -->
-
-                        <!-- 
-                            if errors are encountered due to mis-ordering of service script loading, 
-                            consult this file's history for the previous explicitly-ordered list
-                        -->
-                        <include>${nwcClientBase}/general/**/*.js</include>
-                        <include>${nwcClientBase}/state/**/*.js</include>
-                        <!-- controllers -->
-                        <include>${nwcClientBase}/workflows/**/*.js</include>
-                        <!-- main app-->
-                        <include>${nwcClientBase}/general/app.js</include>
-                                            
-                    </sourceIncludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.github.timurstrekalov</groupId>
-                <artifactId>saga-maven-plugin</artifactId>
-                <version>1.5.2</version>
-                <configuration>
-                    <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
-                    <outputDir>${project.build.directory}/coverage</outputDir>
-                    <noInstrumentPatterns>
-<!--                        <pattern>.*/.+_spec\.js</pattern>-->
-                        <!-- Add patterns for files that don't need to be analyzed such as library files -->
-                    </noInstrumentPatterns>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.github.goldin</groupId>
-                <artifactId>copy-maven-plugin</artifactId>
-                <version>0.2.5</version>
-                <configuration>      <!-- use copy:copy to run-->
-                    <failIfNotFound>false</failIfNotFound>
-                    <resource>
-                        <targetPath>${project.build.directory}/jasmine</targetPath>
-                        <file>${project.build.directory}/coverage/total-coverage.dat</file>
-                        <destFileName>total-coverage.dat</destFileName>
-                        <replaces>
-                            <replace>
-                                <from>src/</from>
-                                <!-- Regex to replace src/ with correct path name -->
-                                <to>${project.basedir}/src/main/webapp/client/nwc</to>
-                                <!-- Replacement String to my JS src files -->
-                            </replace>
-                        </replaces>
-                    </resource>
-                </configuration>
-            </plugin>
-        </plugins>
-        <finalName>${warName}</finalName>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+				</plugin>
+				<!-- Need to remove the requirement of the web.xml since	-->
+				<!-- 	we are now using SpringConfig (no more xml yay!)	-->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.8</version>
+				</plugin>
+				<plugin>
+					<groupId>com.github.klieber</groupId>
+					<artifactId>phantomjs-maven-plugin</artifactId>
+					<version>0.2.1</version>
+				</plugin>
+				<plugin>
+					<groupId>com.github.searls</groupId>
+					<artifactId>jasmine-maven-plugin</artifactId>
+					<version>1.3.1.2</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
     </build>
 
-    <dependencies>
-        <dependency>
-            <groupId>gov.usgs.cida</groupId>
-            <artifactId>dynamicProperties</artifactId>
-            <version>1.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>gov.usgs.cida.jslibs</groupId>
-            <artifactId>openlayers-raster-jar</artifactId>
-            <version>2.12-10</version>
-        </dependency>
-        <!-- JUnit dependencies -->
-        <!-- ================================================================== -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- ================================================================== -->
-	
-        <!-- Log4j dependencies -->
-        <!-- ================================================================== -->
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-        </dependency>
-        <!-- ================================================================== -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>gov.usgs.cida</groupId>
+				<artifactId>dynamicProperties</artifactId>
+				<version>1.0.2</version>
+			</dependency>
+			<dependency>
+				<groupId>gov.usgs.cida.jslibs</groupId>
+				<artifactId>openlayers-raster-jar</artifactId>
+				<version>2.12-10</version>
+			</dependency>
+			<!-- JUnit dependencies -->
+			<!-- ================================================================== -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.11</version>
+				<scope>test</scope>
+			</dependency>
+			<!-- ================================================================== -->
+		
+			<!-- Log4j dependencies -->
+			<!-- ================================================================== -->
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.17</version>
+			</dependency>
+			<!-- ================================================================== -->
 
-        <!-- Spring 3 dependencies -->
-        <!-- ================================================================== -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
+			<!-- Spring 3 dependencies -->
+			<!-- ================================================================== -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-            <version>2.2.2</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
-        </dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>cglib</groupId>
+				<artifactId>cglib</artifactId>
+				<version>2.2.2</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>3.1.0</version>
+				<scope>provided</scope>
+			</dependency>
 
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.1</version>
-            <scope>provided</scope>
-        </dependency>
+			<dependency>
+				<groupId>javax.servlet.jsp</groupId>
+				<artifactId>jsp-api</artifactId>
+				<version>2.1</version>
+				<scope>provided</scope>
+			</dependency>
 
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.1.2</version>
-        </dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>jstl</artifactId>
+				<version>1.1.2</version>
+			</dependency>
 
-        <dependency>
-            <groupId>taglibs</groupId>
-            <artifactId>standard</artifactId>
-            <version>1.1.2</version>
-        </dependency>
-        <!-- ================================================================== -->
-		
-        <!-- Tiles 3.0 Template Framework 								  -->
-        <!-- ================================================================== -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.1</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.5</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>commons-digester</groupId>
-            <artifactId>commons-digester</artifactId>
-            <version>1.7</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.8.3</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-core</artifactId>
-            <version>3.0.1</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-template</artifactId>
-            <version>3.0.1</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-jsp</artifactId>
-            <version>3.0.1</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-extras</artifactId>
-            <version>3.0.1</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-api</artifactId>
-            <version>3.0.1</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-autotag-core-runtime</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-request-api</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-request-jsp</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-request-servlet</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>gov.usgs.cida</groupId>
-            <artifactId>proxy-utils</artifactId>
-            <version>1.0.6</version>
-        </dependency>
-        <!-- ================================================================== -->
-                
-        <!-- <webjars> -->
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery</artifactId>
-            <version>${jquery.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>angularjs</artifactId>
-            <version>${angular.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>angular-ui-router</artifactId>
-            <version>${angular-ui-router.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>sugar</artifactId>
-            <version>${sugar.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>angular-ui-bootstrap</artifactId>
-            <version>${angular-ui-bootstrap.version}</version>
-        </dependency>
-        <!-- Declaring bootstrap directly, though angular brings it in transitively -->
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>${bootstrap.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>openlayers</artifactId>
-            <version>${openlayers.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>flot</artifactId>
-            <version>${flotcharts.version}-1</version><!-- the "-1" suffix is because webjars refactored and bumped a version-->
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>font-awesome</artifactId>
-            <version>${fontawesome.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>ng-grid</artifactId>
-            <version>${angular-ui-grid.version}</version>
-        </dependency>
-        <!-- </webjars> -->
-                
-        <!-- Persistence dependencies -->
-        <!-- ================================================================== -->
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>4.3.0.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.1-901.jdbc4</version>
-        </dependency>
-        <!-- ================================================================== -->
-    </dependencies>
+			<dependency>
+				<groupId>taglibs</groupId>
+				<artifactId>standard</artifactId>
+				<version>1.1.2</version>
+			</dependency>
+			<!-- ================================================================== -->
+			
+			<!-- Tiles 3.0 Template Framework 								  -->
+			<!-- ================================================================== -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.1</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>1.7.5</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>1.1.1</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>commons-digester</groupId>
+				<artifactId>commons-digester</artifactId>
+				<version>1.7</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>commons-collections</groupId>
+				<artifactId>commons-collections</artifactId>
+				<version>3.2</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>1.8.3</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.tiles</groupId>
+				<artifactId>tiles-core</artifactId>
+				<version>3.0.1</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.tiles</groupId>
+				<artifactId>tiles-template</artifactId>
+				<version>3.0.1</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.tiles</groupId>
+				<artifactId>tiles-jsp</artifactId>
+				<version>3.0.1</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.tiles</groupId>
+				<artifactId>tiles-extras</artifactId>
+				<version>3.0.1</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.tiles</groupId>
+				<artifactId>tiles-api</artifactId>
+				<version>3.0.1</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.tiles</groupId>
+				<artifactId>tiles-autotag-core-runtime</artifactId>
+				<version>1.1.0</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.tiles</groupId>
+				<artifactId>tiles-request-api</artifactId>
+				<version>1.0.1</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.tiles</groupId>
+				<artifactId>tiles-request-jsp</artifactId>
+				<version>1.0.1</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.tiles</groupId>
+				<artifactId>tiles-request-servlet</artifactId>
+				<version>1.0.1</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>gov.usgs.cida</groupId>
+				<artifactId>proxy-utils</artifactId>
+				<version>1.0.6</version>
+			</dependency>
+			<!-- ================================================================== -->
+					
+			<!-- <webjars> -->
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>jquery</artifactId>
+				<version>${jquery.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>angularjs</artifactId>
+				<version>${angular.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>angular-ui-router</artifactId>
+				<version>${angular-ui-router.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>sugar</artifactId>
+				<version>${sugar.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>angular-ui-bootstrap</artifactId>
+				<version>${angular-ui-bootstrap.version}</version>
+			</dependency>
+			<!-- Declaring bootstrap directly, though angular brings it in transitively -->
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>bootstrap</artifactId>
+				<version>${bootstrap.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>openlayers</artifactId>
+				<version>${openlayers.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>flot</artifactId>
+				<version>${flotcharts.version}-1</version><!-- the "-1" suffix is because webjars refactored and bumped a version-->
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>font-awesome</artifactId>
+				<version>${fontawesome.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>ng-grid</artifactId>
+				<version>${angular-ui-grid.version}</version>
+			</dependency>
+			<!-- </webjars> -->
+					
+			<!-- Persistence dependencies -->
+			<!-- ================================================================== -->
+			<dependency>
+				<groupId>commons-dbcp</groupId>
+				<artifactId>commons-dbcp</artifactId>
+				<version>1.4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-entitymanager</artifactId>
+				<version>4.3.0.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-orm</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>9.1-901.jdbc4</version>
+			</dependency>
+			<!-- ================================================================== -->
+		</dependencies>
+	</dependencyManagement>
 </project>
