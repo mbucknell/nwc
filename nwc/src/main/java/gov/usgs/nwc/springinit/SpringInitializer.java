@@ -70,7 +70,7 @@ public class SpringInitializer implements WebApplicationInitializer {
 
 	    String geoserverUrl = props.getProperty("nwc.endpoint.geoserver", "http://cida-eros-wsdev.er.usgs.gov:8081/geoserver/");
         Dynamic geoserver = servletContext.addServlet("geoserver", new AlternateProxyServlet());
-        geoserver.addMapping("/geoserver/*");
+        geoserver.addMapping("/proxy/geoserver/*");
         geoserver.setLoadOnStartup(3);
         HashMap<String,String> geoserverParams = new HashMap<>();
         geoserverParams.put("forward-url-param", "geoserverUrl");
@@ -79,7 +79,7 @@ public class SpringInitializer implements WebApplicationInitializer {
         
 	    String threddsUrl = props.getProperty("nwc.endpoint.thredds", "http://cida-eros-wsdev.er.usgs.gov:8081/thredds/sos/watersmart/");
         Dynamic thredds = servletContext.addServlet("thredds", new AlternateProxyServlet());
-        thredds.addMapping("/thredds/*");
+        thredds.addMapping("/proxy/thredds/*");
         thredds.setLoadOnStartup(4);
         HashMap<String,String> threddsParams = new HashMap<>();
         threddsParams.put("forward-url-param", "threddsUrl");
@@ -88,7 +88,7 @@ public class SpringInitializer implements WebApplicationInitializer {
         
 	    String wpsUrl = props.getProperty("nwc.endpoint.wps", "http://cida-eros-wsdev.er.usgs.gov:8081/wps/");
         Dynamic wps = servletContext.addServlet("wps", new AlternateProxyServlet());
-        wps.addMapping("/wps/*");
+        wps.addMapping("/proxy/wps/*");
         wps.setLoadOnStartup(5);
         HashMap<String,String> wpsParams = new HashMap<>();
         wpsParams.put("forward-url-param", "wpsParams");
@@ -97,7 +97,7 @@ public class SpringInitializer implements WebApplicationInitializer {
         
 	    String nwisUrl = props.getProperty("nwc.enpoint.nwis", "http://waterservices.usgs.gov/nwis/site/");
         Dynamic nwis = servletContext.addServlet("nwis", new AlternateProxyServlet());
-        nwis.addMapping("/nwis/*");
+        nwis.addMapping("/proxy/nwis/*");
         nwis.setLoadOnStartup(6);
         HashMap<String,String> nwisParams = new HashMap<>();
         nwisParams.put("forward-url-param", "nwisUrl");
