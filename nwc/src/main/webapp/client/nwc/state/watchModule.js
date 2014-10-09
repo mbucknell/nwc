@@ -285,7 +285,7 @@
                             endColumn = endColumn.map(reformatDateStr);
                             endColumn = endColumn.map(strToDate);
                             endColumn.sort(function(a, b) {
-                                return a + b;
+                                return b - a;
                             });
                             var endDate = endColumn[0];
 
