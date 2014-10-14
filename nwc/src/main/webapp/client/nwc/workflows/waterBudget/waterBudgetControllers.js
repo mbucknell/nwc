@@ -28,13 +28,13 @@
     )]);
 
 waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState', 'CommonState', 
-    'WaterBudgetPlot', 'WaterUsageChart', 'Units', 'Convert',
+    'Plotter', 'WaterUsageChart', 'Units', 'Convert',
     NWC.ControllerHelpers.StepController(
         {
             name: 'Plot Water Budget Data',
             description: 'Visualize the data for your HUC of interest.'
         },
-        function ($scope, $state, StoredState, CommonState, WaterBudgetPlot, WaterUsageChart, Units, Convert) {
+        function ($scope, $state, StoredState, CommonState, Plotter, WaterUsageChart, Units, Convert) {
             var selectionInfo = {};
             if (StoredState.waterBudgetHucFeature) {
                 selectionInfo.hucId = StoredState.waterBudgetHucFeature.data.HUC_12;
@@ -68,7 +68,6 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             });
             /**
              * {String} category the category of data to plot (daily or monthly)
-             * TODO: should be able to delete WaterBudgetPlot and move to nwc.plotter
              */
             var plotPTandETaData = function(){
                 var normalization = 'normalizedWater';
@@ -76,7 +75,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 var labels = CommonState.DataSeriesStore[StoredState.plotTimeDensity].getSeriesLabelsAs(
                         StoredState.measurementSystem, normalization, StoredState.plotTimeDensity);
                 var ylabel = Units[StoredState.measurementSystem][normalization][StoredState.plotTimeDensity];
-                WaterBudgetPlot.setPlot(plotDivSelector, legendDivSelector, values, labels, ylabel);
+                Plotter.getPlot(plotDivSelector, legendDivSelector, values, labels, ylabel);
             };
             //boolean property is cheaper to watch than deep object comparison
             $scope.$watch('CommonState.newDataSeriesStore', function(newValue, oldValue){
