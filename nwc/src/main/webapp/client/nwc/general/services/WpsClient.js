@@ -110,15 +110,28 @@
                 }
             };
 
+            exports.getProxyUrl = function(url) {
+            	if(url.indexOf(CONFIG.endpoint.direct.wps) >=0 ) {
+            		return url.replace(CONFIG.endpoint.direct.wps, CONFIG.endpoint.wpsBase);
+            	}
+            	return url;
+            };
+            
             /**
              * @todo - make this into a full-fledged OpenLayers.Format.XML subclass
              * @param {XMLDocument} responseDoc
              * @returns {String} the status url
              */
             var getStatusUrlFromStartDoc = function (responseDoc) {
-                var statusUrl = responseDoc.childNodes[0].getAttribute('statusLocation');
+                //IE has the root object as childNode index 1
+            	var statusUrl = $(responseDoc.childNodes[0]).attr('statusLocation') || $(responseDoc.childNodes[1]).attr('statusLocation');
+            	
+            	//Attempt to avoid cross site scripting by stripping out he base url if it matches our proxy destination
+            	statusUrl = exports.getProxyUrl(statusUrl);
+            	
                 return statusUrl;
             };
+            
             /**
              * 
              * @param {XMLElement} parentElt
@@ -133,7 +146,7 @@
                 if (!elts.length) {
                     elts = parentElt.getElementsByTagName(tagName);
                 }
-                if (!elts.length) {
+                if (!elts.length && parentElt.getElementsByTagNameNS) {
                     elts = parentElt.getElementsByTagNameNS(namespaceURI, 'point');
                 }
                 return elts;
@@ -186,7 +199,7 @@
              */
             var getStatusFromStatusDoc = function (statusDoc) {
                 var ProcessStatus = exports.getProcessStatusEnum();
-                var parentElt = statusDoc.childNodes[0];
+                var parentElt = statusDoc.childNodes[1] || statusDoc.childNodes[0]; //IE puts root node at index 1 (xml tag is index 0)
                 var statusElt = extractExactlyOneWpsElementByTagName(parentElt, 'Status');
                 var status = ProcessStatus.IN_PROGRESS;
                 var successful = !!getWpsElementsByTagName(statusElt, 'ProcessSucceeded').length;
@@ -207,11 +220,11 @@
              * @returns {String} results url
              */
             var getResultsUrlFromStatusDoc = function (statusDoc) {
-                var rootElt = statusDoc.childNodes[0];
+                var rootElt = statusDoc.childNodes[1] || statusDoc.childNodes[0]; //IE puts root node at index 1 (xml tag is index 0)
                 //assume only one Reference element in doc
                 var referenceElt = getWpsElementsByTagName(rootElt, 'Reference')[0];
                 var resultsUrl = referenceElt.getAttribute('href');
-                return resultsUrl;
+                return exports.getProxyUrl(resultsUrl);
             };
             
             /**
