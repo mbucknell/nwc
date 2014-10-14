@@ -124,7 +124,6 @@
              * intersecting counties
              */
             var addCountiesThatIntersectWith = function (geometry) {
-                console.debug('Adding Filtered Counties WFS layer based on HUC geometry');
                 var intersectionFilter = new OpenLayers.Filter.Spatial({
                     type: OpenLayers.Filter.Spatial.INTERSECTS,
                     property: 'the_geom',
