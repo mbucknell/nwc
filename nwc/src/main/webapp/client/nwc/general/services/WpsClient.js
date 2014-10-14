@@ -237,8 +237,9 @@
              */
             var wereThereExceptionsInResponse = function (response) {
                 hasExceptions = false;
-                if (response.responseXML) {
-                    var responseDoc = response.responseXML;
+                var xml = response.responseXML || $.parseXML(response.responseText);
+                if (xml) {
+                    var responseDoc = xml;
                     var exceptions = getWpsElementsByTagName(responseDoc, 'Exception');
                     var hasExceptions = !!exceptions.length;
                 }
@@ -310,7 +311,8 @@
                         }
                         else {
                             cfg.start.success(response, cfg);
-                            var statusUrl = getStatusUrlFromStartDoc(response.responseXML);
+                            var xml = response.responseXML || $.parseXML(response.responseText);
+                            var statusUrl = getStatusUrlFromStartDoc(xml);
                             pollStatus(cfg, statusUrl, 0);
                         }
                     },
@@ -336,7 +338,7 @@
                             cfg.status.failure(response, pollCount, ProcessStatus.FAILED, statusUrl, cfg);
                         }
                         else {
-                            var responseDoc = response.responseXML;
+                            var responseDoc = response.responseXML || $.parseXML(response.responseText);
                             var status = getStatusFromStatusDoc(responseDoc);
                             switch (status) {
                                 case ProcessStatus.FAILED:
