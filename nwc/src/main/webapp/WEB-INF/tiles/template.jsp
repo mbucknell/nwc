@@ -22,6 +22,15 @@
 				CONFIG.endpoint.direct.thredds = '${directThreddsEndpoint}';
 				CONFIG.endpoint.direct.wps = '${directWpsEndpoint}';
 				CONFIG.endpoint.direct.nwis = '${directNwisEndpoint}';
+
+				//This is solely to not break IE, TODO: bring in logging lib
+				if(!window.console) {
+					window.console = {
+						log : function() {},
+						dir : function() {},
+						error : function() {}
+					};
+				}
 			}());
 		</script>
 
