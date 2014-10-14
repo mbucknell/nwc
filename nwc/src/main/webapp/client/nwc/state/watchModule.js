@@ -9,7 +9,6 @@
         'nwc.sosSources',
         'nwc.dataSeriesStore',
         'nwc.sosResponseParser',
-        'nwc.waterBudgetPlot',
         'nwc.streamStats',
         'nwc.map.waterBudget',
         'nwc.map.streamflow',

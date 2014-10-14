@@ -70,7 +70,6 @@
 <script type="text/javascript" src="${context}/client/nwc/state/sharedStateServices.js"></script>
 <script type="text/javascript" src="${context}/client/nwc/state/stateController.js"></script>
 
-<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetPlot.js"></script>
 <script type="text/javascript" src="${context}/client/nwc/general/services/BaseMap.js"></script>
 <script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetMap.js"></script>
 <script type="text/javascript" src="${context}/client/nwc/workflows/aquaticBiology/aquaticBiologyMap.js"></script>
