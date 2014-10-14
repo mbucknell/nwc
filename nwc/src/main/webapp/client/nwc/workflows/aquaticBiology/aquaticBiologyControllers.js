@@ -214,13 +214,15 @@
                     });
 
                     //serialize xml document
-                    var xmlString;
-                    //IE
-                    if (window.ActiveXObject) {
+                    var xmlString = "";
+                    
+                    try {
+                    	xmlString = (new XMLSerializer()).serializeToString(doc);
+                    } catch(e) {}
+
+                    //Give IE a shot
+                    if (xmlString.length <= 0 && window.ActiveXObject) {
                         xmlString = doc.xml;
-                    } else {
-                        // code for Mozilla, Firefox, Opera, etc.
-                        xmlString = (new XMLSerializer()).serializeToString(doc);
                     }
 
                     $("[name='currentQuery']").val(xmlString);
