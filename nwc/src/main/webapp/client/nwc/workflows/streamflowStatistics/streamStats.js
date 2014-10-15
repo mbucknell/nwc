@@ -59,9 +59,9 @@
                 return {
                     success: function (resultsUrl, config) {
                         //now that we have the results url, ajax-get the results.
-                        $http.get(resultsUrl).then(
+                        $http.get(wps.getProxyUrl(resultsUrl)).then(
                             function (response) {
-                                resultsHaveBeenObtained(response, resultsUrl, callback);
+                                resultsHaveBeenObtained(response, wps.getProxyUrl(resultsUrl), callback);
                             },
                             resultsCouldNotBeObtained
                         );
