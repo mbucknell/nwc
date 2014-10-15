@@ -26,7 +26,7 @@
 				};
             }
     )]);
-
+  
 waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState', 'CommonState', 
     'Plotter', 'WaterUsageChart', 'Units', 'Convert',
     NWC.ControllerHelpers.StepController(
@@ -35,6 +35,31 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             description: 'Visualize the data for your HUC of interest.'
         },
         function ($scope, $state, StoredState, CommonState, Plotter, WaterUsageChart, Units, Convert) {
+        	//WaterSmart-404 
+            var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
+            renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
+            var layer_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
+            layer_style.fillOpacity = 0.2;
+            layer_style.graphicOpacity = 1;
+        	var vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", {
+                	style: layer_style,
+                	renderers: renderer
+            });
+        	var layerExtent = StoredState.waterBudgetHucFeature.geometry.getBounds();
+        	var hucMap = new OpenLayers.Map('hucMap',{controls: [],'restrictedExtent': layerExtent});
+        	hucMap.addLayer(vectorLayer);
+        	var polygonFeature = new OpenLayers.Feature.Vector(StoredState.waterBudgetHucFeature.geometry);
+        	vectorLayer.addFeatures([polygonFeature]);
+        	var layer = new OpenLayers.Layer.XYZ("World Street Map",
+                    "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}", {
+        				isBaseLayer: true,
+        				units: "m",
+        				sphericalMercator: true
+        	});
+        	hucMap.addLayer(layer);
+        	hucMap.zoomToExtent(hucMap.restrictedExtent);
+            StoredState.hucMap = hucMap;
+        	
             var selectionInfo = {};
             if (StoredState.waterBudgetHucFeature) {
                 selectionInfo.hucId = StoredState.waterBudgetHucFeature.data.HUC_12;

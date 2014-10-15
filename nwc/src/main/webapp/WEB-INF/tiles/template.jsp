@@ -14,13 +14,23 @@
 				//point to local proxies
 				CONFIG.endpoint.geoserver = '${context}/proxy/geoserver/';
 				CONFIG.endpoint.thredds = '${context}/proxy/thredds/';
-				CONFIG.endpoint.wps = '${context}/proxy/wps/WebProcessingService'; //TODO inconsistant use of of URL resources
+				CONFIG.endpoint.wpsBase = '${context}/proxy/wps/';
+				CONFIG.endpoint.wps = CONFIG.endpoint.wpsBase + 'WebProcessingService'; //TODO inconsistant use of of URL resources
 				CONFIG.endpoint.nwis = '${context}/proxy/nwis/';
 				
 				CONFIG.endpoint.direct.geoserver = '${directGeoserverEndpoint}';
 				CONFIG.endpoint.direct.thredds = '${directThreddsEndpoint}';
 				CONFIG.endpoint.direct.wps = '${directWpsEndpoint}';
 				CONFIG.endpoint.direct.nwis = '${directNwisEndpoint}';
+
+				//This is solely to not break IE, TODO: bring in logging lib
+				if(!window.console) {
+					window.console = {
+						log : function() {},
+						dir : function() {},
+						error : function() {}
+					};
+				}
 			}());
 		</script>
 
