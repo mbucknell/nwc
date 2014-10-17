@@ -206,6 +206,7 @@
                         {
                             id: 'nwc-counties',
                             onSelect: function (feature) {
+                            	StoredState.countyFeature = feature;
                                 map.removeControl(control);
                                 hucControl.activate();
                                 layersToRemove.each(function (layer) {

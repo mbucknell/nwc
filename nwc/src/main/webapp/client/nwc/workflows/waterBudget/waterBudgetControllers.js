@@ -35,18 +35,16 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             description: 'Visualize the data for your HUC of interest.'
         },
         function ($scope, $state, StoredState, CommonState, Plotter, WaterUsageChart, Units, Convert) {
-        	//WaterSmart-404 
-            var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
-            renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
             var layer_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
-            layer_style.fillOpacity = 0.2;
+            layer_style.fillOpacity = 0;
             layer_style.graphicOpacity = 1;
+            layer_style.strokeColor = "black";
+            layer_style.strokeWidth = 2;
         	var vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", {
-                	style: layer_style,
-                	renderers: renderer
+                	style: layer_style
             });
         	var layerExtent = StoredState.waterBudgetHucFeature.geometry.getBounds();
-        	var hucMap = new OpenLayers.Map('hucMap',{controls: [],'restrictedExtent': layerExtent});
+        	var hucMap = new OpenLayers.Map('hucMap',{'restrictedExtent': layerExtent});
         	hucMap.addLayer(vectorLayer);
         	var polygonFeature = new OpenLayers.Feature.Vector(StoredState.waterBudgetHucFeature.geometry);
         	vectorLayer.addFeatures([polygonFeature]);
@@ -58,8 +56,20 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
         	});
         	hucMap.addLayer(layer);
         	hucMap.zoomToExtent(hucMap.restrictedExtent);
-            StoredState.hucMap = hucMap;
-        	
+           
+            if (StoredState.countyMap) {
+            	var vectorLayerCounty = new OpenLayers.Layer.Vector("Simple Geometry County", {
+                	style: layer_style
+            	});
+            	StoredState.countyMap.addLayer(vectorLayerCounty);
+            	vectorLayerCounty.addFeatures([StoredState.countyFeature]);
+            	StoredState.countyMap.removeLayer(StoredState.countyMap.getLayersByName("National WBD Snapshot")[0]);
+            	StoredState.countyMap.render('countyMap');
+            	StoredState.countyMap.zoomToExtent(StoredState.countyFeature.geometry.getBounds());
+            	delete StoredState.countyMap;
+            	delete StoredState.countyFeature;
+            }
+            
             var selectionInfo = {};
             if (StoredState.waterBudgetHucFeature) {
                 selectionInfo.hucId = StoredState.waterBudgetHucFeature.data.HUC_12;
@@ -273,6 +283,7 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
             map,
             function() {
                 StoredState.mapExtent = map.getExtent();
+                StoredState.countyMap = map;
             },
             false
         );
