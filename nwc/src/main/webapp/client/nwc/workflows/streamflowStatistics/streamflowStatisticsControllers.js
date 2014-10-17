@@ -143,6 +143,7 @@
                 CommonState.mapControlDescription = MapControlDescriptions.select.description;
                 CommonState.mapControlCursor = MapControlDescriptions.select.cursor;
                 CommonState.showStreamflowPlot = CommonState.showStreamflowPlot || false;
+                StoredState.nwisMap = map;
             }
         )
     ]);
@@ -169,6 +170,52 @@
                 description: 'Select a subset of the time series for which you would like to calculate various statistics.'
             },
             function ($scope, StoredState, CommonState, StoredState, $state, StreamStats, WaterYearUtil) {
+            	              
+                if (StoredState.streamFlowStatHucFeature) {
+                	var watershedMap = new OpenLayers.Map('watershedMap', {projection: "EPSG:900913"});
+                  	watershedMap.render('nwisMap');
+            	 
+                  	var layer = new OpenLayers.Layer.XYZ("World Street Map",
+	                        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}", {
+	            				isBaseLayer: true,
+	            				units: "m",
+	            				sphericalMercator: true
+                  	});
+                  	watershedMap.addLayer(layer);
+            	
+                  	var watersheds = new OpenLayers.Layer.WMS("Watersheds",
+                  			CONFIG.endpoint.geoserver + 'NHDPlusHUCs/wms', 
+                  			{'layers': 'NHDPlusHUCs:NationalWBDSnapshot', transparent: true, format: 'image/png'},
+                  			{isBaseLayer: false}
+        	        );
+                  	//get feature use open reader to get geometry - same way as water budget 
+//        	   		var watershedsWFS = new OpenLayers.Layer.WFS("Watersheds",
+//                  	CONFIG.endpoint.geoserver + 'NHDPlusHUCs/wfs', 
+//                   	{'layers': 'NHDPlusHUCs:NationalWBDSnapshot'},
+//                   	{isBaseLayer: false}
+//               	);
+               
+				   var filter = new OpenLayers.Filter.Comparison({
+					   type: OpenLayers.Filter.Comparison.EQUAL_TO,
+					   property: "HUC_12",
+					   value: StoredState.streamFlowStatHucFeature.data.HUC12
+					});
+				   
+				   var parser = new OpenLayers.Format.Filter.v1_1_0();
+				   var filterAsXml = parser.write(filter);
+				   var xml = new OpenLayers.Format.XML();
+				   var filterAsString = xml.write(filterAsXml);
+				   
+				   watersheds.params["FILTER"] = filterAsString;
+				   watersheds.redraw();
+				   watershedMap.zoomToMaxExtent();
+				   watershedMap.addLayer(watersheds);
+        	   } else {
+					var layers = StoredState.nwisMap.getLayersByName(".");
+					StoredState.nwisMap.render('nwisMap');
+					delete StoredState.nwisMap;
+        	   }
+        	   
             	$scope.previousStateTarget = CommonState.streamflowStatsParamsReturnTarget;
                 StoredState.streamflowStatsParamsReady = false;
                 CommonState.showStreamflowPlot = CommonState.showStreamflowPlot || false;
