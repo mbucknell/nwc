@@ -175,7 +175,7 @@
                 
                 var selectionInfo = {};
                 if (CommonState.streamFlowStatMinDate && CommonState.streamFlowStatMaxDate) {
-                    if(StoredState.gage){
+                    if(StoredState.gage && !StoredState.streamFlowStatHucFeature){
                         selectionInfo.gageId = StoredState.gage.data.STAID;
                         selectionInfo.gageName = StoredState.gage.data.STANAME;
                         selectionInfo.drainageArea = StoredState.gage.data.DRAIN_SQKM;
