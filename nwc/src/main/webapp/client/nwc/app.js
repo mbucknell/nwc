@@ -19,7 +19,7 @@
 			 'nwc.directives.selectionInfo',
 			 'nwc.directives.downloadData',
 			 'nwc.directives.streamflowStatistics',
-			 'nwc.directives.vectorFeatureMap',
+			 'nwc.directives.featureMap',
 			 'ui.router',
 			 'ui.bootstrap',
 			 'nwc.waterUsageChart',
