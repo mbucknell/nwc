@@ -9,8 +9,8 @@
 		var link = function(scope, element, attrs) {
 			var featureLayer = scope.nwcFeatureMap();
 			var layerExtent = featureLayer.getDataExtent();
-			var hucMap = new OpenLayers.Map(element.attr('id'),{controls: [],'restrictedExtent': layerExtent});
-			hucMap.addLayer(featureLayer);
+			var map = new OpenLayers.Map(element.attr('id'),{controls: [],'restrictedExtent': layerExtent});
+			map.addLayer(featureLayer);
 
 			var baseLayer = new OpenLayers.Layer.XYZ("World Street Map",
 					"http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}", {
@@ -18,8 +18,8 @@
 						units: "m",
 						sphericalMercator: true
 			});
-			hucMap.addLayer(baseLayer);
-			hucMap.zoomToExtent(hucMap.restrictedExtent);
+			map.addLayer(baseLayer);
+			map.zoomToExtent(map.restrictedExtent);
 		};
 		return {
 			restrict : 'A',
