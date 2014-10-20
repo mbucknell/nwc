@@ -291,6 +291,8 @@
                             CommonState.streamFlowStatMinDate = startDate;
                             CommonState.streamFlowStatMaxDate = endDate;
                             RunningWatches.remove(gageName);
+                            // set this so that the Streamflow Data Plot button does not show
+                            StoredState.streamFlowStatHucFeature = false;
                             // Adding this back here, need to rework some of this logic 
                             $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
                         };
@@ -311,6 +313,8 @@
                         propertyToWatch: 'streamflowStatsParamsReady',
                         watchFunction: function (prop, oldValue, streamFlowStatsParamsReady) {
                             RunningWatches.add(streamStatsReadyName);
+                            // set this so that the Streamflow Data Plot graph does not display until button pushed
+                            CommonState.showStreamflowPlot =  false;
                             if (streamFlowStatsParamsReady) {
                                 //reset
                                 CommonState.streamflowStatistics = [];
