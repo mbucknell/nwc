@@ -47,6 +47,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
         	vectorLayer.addFeatures([polygonFeature]);
 
 			$scope.hucLayer = vectorLayer;
+			$scope.featureBounds = vectorLayer.getDataExtent();
 
             var selectionInfo = {};
             if (StoredState.waterBudgetHucFeature) {

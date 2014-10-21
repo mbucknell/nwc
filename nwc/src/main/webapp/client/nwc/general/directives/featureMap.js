@@ -7,10 +7,8 @@
 
 	featureMap.directive('nwcFeatureMap', function() {
 		var link = function(scope, element, attrs) {
-			var featureLayer = scope.nwcFeatureMap();
-			var layerExtent = featureLayer.getDataExtent();
-			var map = new OpenLayers.Map(element.attr('id'),{controls: [],'restrictedExtent': layerExtent});
-			map.addLayer(featureLayer);
+			var map = new OpenLayers.Map(element.attr('id'),{controls: [new OpenLayers.Control.Zoom()],'restrictedExtent': scope.bounds()});
+			map.addLayer(scope.layer());
 
 			var baseLayer = new OpenLayers.Layer.XYZ("World Street Map",
 					"http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}", {
@@ -25,7 +23,8 @@
 			restrict : 'A',
 			link : link,
 			scope : {
-				nwcFeatureMap : '&'
+				layer : '&',
+				bounds : '&'
 			}
 		};
 	});
