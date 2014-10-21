@@ -143,7 +143,6 @@
                 CommonState.mapControlDescription = MapControlDescriptions.select.description;
                 CommonState.mapControlCursor = MapControlDescriptions.select.cursor;
                 CommonState.showStreamflowPlot = CommonState.showStreamflowPlot || false;
-//DDS                StoredState.nwisMap = map;
             }
         )
     ]);
