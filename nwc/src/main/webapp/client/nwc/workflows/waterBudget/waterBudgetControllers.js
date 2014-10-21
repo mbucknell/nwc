@@ -289,7 +289,6 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
             map,
             function() {
                 StoredState.mapExtent = map.getExtent();
-               //dds StoredState.countyMap = map;
             },
             false
         );
