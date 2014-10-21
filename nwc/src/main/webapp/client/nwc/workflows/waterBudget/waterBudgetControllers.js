@@ -35,38 +35,44 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             description: 'Visualize the data for your HUC of interest.'
         },
         function ($scope, $state, StoredState, CommonState, Plotter, WaterUsageChart, Units, Convert) {
-            var layer_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
-            layer_style.fillOpacity = 0;
-            layer_style.graphicOpacity = 1;
-            layer_style.strokeColor = "black";
-            layer_style.strokeWidth = 2;
-        	var vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", {
-                	style: layer_style
+            var layerStyle = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
+            layerStyle.fillOpacity = 0;
+            layerStyle.graphicOpacity = 1;
+            layerStyle.strokeColor = "black";
+            layerStyle.strokeWidth = 2;
+        	var hucVectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", {
+                	style: layerStyle
             });
-        	var layerExtent = StoredState.waterBudgetHucFeature.geometry.getBounds();
-        	var hucMap = new OpenLayers.Map('hucMap',{'restrictedExtent': layerExtent});
-        	hucMap.addLayer(vectorLayer);
-        	var polygonFeature = new OpenLayers.Feature.Vector(StoredState.waterBudgetHucFeature.geometry);
-        	vectorLayer.addFeatures([polygonFeature]);
-        	var layer = new OpenLayers.Layer.XYZ("World Street Map",
+        	var hucLayerExtent = StoredState.waterBudgetHucFeature.geometry.getBounds();
+        	var hucMap = new OpenLayers.Map('hucMap',{'restrictedExtent': hucLayerExtent, 'projection': 'EPSG:3857'});
+        	hucMap.addLayer(hucVectorLayer);
+        	var hucFeature = new OpenLayers.Feature.Vector(StoredState.waterBudgetHucFeature.geometry);
+        	hucVectorLayer.addFeatures([hucFeature]);
+        	var hucBaseLayer = new OpenLayers.Layer.XYZ("World Street Map",
                     "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}", {
         				isBaseLayer: true,
         				units: "m",
         				sphericalMercator: true
         	});
-        	hucMap.addLayer(layer);
+        	hucMap.addLayer(hucBaseLayer);
         	hucMap.zoomToExtent(hucMap.restrictedExtent);
            
-            if (StoredState.countyMap) {
-            	var vectorLayerCounty = new OpenLayers.Layer.Vector("Simple Geometry County", {
-                	style: layer_style
+            if (StoredState.countyFeature) {
+            	var countyVectorLayer = new OpenLayers.Layer.Vector("Simple Geometry County", {
+                	style: layerStyle
             	});
-            	StoredState.countyMap.addLayer(vectorLayerCounty);
-            	vectorLayerCounty.addFeatures([StoredState.countyFeature]);
-            	StoredState.countyMap.removeLayer(StoredState.countyMap.getLayersByName("National WBD Snapshot")[0]);
-            	StoredState.countyMap.render('countyMap');
-            	StoredState.countyMap.zoomToExtent(StoredState.countyFeature.geometry.getBounds());
-            	delete StoredState.countyMap;
+            	var countyLayerExtent = StoredState.countyFeature.geometry.getBounds();
+            	var countyMap = new OpenLayers.Map('countyMap',{'restrictedExtent': countyLayerExtent, 'projection': 'EPSG:3857'});
+            	countyMap.addLayer(countyVectorLayer);
+            	countyVectorLayer.addFeatures([StoredState.countyFeature]);
+            	var countyBaseLayer = new OpenLayers.Layer.XYZ("World Street Map",
+                        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}", {
+            				isBaseLayer: true,
+            				units: "m",
+            				sphericalMercator: true
+            	});
+            	countyMap.addLayer(countyBaseLayer);
+            	countyMap.zoomToExtent(countyMap.restrictedExtent);
             	delete StoredState.countyFeature;
             }
             
@@ -283,7 +289,7 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
             map,
             function() {
                 StoredState.mapExtent = map.getExtent();
-                StoredState.countyMap = map;
+               //dds StoredState.countyMap = map;
             },
             false
         );
