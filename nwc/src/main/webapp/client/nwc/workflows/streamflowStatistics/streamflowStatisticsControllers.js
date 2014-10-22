@@ -171,7 +171,7 @@
             function ($scope, StoredState, CommonState, StoredState, $state, StreamStats, WaterYearUtil) {
             	              
                 if (StoredState.streamFlowStatHucFeature) { //Modeled map
-                	var watershedMap = new OpenLayers.Map('watershedMap', {'projection': 'EPSG:3857'});
+                	var watershedMap = new OpenLayers.Map('watershedMap', {controls: [new OpenLayers.Control.Zoom()], 'projection': 'EPSG:3857'});
                   	watershedMap.render('nwisMap');
             	 
                   	var layer = new OpenLayers.Layer.XYZ("World Street Map",
@@ -218,7 +218,7 @@
 				   
 				   watershedMap.addLayer(waterShedVector);
         	   } else { //Observed map
-        			var gageMap = new OpenLayers.Map('nwisMap', {'projection': 'EPSG:3857'});
+        			var gageMap = new OpenLayers.Map('nwisMap', {controls: [new OpenLayers.Control.Zoom()], 'projection': 'EPSG:3857'});
         			
         			var baseLayer = new OpenLayers.Layer.XYZ("World Street Map",
 	                        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}", {
