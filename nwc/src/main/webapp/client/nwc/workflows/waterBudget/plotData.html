@@ -55,7 +55,7 @@
                 <button type="button" class="btn btn-primary" ng-model="StoredState.plotTimeDensity" btn-radio="'daily'">Daily</button>
             </div>
         </div>
-        <div id="hucMap" style="height:200px;width:200px;border-style:solid;border-width:1px;" class="col-xs-4"></div>
+        <div id="hucMap" nwc-feature-map layer="hucLayer" bounds="featureBounds" style="height:200px;width:200px;border-style:solid;border-width:1px;" class="col-xs-4"></div>
     </div>
     <div style="height: 400px;" id="waterBudgetPlot" class="col-xs-10"></div>
     <div class="col-xs-2">

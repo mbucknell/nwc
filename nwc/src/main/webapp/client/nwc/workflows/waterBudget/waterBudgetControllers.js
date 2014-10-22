@@ -1,7 +1,7 @@
 /*global angular,NWC,OpenLayers,$,CONFIG*/
 (function(){
     var waterBudgetControllers = angular.module('nwc.controllers.waterBudget', ['nwc.conversion']);
-    
+
     waterBudgetControllers.controller('WaterBudget', ['$scope', 'StoredState', '$sce', 'WaterBudgetMap',
         NWC.ControllerHelpers.WorkflowController(
             {
@@ -13,12 +13,12 @@
             },
             function ($scope, SharedState, $sce, WaterBudgetMap) {
                 $scope.description = $sce.trustAsHtml($scope.description);
-				
+
 				//get map and layer info
 				var map = WaterBudgetMap.getMap();
 				var hucLayerName = WaterBudgetMap.hucLayerName;
 				var layer = map.getLayersByName(hucLayerName)[0];
-					
+
 				//function for toggling HUC layer
 				$scope.toggleHUC = function () {
 					var currentVisibility = layer.getVisibility();
@@ -26,8 +26,8 @@
 				};
             }
     )]);
-  
-waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState', 'CommonState', 
+
+waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState', 'CommonState',
     'Plotter', 'WaterUsageChart', 'Units', 'Convert',
     NWC.ControllerHelpers.StepController(
         {
@@ -35,29 +35,23 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             description: 'Visualize the data for your HUC of interest.'
         },
         function ($scope, $state, StoredState, CommonState, Plotter, WaterUsageChart, Units, Convert) {
+			// Create vector layer to show HUC
             var layerStyle = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
             layerStyle.fillOpacity = 0;
             layerStyle.graphicOpacity = 1;
             layerStyle.strokeColor = "black";
             layerStyle.strokeWidth = 2;
-        	var hucVectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", {
-                	style: layerStyle
+        	var vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", {
+               	style: layerStyle
             });
-        	var hucLayerExtent = StoredState.waterBudgetHucFeature.geometry.getBounds();
-        	var hucMap = new OpenLayers.Map('hucMap',{'restrictedExtent': hucLayerExtent, 'projection': 'EPSG:3857'});
-        	hucMap.addLayer(hucVectorLayer);
-        	var hucFeature = new OpenLayers.Feature.Vector(StoredState.waterBudgetHucFeature.geometry);
-        	hucVectorLayer.addFeatures([hucFeature]);
-        	var hucBaseLayer = new OpenLayers.Layer.XYZ("World Street Map",
-                    "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}", {
-        				isBaseLayer: true,
-        				units: "m",
-        				sphericalMercator: true
-        	});
-        	hucMap.addLayer(hucBaseLayer);
-        	hucMap.zoomToExtent(hucMap.restrictedExtent);
-           
-            if (StoredState.countyFeature) {
+
+        	var polygonFeature = new OpenLayers.Feature.Vector(StoredState.waterBudgetHucFeature.geometry);
+        	vectorLayer.addFeatures([polygonFeature]);
+
+			$scope.hucLayer = vectorLayer;
+			$scope.featureBounds = vectorLayer.getDataExtent();
+
+			if (StoredState.countyFeature) {
             	var countyVectorLayer = new OpenLayers.Layer.Vector("Simple Geometry County", {
                 	style: layerStyle
             	});
@@ -75,7 +69,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             	countyMap.zoomToExtent(countyMap.restrictedExtent);
             	delete StoredState.countyFeature;
             }
-            
+			
             var selectionInfo = {};
             if (StoredState.waterBudgetHucFeature) {
                 selectionInfo.hucId = StoredState.waterBudgetHucFeature.data.HUC_12;
@@ -85,7 +79,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 return;
             }
             $scope.selectionInfo = selectionInfo;
-            
+
             var plotDivSelector = '#waterBudgetPlot';
             var legendDivSelector = '#waterBudgetLegend';
             StoredState.plotNormalization = StoredState.plotNormalization || 'totalWater';
@@ -129,9 +123,9 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                     }
                 }
             });
-            
+
             var chartDivSelector = '#waterUsageChart';
-            
+
             var chartWaterUse = function() {
                 var normalizationFn = Convert.noop;
                 if ('normalizedWater' === StoredState.plotNormalization) {
@@ -142,10 +136,10 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 var labels = CommonState.WaterUsageDataSeries.getSeriesLabelsAs(
                     StoredState.measurementSystem, StoredState.plotNormalization, StoredState.plotTimeDensity).from(1);
                 var ylabel = Units[StoredState.measurementSystem][StoredState.plotNormalization].daily;
-                WaterUsageChart.setChart(chartDivSelector, values, labels, ylabel, 
+                WaterUsageChart.setChart(chartDivSelector, values, labels, ylabel,
                     Units[StoredState.measurementSystem][StoredState.plotNormalization].precision);
             };
-            
+
             //boolean property is cheaper to watch than deep object comparison
             $scope.$watch('CommonState.newWaterUseData', function(newValue, oldValue){
                 if(newValue){
@@ -155,15 +149,15 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                     CommonState.newDataSeriesStore = true;
                 }
             });
-            
+
             $scope.hideUse = function () {
                 return (!CommonState.WaterUsageDataSeries) || !(CommonState.WaterUsageDataSeries.data) || !(CommonState.WaterUsageDataSeries.data.length);
             };
-            
+
             $scope.hideNormalizationWarning = function() {
                 return (StoredState.plotNormalization !== 'normalizedWater')
             }
-            
+
             var buildName = function(selectionName, selectionId, series) {
                 var filename = selectionName;
                 filename += '_' + selectionId;
@@ -173,7 +167,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 filename = escape(filename);
                 return filename;
             };
-            
+
             $scope.getHucFilename = function (series) {
                 var filename = 'data.csv';
                 if (StoredState.waterBudgetHucFeature) {
@@ -182,7 +176,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 }
                 return filename;
             };
-            
+
             $scope.getCntyFilename = function (series) {
                 var filename = 'data.csv';
                 if (StoredState.countyInfo) {
@@ -191,13 +185,13 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 }
                 return filename;
             };
-            
+
             $scope.getCombinedWaterUse = function(dataSeries) {
                 var result = Object.clone(dataSeries);
                 result.data = WaterUsageChart.combineData(result.data);
                 return result;
             };
-            
+
             $scope.CommonState = CommonState;
             $scope.StoredState = StoredState;
         })
@@ -212,7 +206,7 @@ waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'Common
         function ($scope, StoredState, CommonState, WaterBudgetMap, $log, MapControlDescriptions) {
             $scope.StoredState = StoredState;
             $scope.CommonState = CommonState;
-            
+
             var map = WaterBudgetMap.getMap();
 
             map.render('hucSelectMap');
@@ -226,7 +220,7 @@ waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'Common
                 },
                 false
             );
-            
+
             $scope.$watch('CommonState.activatedMapControl', function(newControl, oldControl) {
                 var controlId;
                 if (newControl === 'zoom') {
@@ -247,13 +241,13 @@ waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'Common
                 CommonState.mapControlDescription = MapControlDescriptions[newControl].description;
                 CommonState.mapControlCursor = MapControlDescriptions[newControl].cursor;
             });
-        
+
             // when there is more than select, logic for additional buttons can go here
-        
+
             CommonState.activatedMapControl = 'select';
             CommonState.mapControlDescription = MapControlDescriptions.select.description;
             CommonState.mapControlCursor = MapControlDescriptions.select.cursor;
-            
+
             $log.info(CommonState);
         }
     )
@@ -269,7 +263,7 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
         $scope.StoredState = StoredState;
         $scope.CommonState = CommonState;
         $scope.showCountyCitation = true;
-        
+
         var map = WaterBudgetMap.getMap();
         map.render('hucSelectMap');
 
@@ -278,11 +272,11 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
             countyInfo.offeringId = countyFeature.attributes.FIPS;
             countyInfo.area = countyFeature.attributes.AREA_SQMI;
             countyInfo.name = countyFeature.attributes.FULL_NAME.capitalize(true);
-            
+
             StoredState.countyInfo = countyInfo;
         };
         map.getCountyThatIntersectsWithHucFeature(StoredState.waterBudgetHucFeature, setCountyInfo);
-        
+
         map.zoomToExtent(StoredState.mapExtent, true);
         map.events.register(
             'moveend',
@@ -330,7 +324,7 @@ waterBudgetControllers.controller('DisambiguateClick', ['$scope', 'StoredState',
         },
         function ($scope, StoredState, CommonState, $log, $state) {
             $scope.hucs = CommonState.ambiguousHucs;
-            
+
             /**
              * @param {OpenLayers.Feature} huc
              */
@@ -338,7 +332,7 @@ waterBudgetControllers.controller('DisambiguateClick', ['$scope', 'StoredState',
                 StoredState.waterBudgetHucFeature = huc;
                 $state.go('^.plotData');
             };
-			
+
             $log.info(StoredState);
         }
     )
@@ -353,8 +347,8 @@ waterBudgetControllers.controller('FinalStep', ['$scope', 'StoredState', '$state
         function ($scope, StoredState, $state, CommonState, $log) {
             StoredState._clientState.name = $state.current.name;
             StoredState._clientState.params = $state.params;
-            
-            
+
+
             $log.info(CommonState);
         }
     )
@@ -377,7 +371,7 @@ waterBudgetControllers.controller('Restore', [
                     });
         };
         $timeout(retrieveState, 3000);
-        
+
     }
 ]);
 
