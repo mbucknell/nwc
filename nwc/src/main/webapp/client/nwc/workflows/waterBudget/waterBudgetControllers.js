@@ -41,32 +41,27 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             layerStyle.graphicOpacity = 1;
             layerStyle.strokeColor = "black";
             layerStyle.strokeWidth = 2;
-        	var vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", {
+        	var hucVectorLayer = new OpenLayers.Layer.Vector("Simple Geometry Huc", {
                	style: layerStyle
             });
 
-        	var polygonFeature = new OpenLayers.Feature.Vector(StoredState.waterBudgetHucFeature.geometry);
-        	vectorLayer.addFeatures([polygonFeature]);
+        	var hucFeature = new OpenLayers.Feature.Vector(StoredState.waterBudgetHucFeature.geometry);
+        	hucVectorLayer.addFeatures([hucFeature]);
 
-			$scope.hucLayer = vectorLayer;
-			$scope.featureBounds = vectorLayer.getDataExtent();
+			$scope.hucLayer = hucVectorLayer;
+			$scope.featureBounds = hucVectorLayer.getDataExtent();
 
 			if (StoredState.countyFeature) {
             	var countyVectorLayer = new OpenLayers.Layer.Vector("Simple Geometry County", {
                 	style: layerStyle
             	});
-            	var countyLayerExtent = StoredState.countyFeature.geometry.getBounds();
-            	var countyMap = new OpenLayers.Map('countyMap',{'restrictedExtent': countyLayerExtent, 'projection': 'EPSG:3857'});
-            	countyMap.addLayer(countyVectorLayer);
-            	countyVectorLayer.addFeatures([StoredState.countyFeature]);
-            	var countyBaseLayer = new OpenLayers.Layer.XYZ("World Street Map",
-                        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}", {
-            				isBaseLayer: true,
-            				units: "m",
-            				sphericalMercator: true
-            	});
-            	countyMap.addLayer(countyBaseLayer);
-            	countyMap.zoomToExtent(countyMap.restrictedExtent);
+            	
+            	var countyFeature = new OpenLayers.Feature.Vector(StoredState.countyFeature.geometry);
+            	countyVectorLayer.addFeatures([countyFeature]);
+
+    			$scope.countyLayer = countyVectorLayer;
+    			$scope.featureBounds = countyVectorLayer.getDataExtent();
+    			
             	delete StoredState.countyFeature;
             }
 			
