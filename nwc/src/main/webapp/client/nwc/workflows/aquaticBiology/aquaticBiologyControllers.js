@@ -131,6 +131,8 @@
             			'Your selection landed near multiple watersheds. Select a HUC to calculate modeled streamflow statistics.',
             			$scope.hucs, 
             	        function(huc) {
+            				//set this so that gage info does not show on streamflow view 
+                            StoredState.gage = undefined;
             				CommonState.streamflowStatsParamsReturnTarget = 'workflow.aquaticBiology.showSelectedBioDataSites';
             				//TODO this was copy/pasted from streamflowMap.js, need to DRY out
                             var minStatDate = Date.create('1980/10/01').utc();
