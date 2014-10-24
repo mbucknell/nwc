@@ -36,19 +36,35 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
         },
         function ($scope, $state, StoredState, CommonState, Plotter, WaterUsageChart, Units, Convert) {
 			// Create vector layer to show HUC
-            var layer_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
-            layer_style.fillOpacity = 0.2;
-            layer_style.graphicOpacity = 1;
-        	var vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", {
-               	style: layer_style
+            var layerStyle = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
+            layerStyle.fillOpacity = 0;
+            layerStyle.graphicOpacity = 1;
+            layerStyle.strokeColor = "black";
+            layerStyle.strokeWidth = 2;
+        	var hucVectorLayer = new OpenLayers.Layer.Vector("Simple Geometry Huc", {
+               	style: layerStyle
             });
 
-        	var polygonFeature = new OpenLayers.Feature.Vector(StoredState.waterBudgetHucFeature.geometry);
-        	vectorLayer.addFeatures([polygonFeature]);
+        	var hucFeature = new OpenLayers.Feature.Vector(StoredState.waterBudgetHucFeature.geometry);
+        	hucVectorLayer.addFeatures([hucFeature]);
 
-			$scope.hucLayer = vectorLayer;
-			$scope.featureBounds = vectorLayer.getDataExtent();
+			$scope.hucLayer = [hucVectorLayer];
+			$scope.hucBounds = hucVectorLayer.getDataExtent();
 
+			if (StoredState.countyFeature) {
+            	var countyVectorLayer = new OpenLayers.Layer.Vector("Simple Geometry County", {
+                	style: layerStyle
+            	});
+            	
+            	var countyFeature = new OpenLayers.Feature.Vector(StoredState.countyFeature.geometry);
+            	countyVectorLayer.addFeatures([countyFeature]);
+
+    			$scope.countyLayer = [countyVectorLayer];
+    			$scope.countyBounds = StoredState.countyFeature.geometry.getBounds();
+    			
+            	delete StoredState.countyFeature;
+            }
+			
             var selectionInfo = {};
             if (StoredState.waterBudgetHucFeature) {
                 selectionInfo.hucId = StoredState.waterBudgetHucFeature.data.HUC_12;
