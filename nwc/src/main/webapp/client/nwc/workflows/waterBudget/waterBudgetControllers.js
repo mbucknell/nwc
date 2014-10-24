@@ -48,7 +48,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
         	var hucFeature = new OpenLayers.Feature.Vector(StoredState.waterBudgetHucFeature.geometry);
         	hucVectorLayer.addFeatures([hucFeature]);
 
-			$scope.hucLayer = hucVectorLayer;
+			$scope.hucLayer = [hucVectorLayer];
 			$scope.hucBounds = hucVectorLayer.getDataExtent();
 
 			if (StoredState.countyFeature) {
@@ -59,7 +59,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             	var countyFeature = new OpenLayers.Feature.Vector(StoredState.countyFeature.geometry);
             	countyVectorLayer.addFeatures([countyFeature]);
 
-    			$scope.countyLayer = countyVectorLayer;
+    			$scope.countyLayer = [countyVectorLayer];
     			$scope.countyBounds = StoredState.countyFeature.geometry.getBounds();
     			
             	delete StoredState.countyFeature;

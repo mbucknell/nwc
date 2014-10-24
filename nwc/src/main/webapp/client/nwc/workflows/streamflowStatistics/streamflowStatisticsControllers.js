@@ -169,10 +169,10 @@
                 description: 'Select a subset of the time series for which you would like to calculate various statistics.'
             },
             function ($scope, StoredState, CommonState, StoredState, $state, StreamStats, WaterYearUtil) {
-            	              
+ 
                 if (StoredState.streamFlowStatHucFeature) { //Modeled map
                 	var watershedMap = new OpenLayers.Map('watershedMap', {controls: [new OpenLayers.Control.Zoom()], 'projection': 'EPSG:3857'});
-                  	watershedMap.render('nwisMap');
+                  	watershedMap.render('watershedMap');
             	 
                   	var layer = new OpenLayers.Layer.XYZ("World Street Map",
 	                        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}", {
@@ -183,73 +183,56 @@
                   	watershedMap.addLayer(layer);
                
 				   var filter = new OpenLayers.Filter.Comparison({
-					   type: OpenLayers.Filter.Comparison.EQUAL_TO,
-					   property: "HUC_12",
-					   value: StoredState.streamFlowStatHucFeature.data.HUC12
+					type: OpenLayers.Filter.Comparison.EQUAL_TO,
+					property: "HUC_12",
+					value: StoredState.streamFlowStatHucFeature.data.HUC12
 					});
 				   
 				   var protocol = new OpenLayers.Protocol.WFS({
-                       url:  CONFIG.endpoint.geoserver + "NHDPlusHUCs/wfs",
-                       featureType: "NationalWBDSnapshot",
-                       featureNS: "http://cida.usgs.gov/NHDPlusHUCs",
-                       version: "1.0.0",
-                       geometryName: "the_geom",
-                       srsName : "EPSG:3857"
+					url:  CONFIG.endpoint.geoserver + "NHDPlusHUCs/wfs",
+					featureType: "NationalWBDSnapshot",
+					featureNS: "http://cida.usgs.gov/NHDPlusHUCs",
+					version: "1.0.0",
+					geometryName: "the_geom",
+					srsName : "EPSG:3857"
                    });
-				   
-				   var waterShedVector = new OpenLayers.Layer.Vector("WFS", {
-                       strategies: [new OpenLayers.Strategy.Fixed()],
-                       protocol: protocol,
-                       styleMap: new OpenLayers.StyleMap({
-                           strokeWidth: 2,
-                           strokeColor: "black",
-                           fillOpacity: 0,
-                       	   graphicOpacity: 1,
-                       	   fill: false
-                       }),
-                       filter:filter
-                   })
-				   
-				   waterShedVector.events.on({
-					   featureadded: function(event){
-						   this.map.zoomToExtent(this.getDataExtent());
-				       }
-				   });
-				   
-				   watershedMap.addLayer(waterShedVector);
-        	   } else { //Observed map
-        			var gageMap = new OpenLayers.Map('nwisMap', {controls: [new OpenLayers.Control.Zoom()], 'projection': 'EPSG:3857'});
-        			
-        			var baseLayer = new OpenLayers.Layer.XYZ("World Street Map",
-	                        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}", {
-	            				isBaseLayer: true,
-	            				units: "m",
-	            				sphericalMercator: true
-                  	});
-        			
-        			gageMap.addLayer(baseLayer);
+			
+				var waterShedVector = new OpenLayers.Layer.Vector("WFS", {
+					strategies: [new OpenLayers.Strategy.Fixed()],
+					protocol: protocol,
+						styleMap: new OpenLayers.StyleMap({
+							strokeWidth: 2,
+							strokeColor: "black",
+							fillOpacity: 0,
+							graphicOpacity: 1,
+							fill: false
+						}),
+						filter:filter
+				})
+			
+				waterShedVector.events.on({
+					featureadded: function(event){
+						this.map.zoomToExtent(this.getDataExtent());
+					}
+				});
+				watershedMap.addLayer(waterShedVector);
+                } else { //Observed map
                   	var lon = StoredState.gage.data.LNG_GAGE;
                   	var lat = StoredState.gage.data.LAT_GAGE;
-                  	var gageStyle = StoredState.gageStyle;
                   	var espg4326 = new OpenLayers.Projection('EPSG:4326');
-                  	var projectTo = gageMap.getProjectionObject();
-                  	var lonLat = new OpenLayers.LonLat(lon, lat).transform(espg4326, projectTo);
-                  	var zoom = 16;
-                  	gageMap.setCenter(lonLat, zoom);
-                  	
-                  	var gageVectorLayer = new OpenLayers.Layer.Vector("Simple Geometry Gage", {
-                    	style: gageStyle
-                	});
-                  	
-                  	var watershedMarker = new OpenLayers.Feature.Vector(
-                  			 new OpenLayers.Geometry.Point(lon, lat).transform(espg4326, projectTo)
-                  	);
-                  	
+                  	var espg3857 = new OpenLayers.Projection('EPSG:3857');
+                  	var lonLat = new OpenLayers.LonLat(lon, lat).transform(espg4326, espg3857);
+                  	                  	
+                  	var gageVectorLayer = new OpenLayers.Layer.Vector("Simple Geometry Gage");
+                  	var point = new OpenLayers.Geometry.Point(lon, lat).transform(espg4326, espg3857);
+                  	var watershedMarker = new OpenLayers.Feature.Vector(point);                  	
                   	gageVectorLayer.addFeatures([watershedMarker]);
-                  	gageMap.addLayer(gageVectorLayer);
+                  	
                   	var markers = new OpenLayers.Layer.Markers("Markers");
-                  	gageMap.addLayer(markers);
-                    markers.addMarker(new OpenLayers.Marker(lonLat));
+                  	markers.addMarker(new OpenLayers.Marker(lonLat));
+                  	
+                	$scope.gageLayers = [gageVectorLayer, markers];
+        			$scope.gageBounds = point.getBounds();
         	   }
         	   
             	$scope.previousStateTarget = CommonState.streamflowStatsParamsReturnTarget;
