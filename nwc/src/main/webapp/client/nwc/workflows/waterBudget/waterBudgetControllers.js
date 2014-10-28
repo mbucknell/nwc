@@ -57,7 +57,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             	});
             	
             	var countyFeature = new OpenLayers.Feature.Vector(StoredState.countyFeature.geometry);
-            	countyVectorLayer.addFeatures([countyFeature]);
+            	countyVectorLayer.addFeatures([hucFeature.clone(), countyFeature]);
 
     			$scope.countyLayer = [countyVectorLayer];
     			$scope.countyBounds = StoredState.countyFeature.geometry.getBounds();
