@@ -122,6 +122,10 @@ sharedStateServices.factory('StatePersistence', [
                     var serializedHuc = geoJsonFormatter.write(hucFeature);
                     return serializedHuc;
                 },
+                'countyFeature' : function(countyFeature){
+                    var serializedCounty = geoJsonFormatter.write(countyFeature);
+                    return serializedCounty;
+                },
                 'streamFlowStatHucFeature' : function(hucFeature){
                     var serializedHuc = geoJsonFormatter.write(hucFeature);
                     return serializedHuc;
@@ -154,6 +158,10 @@ sharedStateServices.factory('StatePersistence', [
                 'waterBudgetHucFeature': function(hucFeatureString){
                     var deserializedHucArray = geoJsonFormatter.read(hucFeatureString);
                     return deserializedHucArray[0];
+                },
+                'countyFeature': function(countyFeatureString){
+                    var deserializedCountyArray = geoJsonFormatter.read(countyFeatureString);
+                    return deserializedCountyArray[0];
                 },
                 'streamFlowStatHucFeature': function(hucFeatureString){
                     var deserializedHucArray = geoJsonFormatter.read(hucFeatureString);
