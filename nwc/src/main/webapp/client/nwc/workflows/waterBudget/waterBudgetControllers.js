@@ -61,8 +61,6 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
 
     			$scope.countyLayer = [countyVectorLayer];
     			$scope.countyBounds = StoredState.countyFeature.geometry.getBounds();
-    			
-//            	delete StoredState.countyFeature;
             }
 			
             var selectionInfo = {};
