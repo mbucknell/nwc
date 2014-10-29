@@ -5,11 +5,11 @@
 
 <site-stats ng-if="StoredState.gage" info="selectionInfo"></site-stats>
 <huc-stats ng-if="StoredState.streamFlowStatHucFeature" info="selectionInfo"></huc-stats>
-
+<div ng-show="StoredState.streamFlowStatHucFeature" id="watershedMap" style="height:200px;width:200px;border-style:solid;border-width:1px;"></div>
+<div ng-show="!StoredState.streamFlowStatHucFeature" id="gageMap" nwc-feature-map layers="gageLayers" bounds="gageBounds" style="height:200px;width:200px;border-style:solid;border-width:1px;"></div>
+ 	
 <form name="statsParams" novalidate ng-show="siteStatisticsParameters && siteStatisticsParameters.startDate && siteStatisticsParameters.endDate">
-<div ng-show="StoredState.streamFlowStatHucFeature" id="watershedMap" style="height:200px;width:200px;border-style:solid;border-width:1px;" class="col-xs-4"></div>
-<div ng-show="!StoredState.streamFlowStatHucFeature" id="gageMap" nwc-feature-map layers="gageLayers" bounds="gageBounds" style="height:200px;width:200px;border-style:solid;border-width:1px;" class="col-xs-4"></div>
-        
+
 <div class="row">
     <h4 class="text-center">Date Range (Water Years)</h4>
     
