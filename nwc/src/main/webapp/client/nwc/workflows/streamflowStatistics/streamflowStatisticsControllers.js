@@ -171,6 +171,7 @@
             function ($scope, StoredState, CommonState, StoredState, $state, StreamStats, WaterYearUtil) {
  
                 if (StoredState.streamFlowStatHucFeature) { //Modeled map
+                	$scope.streamFlowMap = {loading : true};
                 	var watershedMap = new OpenLayers.Map('watershedMap', {controls: [new OpenLayers.Control.Zoom()], 'projection': 'EPSG:3857'});
                   	watershedMap.render('watershedMap');
             	 
@@ -197,24 +198,28 @@
 					srsName : "EPSG:3857"
                    });
 			
-				var waterShedVector = new OpenLayers.Layer.Vector("WFS", {
-					strategies: [new OpenLayers.Strategy.Fixed()],
-					protocol: protocol,
-						styleMap: new OpenLayers.StyleMap({
-							strokeWidth: 2,
-							strokeColor: "black",
-							fillOpacity: 0,
-							graphicOpacity: 1,
-							fill: false
-						}),
-						filter:filter
-				})
-			
-				waterShedVector.events.on({
-					featureadded: function(event){
-						this.map.zoomToExtent(this.getDataExtent());
-					}
-				});
+				   var waterShedVector = new OpenLayers.Layer.Vector("WFS", {
+						strategies: [new OpenLayers.Strategy.Fixed()],
+						protocol: protocol,
+							styleMap: new OpenLayers.StyleMap({
+								strokeWidth: 2,
+								strokeColor: "black",
+								fillOpacity: 0,
+								graphicOpacity: 1,
+								fill: false
+							}),
+							filter:filter
+					})
+				
+					waterShedVector.events.on({
+						featureadded: function(event){
+							this.map.zoomToExtent(this.getDataExtent());
+						},
+						loadend: function(event){
+							$scope.streamFlowMap.loading = false;
+							$scope.$digest();
+						}
+					});
 				watershedMap.addLayer(waterShedVector);
                 } else { //Observed map
                   	var lon = StoredState.gage.data.LNG_GAGE;
