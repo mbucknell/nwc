@@ -331,16 +331,26 @@
                                     tsvHeader += "\"# http://waterdata.usgs.gov/nwis/nwisman/?site_no={nwis gage id}\"\n";
                                     tsvHeader += "\"# \"\n";
                                     tsvHeader += "\"# http://github.com/USGS-R/EflowStats\"\n";
-                                    var tsvValues = "";
+                                    var tsvValues = "Name\tValue\tDescription\n";
                                     var i;
                                     for (i = 0; i < statistics.length; i += 1) {
-                                    	if (i < statistics.length - 1) {
-                                        	tsvHeader += statistics[i].name + "\t";
-                                        	tsvValues += statistics[i].value + "\t";
+                                    	if (statistics[i].name) {
+                                        	tsvValues += statistics[i].name + "\t";
                                     	}
-                                    	else {  //use newline character after last object
-                                        	tsvHeader += statistics[i].name + "\n";
-                                        	tsvValues += statistics[i].value + "\n";                                    			
+                                    	else {
+                                    		tsvValues += "\t";
+                                    	}
+                                    	if (statistics[i].value) {
+                                        	tsvValues += statistics[i].value + "\t";                                    		
+                                    	}
+                                    	else {
+                                    		tsvValues += "\t";                                    		
+                                    	}
+                                    	if (statistics[i].desc) {
+                                        	tsvValues += statistics[i].desc + "\n";                                    		
+                                    	}
+                                    	else {
+                                    		tsvValues += "\t\n";                                    		
                                     	}
                                     }
                                     CommonState.streamFlowStatisticsTsv = encodeURIComponent(tsvHeader + tsvValues);
