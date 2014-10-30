@@ -7,4 +7,4 @@ Vagrantfile
 /.vagrant
 nb-configuration.xml
 nbactions.xml
-context.xml
+**/context.xml
