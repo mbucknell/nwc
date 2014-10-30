@@ -350,7 +350,7 @@
                                         	tsvValues += statistics[i].desc + "\n";                                    		
                                     	}
                                     	else {
-                                    		tsvValues += "\t\n";                                    		
+                                    		tsvValues += "\n";                                    		
                                     	}
                                     }
                                     CommonState.streamFlowStatisticsTsv = encodeURIComponent(tsvHeader + tsvValues);
