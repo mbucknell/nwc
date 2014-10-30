@@ -150,6 +150,7 @@
             <plugin>
                 <groupId>com.github.timurstrekalov</groupId>
                 <artifactId>saga-maven-plugin</artifactId>
+                <version>1.5.3</version>
                 <configuration>
                     <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
                     <outputDir>${project.build.directory}/coverage</outputDir>
@@ -162,6 +163,7 @@
             <plugin>
                 <groupId>com.github.goldin</groupId>
                 <artifactId>copy-maven-plugin</artifactId>
+                <version>0.2.5</version>
                 <configuration>      <!-- use copy:copy to run-->
                     <failIfNotFound>false</failIfNotFound>
                     <resource>
