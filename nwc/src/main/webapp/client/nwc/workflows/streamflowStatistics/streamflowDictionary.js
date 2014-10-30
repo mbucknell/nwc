@@ -202,7 +202,7 @@
         return [
             {
                 shortName: "magnifSeven",
-                longName: "Magnificent Seven",
+                longName: "Seven Fundamental Daily Streamflow Statistics",
                 url: "http://onlinelibrary.wiley.com/doi/10.1002/rra.2710/abstract"
             },
             {
