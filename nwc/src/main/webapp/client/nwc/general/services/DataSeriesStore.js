@@ -26,15 +26,15 @@
                             var csvHeader = "";
                             if (this.metadata.downloadHeader && this.metadata.downloadHeader.length !== 0) {
                                 this.metadata.downloadHeader.lines(function(line) {
-                                    csvHeader += "\"# " + line + "\"\n";
+                                    csvHeader += "\"# " + line + "\"\r\n";
                                 });
                             }
                             csvHeader += this.metadata.seriesLabels.map(function(label) {
                                 return createSeriesLabel(label);
-                            }).join(",") + "\n";
+                            }).join(",") + "\r\n";
                             var csvValues = "";
                             this.data.each(function(row) {
-                                csvValues += row.join(",") + "\n";
+                                csvValues += row.join(",") + "\r\n";
                             });
                             return encodeURIComponent(csvHeader + csvValues);
                         },

@@ -10,7 +10,7 @@
 </div>
 
 <div class="row spacer" ng-hide="hideUse()">
-    <div class="col-xs-3"></div>
+    <div id="countyMap" nwc-feature-map layers="countyLayer" bounds="countyBounds" style="height:200px;width:200px;border-style:solid;border-width:1px;" class="col-xs-3"></div>
     <div class="col-xs-6">
         <div class="btn-group">
             <button type="button" class="btn btn-primary" ng-model="StoredState.plotNormalization" btn-radio="'totalWater'">Total County Water Use</button>
@@ -48,14 +48,14 @@
     <h4>Precipitation and Evapotranspiration for the Selected HUC</h4>
     <huc-stats info="selectionInfo"></huc-stats>
     <div class="row spacer">
-        <div class="col-xs-4"></div>
         <div class="col-xs-4">
+         	<div id="hucMap" nwc-feature-map layers="hucLayer" bounds="hucBounds" style="height:200px;width:200px;border-style:solid;border-width:1px;"></div>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary" ng-model="StoredState.plotTimeDensity" btn-radio="'monthly'">Monthly</button>
                 <button type="button" class="btn btn-primary" ng-model="StoredState.plotTimeDensity" btn-radio="'daily'">Daily</button>
             </div>
         </div>
-        <div id="hucMap" nwc-feature-map layer="hucLayer" bounds="featureBounds" style="height:150px;width:150px;background-color:gray" class="col-xs-4"></div>
+        <div class="col-xs-4"></div>
     </div>
     <div style="height: 400px;" id="waterBudgetPlot" class="col-xs-10"></div>
     <div class="col-xs-2">
