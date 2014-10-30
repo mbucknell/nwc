@@ -1,4 +1,4 @@
-<h4 ng-if="StoredState.streamFlowStatHucFeature" ng-hide="CommonState.ModeledHucDataSeries.data.length">Loading data <i class="fa fa-spinner fa-spin"></i></h4>
+<h4 ng-show="streamFlowMap.loading">Loading data <i class="fa fa-spinner fa-spin"></i></h4>
 
 <h4 ng-bind="name"></h4>
 <p ng-bind="description"></p>
