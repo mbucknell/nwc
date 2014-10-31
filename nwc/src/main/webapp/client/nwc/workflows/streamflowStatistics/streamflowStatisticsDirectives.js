@@ -63,10 +63,10 @@
     streamflowStatistics.directive('downloadStatistics', ['CommonState', 'StoredState',
         function(CommonState, StoredState) {
 
-            var buildName = function(selectionName, selectionId) {
+            var buildStatisticsName = function(selectionName, selectionId) {
                 var filename = selectionName;
                 filename += selectionId;
-                filename += '.txt';
+                filename += '.tsv';
                 filename = escape(filename);
                 return filename;
             };
@@ -74,18 +74,18 @@
             return {
                 restrict: 'E',
                 link: function(scope, element, attrs) {
-                    var getFilename = function (series) {
+                    var getStatisticsFilename = function () {
                         var filename = 'data.csv';
                         if (StoredState.gage) {
-                            filename = buildName('eflowstats_NWIS_', StoredState.gage.data.STAID);
+                            filename = buildStatisticsName('eflowstats_NWIS_', StoredState.gage.data.STAID);
                         }
                         else if (StoredState.streamFlowStatHucFeature) {
-                            filename = buildName('eflowstats_NWIS_', StoredState.streamFlowStatHucFeature.data.HUC12);
+                            filename = buildStatisticsName('eflowstats_HUC_', StoredState.streamFlowStatHucFeature.data.HUC12);
                         }
                         return filename;
                     };
 
-                    scope.getFilename = getFilename;
+                    scope.getStatisticsFilename = getStatisticsFilename;
                 },
                 templateUrl: '../client/nwc/workflows/streamflowStatistics/downloadStatistics.html'
             };

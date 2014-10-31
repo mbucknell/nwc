@@ -323,14 +323,10 @@
                                 var newHuc = StoredState.streamFlowStatHucFeature;
                                 var startDate = StoredState.siteStatisticsParameters.startDate;
                                 var endDate = StoredState.siteStatisticsParameters.endDate;
+                                var tsvHeader;
                                 var callback = function(statistics, resultsUrl){
                                     CommonState.streamflowStatistics = statistics;
                                     CommonState.streamflowStatisticsUrl = resultsUrl;
-                                    var tsvHeader = "\"# Data derived from the USGS NWIS Web Services.\"\n";
-                                    tsvHeader += "\"# Statistics calculated using the USGS EflowStats package.\"\n";
-                                    tsvHeader += "\"# http://waterdata.usgs.gov/nwis/nwisman/?site_no={nwis gage id}\"\n";
-                                    tsvHeader += "\"# \"\n";
-                                    tsvHeader += "\"# http://github.com/USGS-R/EflowStats\"\n";
                                     var tsvValues = "Name\tValue\tDescription\n";
                                     var i;
                                     for (i = 0; i < statistics.length; i += 1) {
@@ -360,10 +356,19 @@
                                 
                                 if(newGage){
                                     var siteId = newGage.data.STAID;
+                                    tsvHeader = "\"# Data derived from the USGS NWIS Web Services.\"\n";
+                                    tsvHeader += "\"# Statistics calculated using the USGS EflowStats package.\"\n";
+                                    tsvHeader += "\"# http://waterdata.usgs.gov/nwis/nwisman/?site_no=" + siteId + " \"\n";
+                                    tsvHeader += "\"# http://github.com/USGS-R/EflowStats \"\n";
                                     StreamStats.getSiteStats([siteId], statTypes, startDate, endDate, callback);
                                 }
                                 else if(newHuc){
                                     var hucId = newHuc.data.HUC12;
+                                    tsvHeader = "\"# Data derived from National Water Census daily flow estimates.\"\n";
+                                    tsvHeader += "\"# HUC " + hucId +  " was selected.\"\n";
+                                    tsvHeader += "\"# Statistics calculated using the USGS EflowStats Package\"\n";
+                                    tsvHeader += "\"# http://cida.usgs.gov/nwc/ang/#/workflow/streamflow-statistics/select-site \"\n";
+                                    tsvHeader += "\"# http://github.com/USGS-R/EflowStats \"\n";
                                     StreamStats.getHucStats([hucId], statTypes, startDate, endDate, callback);
                                 }
                                 else{
