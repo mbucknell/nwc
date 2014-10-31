@@ -14,6 +14,9 @@
 <script type="text/javascript" src="${context}/webjars/ng-grid/${angularUiGridVersion}/ng-grid${jsMin}.js"></script>
 <script type="text/javascript" src="${context}/webjars/sugar/${sugarVersion}/sugar-full${sugarMin}.js"></script>
 <script type="text/javascript" src="${context}/webjars/openlayers/${openlayersVersion}/OpenLayers${openlayersMin}.js"></script>
+<script type="text/javascript" src="${context}/webjars/jsts/${jstsVersion}/javascript.util.js"></script>
+<script type="text/javascript" src="${context}/webjars/jsts/${jstsVersion}/jsts.js"></script>
+
 <!-- IE11 serializes the WFS call and adds an extra empty namespace attribute (NS1), this override strips it out -->
 <script type="text/javascript"> 
 (function() {
