@@ -11,11 +11,14 @@
      */
     var gallonsToCubicMetersConversionFactor = (1/264.172);
     var squareMetersToAcresConversionFactor = (1/4046.86);
+    var acresToSquareMetersConversionFactor = 1 / squareMetersToAcresConversionFactor;
     var mgdToMmAcresPerDayConversionFactor = (1000000/1) * gallonsToCubicMetersConversionFactor * squareMetersToAcresConversionFactor * (1000/1);
     var mgdToMmAcresPerDay = function (mgd) {
         return mgd * mgdToMmAcresPerDayConversionFactor;
     };
-
+    var acresToSquareMeters = function(acres){
+       return  acres * acresToSquareMetersConversionFactor;
+    };
     //conversion factor per http://en.wikipedia.org/wiki/Acre#Description
     var squareMilesToAcresConversionFactor = 640.0;
     var squareMilesToAcres = function (squareMiles) {
@@ -63,6 +66,7 @@
                 mgdToMmAcresPerDay: mgdToMmAcresPerDay,
                 squareMilesToAcres: squareMilesToAcres,
                 acresToSquareKilometers: acresToSquareKilometers,
+                acresToSquareMeters: acresToSquareMeters,
                 mmToInches: mmToInches,
                 mgdToMillionCubicMetersPerYear: mgdToMillionCubicMetersPerYear,
                 normalize: normalize,

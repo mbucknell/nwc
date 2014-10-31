@@ -3,8 +3,8 @@
     var waterBudgetMap = angular.module('nwc.map.waterBudget', ['ui.router', 'nwc.map.base']);
 	var myHucLayerName = "National WBD Snapshot";
 	
-    waterBudgetMap.factory('WaterBudgetMap', [ 'StoredState', 'CommonState', '$state', '$log', 'BaseMap', 'DataSeries',
-       function(StoredState, CommonState, $state, $log, BaseMap, DataSeries){
+    waterBudgetMap.factory('WaterBudgetMap', [ 'StoredState', 'CommonState', '$state', '$log', 'BaseMap', 'DataSeries', 'HucCountiesIntersector',
+       function(StoredState, CommonState, $state, $log, BaseMap, DataSeries, HucCountiesIntersector){
            var privateMap;
     
         var initMap = function () {
@@ -123,7 +123,8 @@
              * @returns {Openlayers.Layer.Vector} the vector layer containing the 
              * intersecting counties
              */
-            var addCountiesThatIntersectWith = function (geometry) {
+            var addCountiesThatIntersectWith = function (hucFeature) {
+                var geometry = hucFeature.geometry;
                 var intersectionFilter = new OpenLayers.Filter.Spatial({
                     type: OpenLayers.Filter.Spatial.INTERSECTS,
                     property: 'the_geom',
@@ -167,18 +168,13 @@
                     intersectingCountiesLayer,
                     function() {
                         var countyFeatures = intersectingCountiesLayer.features;
+                        CommonState.hucCountiesIntersectionInfo = HucCountiesIntersector.intersect(hucFeature, countyFeatures);
                         var countiesExtent = intersectingCountiesLayer.getDataExtent();
                         StoredState.mapExtent = countiesExtent;
                         map.zoomToExtent(countiesExtent);
                     }
                 );
                 return intersectingCountiesLayer;
-            };
-            var getIntersectionInfo = function(countyFeatures, hucFeature){
-                
-                
-                
-                CommonState.countyHucIntersectionInfo = [];
             };
             /**
              * @param {OpenLayers.Feature.Vector} feature
@@ -233,7 +229,7 @@
              */
             var getCountyThatIntersectsWithHucFeature = function (hucFeature) {
                 var highlightedFeatureLayer = addHighlightedFeature(hucFeature);
-                var intersectingCountiesLayer = addCountiesThatIntersectWith(hucFeature.geometry);
+                var intersectingCountiesLayer = addCountiesThatIntersectWith(hucFeature);
                 addCountySelectControl(
                         {
                             highlightedLayer: highlightedFeatureLayer,

@@ -1,8 +1,8 @@
 /*global angular*/
 (function () {
-    var WaterUseLookup = angular.module('nwc.waterBudgetServices', []);
+    var WaterBudgetServices = angular.module('nwc.waterBudgetServices', []);
     
-    WaterUseLookup.factory('CountyWaterUseProperties', [function() {
+    WaterBudgetServices.factory('CountyWaterUseProperties', [function() {
             var groupings = Object.extended({
                 'Public Supply' : ["PS-WGWFr", "PS-WGWSa", "PS-WSWFr", "PS-WSWSa"],
                 'Domestic' : ["DO-WGWFr", "DO-WGWSa", "DO-WSWFr", "DO-WSWSa"],
@@ -48,5 +48,38 @@
                 }).once()
             };
     }]);
+    WaterBudgetServices.factory('HucCountiesIntersector', ['Convert', 
+        function(Convert){
+            var getIntersectionInfo = function(hucFeature, countyFeatures){
+                var countyHucIntersectionInfo = [];
+                var hucArea = Convert.acresToSquareMeters(parseFloat(hucFeature.attributes.ACRES));
+                var geoJsonWriter = new OpenLayers.Format.GeoJSON();
+                var geoJsonReader = new jsts.io.GeoJSONReader();
+                var hucGeoJson = geoJsonWriter.write(hucFeature);
+                var hucJstsGeom = geoJsonReader.read(hucGeoJson);       
+                
+                countyFeatures.each(function(countyFeature){
+                    var countyArea = Convert.acresToSquareMeters(Convert.squareMilesToAcres(parseFloat(countyFeature.attributes.AREA_SQMI)));
+                    var countyGeoJson = geoJsonWriter.write(countyFeature);
+                    var countyJstsGeom = geoJsonReader.read(countyGeoJson);
+                    var intersection = countyJstsGeom.geometry.intersection(hucJstsGeom.geometry);
+                    var intersectingArea = intersection.getArea();
+                    
+                    var percentHucInCounty = intersectingArea / hucArea;
+                    var percentCountyInHuc = intersectingArea / countyArea;
+                    
+                    countyHucIntersectionInfo.push({
+                        countyName: countyFeature.attributes.FULL_NAME.capitalize(true), 
+                        hucInCounty: 100 * percentHucInCounty,
+                        countyInHuc: 100 * percentCountyInHuc
+                    });
+                });
+                return countyHucIntersectionInfo;
+            };
+            return {
+                intersect: getIntersectionInfo
+            };
+        }
+    ]);
 })();
 
