@@ -166,12 +166,19 @@
                 intersectingCountiesLayer.events.register('featuresadded',
                     intersectingCountiesLayer,
                     function() {
+                        var countyFeatures = intersectingCountiesLayer.features;
                         var countiesExtent = intersectingCountiesLayer.getDataExtent();
                         StoredState.mapExtent = countiesExtent;
                         map.zoomToExtent(countiesExtent);
                     }
                 );
                 return intersectingCountiesLayer;
+            };
+            var getIntersectionInfo = function(countyFeatures, hucFeature){
+                
+                
+                
+                CommonState.countyHucIntersectionInfo = [];
             };
             /**
              * @param {OpenLayers.Feature.Vector} feature
@@ -212,7 +219,6 @@
                                 layersToRemove.each(function (layer) {
                                     map.removeLayer(layer);
                                 });
-                                options.countySelectedCallback(feature);
                             }
                         }
                 );
@@ -224,18 +230,14 @@
             
             /**
              * @param {Openlayers.Feature.Vector} hucFeature The huc that a user has selected.
-             * @param {Function} countySelectedCallback The callback fired once a user 
-             * has selected a representative county for water use. The callback's only 
-             * parameter is a Openlayers.Feature.Vector for the county the user selected.
              */
-            var getCountyThatIntersectsWithHucFeature = function (hucFeature, countySelectedCallback) {
+            var getCountyThatIntersectsWithHucFeature = function (hucFeature) {
                 var highlightedFeatureLayer = addHighlightedFeature(hucFeature);
                 var intersectingCountiesLayer = addCountiesThatIntersectWith(hucFeature.geometry);
                 addCountySelectControl(
                         {
                             highlightedLayer: highlightedFeatureLayer,
                             selectionLayer: intersectingCountiesLayer,
-                            countySelectedCallback: countySelectedCallback
                         }
                 );
             };

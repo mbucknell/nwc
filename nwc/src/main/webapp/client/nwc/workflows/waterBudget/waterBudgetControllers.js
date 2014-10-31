@@ -260,15 +260,12 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
         var map = WaterBudgetMap.getMap();
         map.render('hucSelectMap');
 
-        var setCountyInfo = function(countyFeature){
-            var countyInfo = {};
-            countyInfo.offeringId = countyFeature.attributes.FIPS;
-            countyInfo.area = countyFeature.attributes.AREA_SQMI;
-            countyInfo.name = countyFeature.attributes.FULL_NAME.capitalize(true);
 
-            StoredState.countyInfo = countyInfo;
-        };
-        map.getCountyThatIntersectsWithHucFeature(StoredState.waterBudgetHucFeature, setCountyInfo);
+//            countyInfo.offeringId = countyFeature.attributes.FIPS;
+//            countyInfo.area = countyFeature.attributes.AREA_SQMI;
+//            countyInfo.name = countyFeature.attributes.FULL_NAME.capitalize(true);
+
+        map.getCountyThatIntersectsWithHucFeature(StoredState.waterBudgetHucFeature);
 
         map.zoomToExtent(StoredState.mapExtent, true);
         map.events.register(

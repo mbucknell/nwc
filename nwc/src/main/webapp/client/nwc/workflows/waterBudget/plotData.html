@@ -22,7 +22,7 @@
 
 
 <div class="row col-xs-12" ng-hide="hideUse()">
-    <h4 ng-bind=" 'Water Use for ' + StoredState.countyInfo.name + ' County'"></h4>
+    <h4 ng-bind=" 'Water Use for ' + StoredState.countyFeature.attributes.FULL_NAME.capitalize(true) + ' County'"></h4>
 	<div ng-hide="hideNormalizationWarning()">
 		<em class="caution">Area Averaged Withdrawal Estimates, Use with Caution!</em>
 		<p>Water use by county area is represented as evenly distributed across the
