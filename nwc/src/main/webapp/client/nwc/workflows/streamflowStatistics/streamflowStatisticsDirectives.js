@@ -60,4 +60,34 @@
                 templateUrl: '../client/nwc/workflows/streamflowStatistics/plotData.html'
             };
         }]);
+    streamflowStatistics.directive('downloadStatistics', ['CommonState', 'StoredState',
+        function(CommonState, StoredState) {
+
+            var buildName = function(selectionName, selectionId) {
+                var filename = selectionName;
+                filename += selectionId;
+                filename += '.txt';
+                filename = escape(filename);
+                return filename;
+            };
+
+            return {
+                restrict: 'E',
+                link: function(scope, element, attrs) {
+                    var getFilename = function (series) {
+                        var filename = 'data.csv';
+                        if (StoredState.gage) {
+                            filename = buildName('eflowstats_NWIS_', StoredState.gage.data.STAID);
+                        }
+                        else if (StoredState.streamFlowStatHucFeature) {
+                            filename = buildName('eflowstats_NWIS_', StoredState.streamFlowStatHucFeature.data.HUC12);
+                        }
+                        return filename;
+                    };
+
+                    scope.getFilename = getFilename;
+                },
+                templateUrl: '../client/nwc/workflows/streamflowStatistics/downloadStatistics.html'
+            };
+        }]);
 }());

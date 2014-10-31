@@ -14,7 +14,6 @@
 <h4 ng-hide="CommonState.streamflowStatistics.length">Calculating Statistics <i class="fa fa-spinner fa-spin"></i></h4>
 
 <div ng-hide="CommonState.streamflowStatistics.length === 0" class="row col-xs-12 table-responsive">
-        <a ng-href="{{CommonState.streamflowStatisticsUrl}}">Download These Statistics</a>
 	<table class="table table-striped huc_table">
             <thead>
 			<tr>
@@ -31,6 +30,7 @@
 			</tr>
 		</tbody>
 	</table>
+        <download-statistics></download-statistics>
 </div>
 <nav>
     <button class="btn" ui-sref="^.setSiteStatisticsParameters"><span class="glyphicon glyphicon-arrow-left"></span> Back</button>
