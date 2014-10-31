@@ -58,12 +58,16 @@
                 var hucJstsGeom = geoJsonReader.read(hucGeoJson);       
                 
                 var countiesHucIntersectionInfo = countyFeatures.map(function(countyFeature){
+                    countyFeature.geometry = countyFeature.geometry.transform(
+                            new OpenLayers.Projection('EPSG:4326'),
+                            new OpenLayers.Projection('EPSG:900913')
+                    );
                     var countyArea = Convert.acresToSquareMeters(Convert.squareMilesToAcres(parseFloat(countyFeature.attributes.AREA_SQMI)));
                     var countyGeoJson = geoJsonWriter.write(countyFeature);
                     var countyJstsGeom = geoJsonReader.read(countyGeoJson);
                     var intersection = countyJstsGeom.geometry.intersection(hucJstsGeom.geometry);
                     var intersectingArea = intersection.getArea();
-                    var magic = 1.8772775406969153;
+                    var magic = 1;
                     var percentHucInCounty = (intersectingArea / hucArea)/magic;
                     var percentCountyInHuc = (intersectingArea / countyArea)/magic;
                     
