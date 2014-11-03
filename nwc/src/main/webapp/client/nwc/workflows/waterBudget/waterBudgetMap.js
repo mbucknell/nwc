@@ -151,7 +151,7 @@
                                 cursor: 'pointer'
                             }),
                             filter: intersectionFilter,
-                            projection: new OpenLayers.Projection("EPSG:4326"),
+                            projection: new OpenLayers.Projection('EPSG:900913'),
                             protocol: new OpenLayers.Protocol.WFS({
                                 version: '1.0.0',
                                 url: CONFIG.endpoint.geoserver + 'ows',

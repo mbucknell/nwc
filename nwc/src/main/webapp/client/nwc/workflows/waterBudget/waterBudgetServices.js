@@ -51,28 +51,28 @@
     WaterBudgetServices.factory('HucCountiesIntersector', ['Convert', 
         function(Convert){
             var getIntersectionInfo = function(hucFeature, countyFeatures){
-                var hucArea = Convert.acresToSquareMeters(parseFloat(hucFeature.attributes.ACRES));
                 var geoJsonWriter = new OpenLayers.Format.GeoJSON();
                 var geoJsonReader = new jsts.io.GeoJSONReader();
                 var hucGeoJson = geoJsonWriter.write(hucFeature);
-                var hucJstsGeom = geoJsonReader.read(hucGeoJson);       
+                var hucJstsGeom = geoJsonReader.read(hucGeoJson);  
+                var hucArea = hucJstsGeom.geometry.getArea();
                 
                 var countiesHucIntersectionInfo = countyFeatures.map(function(countyFeature){
                     countyFeature.geometry = countyFeature.geometry.transform(
                             new OpenLayers.Projection('EPSG:4326'),
-                            new OpenLayers.Projection('EPSG:900913')
+                            new OpenLayers.Projection('EPSG:900913')//maybe use epsg:3857 instead?
                     );
-                    var countyArea = Convert.acresToSquareMeters(Convert.squareMilesToAcres(parseFloat(countyFeature.attributes.AREA_SQMI)));
                     var countyGeoJson = geoJsonWriter.write(countyFeature);
                     var countyJstsGeom = geoJsonReader.read(countyGeoJson);
+                    var countyArea = countyJstsGeom.geometry.getArea();
                     var intersection = countyJstsGeom.geometry.intersection(hucJstsGeom.geometry);
                     var intersectingArea = intersection.getArea();
-                    var magic = 1;
-                    var percentHucInCounty = (intersectingArea / hucArea)/magic;
-                    var percentCountyInHuc = (intersectingArea / countyArea)/magic;
+                    var percentHucInCounty = (intersectingArea / hucArea);
+                    var percentCountyInHuc = (intersectingArea / countyArea);
                     
                     var countyHucIntersectionInfo = {
-                        countyName: countyFeature.attributes.FULL_NAME.capitalize(true), 
+                        countyName: countyFeature.attributes.FULL_NAME.capitalize(true),
+                        countyId: countyFeature.attributes.FIPS,
                         hucInCounty: 100 * percentHucInCounty,
                         countyInHuc: 100 * percentCountyInHuc
                     };
