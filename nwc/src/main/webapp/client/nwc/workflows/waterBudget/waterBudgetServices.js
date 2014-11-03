@@ -48,8 +48,8 @@
                 }).once()
             };
     }]);
-    WaterBudgetServices.factory('HucCountiesIntersector', ['Convert', 
-        function(Convert){
+    WaterBudgetServices.factory('HucCountiesIntersector', [ 
+        function(){
             var getIntersectionInfo = function(hucFeature, countyFeatures){
                 var geoJsonWriter = new OpenLayers.Format.GeoJSON();
                 var geoJsonReader = new jsts.io.GeoJSONReader();
@@ -58,14 +58,14 @@
                 var hucArea = hucJstsGeom.geometry.getArea();
                 
                 var countiesHucIntersectionInfo = countyFeatures.map(function(countyFeature){
-                    countyFeature.geometry = countyFeature.geometry.transform(
+                    var countyFeatureGeometry = countyFeature.geometry.transform(
                             new OpenLayers.Projection('EPSG:4326'),
                             new OpenLayers.Projection('EPSG:900913')//maybe use epsg:3857 instead?
                     );
-                    var countyGeoJson = geoJsonWriter.write(countyFeature);
+                    var countyGeoJson = geoJsonWriter.write(countyFeatureGeometry);
                     var countyJstsGeom = geoJsonReader.read(countyGeoJson);
-                    var countyArea = countyJstsGeom.geometry.getArea();
-                    var intersection = countyJstsGeom.geometry.intersection(hucJstsGeom.geometry);
+                    var countyArea = countyJstsGeom.getArea();
+                    var intersection = countyJstsGeom.intersection(hucJstsGeom.geometry);
                     var intersectingArea = intersection.getArea();
                     var percentHucInCounty = (intersectingArea / hucArea);
                     var percentCountyInHuc = (intersectingArea / countyArea);

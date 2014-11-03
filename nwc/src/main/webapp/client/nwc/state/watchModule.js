@@ -155,12 +155,16 @@
             ]);
     var countyFeatureName = 'countyFeature';
     registerWatchFactory(countyFeatureName,
-            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'SosResponseParser', 'DataSeries', '$state', '$log', 'RunningWatches',
-                function ($http, CommonState, SosSources, SosUrlBuilder, SosResponseParser, DataSeries, $state, $log, RunningWatches) {
+            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'SosResponseParser', 'DataSeries', '$state', '$log', 'RunningWatches', 'HucCountiesIntersector', 'StoredState',
+                function ($http, CommonState, SosSources, SosUrlBuilder, SosResponseParser, DataSeries, $state, $log, RunningWatches, HucCountiesIntersector, StoredState) {
                     return {
                         propertyToWatch: countyFeatureName,
                         watchFunction: function (prop, oldCountyFeature, newCountyFeature) {
                             RunningWatches.add(countyFeatureName);
+                            var hucFeature = StoredState.waterBudgetHucFeature;
+                            
+                            CommonState.hucCountyIntersectionInfo = HucCountiesIntersector.intersect(hucFeature, [newCountyFeature])[0];
+                            
                             var offeringId = newCountyFeature.attributes.FIPS;
                             var countyArea = newCountyFeature.attributes.AREA_SQMI;
                             
