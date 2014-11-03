@@ -255,11 +255,13 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
     function ($scope, StoredState, CommonState, WaterBudgetMap, MapControlDescriptions) {
         $scope.StoredState = StoredState;
         $scope.CommonState = CommonState;
-        $scope.showCountyCitation = true;
+        $scope.isCountySelectionPage = true;
 
         var map = WaterBudgetMap.getMap();
         map.render('hucSelectMap');
-        map.getCountyThatIntersectsWithHucFeature(StoredState.waterBudgetHucFeature);
+        map.getCountyThatIntersectsWithHucFeature(StoredState.waterBudgetHucFeature, function() {
+        	  	$scope.$digest();
+        	});
 
         map.zoomToExtent(StoredState.mapExtent, true);
         map.events.register(

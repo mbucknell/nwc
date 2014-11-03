@@ -123,7 +123,7 @@
              * @returns {Openlayers.Layer.Vector} the vector layer containing the 
              * intersecting counties
              */
-            var addCountiesThatIntersectWith = function (hucFeature) {
+            var addCountiesThatIntersectWith = function (hucFeature, callback) {
                 var geometry = hucFeature.geometry;
                 var intersectionFilter = new OpenLayers.Filter.Spatial({
                     type: OpenLayers.Filter.Spatial.INTERSECTS,
@@ -171,6 +171,7 @@
                         CommonState.hucCountiesIntersectionInfo = HucCountiesIntersector.intersect(hucFeature, countyFeatures);
                         var countiesExtent = intersectingCountiesLayer.getDataExtent();
                         StoredState.mapExtent = countiesExtent;
+                        callback();
                         map.zoomToExtent(countiesExtent);
                     }
                 );
@@ -227,9 +228,9 @@
             /**
              * @param {Openlayers.Feature.Vector} hucFeature The huc that a user has selected.
              */
-            var getCountyThatIntersectsWithHucFeature = function (hucFeature) {
+            var getCountyThatIntersectsWithHucFeature = function (hucFeature, callback) {
                 var highlightedFeatureLayer = addHighlightedFeature(hucFeature);
-                var intersectingCountiesLayer = addCountiesThatIntersectWith(hucFeature);
+                var intersectingCountiesLayer = addCountiesThatIntersectWith(hucFeature, callback);
                 addCountySelectControl(
                         {
                             highlightedLayer: highlightedFeatureLayer,
