@@ -320,6 +320,77 @@
                 description: 'Visualize and export the statistics for the selected site.'
             },
             function ($scope, StoredState, CommonState, StoredState, $state) {
+
+                if (StoredState.streamFlowStatHucFeature) { //Modeled map
+                	$scope.streamFlowMap = {loading : true};
+                	var watershedMap = new OpenLayers.Map('watershedMap', {controls: [new OpenLayers.Control.Zoom()], 'projection': 'EPSG:3857'});
+                  	watershedMap.render('watershedMap');
+            	 
+                  	var layer = new OpenLayers.Layer.XYZ("World Street Map",
+	                        "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}", {
+	            				isBaseLayer: true,
+	            				units: "m",
+	            				sphericalMercator: true
+                  	});
+                  	watershedMap.addLayer(layer);
+               
+				   var filter = new OpenLayers.Filter.Comparison({
+					type: OpenLayers.Filter.Comparison.EQUAL_TO,
+					property: "HUC_12",
+					value: StoredState.streamFlowStatHucFeature.data.HUC12
+					});
+				   
+				   var protocol = new OpenLayers.Protocol.WFS({
+					url:  CONFIG.endpoint.geoserver + "NHDPlusHUCs/wfs",
+					featureType: "NationalWBDSnapshot",
+					featureNS: "http://cida.usgs.gov/NHDPlusHUCs",
+					version: "1.0.0",
+					geometryName: "the_geom",
+					srsName : "EPSG:3857"
+                   });
+			
+				   var waterShedVector = new OpenLayers.Layer.Vector("WFS", {
+						strategies: [new OpenLayers.Strategy.Fixed()],
+						protocol: protocol,
+							styleMap: new OpenLayers.StyleMap({
+								strokeWidth: 2,
+								strokeColor: "black",
+								fillOpacity: 0,
+								graphicOpacity: 1,
+								fill: false
+							}),
+							filter:filter
+					})
+				
+					waterShedVector.events.on({
+						featureadded: function(event){
+							this.map.zoomToExtent(this.getDataExtent());
+						},
+						loadend: function(event){
+							$scope.streamFlowMap.loading = false;
+							$scope.$digest();
+						}
+					});
+				watershedMap.addLayer(waterShedVector);
+                } else { //Observed map
+                  	var lon = StoredState.gage.data.LNG_GAGE;
+                  	var lat = StoredState.gage.data.LAT_GAGE;
+                  	var espg4326 = new OpenLayers.Projection('EPSG:4326');
+                  	var espg3857 = new OpenLayers.Projection('EPSG:3857');
+                  	var lonLat = new OpenLayers.LonLat(lon, lat).transform(espg4326, espg3857);
+                  	                  	
+                  	var gageVectorLayer = new OpenLayers.Layer.Vector("Simple Geometry Gage");
+                  	var point = new OpenLayers.Geometry.Point(lon, lat).transform(espg4326, espg3857);
+                  	var watershedMarker = new OpenLayers.Feature.Vector(point);                  	
+                  	gageVectorLayer.addFeatures([watershedMarker]);
+                  	
+                  	var markers = new OpenLayers.Layer.Markers("Markers");
+                  	markers.addMarker(new OpenLayers.Marker(lonLat));
+                  	
+                	$scope.gageLayers = [gageVectorLayer, markers];
+        			$scope.gageBounds = point.getBounds();
+                }            	
+            	
                 $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
                 CommonState.showStreamflowPlot = CommonState.showStreamflowPlot || false;
