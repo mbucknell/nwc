@@ -48,30 +48,28 @@
                 }).once()
             };
     }]);
-var nullCoords = function(component){
-    return null === component.x || null === component.y;
-};
     WaterBudgetServices.factory('HucCountiesIntersector', [ 
         function(){
             var getIntersectionInfo = function(hucFeature, countyFeatures){
-                var geoJsonWriter = new OpenLayers.Format.GeoJSON();
-                var geoJsonReader = new jsts.io.GeoJSONReader();
-                var hucGeoJson = geoJsonWriter.write(hucFeature);
-                var hucJstsGeom = geoJsonReader.read(hucGeoJson);  
+                var olGeoJsonFormatter = new OpenLayers.Format.GeoJSON();
+                var jstsGeoJsonReader = new jsts.io.GeoJSONReader();
+                var hucGeoJson = olGeoJsonFormatter.write(hucFeature);
+                var hucJstsGeom = jstsGeoJsonReader.read(hucGeoJson);  
                 var hucArea = hucJstsGeom.geometry.getArea();
                 
                 var countiesHucIntersectionInfo = countyFeatures.map(function(countyFeature){
-                    var countyFeatureGeometry = countyFeature.geometry.transform(
+                    //since OpenLayers' feature.transform method modifies data in-place, we must
+                    //operate on a clone to avoid affecting the original data
+                    //there is no native clone method, so we serialize and de-serialize instead.
+                    var countyGeoJson = olGeoJsonFormatter.write(countyFeature.geometry);
+                    var countyGeoClone = olGeoJsonFormatter.read(countyGeoJson, 'Geometry');
+                    var countyFeatureGeometry = countyGeoClone.transform(
                             new OpenLayers.Projection('EPSG:4326'),
                             new OpenLayers.Projection('EPSG:900913')//maybe use epsg:3857 instead?
                     );
-                    var reprojectionHasNullCoords = countyFeatureGeometry.components[0].components[0].components.find(nullCoords);
-                    if(reprojectionHasNullCoords){
-                        //transformation was invalid; use original coords
-                        countyFeatures = countyFeature.geometry;
-                    }
-                    var countyGeoJson = geoJsonWriter.write(countyFeatureGeometry);
-                    var countyJstsGeom = geoJsonReader.read(countyGeoJson);
+                    var transformedCountyGeoJson = olGeoJsonFormatter.write(countyFeatureGeometry);
+  
+                    var countyJstsGeom = jstsGeoJsonReader.read(transformedCountyGeoJson);
                     var countyArea = countyJstsGeom.getArea();
                     var intersection = countyJstsGeom.intersection(hucJstsGeom.geometry);
                     var intersectingArea = intersection.getArea();
