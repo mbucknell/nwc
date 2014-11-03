@@ -40,6 +40,7 @@
     request.setAttribute("openlayersVersion", props.get("openlayers.version"));
     request.setAttribute("fontawesomeVersion", props.get("fontawesome.version"));
     request.setAttribute("sugarVersion", props.get("sugar.version"));
+    request.setAttribute("jstsVersion", props.get("jsts.version"));
 
     request.setAttribute("directGeoserverEndpoint", props.get("nwc.endpoint.geoserver"));
     request.setAttribute("directThreddsEndpoint", props.get("nwc.endpoint.thredds"));

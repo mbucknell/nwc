@@ -1,8 +1,8 @@
 /*global angular*/
 (function () {
-    var WaterUseLookup = angular.module('nwc.waterBudgetServices', []);
+    var WaterBudgetServices = angular.module('nwc.waterBudgetServices', []);
     
-    WaterUseLookup.factory('CountyWaterUseProperties', [function() {
+    WaterBudgetServices.factory('CountyWaterUseProperties', [function() {
             var groupings = Object.extended({
                 'Public Supply' : ["PS-WGWFr", "PS-WGWSa", "PS-WSWFr", "PS-WSWSa"],
                 'Domestic' : ["DO-WGWFr", "DO-WGWSa", "DO-WSWFr", "DO-WSWSa"],
@@ -48,5 +48,42 @@
                 }).once()
             };
     }]);
+    WaterBudgetServices.factory('HucCountiesIntersector', ['Convert', 
+        function(Convert){
+            var getIntersectionInfo = function(hucFeature, countyFeatures){
+                var geoJsonWriter = new OpenLayers.Format.GeoJSON();
+                var geoJsonReader = new jsts.io.GeoJSONReader();
+                var hucGeoJson = geoJsonWriter.write(hucFeature);
+                var hucJstsGeom = geoJsonReader.read(hucGeoJson);  
+                var hucArea = hucJstsGeom.geometry.getArea();
+                
+                var countiesHucIntersectionInfo = countyFeatures.map(function(countyFeature){
+                    countyFeature.geometry = countyFeature.geometry.transform(
+                            new OpenLayers.Projection('EPSG:4326'),
+                            new OpenLayers.Projection('EPSG:900913')//maybe use epsg:3857 instead?
+                    );
+                    var countyGeoJson = geoJsonWriter.write(countyFeature);
+                    var countyJstsGeom = geoJsonReader.read(countyGeoJson);
+                    var countyArea = countyJstsGeom.geometry.getArea();
+                    var intersection = countyJstsGeom.geometry.intersection(hucJstsGeom.geometry);
+                    var intersectingArea = intersection.getArea();
+                    var percentHucInCounty = (intersectingArea / hucArea);
+                    var percentCountyInHuc = (intersectingArea / countyArea);
+                    
+                    var countyHucIntersectionInfo = {
+                        countyName: countyFeature.attributes.FULL_NAME.capitalize(true),
+                        countyId: countyFeature.attributes.FIPS,
+                        hucInCounty: 100 * percentHucInCounty,
+                        countyInHuc: 100 * percentCountyInHuc
+                    };
+                    return countyHucIntersectionInfo;
+                });
+                return countiesHucIntersectionInfo;
+            };
+            return {
+                intersect: getIntersectionInfo
+            };
+        }
+    ]);
 })();
 

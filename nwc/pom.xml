@@ -111,6 +111,7 @@
                         <include>${webjars.libs}/angular-ui-bootstrap/${angular-ui-bootstrap.version}/ui-bootstrap.js</include>
                         <include>${webjars.libs}/angular-ui-bootstrap/${angular-ui-bootstrap.version}/ui-bootstrap-tpls.js</include>
                         <include>${webjars.libs}/sugar/${sugar.version}/sugar-full.development.js</include>
+                        <include>${webjars.libs}/jsts/${jsts.version}/jsts.js</include>
                         <include>${webjars.libs}/openlayers/${openlayers.version}/OpenLayers.debug.js</include>
                         <include>${thirdParty.libs}/openlayers/extension/Raster.js</include>
                         <include>${thirdParty.libs}/openlayers/extension/Layer/Raster.js</include>
@@ -383,6 +384,10 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>ng-grid</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jsts</artifactId>
         </dependency>
         <!-- </webjars> -->
                 

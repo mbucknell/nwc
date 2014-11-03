@@ -153,15 +153,16 @@
                     };
                 }
             ]);
-    var countyInfoName = 'countyInfo';
-    registerWatchFactory(countyInfoName,
+    var countyFeatureName = 'countyFeature';
+    registerWatchFactory(countyFeatureName,
             [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'SosResponseParser', 'DataSeries', '$state', '$log', 'RunningWatches',
                 function ($http, CommonState, SosSources, SosUrlBuilder, SosResponseParser, DataSeries, $state, $log, RunningWatches) {
                     return {
-                        propertyToWatch: countyInfoName,
-                        watchFunction: function (prop, oldCountyInfo, newCountyInfo) {
-                            RunningWatches.add(countyInfoName);
-                            var offeringId = newCountyInfo.offeringId;
+                        propertyToWatch: countyFeatureName,
+                        watchFunction: function (prop, oldCountyFeature, newCountyFeature) {
+                            RunningWatches.add(countyFeatureName);
+                            var offeringId = newCountyFeature.attributes.FIPS;
+                            var countyArea = newCountyFeature.attributes.AREA_SQMI;
                             
                             var sosUrl = SosUrlBuilder.buildSosUrlFromSource(offeringId, SosSources.countyWaterUse);
 
@@ -172,7 +173,7 @@
                                         'See browser logs for details';
                                 alert(message);
                                 $log.error('Error while accessing: ' + url + '\n' + response.data);
-                                RunningWatches.remove(countyInfoName);
+                                RunningWatches.remove(countyFeatureName);
                             };
 
                             var waterUseSuccess = function (response) {
@@ -197,14 +198,14 @@
 
                                     CommonState.WaterUsageDataSeries = waterUseDataSeries;
                                     CommonState.newWaterUseData = true;
-                                    RunningWatches.remove(countyInfoName);
+                                    RunningWatches.remove(countyFeatureName);
                                     $state.go('workflow.waterBudget.plotData');
                                 }
                             };
 
                             $http.get(sosUrl).then(waterUseSuccess, waterUseFailure);
 
-                            return newCountyInfo;
+                            return newCountyFeature;
                         }
                     };
                 }
