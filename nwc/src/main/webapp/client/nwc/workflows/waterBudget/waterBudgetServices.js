@@ -48,6 +48,9 @@
                 }).once()
             };
     }]);
+var nullCoords = function(component){
+    return null === component.x || null === component.y;
+};
     WaterBudgetServices.factory('HucCountiesIntersector', [ 
         function(){
             var getIntersectionInfo = function(hucFeature, countyFeatures){
@@ -62,6 +65,11 @@
                             new OpenLayers.Projection('EPSG:4326'),
                             new OpenLayers.Projection('EPSG:900913')//maybe use epsg:3857 instead?
                     );
+                    var reprojectionHasNullCoords = countyFeatureGeometry.components[0].components[0].components.find(nullCoords);
+                    if(reprojectionHasNullCoords){
+                        //transformation was invalid; use original coords
+                        countyFeatures = countyFeature.geometry;
+                    }
                     var countyGeoJson = geoJsonWriter.write(countyFeatureGeometry);
                     var countyJstsGeom = geoJsonReader.read(countyGeoJson);
                     var countyArea = countyJstsGeom.getArea();
