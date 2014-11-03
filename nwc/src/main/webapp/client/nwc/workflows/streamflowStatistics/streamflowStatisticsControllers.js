@@ -389,9 +389,9 @@
                   	
                 	$scope.gageLayers = [gageVectorLayer, markers];
         			$scope.gageBounds = point.getBounds();
-        	   }            	
+                }            	
             	
-            	$scope.CommonState = CommonState;
+                $scope.CommonState = CommonState;
                 $scope.StoredState = StoredState;
                 CommonState.showStreamflowPlot = CommonState.showStreamflowPlot || false;
                 var selectionInfo = {};
