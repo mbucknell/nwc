@@ -168,7 +168,7 @@
                     intersectingCountiesLayer,
                     function() {
                         var countyFeatures = intersectingCountiesLayer.features;
-                        CommonState.hucCountiesIntersectionInfo = HucCountiesIntersector.intersect(hucFeature, countyFeatures);
+                        CommonState.hucCountiesIntersectionInfo = HucCountiesIntersector.intersectCounties(hucFeature, countyFeatures);
                         var countiesExtent = intersectingCountiesLayer.getDataExtent();
                         StoredState.mapExtent = countiesExtent;
                         callback();

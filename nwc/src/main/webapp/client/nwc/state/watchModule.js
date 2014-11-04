@@ -163,7 +163,7 @@
                             RunningWatches.add(countyFeatureName);
                             var hucFeature = StoredState.waterBudgetHucFeature;
                             
-                            CommonState.hucCountyIntersectionInfo = HucCountiesIntersector.intersect(hucFeature, [newCountyFeature])[0];
+                            CommonState.hucCountyIntersectionInfo = HucCountiesIntersector.intersectCounty(hucFeature, newCountyFeature);
                             
                             var offeringId = newCountyFeature.attributes.FIPS;
                             var countyArea = newCountyFeature.attributes.AREA_SQMI;

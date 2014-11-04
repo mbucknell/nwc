@@ -50,44 +50,52 @@
     }]);
     WaterBudgetServices.factory('HucCountiesIntersector', [ 
         function(){
-            var getIntersectionInfo = function(hucFeature, countyFeatures){
-                var olGeoJsonFormatter = new OpenLayers.Format.GeoJSON();
-                var jstsGeoJsonReader = new jsts.io.GeoJSONReader();
+        	
+        	var olGeoJsonFormatter = new OpenLayers.Format.GeoJSON();
+            var jstsGeoJsonReader = new jsts.io.GeoJSONReader();
+        	
+            var getCountiesIntersectionInfo = function(hucFeature, countyFeatures){               
+                var countiesHucIntersectionInfo = countyFeatures.map(function(countyFeature){
+                    countyFeature.geometry = countyFeature.geometry.transform(
+                            new OpenLayers.Projection('EPSG:4326'),
+                            new OpenLayers.Projection('EPSG:900913')//maybe use epsg:3857 instead?
+                    );
+                    var oneCountyInfo = getCountyIntersectionInfo(hucFeature, countyFeature);
+                    return oneCountyInfo;
+                });
+                return countiesHucIntersectionInfo;
+            };
+            
+            var getCountyIntersectionInfo = function(hucFeature, countyFeature){
+            	//since OpenLayers' feature.transform method modifies data in-place, we must
+                //operate on a clone to avoid affecting the original data
+                //there is no native clone method, so we serialize and de-serialize instead.
                 var hucGeoJson = olGeoJsonFormatter.write(hucFeature);
                 var hucJstsGeom = jstsGeoJsonReader.read(hucGeoJson);  
                 var hucArea = hucJstsGeom.geometry.getArea();
                 
-                var countiesHucIntersectionInfo = countyFeatures.map(function(countyFeature){
-                    //since OpenLayers' feature.transform method modifies data in-place, we must
-                    //operate on a clone to avoid affecting the original data
-                    //there is no native clone method, so we serialize and de-serialize instead.
-                    var countyGeoJson = olGeoJsonFormatter.write(countyFeature.geometry);
-                    var countyGeoClone = olGeoJsonFormatter.read(countyGeoJson, 'Geometry');
-                    var countyFeatureGeometry = countyGeoClone.transform(
-                            new OpenLayers.Projection('EPSG:4326'),
-                            new OpenLayers.Projection('EPSG:900913')//maybe use epsg:3857 instead?
-                    );
-                    var transformedCountyGeoJson = olGeoJsonFormatter.write(countyFeatureGeometry);
-  
-                    var countyJstsGeom = jstsGeoJsonReader.read(transformedCountyGeoJson);
-                    var countyArea = countyJstsGeom.getArea();
-                    var intersection = countyJstsGeom.intersection(hucJstsGeom.geometry);
-                    var intersectingArea = intersection.getArea();
-                    var percentHucInCounty = (intersectingArea / hucArea);
-                    var percentCountyInHuc = (intersectingArea / countyArea);
-                    
-                    var countyHucIntersectionInfo = {
-                        countyName: countyFeature.attributes.FULL_NAME.capitalize(true),
-                        countyId: countyFeature.attributes.FIPS,
-                        hucInCounty: 100 * percentHucInCounty,
-                        countyInHuc: 100 * percentCountyInHuc
-                    };
-                    return countyHucIntersectionInfo;
-                });
-                return countiesHucIntersectionInfo;
+            	var countyGeoJson = olGeoJsonFormatter.write(countyFeature.geometry);
+                var countyJstsGeom = jstsGeoJsonReader.read(countyGeoJson);
+                
+                var countyArea = countyJstsGeom.getArea();
+                
+                var intersection = countyJstsGeom.intersection(hucJstsGeom.geometry);
+                var intersectingArea = intersection.getArea();
+                var percentHucInCounty = (intersectingArea / hucArea);
+                var percentCountyInHuc = (intersectingArea / countyArea);
+                
+                var countyHucIntersectionInfo = {
+                    countyName: countyFeature.attributes.FULL_NAME.capitalize(true),
+                    countyId: countyFeature.attributes.FIPS,
+                    hucInCounty: 100 * percentHucInCounty,
+                    countyInHuc: 100 * percentCountyInHuc
+                };
+                return countyHucIntersectionInfo;
             };
+            
             return {
-                intersect: getIntersectionInfo
+                intersectCounties: getCountiesIntersectionInfo,
+                intersectCounty: getCountyIntersectionInfo
             };
         }
     ]);
