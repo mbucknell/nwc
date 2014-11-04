@@ -18,27 +18,28 @@
     <a href="http://publications.newberry.org/ahcbp">http://publications.newberry.org/ahcbp</a>.
 </div>
 
-<div ng-if="isCountySelectionPage" class="table-responsive">
-	<table class="table table-striped huc_table">
-		<thead>
-			<tr>
-				<th>County Name</th>
-				<th>County Id</th>
-				<th>% HUC in County</th>
-				<th>% County in HUC</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="intersection in CommonState.hucCountiesIntersectionInfo">
-				<td ng-bind="intersection.countyName"></td>
-				<td ng-bind="intersection.countyId"></td>
-				<td ng-bind="{{intersection.hucInCounty | number : 0}}"></td>
-				<td ng-bind="{{intersection.countyInHuc | number : 0}}"></td>
-			</tr>
-		</tbody>
-	</table>
+<div class="row">
+	<div ng-if="isCountySelectionPage" class="table-responsive">
+		<table class="col-xs-12 table table-striped huc_table">
+			<thead>
+				<tr>
+					<th>County Name</th>
+					<th>County Id</th>
+					<th>% HUC in County</th>
+					<th>% County in HUC</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="intersection in CommonState.hucCountiesIntersectionInfo">
+					<td ng-bind="intersection.countyName"></td>
+					<td ng-bind="intersection.countyId"></td>
+					<td ng-bind="{{intersection.hucInCounty | number : 0}}"></td>
+					<td ng-bind="{{intersection.countyInHuc | number : 0}}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
-
 
 <div style="display:none">
     <nav>
