@@ -8,7 +8,10 @@
 	featureMap.directive('nwcFeatureMap', function() {
 		var link = function(scope, element, attrs) {
 			var map = new OpenLayers.Map(element.attr('id'),{controls: [new OpenLayers.Control.Zoom()],'restrictedExtent': scope.bounds()});
-			map.addLayers(scope.layers());
+                        var layers = scope.layers();
+                        if(layers){
+                            map.addLayers(layers);
+                        }
 
 			var baseLayer = new OpenLayers.Layer.XYZ("World Street Map",
 					"http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}", {

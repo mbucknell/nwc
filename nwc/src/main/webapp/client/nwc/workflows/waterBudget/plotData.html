@@ -10,19 +10,37 @@
 </div>
 
 <div class="row spacer" ng-hide="hideUse()">
-    <div id="countyMap" nwc-feature-map layers="countyLayer" bounds="countyBounds" style="height:200px;width:200px;border-style:solid;border-width:1px;" class="col-xs-3"></div>
-    <div class="col-xs-6">
-        <div class="btn-group">
-            <button type="button" class="btn btn-primary" ng-model="StoredState.plotNormalization" btn-radio="'totalWater'">Total County Water Use</button>
-            <button type="button" class="btn btn-primary" ng-model="StoredState.plotNormalization" btn-radio="'normalizedWater'">Area Normalized County Water Use</button>
-        </div>
+	<div class="row">
+		<div class="col-xs-3"></div>
+		<div class="col-xs-6">
+	        <div class="btn-group">
+	            <button type="button" class="btn btn-primary" ng-model="StoredState.plotNormalization" btn-radio="'totalWater'">Total County Water Use</button>
+	            <button type="button" class="btn btn-primary" ng-model="StoredState.plotNormalization" btn-radio="'normalizedWater'">Area Normalized County Water Use</button>
+        	</div>
+		</div>
+		<div class="col-xs-3"></div>
+	</div>
+	<div class="row">
+		<div class="col-xs-3">
+	    	<div id="countyMap" nwc-feature-map layers="countyLayer" bounds="countyBounds" style="height:200px;width:200px;border-style:solid;border-width:1px;"></div>
+    	</div>
+	    <div class="col-xs-6">
+			<div class="row spacer">
+				<span>Percentage of HUC in </span><span ng-bind="StoredState.countyFeature.attributes.FULL_NAME.capitalize(true)"></span><span> County</span>
+				<span ng-bind="{{CommonState.hucCountyIntersectionInfo.hucInCounty | number : 0}}"></span><span>%</span>
+			</div>
+			<div class="row">
+				<span>Percentage of </span><span ng-bind="StoredState.countyFeature.attributes.FULL_NAME.capitalize(true)"></span><span> County in HUC</span>
+				<span ng-bind="{{CommonState.hucCountyIntersectionInfo.countyInHuc | number : 0}}"></span><span>%</span>
+			</div>
+	    </div>
+	    <div class="col-xs-3"></div>
     </div>
-    <div class="col-xs-3"></div>
 </div>
 
 
 <div class="row col-xs-12" ng-hide="hideUse()">
-    <h4 ng-bind=" 'Water Use for ' + StoredState.countyFeature.attributes.FULL_NAME.capitalize(true) + ' County'"></h4>
+    <h4 ng-bind=" 'Water Use for ' + StoredState.countyFeature.attributes.FULL_NAME.capitalize(true) + ' County '"></h4>
 	<div ng-hide="hideNormalizationWarning()">
 		<em class="caution">Area Averaged Withdrawal Estimates, Use with Caution!</em>
 		<p>Water use by county area is represented as evenly distributed across the
@@ -50,7 +68,7 @@
     <div class="row spacer">
         <div class="col-xs-4">
          	<div id="hucMap" nwc-feature-map layers="hucLayer" bounds="hucBounds" style="height:200px;width:200px;border-style:solid;border-width:1px;"></div>
-            <div class="btn-group">
+            <div class="btn-group spacer">
                 <button type="button" class="btn btn-primary" ng-model="StoredState.plotTimeDensity" btn-radio="'monthly'">Monthly</button>
                 <button type="button" class="btn btn-primary" ng-model="StoredState.plotTimeDensity" btn-radio="'daily'">Daily</button>
             </div>
