@@ -32,8 +32,8 @@
 			<tr ng-repeat="intersection in CommonState.hucCountiesIntersectionInfo">
 				<td ng-bind="intersection.countyName"></td>
 				<td ng-bind="intersection.countyId"></td>
-				<td ng-bind="intersection.hucInCounty"></td>
-				<td ng-bind="intersection.countyInHuc"></td>
+				<td ng-bind="{{intersection.hucInCounty | number : 0}}"></td>
+				<td ng-bind="{{intersection.countyInHuc | number : 0}}"></td>
 			</tr>
 		</tbody>
 	</table>
