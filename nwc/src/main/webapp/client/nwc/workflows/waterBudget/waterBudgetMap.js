@@ -173,6 +173,7 @@
                         StoredState.mapExtent = countiesExtent;
                         callback();
                         map.zoomToExtent(countiesExtent);
+                        intersectingCountiesLayer.refresh();
                     }
                 );
                 return intersectingCountiesLayer;
