@@ -4,10 +4,6 @@
     Step-specific or workflow-specific dependencies can be loaded in the 
     templates for those steps or workflows.
 --%>
-<%
-String timestamp = "" + System.currentTimeMillis();
-%>
-
 <!--library dependencies -->
 <script type="text/javascript" src="${context}/webjars/angularjs/${angularVersion}/angular${jsMin}.js"></script>
 <script type="text/javascript" src="${context}/webjars/angular-ui-router/${angularUiRouterVersion}/angular-ui-router${jsMin}.js"></script>
@@ -53,57 +49,57 @@ String timestamp = "" + System.currentTimeMillis();
 
 <script type="text/javascript" src="${context}/3rdparty/checklist-model/checklist-model.js"></script>
 <!-- misc -->
-<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/WaterCensusToolbar/js/WaterCensusControls.js?nocache=<%=timestamp%>"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/WaterCensusToolbar/js/WaterCensusControls.js?nocache=${applicationVersion}"></script>
 
-<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/FlowlineLayer/FlowlinesData.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/FlowlineLayer/FlowlinesRaster.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/GageLayer/GageData.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/GageLayer/GageFeature.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/GageLayer/GageRaster.js?nocache=<%=timestamp%>"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/FlowlineLayer/FlowlinesData.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/FlowlineLayer/FlowlinesRaster.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/GageLayer/GageData.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/GageLayer/GageFeature.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/GageLayer/GageRaster.js?nocache=${applicationVersion}"></script>
 
 
 <!--services -->
-<script type="text/javascript" src="${context}/client/nwc/general/services/util.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/DataSeriesStore.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/SosSources.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/SosResponseParser.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/CommonDictionary.js?nocache=<%=timestamp%>"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/util.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/DataSeriesStore.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/SosSources.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/SosResponseParser.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/CommonDictionary.js?nocache=${applicationVersion}"></script>
 
-<script type="text/javascript" src="${context}/client/nwc/state/watchModule.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/state/sharedStateServices.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/state/stateController.js?nocache=<%=timestamp%>"></script>
+<script type="text/javascript" src="${context}/client/nwc/state/watchModule.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/state/sharedStateServices.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/state/stateController.js?nocache=${applicationVersion}"></script>
 
-<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetPlot.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/BaseMap.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetMap.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/aquaticBiology/aquaticBiologyMap.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowMap.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/Conversion.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetServices.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterUsageChart.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamStats.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowDictionary.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/WpsClient.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/RdbParser.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/WaterYearUtil.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/Plotter.js?nocache=<%=timestamp%>"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetPlot.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/BaseMap.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetMap.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/aquaticBiology/aquaticBiologyMap.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowMap.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/Conversion.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetServices.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterUsageChart.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamStats.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowDictionary.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/WpsClient.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/RdbParser.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/WaterYearUtil.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/Plotter.js?nocache=${applicationVersion}"></script>
 
 <!-- directives -->
-<script type="text/javascript" src="${context}/client/nwc/general/directives/selectionInfoDirectives.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/directives/downloadDataDirective.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowStatisticsDirectives.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/directives/GageList/GageList.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/directives/HucList/HucList.js?nocache=<%=timestamp%>"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/directives/selectionInfoDirectives.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/directives/downloadDataDirective.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowStatisticsDirectives.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/directives/GageList/GageList.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/directives/HucList/HucList.js?nocache=${applicationVersion}"></script>
 
 <!-- controllers -->
-<script type="text/javascript" src="${context}/client/nwc/general/controllers/controllerHelpers.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetControllers.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/aquaticBiology/aquaticBiologyControllers.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowStatisticsControllers.js?nocache=<%=timestamp%>"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/dataDiscovery/dataDiscoveryControllers.js?nocache=<%=timestamp%>"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/controllers/controllerHelpers.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetControllers.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/aquaticBiology/aquaticBiologyControllers.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowStatisticsControllers.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/dataDiscovery/dataDiscoveryControllers.js?nocache=${applicationVersion}"></script>
 
 <!-- main app-->
-<script type="text/javascript" src="${context}/client/nwc/app.js?nocache=<%=timestamp%>"></script>
+<script type="text/javascript" src="${context}/client/nwc/app.js?nocache=${applicationVersion}"></script>
 
 
 

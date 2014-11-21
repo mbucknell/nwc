@@ -30,6 +30,8 @@
     request.setAttribute("openlayersMin", (development) ? ".debug" : "");
     request.setAttribute("dygraphsMin", (development) ? "-dev" : "-combined");
     
+
+    request.setAttribute("applicationVersion", props.get("version"));
     request.setAttribute("jqueryVersion", props.get("jquery.version"));
     request.setAttribute("bootstrapVersion", props.get("bootstrap.version"));
     request.setAttribute("angularVersion", props.get("angular.version"));
