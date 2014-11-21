@@ -13,6 +13,9 @@
 <script type="text/javascript" src="${context}/webjars/ng-grid/${angularUiGridVersion}/ng-grid${jsMin}.js"></script>
 <script type="text/javascript" src="${context}/webjars/sugar/${sugarVersion}/sugar-full${sugarMin}.js"></script>
 <script type="text/javascript" src="${context}/webjars/openlayers/${openlayersVersion}/OpenLayers${openlayersMin}.js"></script>
+<script type="text/javascript" src="${context}/webjars/jsts/${jstsVersion}/javascript.util.js"></script>
+<script type="text/javascript" src="${context}/webjars/jsts/${jstsVersion}/jsts.js"></script>
+
 <!-- IE11 serializes the WFS call and adds an extra empty namespace attribute (NS1), this override strips it out -->
 <script type="text/javascript"> 
 (function() {
@@ -49,57 +52,57 @@
 
 <script type="text/javascript" src="${context}/3rdparty/checklist-model/checklist-model.js"></script>
 <!-- misc -->
-<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/WaterCensusToolbar/js/WaterCensusControls.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/WaterCensusToolbar/js/WaterCensusControls.js?version=${applicationVersion}"></script>
 
-<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/FlowlineLayer/FlowlinesData.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/FlowlineLayer/FlowlinesRaster.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/GageLayer/GageData.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/GageLayer/GageFeature.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/GageLayer/GageRaster.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/FlowlineLayer/FlowlinesData.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/FlowlineLayer/FlowlinesRaster.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/GageLayer/GageData.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/GageLayer/GageFeature.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/openLayersExtensions/GageLayer/GageRaster.js?version=${applicationVersion}"></script>
 
 
 <!--services -->
-<script type="text/javascript" src="${context}/client/nwc/general/services/util.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/DataSeriesStore.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/SosSources.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/SosResponseParser.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/CommonDictionary.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/util.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/DataSeriesStore.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/SosSources.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/SosResponseParser.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/CommonDictionary.js?version=${applicationVersion}"></script>
 
-<script type="text/javascript" src="${context}/client/nwc/state/watchModule.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/state/sharedStateServices.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/state/stateController.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/state/watchModule.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/state/sharedStateServices.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/state/stateController.js?version=${applicationVersion}"></script>
 
-<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetPlot.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/BaseMap.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetMap.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/aquaticBiology/aquaticBiologyMap.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowMap.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/Conversion.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetServices.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterUsageChart.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamStats.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowDictionary.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/WpsClient.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/RdbParser.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/WaterYearUtil.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/services/Plotter.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/BaseMap.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetMap.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/aquaticBiology/aquaticBiologyMap.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowMap.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/Conversion.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetServices.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterUsageChart.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamStats.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowDictionary.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/WpsClient.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/RdbParser.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/WaterYearUtil.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/services/Plotter.js?version=${applicationVersion}"></script>
 
 <!-- directives -->
-<script type="text/javascript" src="${context}/client/nwc/general/directives/selectionInfoDirectives.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/directives/downloadDataDirective.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowStatisticsDirectives.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/directives/GageList/GageList.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/general/directives/HucList/HucList.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/directives/selectionInfoDirectives.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/directives/downloadDataDirective.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/directives/featureMap.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowStatisticsDirectives.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/directives/GageList/GageList.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/directives/HucList/HucList.js?version=${applicationVersion}"></script>
 
 <!-- controllers -->
-<script type="text/javascript" src="${context}/client/nwc/general/controllers/controllerHelpers.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetControllers.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/aquaticBiology/aquaticBiologyControllers.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowStatisticsControllers.js?nocache=${applicationVersion}"></script>
-<script type="text/javascript" src="${context}/client/nwc/workflows/dataDiscovery/dataDiscoveryControllers.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/general/controllers/controllerHelpers.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/waterBudget/waterBudgetControllers.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/aquaticBiology/aquaticBiologyControllers.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/streamflowStatistics/streamflowStatisticsControllers.js?version=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/workflows/dataDiscovery/dataDiscoveryControllers.js?version=${applicationVersion}"></script>
 
 <!-- main app-->
-<script type="text/javascript" src="${context}/client/nwc/app.js?nocache=${applicationVersion}"></script>
+<script type="text/javascript" src="${context}/client/nwc/app.js?version=${applicationVersion}"></script>
 
 
 

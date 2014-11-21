@@ -1,7 +1,7 @@
 /*global angular*/
 (function(){
 	var nwcApp = angular.module(
-			'nwcApp', 
+			'nwcApp',
 			[
 			 'nwc.sharedStateServices',
 			 'nwc.util',
@@ -19,9 +19,9 @@
 			 'nwc.directives.selectionInfo',
 			 'nwc.directives.downloadData',
 			 'nwc.directives.streamflowStatistics',
+			 'nwc.directives.featureMap',
 			 'ui.router',
 			 'ui.bootstrap',
-			 'nwc.waterBudgetPlot',
 			 'nwc.waterUsageChart',
 			 'nwc.map.base',
 			 'nwc.map.waterBudget',
@@ -154,7 +154,7 @@
 	//automatically update StoredState object on angular-ui-router state change so that
 	//individual controllers and/or services do not have to pass the current state name
 	//and parameters into StatePersistence methods.
-	nwcApp.run(['$rootScope', 'StoredState', 
+	nwcApp.run(['$rootScope', 'StoredState',
 		function($rootScope, StoredState){
 			$rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
 				StoredState.stateName = toState.name;

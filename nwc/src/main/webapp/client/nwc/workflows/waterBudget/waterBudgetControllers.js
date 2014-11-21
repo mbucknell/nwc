@@ -1,7 +1,7 @@
 /*global angular,NWC,OpenLayers,$,CONFIG*/
 (function(){
     var waterBudgetControllers = angular.module('nwc.controllers.waterBudget', ['nwc.conversion']);
-    
+
     waterBudgetControllers.controller('WaterBudget', ['$scope', 'StoredState', '$sce', 'WaterBudgetMap',
         NWC.ControllerHelpers.WorkflowController(
             {
@@ -13,12 +13,12 @@
             },
             function ($scope, SharedState, $sce, WaterBudgetMap) {
                 $scope.description = $sce.trustAsHtml($scope.description);
-				
+
 				//get map and layer info
 				var map = WaterBudgetMap.getMap();
 				var hucLayerName = WaterBudgetMap.hucLayerName;
 				var layer = map.getLayersByName(hucLayerName)[0];
-					
+
 				//function for toggling HUC layer
 				$scope.toggleHUC = function () {
 					var currentVisibility = layer.getVisibility();
@@ -27,14 +27,42 @@
             }
     )]);
 
-waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState', 'CommonState', 
-    'WaterBudgetPlot', 'WaterUsageChart', 'Units', 'Convert',
+waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState', 'CommonState',
+    'Plotter', 'WaterUsageChart', 'Units', 'Convert',
     NWC.ControllerHelpers.StepController(
         {
             name: 'Plot Water Budget Data',
             description: 'Visualize the data for your HUC of interest.'
         },
-        function ($scope, $state, StoredState, CommonState, WaterBudgetPlot, WaterUsageChart, Units, Convert) {
+        function ($scope, $state, StoredState, CommonState, Plotter, WaterUsageChart, Units, Convert) {
+			// Create vector layer to show HUC
+            var layerStyle = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
+            layerStyle.fillOpacity = 0;
+            layerStyle.graphicOpacity = 1;
+            layerStyle.strokeColor = "black";
+            layerStyle.strokeWidth = 2;
+        	var hucVectorLayer = new OpenLayers.Layer.Vector("Simple Geometry Huc", {
+               	style: layerStyle
+            });
+
+        	var hucFeature = new OpenLayers.Feature.Vector(StoredState.waterBudgetHucFeature.geometry);
+        	hucVectorLayer.addFeatures([hucFeature]);
+
+			$scope.hucLayer = [hucVectorLayer];
+			$scope.hucBounds = hucVectorLayer.getDataExtent();
+
+			if (StoredState.countyFeature) {
+            	var countyVectorLayer = new OpenLayers.Layer.Vector("Simple Geometry County", {
+                	style: layerStyle
+            	});
+            	
+            	var countyFeature = new OpenLayers.Feature.Vector(StoredState.countyFeature.geometry);
+            	countyVectorLayer.addFeatures([hucFeature.clone(), countyFeature]);
+
+    			$scope.countyLayer = [countyVectorLayer];
+    			$scope.countyBounds = StoredState.countyFeature.geometry.getBounds();
+            }
+			
             var selectionInfo = {};
             if (StoredState.waterBudgetHucFeature) {
                 selectionInfo.hucId = StoredState.waterBudgetHucFeature.data.HUC_12;
@@ -44,7 +72,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 return;
             }
             $scope.selectionInfo = selectionInfo;
-            
+
             var plotDivSelector = '#waterBudgetPlot';
             var legendDivSelector = '#waterBudgetLegend';
             StoredState.plotNormalization = StoredState.plotNormalization || 'totalWater';
@@ -68,7 +96,6 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             });
             /**
              * {String} category the category of data to plot (daily or monthly)
-             * TODO: should be able to delete WaterBudgetPlot and move to nwc.plotter
              */
             var plotPTandETaData = function(){
                 var normalization = 'normalizedWater';
@@ -76,7 +103,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 var labels = CommonState.DataSeriesStore[StoredState.plotTimeDensity].getSeriesLabelsAs(
                         StoredState.measurementSystem, normalization, StoredState.plotTimeDensity);
                 var ylabel = Units[StoredState.measurementSystem][normalization][StoredState.plotTimeDensity];
-                WaterBudgetPlot.setPlot(plotDivSelector, legendDivSelector, values, labels, ylabel);
+                Plotter.getPlot(plotDivSelector, legendDivSelector, values, labels, ylabel);
             };
             //boolean property is cheaper to watch than deep object comparison
             $scope.$watch('CommonState.newDataSeriesStore', function(newValue, oldValue){
@@ -89,9 +116,9 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                     }
                 }
             });
-            
+
             var chartDivSelector = '#waterUsageChart';
-            
+
             var chartWaterUse = function() {
                 var normalizationFn = Convert.noop;
                 if ('normalizedWater' === StoredState.plotNormalization) {
@@ -102,10 +129,10 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 var labels = CommonState.WaterUsageDataSeries.getSeriesLabelsAs(
                     StoredState.measurementSystem, StoredState.plotNormalization, StoredState.plotTimeDensity).from(1);
                 var ylabel = Units[StoredState.measurementSystem][StoredState.plotNormalization].daily;
-                WaterUsageChart.setChart(chartDivSelector, values, labels, ylabel, 
+                WaterUsageChart.setChart(chartDivSelector, values, labels, ylabel,
                     Units[StoredState.measurementSystem][StoredState.plotNormalization].precision);
             };
-            
+
             //boolean property is cheaper to watch than deep object comparison
             $scope.$watch('CommonState.newWaterUseData', function(newValue, oldValue){
                 if(newValue){
@@ -115,15 +142,15 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                     CommonState.newDataSeriesStore = true;
                 }
             });
-            
+
             $scope.hideUse = function () {
                 return (!CommonState.WaterUsageDataSeries) || !(CommonState.WaterUsageDataSeries.data) || !(CommonState.WaterUsageDataSeries.data.length);
             };
-            
+
             $scope.hideNormalizationWarning = function() {
                 return (StoredState.plotNormalization !== 'normalizedWater')
             }
-            
+
             var buildName = function(selectionName, selectionId, series) {
                 var filename = selectionName;
                 filename += '_' + selectionId;
@@ -133,7 +160,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 filename = escape(filename);
                 return filename;
             };
-            
+
             $scope.getHucFilename = function (series) {
                 var filename = 'data.csv';
                 if (StoredState.waterBudgetHucFeature) {
@@ -142,7 +169,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 }
                 return filename;
             };
-            
+
             $scope.getCntyFilename = function (series) {
                 var filename = 'data.csv';
                 if (StoredState.countyInfo) {
@@ -151,13 +178,13 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 }
                 return filename;
             };
-            
+
             $scope.getCombinedWaterUse = function(dataSeries) {
                 var result = Object.clone(dataSeries);
                 result.data = WaterUsageChart.combineData(result.data);
                 return result;
             };
-            
+
             $scope.CommonState = CommonState;
             $scope.StoredState = StoredState;
         })
@@ -172,7 +199,7 @@ waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'Common
         function ($scope, StoredState, CommonState, WaterBudgetMap, $log, MapControlDescriptions) {
             $scope.StoredState = StoredState;
             $scope.CommonState = CommonState;
-            
+
             var map = WaterBudgetMap.getMap();
 
             map.render('hucSelectMap');
@@ -186,7 +213,7 @@ waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'Common
                 },
                 false
             );
-            
+
             $scope.$watch('CommonState.activatedMapControl', function(newControl, oldControl) {
                 var controlId;
                 if (newControl === 'zoom') {
@@ -207,13 +234,13 @@ waterBudgetControllers.controller('SelectHuc', ['$scope', 'StoredState', 'Common
                 CommonState.mapControlDescription = MapControlDescriptions[newControl].description;
                 CommonState.mapControlCursor = MapControlDescriptions[newControl].cursor;
             });
-        
+
             // when there is more than select, logic for additional buttons can go here
-        
+
             CommonState.activatedMapControl = 'select';
             CommonState.mapControlDescription = MapControlDescriptions.select.description;
             CommonState.mapControlCursor = MapControlDescriptions.select.cursor;
-            
+
             $log.info(CommonState);
         }
     )
@@ -228,21 +255,14 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
     function ($scope, StoredState, CommonState, WaterBudgetMap, MapControlDescriptions) {
         $scope.StoredState = StoredState;
         $scope.CommonState = CommonState;
-        $scope.showCountyCitation = true;
-        
+        $scope.isCountySelectionPage = true;
+
         var map = WaterBudgetMap.getMap();
         map.render('hucSelectMap');
+        map.getCountyThatIntersectsWithHucFeature(StoredState.waterBudgetHucFeature, function() {
+        	  	$scope.$digest();
+        	});
 
-        var setCountyInfo = function(countyFeature){
-            var countyInfo = {};
-            countyInfo.offeringId = countyFeature.attributes.FIPS;
-            countyInfo.area = countyFeature.attributes.AREA_SQMI;
-            countyInfo.name = countyFeature.attributes.FULL_NAME.capitalize(true);
-            
-            StoredState.countyInfo = countyInfo;
-        };
-        map.getCountyThatIntersectsWithHucFeature(StoredState.waterBudgetHucFeature, setCountyInfo);
-        
         map.zoomToExtent(StoredState.mapExtent, true);
         map.events.register(
             'moveend',
@@ -290,7 +310,7 @@ waterBudgetControllers.controller('DisambiguateClick', ['$scope', 'StoredState',
         },
         function ($scope, StoredState, CommonState, $log, $state) {
             $scope.hucs = CommonState.ambiguousHucs;
-            
+
             /**
              * @param {OpenLayers.Feature} huc
              */
@@ -298,7 +318,7 @@ waterBudgetControllers.controller('DisambiguateClick', ['$scope', 'StoredState',
                 StoredState.waterBudgetHucFeature = huc;
                 $state.go('^.plotData');
             };
-			
+
             $log.info(StoredState);
         }
     )
@@ -313,8 +333,8 @@ waterBudgetControllers.controller('FinalStep', ['$scope', 'StoredState', '$state
         function ($scope, StoredState, $state, CommonState, $log) {
             StoredState._clientState.name = $state.current.name;
             StoredState._clientState.params = $state.params;
-            
-            
+
+
             $log.info(CommonState);
         }
     )
@@ -337,7 +357,7 @@ waterBudgetControllers.controller('Restore', [
                     });
         };
         $timeout(retrieveState, 3000);
-        
+
     }
 ]);
 

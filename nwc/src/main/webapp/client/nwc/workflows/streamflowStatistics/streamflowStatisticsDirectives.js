@@ -17,7 +17,7 @@
                         measurementSystem, "streamflow", plotTimeDensity);
                 var ylabel = Units[measurementSystem].streamflow[plotTimeDensity];
                 var title = "Modeled Streamflow for the " + StoredState.streamFlowStatHucFeature.data.HU_12_NAME + " Watershed.";
-                Plotter.setPlot(plotDivSelector, legendDivSelector, values, labels, ylabel, title);
+                Plotter.getPlot(plotDivSelector, legendDivSelector, values, labels, ylabel, title);
             };
 
             var buildName = function(selectionName, selectionId, series) {
@@ -58,6 +58,36 @@
                     });
                 },
                 templateUrl: '../client/nwc/workflows/streamflowStatistics/plotData.html'
+            };
+        }]);
+    streamflowStatistics.directive('downloadStatistics', ['CommonState', 'StoredState',
+        function(CommonState, StoredState) {
+
+            var buildStatisticsName = function(selectionName, selectionId) {
+                var filename = selectionName;
+                filename += selectionId;
+                filename += '.tsv';
+                filename = escape(filename);
+                return filename;
+            };
+
+            return {
+                restrict: 'E',
+                link: function(scope, element, attrs) {
+                    var getStatisticsFilename = function () {
+                        var filename = 'data.csv';
+                        if (StoredState.gage) {
+                            filename = buildStatisticsName('eflowstats_NWIS_', StoredState.gage.data.STAID);
+                        }
+                        else if (StoredState.streamFlowStatHucFeature) {
+                            filename = buildStatisticsName('eflowstats_HUC_', StoredState.streamFlowStatHucFeature.data.HUC12);
+                        }
+                        return filename;
+                    };
+
+                    scope.getStatisticsFilename = getStatisticsFilename;
+                },
+                templateUrl: '../client/nwc/workflows/streamflowStatistics/downloadStatistics.html'
             };
         }]);
 }());

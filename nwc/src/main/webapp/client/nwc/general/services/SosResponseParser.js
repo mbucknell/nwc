@@ -32,6 +32,12 @@
                 if (0 === valuesTxt.length) {
                     valuesTxt = $(response).find('values').text();
                 }
+                
+                //IE parsing of xml
+                if (0 === valuesTxt.length) {
+                    valuesTxt = $($.parseXML(response)).find('swe\\:values').text();
+                }
+                
                 return valuesTxt;
             };
             

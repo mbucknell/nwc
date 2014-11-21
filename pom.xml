@@ -3,7 +3,7 @@
 
     <groupId>gov.usgs.cida.nwc</groupId>
     <artifactId>nwc-parent</artifactId>
-    <version>0.1.6-SNAPSHOT</version>
+    <version>0.1.8-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>NWC</name>
@@ -133,10 +133,11 @@
         <angular-ui-router.version>0.2.0</angular-ui-router.version>
         <angular-ui-bootstrap.version>0.9.0</angular-ui-bootstrap.version>
         <angular-ui-grid.version>2.0.7</angular-ui-grid.version>
-        <flotcharts.version>0.8.0</flotcharts.version>
+        <flotcharts.version>0.8.3</flotcharts.version>
         <openlayers.version>2.12</openlayers.version>
         <fontawesome.version>4.0.3</fontawesome.version>
         <sugar.version>1.4.1</sugar.version>
+        <jsts.version>0.14.0</jsts.version>
     </properties>
 	
 	<modules>
@@ -400,7 +401,7 @@
 			<dependency>
 				<groupId>org.webjars</groupId>
 				<artifactId>flot</artifactId>
-				<version>${flotcharts.version}-1</version><!-- the "-1" suffix is because webjars refactored and bumped a version-->
+				<version>${flotcharts.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.webjars</groupId>
@@ -412,6 +413,11 @@
 				<artifactId>ng-grid</artifactId>
 				<version>${angular-ui-grid.version}</version>
 			</dependency>
+                        <dependency>
+                            <groupId>org.webjars</groupId>
+                            <artifactId>jsts</artifactId>
+                            <version>${jsts.version}</version>
+                        </dependency>
 			<!-- </webjars> -->
 					
 			<!-- Persistence dependencies -->

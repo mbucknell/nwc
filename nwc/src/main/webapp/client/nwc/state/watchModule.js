@@ -9,7 +9,6 @@
         'nwc.sosSources',
         'nwc.dataSeriesStore',
         'nwc.sosResponseParser',
-        'nwc.waterBudgetPlot',
         'nwc.streamStats',
         'nwc.map.waterBudget',
         'nwc.map.streamflow',
@@ -154,15 +153,20 @@
                     };
                 }
             ]);
-    var countyInfoName = 'countyInfo';
-    registerWatchFactory(countyInfoName,
-            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'SosResponseParser', 'DataSeries', '$state', '$log', 'RunningWatches',
-                function ($http, CommonState, SosSources, SosUrlBuilder, SosResponseParser, DataSeries, $state, $log, RunningWatches) {
+    var countyFeatureName = 'countyFeature';
+    registerWatchFactory(countyFeatureName,
+            [           '$http', 'CommonState', 'SosSources', 'SosUrlBuilder', 'SosResponseParser', 'DataSeries', '$state', '$log', 'RunningWatches', 'HucCountiesIntersector', 'StoredState',
+                function ($http, CommonState, SosSources, SosUrlBuilder, SosResponseParser, DataSeries, $state, $log, RunningWatches, HucCountiesIntersector, StoredState) {
                     return {
-                        propertyToWatch: countyInfoName,
-                        watchFunction: function (prop, oldCountyInfo, newCountyInfo) {
-                            RunningWatches.add(countyInfoName);
-                            var offeringId = newCountyInfo.offeringId;
+                        propertyToWatch: countyFeatureName,
+                        watchFunction: function (prop, oldCountyFeature, newCountyFeature) {
+                            RunningWatches.add(countyFeatureName);
+                            var hucFeature = StoredState.waterBudgetHucFeature;
+                            
+                            CommonState.hucCountyIntersectionInfo = HucCountiesIntersector.intersectCounty(hucFeature, newCountyFeature);
+                            
+                            var offeringId = newCountyFeature.attributes.FIPS;
+                            var countyArea = newCountyFeature.attributes.AREA_SQMI;
                             
                             var sosUrl = SosUrlBuilder.buildSosUrlFromSource(offeringId, SosSources.countyWaterUse);
 
@@ -173,7 +177,7 @@
                                         'See browser logs for details';
                                 alert(message);
                                 $log.error('Error while accessing: ' + url + '\n' + response.data);
-                                RunningWatches.remove(countyInfoName);
+                                RunningWatches.remove(countyFeatureName);
                             };
 
                             var waterUseSuccess = function (response) {
@@ -198,14 +202,14 @@
 
                                     CommonState.WaterUsageDataSeries = waterUseDataSeries;
                                     CommonState.newWaterUseData = true;
-                                    RunningWatches.remove(countyInfoName);
+                                    RunningWatches.remove(countyFeatureName);
                                     $state.go('workflow.waterBudget.plotData');
                                 }
                             };
 
                             $http.get(sosUrl).then(waterUseSuccess, waterUseFailure);
 
-                            return newCountyInfo;
+                            return newCountyFeature;
                         }
                     };
                 }
@@ -292,6 +296,8 @@
                             CommonState.streamFlowStatMinDate = startDate;
                             CommonState.streamFlowStatMaxDate = endDate;
                             RunningWatches.remove(gageName);
+                            // set this so that the Streamflow Data Plot button does not show
+                            StoredState.streamFlowStatHucFeature = false;
                             // Adding this back here, need to rework some of this logic 
                             $state.go('workflow.streamflowStatistics.setSiteStatisticsParameters');
                         };
@@ -312,6 +318,8 @@
                         propertyToWatch: 'streamflowStatsParamsReady',
                         watchFunction: function (prop, oldValue, streamFlowStatsParamsReady) {
                             RunningWatches.add(streamStatsReadyName);
+                            // set this so that the Streamflow Data Plot graph does not display until button pushed
+                            CommonState.showStreamflowPlot =  false;
                             if (streamFlowStatsParamsReady) {
                                 //reset
                                 CommonState.streamflowStatistics = [];
@@ -320,19 +328,52 @@
                                 var newHuc = StoredState.streamFlowStatHucFeature;
                                 var startDate = StoredState.siteStatisticsParameters.startDate;
                                 var endDate = StoredState.siteStatisticsParameters.endDate;
+                                var tsvHeader;
                                 var callback = function(statistics, resultsUrl){
                                     CommonState.streamflowStatistics = statistics;
                                     CommonState.streamflowStatisticsUrl = resultsUrl;
+                                    var tsvValues = "Name\tValue\tDescription\n";
+                                    var i;
+                                    for (i = 0; i < statistics.length; i += 1) {
+                                    	if (statistics[i].name) {
+                                        	tsvValues += statistics[i].name + "\t";
+                                    	}
+                                    	else {
+                                    		tsvValues += "\t";
+                                    	}
+                                    	if (statistics[i].value) {
+                                        	tsvValues += statistics[i].value + "\t";                                    		
+                                    	}
+                                    	else {
+                                    		tsvValues += "\t";                                    		
+                                    	}
+                                    	if (statistics[i].desc) {
+                                        	tsvValues += statistics[i].desc + "\n";                                    		
+                                    	}
+                                    	else {
+                                    		tsvValues += "\n";                                    		
+                                    	}
+                                    }
+                                    CommonState.streamFlowStatisticsTsv = encodeURIComponent(tsvHeader + tsvValues);
                                     RunningWatches.remove(streamStatsReadyName);
                                 };
                                 var statTypes  = StoredState.siteStatisticsParameters.statGroups;
                                 
                                 if(newGage){
                                     var siteId = newGage.data.STAID;
+                                    tsvHeader = "\"# Data derived from the USGS NWIS Web Services.\"\n";
+                                    tsvHeader += "\"# Statistics calculated using the USGS EflowStats package.\"\n";
+                                    tsvHeader += "\"# http://waterdata.usgs.gov/nwis/nwisman/?site_no=" + siteId + " \"\n";
+                                    tsvHeader += "\"# http://github.com/USGS-R/EflowStats \"\n";
                                     StreamStats.getSiteStats([siteId], statTypes, startDate, endDate, callback);
                                 }
                                 else if(newHuc){
                                     var hucId = newHuc.data.HUC12;
+                                    tsvHeader = "\"# Data derived from National Water Census daily flow estimates.\"\n";
+                                    tsvHeader += "\"# HUC " + hucId +  " was selected.\"\n";
+                                    tsvHeader += "\"# Statistics calculated using the USGS EflowStats Package\"\n";
+                                    tsvHeader += "\"# http://cida.usgs.gov/nwc/ang/#/workflow/streamflow-statistics/select-site \"\n";
+                                    tsvHeader += "\"# http://github.com/USGS-R/EflowStats \"\n";
                                     StreamStats.getHucStats([hucId], statTypes, startDate, endDate, callback);
                                 }
                                 else{

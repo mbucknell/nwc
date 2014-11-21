@@ -131,6 +131,8 @@
             			'Your selection landed near multiple watersheds. Select a HUC to calculate modeled streamflow statistics.',
             			$scope.hucs, 
             	        function(huc) {
+            				//set this so that gage info does not show on streamflow view 
+                            StoredState.gage = undefined;
             				CommonState.streamflowStatsParamsReturnTarget = 'workflow.aquaticBiology.showSelectedBioDataSites';
             				//TODO this was copy/pasted from streamflowMap.js, need to DRY out
                             var minStatDate = Date.create('1980/10/01').utc();
@@ -214,13 +216,15 @@
                     });
 
                     //serialize xml document
-                    var xmlString;
-                    //IE
-                    if (window.ActiveXObject) {
+                    var xmlString = "";
+                    
+                    try {
+                    	xmlString = (new XMLSerializer()).serializeToString(doc);
+                    } catch(e) {}
+
+                    //Give IE a shot
+                    if (xmlString.length <= 0 && window.ActiveXObject) {
                         xmlString = doc.xml;
-                    } else {
-                        // code for Mozilla, Firefox, Opera, etc.
-                        xmlString = (new XMLSerializer()).serializeToString(doc);
                     }
 
                     $("[name='currentQuery']").val(xmlString);

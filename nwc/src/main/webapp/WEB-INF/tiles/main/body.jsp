@@ -6,7 +6,7 @@
 
 <div id="main_page" class="page_body_content">
     <div class="row betatext well col-xs-12">
-        Notice: This web page is in a beta state. It should be considered provisional and subject to change. If you find any issues or have suggestions, please contact <a href="mailto:dblodgett@usgs.gov?Subject=NWC Portal">dblodgett@usgs.gov</a>. This web page is most compatible with the Chrome and Firefox browsers. Internet Explorer 9 through 11 will be supported soon.
+        Welcome to the National Water Census Data Portal. Here you will find national estimates of water budget components for local watersheds, water use data for counties, tools to calculate statistics of daily streamflow records, modeled daily streamflow at ungaged stations, and access to records of aquatic biology observations. If you find any issues or have suggestions, please contact <a href="mailto:dblodgett@usgs.gov?Subject=NWC Portal">dblodgett@usgs.gov</a>. This portal is a subset of the research and information being conducted by the National Water Census. Please visit <a href="http://water.usgs.gov/watercensus/">our home page</a> to find out more.
     </div>
 	<div id="full_dashboard" class="row dashboard navigation_toggle_a">
 		<div id="dashboard_nav" class="dashboard_nav col-xs-12 col-md-3">

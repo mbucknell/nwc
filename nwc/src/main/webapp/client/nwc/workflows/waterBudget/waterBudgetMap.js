@@ -3,8 +3,8 @@
     var waterBudgetMap = angular.module('nwc.map.waterBudget', ['ui.router', 'nwc.map.base']);
 	var myHucLayerName = "National WBD Snapshot";
 	
-    waterBudgetMap.factory('WaterBudgetMap', [ 'StoredState', 'CommonState', '$state', '$log', 'BaseMap', 'DataSeries',
-       function(StoredState, CommonState, $state, $log, BaseMap, DataSeries){
+    waterBudgetMap.factory('WaterBudgetMap', [ 'StoredState', 'CommonState', '$state', '$log', 'BaseMap', 'DataSeries', 'HucCountiesIntersector',
+       function(StoredState, CommonState, $state, $log, BaseMap, DataSeries, HucCountiesIntersector){
            var privateMap;
     
         var initMap = function () {
@@ -123,8 +123,8 @@
              * @returns {Openlayers.Layer.Vector} the vector layer containing the 
              * intersecting counties
              */
-            var addCountiesThatIntersectWith = function (geometry) {
-                console.debug('Adding Filtered Counties WFS layer based on HUC geometry');
+            var addCountiesThatIntersectWith = function (hucFeature, callback) {
+                var geometry = hucFeature.geometry;
                 var intersectionFilter = new OpenLayers.Filter.Spatial({
                     type: OpenLayers.Filter.Spatial.INTERSECTS,
                     property: 'the_geom',
@@ -151,7 +151,7 @@
                                 cursor: 'pointer'
                             }),
                             filter: intersectionFilter,
-                            projection: new OpenLayers.Projection("EPSG:4326"),
+                            projection: new OpenLayers.Projection('EPSG:900913'),
                             protocol: new OpenLayers.Protocol.WFS({
                                 version: '1.0.0',
                                 url: CONFIG.endpoint.geoserver + 'ows',
@@ -167,9 +167,13 @@
                 intersectingCountiesLayer.events.register('featuresadded',
                     intersectingCountiesLayer,
                     function() {
+                        var countyFeatures = intersectingCountiesLayer.features;
+                        CommonState.hucCountiesIntersectionInfo = HucCountiesIntersector.intersectCounties(hucFeature, countyFeatures);
                         var countiesExtent = intersectingCountiesLayer.getDataExtent();
                         StoredState.mapExtent = countiesExtent;
+                        callback();
                         map.zoomToExtent(countiesExtent);
+                        intersectingCountiesLayer.refresh();
                     }
                 );
                 return intersectingCountiesLayer;
@@ -207,12 +211,12 @@
                         {
                             id: 'nwc-counties',
                             onSelect: function (feature) {
+                            	StoredState.countyFeature = feature;
                                 map.removeControl(control);
                                 hucControl.activate();
                                 layersToRemove.each(function (layer) {
                                     map.removeLayer(layer);
                                 });
-                                options.countySelectedCallback(feature);
                             }
                         }
                 );
@@ -224,18 +228,14 @@
             
             /**
              * @param {Openlayers.Feature.Vector} hucFeature The huc that a user has selected.
-             * @param {Function} countySelectedCallback The callback fired once a user 
-             * has selected a representative county for water use. The callback's only 
-             * parameter is a Openlayers.Feature.Vector for the county the user selected.
              */
-            var getCountyThatIntersectsWithHucFeature = function (hucFeature, countySelectedCallback) {
+            var getCountyThatIntersectsWithHucFeature = function (hucFeature, callback) {
                 var highlightedFeatureLayer = addHighlightedFeature(hucFeature);
-                var intersectingCountiesLayer = addCountiesThatIntersectWith(hucFeature.geometry);
+                var intersectingCountiesLayer = addCountiesThatIntersectWith(hucFeature, callback);
                 addCountySelectControl(
                         {
                             highlightedLayer: highlightedFeatureLayer,
                             selectionLayer: intersectingCountiesLayer,
-                            countySelectedCallback: countySelectedCallback
                         }
                 );
             };
