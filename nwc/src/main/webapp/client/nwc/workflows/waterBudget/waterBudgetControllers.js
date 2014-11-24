@@ -7,7 +7,8 @@
             {
                 name: "Available Water Budget Components",
                 description: "Discover and access water budget data for watersheds\n\
-                    and counties. Select a watershed of interest for precipitation and\n\
+                    and counties. Zoom to a your location of interest, turn on the\n\
+                    watersheds, and select a watershed of interest for precipitation and\n\
                     evapotranspiration data. County water use data for counties intersecting\n\
                     the watershed is also available."
             },
