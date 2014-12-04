@@ -123,7 +123,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             var chartWaterUse = function() {
                 var normalizationFn = Convert.noop;
                 if ('normalizedWater' === StoredState.plotNormalization) {
-                    normalizationFn = Convert.normalize.fill(undefined, StoredState.countyInfo.area);
+                    normalizationFn = Convert.normalize.fill(undefined, StoredState.countyFeature.attributes.AREA_SQMI);
                 }
                 var values = CommonState.WaterUsageDataSeries.getDataAs(StoredState.measurementSystem, StoredState.plotNormalization, normalizationFn);
                 // get modified Series labels and throw away "Date"
@@ -173,9 +173,9 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
 
             $scope.getCntyFilename = function (series) {
                 var filename = 'data.csv';
-                if (StoredState.countyInfo) {
-                    filename = buildName(StoredState.countyInfo.name,
-                        StoredState.countyInfo.offeringId, series);
+                if (StoredState.countyFeature) {
+                    filename = buildName(StoredState.countyFeature.attributes.FULL_NAME.capitalize(true),
+                        StoredState.countyFeature.attributes.FIPS, series);
                 }
                 return filename;
             };
