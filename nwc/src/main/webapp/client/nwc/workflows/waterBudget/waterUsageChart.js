@@ -104,7 +104,7 @@
 
                 labels.each(function(label, labelIndex) {
                     var column = {label: label};
-                    //date column offesets index calculation by one
+                    //date column offsets index calculation by one
                     var valueIndex = labelIndex + 1;
                     column.data = combinedData.map(function(row) {
                         var newRow = null;
@@ -122,7 +122,7 @@
                     data.push(column);
                 });
                 var yearTooltipSeparator = ' - ';
-                var numYearsPerDatum = 5;
+                var numYearsPerDatum = 1;
                 (function plotWithOptions() {
                     /*
                      *  #ms in 5 years = (#ms in 4 non-leap years) + (#ms in 1 leap year)   =   157766400000
@@ -142,6 +142,9 @@
                         },
                         xaxis: {
                             mode: "time",
+                            tickFormatter: function(val, axis) {
+                            	return Date.create(val).utc().format(dateFormat);
+                            },
                             tickSize: [5, "year"],
                             tickLength: 10,
                             color: "black",
