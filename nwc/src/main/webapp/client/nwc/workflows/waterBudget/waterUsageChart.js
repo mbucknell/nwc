@@ -193,14 +193,6 @@
                             }
                         },
                         legend: {
-//                            show: boolean
-//                            labelFormatter: null or (fn: string, series object -> string)
-//                            labelBoxBorderColor: color
-//                            noColumns: number
-//                            position: "ne" or "nw" or "se" or "sw"
-//                            margin: number of pixels or [x margin, y margin]
-//                            backgroundColor: null or color
-//                            backgroundOpacity: number between 0 and 1
                         	container: chartLegendDivSelector
                         }
                     });
