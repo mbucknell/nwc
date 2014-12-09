@@ -119,6 +119,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             });
 
             var chartDivSelector = '#waterUsageChart';
+            var chartLegendDivSelector = '#waterUsageLegend';
 
             var chartWaterUse = function() {
                 var normalizationFn = Convert.noop;
@@ -130,7 +131,7 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
                 var labels = CommonState.WaterUsageDataSeries.getSeriesLabelsAs(
                     StoredState.measurementSystem, StoredState.plotNormalization, StoredState.plotTimeDensity).from(1);
                 var ylabel = Units[StoredState.measurementSystem][StoredState.plotNormalization].daily;
-                WaterUsageChart.setChart(chartDivSelector, values, labels, ylabel,
+                WaterUsageChart.setChart(chartDivSelector, chartLegendDivSelector, values, labels, ylabel,
                     Units[StoredState.measurementSystem][StoredState.plotNormalization].precision);
             };
 

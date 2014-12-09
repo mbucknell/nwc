@@ -70,7 +70,7 @@
             };
             
             var privateChart = {};
-            var setChart = function(chartEltSelector, inputData, labels, ylabel, precision) {
+            var setChart = function(chartEltSelector, chartLegendDivSelector, inputData, labels, ylabel, precision) {
                 if (!inputData || !inputData.length) {
                     if (privateChart.shutdown) {
                         privateChart.shutdown()
@@ -191,6 +191,17 @@
                                 var tooltipText = 'Date: ' + dateDisplay + "<br/>" + label + ": " + roundedValue + " " + waterUsageUnitName;
                                 return tooltipText;
                             }
+                        },
+                        legend: {
+//                            show: boolean
+//                            labelFormatter: null or (fn: string, series object -> string)
+//                            labelBoxBorderColor: color
+//                            noColumns: number
+//                            position: "ne" or "nw" or "se" or "sw"
+//                            margin: number of pixels or [x margin, y margin]
+//                            backgroundColor: null or color
+//                            backgroundOpacity: number between 0 and 1
+                        	container: chartLegendDivSelector
                         }
                     });
                 })();
