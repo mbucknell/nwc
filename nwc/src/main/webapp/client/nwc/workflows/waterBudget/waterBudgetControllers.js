@@ -6,11 +6,13 @@
         NWC.ControllerHelpers.WorkflowController(
             {
                 name: "Available Water Budget Components",
-                description: "Discover and access water budget data for watersheds\n\
-                    and counties. Zoom to a your location of interest, turn on the\n\
-                    watersheds, and select a watershed of interest for precipitation and\n\
-                    evapotranspiration data. County water use data for counties intersecting\n\
-                    the watershed is also available."
+                description: "Discover and access precipitation and\n\
+                    evapotranspiration data for watersheds and counties.<br>\n\
+                    1) Zoom to a your location of interest.<br>\n\
+                    2) Turn on the watersheds map layer.<br>\n\
+                    3) Select a watershed of interest.<br> \n\
+                    4) Water use data for counties intersecting\n\
+                    the watershed are available on the next page."
             },
             function ($scope, SharedState, $sce, WaterBudgetMap) {
                 $scope.description = $sce.trustAsHtml($scope.description);
