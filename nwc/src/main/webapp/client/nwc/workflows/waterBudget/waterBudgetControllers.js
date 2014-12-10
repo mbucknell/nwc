@@ -7,11 +7,13 @@
             {
                 name: "Available Water Budget Components",
                 description: "Discover and access precipitation and\n\
-                    evapotranspiration data for watersheds and counties.<br>\n\
-                    1) Zoom to a your location of interest.<br>\n\
-                    2) Turn on the watersheds map layer.<br>\n\
-                    3) Select a watershed of interest.<br> \n\
-                    4) Water use data for counties intersecting\n\
+                    evapotranspiration data for watersheds and counties.\n\
+                    <ol>\n\
+                    <li>Zoom to a your location of interest.</li>\n\
+                    <li>Turn on the watersheds map layer.</li>\n\
+                    <li>Select a watershed of interest.</li>\n\
+                    <li>Water use data for counties intersecting</li>\n\
+                    </ol>\n\
                     the watershed are available on the next page."
             },
             function ($scope, SharedState, $sce, WaterBudgetMap) {

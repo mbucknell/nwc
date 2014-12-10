@@ -8,11 +8,13 @@
                 description: "Access aquatic biology data from the \n\
                     <a href=\"https://aquatic.biodata.usgs.gov\" target=\"_blank\">BioData</a> \n\
                     database and calculate streamflow statistics for near-by stream gages\n\
-                    or model results.<br>\n\
-                    1) Turn on the stream flow data source desired.<br>\n\
-                    2) Zoom to the region of interest.<br>\n\
-                    3) Select a collection of sites.<br>\n\
-                    4) Access data from the BioData system and/or get streamflow statistics.<br>\n\
+                    or model results.\n\
+                    <ol>\n\
+                        <li>Turn on the stream flow data source desired.</li>\n\
+                        <li>Zoom to the region of interest.</li>\n\
+                        <li>Select a collection of sites.</li>\n\
+                        <li>Access data from the BioData system and/or get streamflow statistics.</li>\n\
+                    </ol>\n\
                     Software to calculate these statistics is also available as an open-source R package \n\
                     on GitHub: <a href=\"https://github.com/USGS-R/EflowStats\" target=\"_blank\">\n\
                     https://github.com/USGS-R/EflowStats <i class=\"fa fa-external-link\"></i>."

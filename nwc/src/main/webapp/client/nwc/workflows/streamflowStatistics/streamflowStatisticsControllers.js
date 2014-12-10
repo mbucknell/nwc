@@ -6,11 +6,13 @@
             {
                 name: "Streamflow Statistics Calculator",
                 description: "Access streamflow statistics for National Water Information\n\
-                    System gages and modeled daily flow in some regions.<br>\n\
-                    1) Set the map layer to display the desired streamflow type.\n\
-                    Notice the different stream gage views.<br>\n\
-                    2) Select a gage or watershed to get statistics for.<br> \n\
-                    3) Choose a time period and statistics group on the next page.<br>\n\
+                    System gages and modeled daily flow in some regions.\n\
+                    <ol>\n\
+                    <li>Set the map layer to display the desired streamflow type.\n\
+                    Notice the different stream gage views.</li>\n\
+                    <li> Select a gage or watershed to get statistics for.</li>\n\
+                    <li>Choose a time period and statistics group on the next page.</li>\n\
+                    </ol>\n\
                     Software to calculate these statistics is also available as an \n\
                     open-source R package on GitHub:\n\
                     <a href=\"https://github.com/USGS-R/EflowStats\" target=\"_blank\">\n\
