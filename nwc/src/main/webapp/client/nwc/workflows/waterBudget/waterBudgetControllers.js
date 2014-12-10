@@ -12,9 +12,9 @@
                     <li>Zoom to a your location of interest.</li>\n\
                     <li>Turn on the watersheds map layer.</li>\n\
                     <li>Select a watershed of interest.</li>\n\
-                    <li>Water use data for counties intersecting</li>\n\
-                    </ol>\n\
-                    the watershed are available on the next page."
+                    <li>Water use data for counties intersecting\n\
+                    the watershed are available on the next page.</li>\n\
+                    </ol>"
             },
             function ($scope, SharedState, $sce, WaterBudgetMap) {
                 $scope.description = $sce.trustAsHtml($scope.description);
