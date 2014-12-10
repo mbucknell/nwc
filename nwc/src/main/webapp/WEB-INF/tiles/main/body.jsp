@@ -46,7 +46,7 @@
                                 </a>
                             </div>
                             <div class="panel-footer">
-                                ${workflow.description}
+                                <a href="${context}${workflow.URI}">${workflow.description}</a>
                             </div>
                         </div>
                     </div>
