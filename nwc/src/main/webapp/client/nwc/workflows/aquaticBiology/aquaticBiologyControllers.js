@@ -5,15 +5,18 @@
         NWC.ControllerHelpers.WorkflowController(
             {
                 name: "Aquatic Biology Data and Related Streamflow Statistics",
-                description: " Access aquatic biology data from the \n\
+                description: "Access aquatic biology data from the \n\
                     <a href=\"https://aquatic.biodata.usgs.gov\" target=\"_blank\">BioData</a> \n\
                     database and calculate streamflow statistics for near-by stream gages\n\
-                    or model results. Select a collection of aquatic biology sites and\n\
-                    access the data from the BioData system. Coming Soon: Select a collection\n\
-                    of related stream-flow gages, specify a time range of interest, and\n\
-                    choose statistics to receive. Software to calculate these statistics\n\
-                    is also available as an open-source package on GitHub:\n\
-                    <a href=\"https://github.com/USGS-R/EflowStats\" target=\"_blank\">\n\
+                    or model results.\n\
+                    <ol>\n\
+                        <li>Turn on the stream flow data source desired.</li>\n\
+                        <li>Zoom to the region of interest.</li>\n\
+                        <li>Select a collection of sites.</li>\n\
+                        <li>Access data from the BioData system and/or get streamflow statistics.</li>\n\
+                    </ol>\n\
+                    Software to calculate these statistics is also available as an open-source R package \n\
+                    on GitHub: <a href=\"https://github.com/USGS-R/EflowStats\" target=\"_blank\">\n\
                     https://github.com/USGS-R/EflowStats <i class=\"fa fa-external-link\"></i>."
             },
             function($scope, StoredState, $sce){
