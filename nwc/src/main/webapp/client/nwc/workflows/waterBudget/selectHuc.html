@@ -10,6 +10,9 @@
     <a class="btn btn-primary" ng-class="[!toggleHucLayer]" data-toggle="button" ng-click="toggleHucLayer = !toggleHucLayer;toggleHUC();">Turn Watersheds {{!toggleHucLayer && 'On'|| 'Off'}}</a>
     <span>Turn on/off map-display of <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_documentation.php" target="_blank">Watershed Boundary Dataset</a> <i class="fa fa-external-link"></i> for which water budget information is available.</span>
 </div>
+<div class="row col-xs-12" ng-if="isCountySelectionPage">
+    <em class="caution">If counties do not display, please zoom or pan the map slightly. This issue will be fixed soon.</em>
+</div>
 <div id="hucSelectMap" class="row col-xs-12" style="height: 500px;" ng-style="CommonState.mapControlCursor"></div>
 <div class="row col-xs-12" ng-if="isCountySelectionPage">
     Siczewicz, Peter. U.S. Historical Counties (Generalized .001 deg). Dataset.
