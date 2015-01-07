@@ -2,11 +2,11 @@
 (function () {
     var waterBudgetMap = angular.module('nwc.map.waterBudget', ['ui.router', 'nwc.map.base']);
 	var myHucLayerName = "National WBD Snapshot";
-	
+
     waterBudgetMap.factory('WaterBudgetMap', [ 'StoredState', 'CommonState', '$state', '$log', 'BaseMap', 'DataSeries', 'HucCountiesIntersector',
        function(StoredState, CommonState, $state, $log, BaseMap, DataSeries, HucCountiesIntersector){
            var privateMap;
-    
+
         var initMap = function () {
             var mapLayers = [];
             var controls = [];
@@ -20,10 +20,11 @@
                         styles: ['polygon'],
                         tiled: true
                     },
-            hucLayerOptions
+					hucLayerOptions
                     );
+
             mapLayers.push(hucLayer);
-            
+
             // ////////////////////////////////////////////// FLOWLINES
             var flowlinesData = new OpenLayers.Layer.FlowlinesData(
                     "Flowline WMS (Data)",
@@ -41,7 +42,7 @@
 
             mapLayers.push(flowlinesData);
             mapLayers.push(flowlineRaster);
-            
+
             var hucsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
                     title: 'huc-identify-control',
                     hover: false,
@@ -58,8 +59,8 @@
                     id: 'nwc-hucs',
                     autoActivate: true
                 });
-                
-                
+
+
                 var featureInfoHandler = function (responseObject) {
                     //for some reason the real features are inside an array
                     var actualFeatures = responseObject.features[0].features;
@@ -89,38 +90,38 @@
                 controls.push(new OpenLayers.Control.ZoomBox({
                     id: 'nwc-zoom'
                 }));
-                
+
                 var map = BaseMap.new({
                     layers: mapLayers,
                     controls: controls
                 });
-                
+
                 map.events.register(
                         'zoomend',
                         map,
                         function () {
                             var zoom = map.zoom;
-                            $log.info('Current map zoom: ' + zoom);
                             flowlineRaster.updateFromClipValue(flowlineRaster.getClipValueForZoom(zoom));
                         },
                         true
                 );
-                
+
                 flowlineRaster.setStreamOrderClipValues(map.getNumZoomLevels());
                 flowlineRaster.updateFromClipValue(flowlineRaster.getClipValueForZoom(map.zoom));
-            
-            
+
+
             ///map object methods
-            
+
             //convenience accessor
             var getHucLayer = function () {
                 return hucLayer;
             };
-            
+
             /**
-             * @param {Openlayers.Geometry} geometry The geom of the huc that will be 
+             * @param {Openlayers.Geometry} geometry The geom of the huc that will be
              * used to search for intersections with the counties layer
-             * @returns {Openlayers.Layer.Vector} the vector layer containing the 
+			 * @param {Function} callback This is called after the vector layer's extent is calculated
+             * @returns {Openlayers.Layer.Vector} the vector layer containing the
              * intersecting counties
              */
             var addCountiesThatIntersectWith = function (hucFeature, callback) {
@@ -173,7 +174,6 @@
                         StoredState.mapExtent = countiesExtent;
                         callback();
                         map.zoomToExtent(countiesExtent);
-                        intersectingCountiesLayer.refresh();
                     }
                 );
                 return intersectingCountiesLayer;
@@ -225,7 +225,7 @@
                 map.addControl(control);
                 control.activate();
             };
-            
+
             /**
              * @param {Openlayers.Feature.Vector} hucFeature The huc that a user has selected.
              */
@@ -239,12 +239,12 @@
                         }
                 );
             };
-            
+
             map.getHucLayer = getHucLayer;
             map.getCountyThatIntersectsWithHucFeature = getCountyThatIntersectsWithHucFeature;
             map.addCountySelectControl = addCountySelectControl;
             map.addHighlightedFeature = addHighlightedFeature;
-            
+
             //stash it in a closure var
             privateMap = map;
             privateMap.getCountyThatIntersectsWithHucFeature = getCountyThatIntersectsWithHucFeature;
@@ -254,17 +254,17 @@
             if (!privateMap || !privateMap.viewPortDiv.parentNode) {
                 initMap();
             }
-            
+
             return privateMap;
         };
         return {
             initMap: initMap,
             getMap: getMap,
 			hucLayerName: myHucLayerName
-			
+
         };
-		
-       } 
+
+       }
     ]);
-    
+
 }());
