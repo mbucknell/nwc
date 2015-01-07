@@ -60,14 +60,14 @@ waterBudgetControllers.controller('PlotData', ['$scope', '$state', 'StoredState'
             	var countyVectorLayer = new OpenLayers.Layer.Vector("Simple Geometry County", {
                 	style: layerStyle
             	});
-            	
+
             	var countyFeature = new OpenLayers.Feature.Vector(StoredState.countyFeature.geometry);
             	countyVectorLayer.addFeatures([hucFeature.clone(), countyFeature]);
 
     			$scope.countyLayer = [countyVectorLayer];
     			$scope.countyBounds = StoredState.countyFeature.geometry.getBounds();
             }
-			
+
             var selectionInfo = {};
             if (StoredState.waterBudgetHucFeature) {
                 selectionInfo.hucId = StoredState.waterBudgetHucFeature.data.HUC_12;
@@ -263,13 +263,12 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
         $scope.CommonState = CommonState;
         $scope.isCountySelectionPage = true;
 
-        var map = WaterBudgetMap.getMap();
+        var map = WaterBudgetMap.initMap();
+		map.zoomToExtent(StoredState.mapExtent, true);
         map.render('hucSelectMap');
         map.getCountyThatIntersectsWithHucFeature(StoredState.waterBudgetHucFeature, function() {
         	  	$scope.$digest();
         	});
-
-        map.zoomToExtent(StoredState.mapExtent, true);
         map.events.register(
             'moveend',
             map,
