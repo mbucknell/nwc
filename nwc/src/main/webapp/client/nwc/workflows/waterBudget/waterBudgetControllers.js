@@ -12,7 +12,7 @@
                     <li>Zoom to a your location of interest.</li>\n\
                     <li>Turn on the watersheds map layer.</li>\n\
                     <li>Select a watershed of interest.</li>\n\
-                    <li>Water use data for counties intersecting\n\
+                    <li>Water withdrawal data for counties intersecting\n\
                     the watershed are available on the next page.</li>\n\
                     </ol>"
             },
@@ -256,7 +256,7 @@ waterBudgetControllers.controller('SelectCounty', ['$scope', 'StoredState', 'Com
     NWC.ControllerHelpers.StepController(
             {
                 name: 'County Selection',
-                description: 'Select water use data for a county that intersects with your HUC'
+                description: 'Select water withdrawal data for a county that intersects with your HUC'
             },
     function ($scope, StoredState, CommonState, WaterBudgetMap, MapControlDescriptions) {
         $scope.StoredState = StoredState;

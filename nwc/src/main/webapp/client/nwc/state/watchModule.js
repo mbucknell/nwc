@@ -172,7 +172,7 @@
 
                             var waterUseFailure = function (response) {
                                 var url = response.config.url;
-                                var message = 'An error occurred while retrieving water use data from:\n' +
+                                var message = 'An error occurred while retrieving water withdrawal data from:\n' +
                                         url + '\n' +
                                         'See browser logs for details';
                                 alert(message);
@@ -409,7 +409,7 @@
 
                                 var modeledFailure = function (response) {
                                     var url = response.config.url;
-                                    var message = 'An error occurred while retrieving water use data from:\n' +
+                                    var message = 'An error occurred while retrieving water withdrawals data from:\n' +
                                             url + '\n' +
                                             'See browser logs for details';
                                     alert(message);
