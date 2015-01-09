@@ -6,11 +6,11 @@
 
 <title>National Water Census Data Portal - Water Budgets - Streamflow Statistics - Aquatic Biology</title>
 
-<meta name="keywords" content="Water Availability, watershed, water use, 
+<meta name="keywords" content="Water Availability, watershed, water use, water withdrawals,
       water availability, streamflow statistics, aquatic biology">
 
 <meta name="description" content="Find national estimates of water availability,
-      water budget components for local watersheds, water use data for counties, 
+      water budget components for local watersheds, water withdrawal data for counties, 
       tools to calculate statistics of daily streamflow records, modeled daily 
       streamflow at ungaged stations, and access to records of aquatic biology 
       observations.">
