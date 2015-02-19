@@ -31,14 +31,12 @@
                     <goal>process-resources</goal>
                 </configuration>
             </plugin>
-            <!-- Need to remove the requirement of the web.xml since	-->
-            <!-- 	we are now using SpringConfig (no more xml yay!)	-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <warName>${warName}</warName>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <failOnMissingWebXml>true</failOnMissingWebXml>
                 </configuration>
             </plugin>
             <plugin>
@@ -212,31 +210,6 @@
         </dependency>
         <!-- ================================================================== -->
 
-        <!-- Spring 3 dependencies -->
-        <!-- ================================================================== -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-		
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-        </dependency>
-		
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
@@ -245,7 +218,7 @@
 
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -254,89 +227,6 @@
             <artifactId>jstl</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>taglibs</groupId>
-            <artifactId>standard</artifactId>
-        </dependency>
-        <!-- ================================================================== -->
-		
-        <!-- Tiles 3.0 Template Framework 								  -->
-        <!-- ================================================================== -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-        </dependency>
-		
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-        </dependency>
-		
-        <dependency>
-            <groupId>commons-digester</groupId>
-            <artifactId>commons-digester</artifactId>
-        </dependency>
-		
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-        </dependency>
-		
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-core</artifactId>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-template</artifactId>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-jsp</artifactId>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-extras</artifactId>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-api</artifactId>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-autotag-core-runtime</artifactId>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-request-api</artifactId>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-request-jsp</artifactId>
-        </dependency>
-		
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-request-servlet</artifactId>
-        </dependency>
-        
         <dependency>
             <groupId>gov.usgs.cida</groupId>
             <artifactId>proxy-utils</artifactId>
@@ -391,24 +281,5 @@
         </dependency>
         <!-- </webjars> -->
                 
-        <!-- Persistence dependencies -->
-        <!-- ================================================================== -->
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-        <!-- ================================================================== -->
     </dependencies>
 </project>

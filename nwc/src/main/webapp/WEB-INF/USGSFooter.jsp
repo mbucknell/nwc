@@ -1,5 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@include file="/WEB-INF/base.jsp"%>
 
 <div id="usgs-footer-panel" class='${param["footer-class"]}'>
     <div id="footer" style="width: 100%; margin-right: -1em;">
@@ -39,10 +37,10 @@
             </div><!-- /page-info -->
             <div id="gov-buttons" style="padding: 5px;">
                 <a title="link to the official US Government web portal" href="http://firstgov.gov/">
-                    <img src='${context}/img/footer_graphic_firstGov.jpg' alt="FirstGov button"/>
+                    <img src='img/footer_graphic_firstGov.jpg' alt="FirstGov button"/>
                 </a>
                 <a title="Link to Take Pride in America, a volunteer organization that helps to keep America's public lands beautiful." href="http://www.takepride.gov/">
-                    <img src='${context}/img/footer_graphic_takePride.jpg' alt="Take Pride in America button"/>
+                    <img src='img/footer_graphic_takePride.jpg' alt="Take Pride in America button"/>
                 </a>
             </div><!-- /gov-buttons -->
         </div><!-- /content -->

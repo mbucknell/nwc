@@ -1,10 +1,9 @@
-<!DOCTYPE HTML>
-<%@include page="/WEB-INF/base.jsp"%>
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 <html>
 	<head>
-		<tiles:insertAttribute name="meta" />
+		<%@include file="/WEB-INF/USGSHead.jsp" %>
+		
 		<script type="text/javascript">
 			(function(){
 				window.CONFIG = {};
@@ -33,30 +32,27 @@
 				}
 			}());
 		</script>
-
 	</head>
 	<body>
 		<div class="container site_body_content">
 			<div class="row">
 				<div id="site_header" class="col-xs-12">
-					<tiles:insertAttribute name="header" />
+					<%@include file="/WEB-INF/USGSHeader.jsp" %>
 				</div>
 			</div>
 			<div class="row">
 				<div id="site_nav" class="col-xs-12">
-					<tiles:insertAttribute name="nav" />
+					<%@include file="/WEB-INF/nav.jsp" %>
 				</div>
 			</div>
 			<div class="row site_body_content">
 				<div id="site_content" class="col-xs-12">
-					<tiles:insertAttribute name="body" />
+					CONTENT
 				</div>
 			</div>
 		</div>
-		
-		<!--	<div id="site_footer" class="navbar-fixed-bottom"> -->
-		<div id="site_footer" class="">
-			<tiles:insertAttribute name="footer" />
- 		</div>
+		<div id="site_footer">
+			<%@include file="/WEB-INF/USGSFooter.jsp" %>
+		</div>
 	</body>
 </html>

@@ -1,4 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@page import="java.io.File"%>
 <%@page import="java.net.URL"%>
@@ -49,9 +48,6 @@
     request.setAttribute("directWpsEndpoint", props.get("nwc.endpoint.wps"));
     request.setAttribute("directNwisEndpoint", props.get("nwc.endpoint.nwis"));
 %>
-
-<!-- Lets set the context path lookup to a variable for ease of use  -->
-<c:set var="context" value="${pageContext.request.contextPath}"/>
 
 <%
 	/*
