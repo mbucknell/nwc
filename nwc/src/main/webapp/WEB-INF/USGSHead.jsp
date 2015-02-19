@@ -35,6 +35,10 @@
 <!-- Our Bootstrap Theme -->
 <link rel="stylesheet" type="text/css" href="themes/theme1/theme1.css"/>
 
+<script type="text/javascript" src="webjars/backbonejs/${backboneVersion}/backbone.js"></script>
+<script type="text/javascript" src="webjars/underscorejs/${underscoreVersion}/underscore.js"></script>
+<script type="text/javascript" src="webjars/handlebars/${handlebarsVersion}/handlebars${jsMin}.js"></script>
+
 <% 
     String gaAccountCode = request.getParameter("google-analytics-account-code");
     String[] gaCommandList = request.getParameterValues("google-analytics-command-set");

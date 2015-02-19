@@ -138,6 +138,9 @@
         <!-- js lib versions -->
         <jquery.version>1.10.2</jquery.version>
         <bootstrap.version>3.0.3</bootstrap.version>
+		<backbone.version>1.1.2</backbone.version>
+		<underscore.version>1.6.0</underscore.version>
+		<handlebars.version>3.0.0</handlebars.version>
         <flotcharts.version>0.8.3</flotcharts.version>
         <openlayers.version>2.12</openlayers.version>
         <fontawesome.version>4.0.3</fontawesome.version>
@@ -254,6 +257,22 @@
 				<groupId>org.webjars</groupId>
 				<artifactId>bootstrap</artifactId>
 				<version>${bootstrap.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>backbonejs</artifactId>
+				<version>${backbone.version}</version>
+			</dependency>
+			<!-- Needed by backbone -->
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>underscorejs</artifactId>
+				<version>${underscore.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>handlebars</artifactId>
+				<version>${handlebars.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.webjars</groupId>
