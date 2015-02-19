@@ -80,72 +80,7 @@
                     <version>1.9.2</version>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.github.searls</groupId>
-                <artifactId>jasmine-maven-plugin</artifactId>
-                <extensions>true</extensions>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <keepServerAlive>true</keepServerAlive>
-                    <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
-                    <webDriverCapabilities>
-                        <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
-                    </webDriverCapabilities>
-                    <jsSrcDir>${basedir}</jsSrcDir>
-                    <jsTestSrcDir>${basedir}/src/test/javascript/specs</jsTestSrcDir>
-                    <sourceIncludes>
-                        <!--library dependencies -->
-                        <include>${webjars.libs}/jquery/${jquery.version}/jquery.js</include>
-                        <include>${webjars.libs}/angularjs/${angular.version}/angular.js</include>
-                        <include>${webjars.libs}/angularjs/${angular.version}/angular-mocks.js</include>
-                        <include>${webjars.libs}/angular-ui-router/${angular-ui-router.version}/angular-ui-router.js</include>
-                        <include>${webjars.libs}/angular-ui-bootstrap/${angular-ui-bootstrap.version}/ui-bootstrap.js</include>
-                        <include>${webjars.libs}/angular-ui-bootstrap/${angular-ui-bootstrap.version}/ui-bootstrap-tpls.js</include>
-                        <include>${webjars.libs}/sugar/${sugar.version}/sugar-full.development.js</include>
-                        <include>${webjars.libs}/jsts/${jsts.version}/jsts.js</include>
-                        <include>${webjars.libs}/openlayers/${openlayers.version}/OpenLayers.debug.js</include>
-                        <include>${thirdParty.libs}/openlayers/extension/Raster.js</include>
-                        <include>${thirdParty.libs}/openlayers/extension/Layer/Raster.js</include>
-                        <include>${thirdParty.libs}/openlayers/extension/Raster/Grid.js</include>
-                        <include>${thirdParty.libs}/openlayers/extension/Raster/Operation.js</include>
-                        <include>${thirdParty.libs}/openlayers/extension/Raster/Composite.js</include>
-                        <include>${thirdParty.base}/dygraphs/dygraph-dev.js</include>
-                        <include>${webjars.libs}/flot/${flotcharts.version}/jquery.flot.js</include>
-                        <include>${webjars.libs}/flot/${flotcharts.version}/jquery.flot.resize.js</include>
-                        <include>${webjars.libs}/flot/${flotcharts.version}/jquery.flot.time.js</include>
-                        <include>${webjars.libs}/flot/${flotcharts.version}/jquery.flot.stack.js</include>
-
-                        <include>${thirdParty.base}/flot-plugins/jquery.flot.tooltip.js</include>
-                        <include>${thirdParty.base}/flot-plugins/jquery.flot.axislabels.js</include>
-
-                        <include>${thirdParty.base}/checklist-model/checklist-model.js</include>
-
-                        <!-- misc -->
-                        <include>${nwcClientBase}/general/openLayersExtensions/WaterCensusToolbar/js/WaterCensusToolbar.js</include>
-
-                        <!--services -->
-
-                        <!-- 
-                            if errors are encountered due to mis-ordering of service script loading, 
-                            consult this file's history for the previous explicitly-ordered list
-                        -->
-                        <include>${nwcClientBase}/general/**/*.js</include>
-                        <include>${nwcClientBase}/state/**/*.js</include>
-                        <!-- controllers -->
-                        <include>${nwcClientBase}/workflows/**/*.js</include>
-                        <!-- main app-->
-                        <include>${nwcClientBase}/general/app.js</include>
-                                            
-                    </sourceIncludes>
-                </configuration>
-            </plugin>
+            
             <plugin>
                 <groupId>com.github.timurstrekalov</groupId>
                 <artifactId>saga-maven-plugin</artifactId>
@@ -240,21 +175,8 @@
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
-            <artifactId>angularjs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>angular-ui-router</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
             <artifactId>sugar</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>angular-ui-bootstrap</artifactId>
-        </dependency>
-        <!-- Declaring bootstrap directly, though angular brings it in transitively -->
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
@@ -270,10 +192,6 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>font-awesome</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>ng-grid</artifactId>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>

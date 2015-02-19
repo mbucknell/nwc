@@ -33,10 +33,7 @@
     request.setAttribute("applicationVersion", props.get("version"));
     request.setAttribute("jqueryVersion", props.get("jquery.version"));
     request.setAttribute("bootstrapVersion", props.get("bootstrap.version"));
-    request.setAttribute("angularVersion", props.get("angular.version"));
-    request.setAttribute("angularUiRouterVersion", props.get("angular-ui-router.version"));
-    request.setAttribute("angularUiBootstrapVersion", props.get("angular-ui-bootstrap.version"));
-    request.setAttribute("angularUiGridVersion", props.get("angular-ui-grid.version"));
+    
     request.setAttribute("flotchartsVersion", props.get("flotcharts.version"));
     request.setAttribute("openlayersVersion", props.get("openlayers.version"));
     request.setAttribute("fontawesomeVersion", props.get("fontawesome.version"));

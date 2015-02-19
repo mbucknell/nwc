@@ -21,8 +21,8 @@
 <script type="text/javascript" src="webjars/jquery/${jqueryVersion}/jquery${jsMin}.js"></script>
 
 <!-- Twitter Bootstrap -->
+<link rel="stylesheet" type="text/css" href="webjars/bootstrap/${bootstrapVersion}/css/bootstrap${jsMin}.css"/>
 <script type="text/javascript" src="webjars/bootstrap/${bootstrapVersion}/js/bootstrap${jsMin}.js"></script>
-<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/${bootstrapVersion}/css/bootstrap${jsMin}.css"/>
 
 <!-- USGS CSS -->
 <link rel="stylesheet" type="text/css" href="css/usgs_common.css"/>
