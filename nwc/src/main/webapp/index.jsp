@@ -55,10 +55,12 @@
 			<%@include file="/WEB-INF/USGSFooter.jsp" %>
 		</div>
 		
+		<script type="text/javascript" src="webjars/sugar/${sugarVersion}/sugar.min.js"></script>
 		<script type="text/javascript" src="webjars/underscorejs/${underscoreVersion}/underscore.js"></script>
 		<script type="text/javascript" src="webjars/backbonejs/${backboneVersion}/backbone.js"></script>
 		<script type="text/javascript" src="webjars/handlebars/${handlebarsVersion}/handlebars${jsMin}.js"></script>
 
+		<script type="text/javascript" src="js/view/HomeView.js"></script>
 		<script type="text/javascript" src="js/controller/NWCRouter.js"></script>
 		
 		<script type="text/javascript" src="js/init.js"></script>

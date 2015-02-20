@@ -17,7 +17,7 @@
 						<ul class="nav nav-pills">
 							{{#each workflows}}
 								<li class="navigation_panel_item">
-									<a href="{{uri}}" style="white-space: nowrap; padding: 10px;">{{name}}</a>
+									<a href="#/{{uri}}" style="white-space: nowrap; padding: 10px;">{{name}}</a>
 								</li>
 							{{/each}}
 						</ul>
@@ -31,15 +31,15 @@
 						<div class="col-xs-12 col-sm-6">
 							<div class="panel panel-default" style="margin: 10px;">
 								<div class="panel-heading" style="text-align: center;">
-									<a href={{uri}}>{{name}}</a>
+									<a href="#/{{uri}}">{{name}}</a>
 								</div>
 								<div class="panel-body">
-									<a href="{{uri}}">
+									<a href="#/{{uri}}">
 										<img src="{{img}}" style="max-width: 60%; margin-left: auto; margin-right: auto;" class="img-responsive" />
 									</a>
 								</div>
 								<div class="panel-footer">
-									<a href="{{uri}}">{{description}}</a>
+									<a href="#/{{uri}}">{{description}}</a>
 								</div>
 							</div>
 						</div>
