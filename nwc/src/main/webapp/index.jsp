@@ -11,9 +11,9 @@
 				CONFIG.endpoint.direct = {};
 
 				//point to local proxies
-				CONFIG.endpoint.geoserver = '${context}/proxy/geoserver/';
-				CONFIG.endpoint.thredds = '${context}/proxy/thredds/';
-				CONFIG.endpoint.wpsBase = '${context}/proxy/wps/';
+				CONFIG.endpoint.geoserver = 'proxygeoserver/';
+				CONFIG.endpoint.thredds = 'proxythredds/';
+				CONFIG.endpoint.wpsBase = 'proxywps/';
 				CONFIG.endpoint.wps = CONFIG.endpoint.wpsBase + 'WebProcessingService'; //TODO inconsistant use of of URL resources
 				CONFIG.endpoint.nwis = '${context}/proxy/nwis/';
 				

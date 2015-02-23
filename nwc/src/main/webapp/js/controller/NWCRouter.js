@@ -10,6 +10,7 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 		'' : 'home'
 	},
 	constructor : function(options) {
+		// TODO: remove this when the real routes and views are available.
 		Backbone.Router.prototype.constructor.call(this, options);
 		var key;
 		for (key in NWC.workflows) {
