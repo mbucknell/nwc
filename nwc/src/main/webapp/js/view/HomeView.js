@@ -16,7 +16,7 @@ NWC.workflows = {
 		name: 'Streamflow Stats',
 		description: 'Access streamflow statistics for stream gages and model results.',
 		img: 'img/workflow/originals/form-01.svg',
-				render: function() {
+		render: function() {
 			$('#site_content').html('Streamflow Stats');
 		}
 
@@ -26,7 +26,7 @@ NWC.workflows = {
 		name: 'Aquatic Biology',
 		description: 'Access aquatic biology data and streamflow statistics for related sites.',
 		img: 'img/workflow/originals/shield-01.svg',
-				render: function() {
+		render: function() {
 			$('#site_content').html('Aquatic Biology');
 		}
 
@@ -36,7 +36,7 @@ NWC.workflows = {
 		name: 'Data Discovery',
 		description: 'Search and browse datasets, publications, and project descriptions.',
 		img: 'img/workflow/originals/folder-01.svg',
-				render: function() {
+		render: function() {
 			$('#site_content').html('Data Discovery');
 		}
 

@@ -54,11 +54,15 @@
 		<div id="site_footer">
 			<%@include file="/WEB-INF/USGSFooter.jsp" %>
 		</div>
-		
+		<!-- vendor libraries -->
 		<script type="text/javascript" src="webjars/sugar/${sugarVersion}/sugar.min.js"></script>
 		<script type="text/javascript" src="webjars/underscorejs/${underscoreVersion}/underscore.js"></script>
 		<script type="text/javascript" src="webjars/backbonejs/${backboneVersion}/backbone.js"></script>
 		<script type="text/javascript" src="webjars/handlebars/${handlebarsVersion}/handlebars${jsMin}.js"></script>
+		<script type="text/javascript" src="webjars/openlayers/${openlayersVersion}/OpenLayers.js"></script>
+		<script type="text/javascript" src="webjars/flot/${flotchartsVersion}/jquery.flot${jsMin}.js"></script>
+		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/javascript.util.js"></script>
+		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/jsts.js"></script>
 
 		<script type="text/javascript" src="js/utils/templateLoader.js"></script>
 		<script type="text/javascript" src="js/view/BaseView.js"></script>
