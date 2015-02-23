@@ -8,7 +8,6 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 
 	routes: {
 		'' : 'home'
-//		'waterbudget' : 'waterBudget'
 	},
 	constructor : function(options) {
 		Backbone.Router.prototype.constructor.call(this, options);
@@ -19,7 +18,7 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	},
 
 	home : function() {
-		this.showView(NWC.view.HomeView, {el: document.getElementById('site_content')});
+		this.showView(NWC.view.HomeView, {});
 	},
 
 	showView : function(view, opts) {
