@@ -45,9 +45,23 @@ NWC.workflows = {
 
 NWC.view.HomeView = NWC.view.BaseView.extend({
 
-	context : {workflows : NWC.workflows},
-	templateName : 'home'
+	events : {
+		'click a' : 'navigate',
+		'click a>img' : 'navigate'
+	},
 
+	context : {workflows : NWC.workflows},
+	templateName : 'home',
+
+	navigate : function(event) {
+		event.preventDefault();
+		if (event.target.pathname) {
+			this.router.navigate(event.target.pathname, {trigger : true});
+		}
+		else {
+			this.router.navigate(event.target.parentNode.pathname, {trigger : true});
+		}
+	}
 });
 
 

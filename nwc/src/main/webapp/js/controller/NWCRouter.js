@@ -19,7 +19,7 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	},
 
 	home : function() {
-		this.showView(NWC.view.HomeView, {});
+		this.showView(NWC.view.HomeView, {router : this});
 	},
 
 	showView : function(view, opts) {
