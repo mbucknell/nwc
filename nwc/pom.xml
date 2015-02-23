@@ -94,6 +94,43 @@
                     </noInstrumentPatterns>
                 </configuration>
             </plugin>
+			<plugin>
+				<groupId>com.github.searls</groupId>
+				<artifactId>jasmine-maven-plugin</artifactId>
+				<executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <keepServerAlive>true</keepServerAlive>
+                    <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
+                    <webDriverCapabilities>
+                        <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
+                    </webDriverCapabilities>
+                    <jsSrcDir>${basedir}/src/main/webapp/js</jsSrcDir>
+                    <jsTestSrcDir>${basedir}/src/test/javascript</jsTestSrcDir>
+					<preloadSources>
+						<source>webjars/jquery.js</source>
+						<source>webjars/sugar.min.js</source>
+						<source>webjars/underscore.js</source>
+						<source>webjars/backbone.js</source>
+						<source>webjars/handlebars.js</source>						
+					</preloadSources>
+					<sourceIncludes>
+						<include>**/*.js</include>
+					</sourceIncludes>
+					<sourceExcludes>
+						<include>init.js</include>
+					</sourceExcludes>
+					<specExcludes>
+						<include>old_specs/*.js</include>
+					</specExcludes>
+				</configuration>		
+			</plugin>
             <plugin>
                 <groupId>com.github.goldin</groupId>
                 <artifactId>copy-maven-plugin</artifactId>

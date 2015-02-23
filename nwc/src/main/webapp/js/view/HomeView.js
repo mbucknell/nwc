@@ -43,24 +43,11 @@ NWC.workflows = {
 	}
 };
 
-NWC.view.HomeView = Backbone.View.extend({
-	render : function() {
-		var html = this.template({workflows : Object.values(NWC.workflows)});
-		this.$el.html(html);
-	},
+NWC.view.HomeView = NWC.view.BaseView.extend({
 
-	initialize : function(options) {
-		Backbone.View.prototype.initialize.apply(this, arguments);
-		$.ajax({
-			url: 'templates/home.html',
-//			cache : true,
-			success : function (data) {
-				this.template = Handlebars.compile(data);
-				this.render();
-			},
-			context : this
-		});
-	}
+	context : {workflows : NWC.workflows},
+	templateName : 'home'
+
 });
 
 

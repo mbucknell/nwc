@@ -1,6 +1,13 @@
+var NWC = NWC || {};
+
 $(document).ready(function() {
-	NWC.router = new NWC.controller.NWCRouter();
-	Backbone.history.start();
+	// Preload all templates
+	NWC.templates = NWC.util.templateLoader();
+
+	NWC.templates.loadTemplates(['home']).always(function() {
+		NWC.router = new NWC.controller.NWCRouter();
+		Backbone.history.start();
+	});
 });
 
 
