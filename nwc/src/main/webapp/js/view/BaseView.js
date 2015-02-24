@@ -13,16 +13,16 @@ NWC.view = NWC.view || {};
  */
 NWC.view.BaseView = Backbone.View.extend({
 
-	el : document.getElementById('site_content'),
-
 	templateName : '',
 
 	render : function() {
 		var html = NWC.templates.getTemplate(this.templateName)(this.context || {});
 		this.$el.html(html);
+		$('#site_content').html(this.$el);
 	},
 
 	initialize : function(options) {
+		options = options || {};
 		this.router = options.router || null;
 		Backbone.View.prototype.initialize.apply(this, arguments);
 		this.render();

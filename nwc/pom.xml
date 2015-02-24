@@ -124,6 +124,7 @@
 						<source>webjars/handlebars.js</source>						
 					</preloadSources>
 					<sourceIncludes>
+						<include>view/BaseView.js</include>
 						<include>**/*.js</include>
 					</sourceIncludes>
 					<sourceExcludes>

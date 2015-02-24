@@ -7,25 +7,36 @@ NWC.controller = NWC.controller || {};
 NWC.controller.NWCRouter = Backbone.Router.extend({
 
 	routes: {
-		'' : 'home'
-	},
-	constructor : function(options) {
-		// TODO: remove this when the real routes and views are available.
-		Backbone.Router.prototype.constructor.call(this, options);
-		var key;
-		for (key in NWC.workflows) {
-			this.route(NWC.workflows[key].uri, key, NWC.workflows[key].render);
-		}
+		'' : 'home',
+		'waterbudget' : 'waterbudget',
+		'streamflow-stats' : 'streamflowStats',
+		'aquatic-biology' : 'aquaticBiology',
+		'data-discovery' : 'dataDiscovery'
 	},
 
 	home : function() {
-		this.showView(NWC.view.HomeView, {router : this});
+		this.showView(NWC.view.HomeView);
+	},
+
+	waterbudget : function() {
+		this.showView(NWC.view.WaterBudgetMapView);
+	},
+
+	streamflowStats : function() {
+		this.showView(NWC.view.StreamflowStatsMapView);
+	},
+
+	aquaticBiology : function() {
+		this.showView(NWC.view.AquaticBiologyMapView);
+	},
+
+	dataDiscovery : function() {
+		this.showView(NWC.view.DataDiscoveryView);
 	},
 
 	showView : function(view, opts) {
 		this.removeCurrentView();
 		this.currentView = new view($.extend({
-			el: document.getElementById('site_content'),
 			router: this
 		}, opts));
 	},

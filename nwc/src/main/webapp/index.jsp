@@ -47,7 +47,6 @@
 			</div>
 			<div class="row site_body_content">
 				<div id="site_content" class="col-xs-12">
-					CONTENT
 				</div>
 			</div>
 		</div>
@@ -67,6 +66,10 @@
 		<script type="text/javascript" src="js/utils/templateLoader.js"></script>
 		<script type="text/javascript" src="js/view/BaseView.js"></script>
 		<script type="text/javascript" src="js/view/HomeView.js"></script>
+		<script type="text/javascript" src="js/view/AquaticBiologyMapView.js"></script>
+		<script type="text/javascript" src="js/view/DataDiscoveryView.js"></script>
+		<script type="text/javascript" src="js/view/StreamflowStatsMapView.js"></script>
+		<script type="text/javascript" src="js/view/WaterBudgetMapView.js"></script>
 		<script type="text/javascript" src="js/controller/NWCRouter.js"></script>
 		
 		<script type="text/javascript" src="js/init.js"></script>

@@ -6,40 +6,25 @@ NWC.workflows = {
 		uri: 'waterbudget',
 		name: 'Water Budget',
 		description: 'Discover water budget data for watersheds and counties.',
-		img: 'img/workflow/originals/watershed.svg',
-		render: function() {
-			$('#site_content').html('Water Budget');
-		}
+		img: 'img/workflow/originals/watershed.svg'
 	},
 	streamflowStats: {
 		uri: 'streamflow-stats',
 		name: 'Streamflow Stats',
 		description: 'Access streamflow statistics for stream gages and model results.',
-		img: 'img/workflow/originals/form-01.svg',
-		render: function() {
-			$('#site_content').html('Streamflow Stats');
-		}
-
+		img: 'img/workflow/originals/form-01.svg'
 	},
 	aquaticBiology: {
 		uri: 'aquatic-biology',
 		name: 'Aquatic Biology',
 		description: 'Access aquatic biology data and streamflow statistics for related sites.',
-		img: 'img/workflow/originals/shield-01.svg',
-		render: function() {
-			$('#site_content').html('Aquatic Biology');
-		}
-
+		img: 'img/workflow/originals/shield-01.svg'
 	},
 	dataDiscovery: {
 		uri: 'data-discovery',
 		name: 'Data Discovery',
 		description: 'Search and browse datasets, publications, and project descriptions.',
-		img: 'img/workflow/originals/folder-01.svg',
-		render: function() {
-			$('#site_content').html('Data Discovery');
-		}
-
+		img: 'img/workflow/originals/folder-01.svg'
 	}
 };
 

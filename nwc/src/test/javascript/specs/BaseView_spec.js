@@ -6,7 +6,7 @@ describe('Tests for NWC.BaseView', function() {
 		NWC.templates.getTemplate.andReturn(templateSpy);
 
 
-	})
+	});
 
 	it('Expects a view to use a template with the templateName property when rendering a view', function() {
 		var NewView = NWC.view.BaseView.extend({templateName : 'base'});
