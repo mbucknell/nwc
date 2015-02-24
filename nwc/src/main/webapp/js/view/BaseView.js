@@ -9,7 +9,6 @@ NWC.view = NWC.view || {};
  *		@prop templateName {String} should always be provided
  *		@prop router {Backbone.Router instance}
  *		@prop context {Object} to be used when rendering templateName
- *		@prop el {HtmlElement} defaults to #site_content
  */
 NWC.view.BaseView = Backbone.View.extend({
 
@@ -18,7 +17,7 @@ NWC.view.BaseView = Backbone.View.extend({
 	render : function() {
 		var html = NWC.templates.getTemplate(this.templateName)(this.context || {});
 		this.$el.html(html);
-		
+
 		return this;
 	},
 
