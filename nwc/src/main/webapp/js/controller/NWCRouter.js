@@ -6,6 +6,8 @@ NWC.controller = NWC.controller || {};
 
 NWC.controller.NWCRouter = Backbone.Router.extend({
 
+	applicationContextDiv : '#site_content',
+
 	routes: {
 		'' : 'home',
 		'waterbudget' : 'waterbudget',
@@ -35,8 +37,12 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	},
 
 	showView : function(view, opts) {
+		var newEl = $('<div>');
+
 		this.removeCurrentView();
+		$(this.applicationContextDiv).append(newEl);
 		this.currentView = new view($.extend({
+			el: newEl,
 			router: this
 		}, opts));
 	},

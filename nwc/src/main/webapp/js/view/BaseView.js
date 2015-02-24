@@ -18,7 +18,8 @@ NWC.view.BaseView = Backbone.View.extend({
 	render : function() {
 		var html = NWC.templates.getTemplate(this.templateName)(this.context || {});
 		this.$el.html(html);
-		$('#site_content').html(this.$el);
+		
+		return this;
 	},
 
 	initialize : function(options) {
