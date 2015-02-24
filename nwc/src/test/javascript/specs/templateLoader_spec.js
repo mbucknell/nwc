@@ -40,6 +40,21 @@ describe('Tests for templateLoader', function() {
 		expect(loadSpy).toHaveBeenCalled();
 		expect(loader.getTemplate('home')).not.toBeNull();
 		expect(loader.getTemplate('next')).not.toBeNull();
+
+		expect(loader.getTemplate('home')({})).toMatch('Home content');
+		expect(loader.getTemplate('next')({})).toMatch('Next content');
+	});
+
+	it('Expects a template which can\'t be retrieved to use default contents', function() {
+		server.respondWith('templates/home.html', [200, {"Content-Type" : "text/html"}, "Home content"]);
+		server.respondWith('templates/next.html', [500, {}, "Error"]);
+
+		loader.loadTemplates(['home', 'next']);
+		server.respond();
+
+		expect(loader.getTemplate('home')({})).toMatch('Home content');
+		expect(loader.getTemplate('next')({})).toMatch('Unable to load template');
+
 	});
 });
 
