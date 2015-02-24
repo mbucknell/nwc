@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<%@include file="/WEB-INF/base.jsp"%>
+<%@include page="/WEB-INF/base.jsp"%>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 
 <html>

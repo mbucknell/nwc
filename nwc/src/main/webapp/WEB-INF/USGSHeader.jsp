@@ -1,5 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@include file="/WEB-INF/base.jsp"%>
 
 <div id="usgs-header-panel" class='${param["header-class"]}'>
     <div id="header">
@@ -8,7 +6,7 @@
             <!-- Not actually visible unless printed -->
             <div id="usgs-header-logo">
                 <a href="http://www.usgs.gov" title="Link to the US Geological Survey main web page">
-                    <img alt="USGS Logo" src='${context}/img/usgs_logo.jpg' />
+                    <img alt="USGS Logo" src='img/usgs_logo.jpg' />
                 </a>
             </div>
             <div id="ccsa-area">

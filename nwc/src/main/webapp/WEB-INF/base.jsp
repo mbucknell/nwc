@@ -1,4 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@page import="java.io.File"%>
 <%@page import="java.net.URL"%>
@@ -34,10 +33,10 @@
     request.setAttribute("applicationVersion", props.get("version"));
     request.setAttribute("jqueryVersion", props.get("jquery.version"));
     request.setAttribute("bootstrapVersion", props.get("bootstrap.version"));
-    request.setAttribute("angularVersion", props.get("angular.version"));
-    request.setAttribute("angularUiRouterVersion", props.get("angular-ui-router.version"));
-    request.setAttribute("angularUiBootstrapVersion", props.get("angular-ui-bootstrap.version"));
-    request.setAttribute("angularUiGridVersion", props.get("angular-ui-grid.version"));
+	request.setAttribute("backboneVersion", props.get("backbone.version"));
+	request.setAttribute("underscoreVersion", props.get("underscore.version"));
+	request.setAttribute("handlebarsVersion", props.get("handlebars.version"));
+    
     request.setAttribute("flotchartsVersion", props.get("flotcharts.version"));
     request.setAttribute("openlayersVersion", props.get("openlayers.version"));
     request.setAttribute("fontawesomeVersion", props.get("fontawesome.version"));
@@ -49,9 +48,6 @@
     request.setAttribute("directWpsEndpoint", props.get("nwc.endpoint.wps"));
     request.setAttribute("directNwisEndpoint", props.get("nwc.endpoint.nwis"));
 %>
-
-<!-- Lets set the context path lookup to a variable for ease of use  -->
-<c:set var="context" value="${pageContext.request.contextPath}"/>
 
 <%
 	/*

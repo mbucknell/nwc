@@ -1,10 +1,9 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <%@include file="/WEB-INF/base.jsp"%>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<title>National Water Census Data Portal - Water Budgets - Streamflow Statistics - Aquatic Biology</title>
+<title>National Water Census Data Portal</title>
 
 <meta name="keywords" content="Water Availability, watershed, water use, water withdrawals,
       water availability, streamflow statistics, aquatic biology">
@@ -19,23 +18,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <!-- JQuery -->
-<script type="text/javascript" src="${context}/webjars/jquery/${jqueryVersion}/jquery${jsMin}.js"></script>
+<script type="text/javascript" src="webjars/jquery/${jqueryVersion}/jquery${jsMin}.js"></script>
 
 <!-- Twitter Bootstrap -->
-<script type="text/javascript" src="${context}/webjars/bootstrap/${bootstrapVersion}/js/bootstrap${jsMin}.js"></script>
-<link rel="stylesheet" type="text/css" href="${context}/webjars/bootstrap/${bootstrapVersion}/css/bootstrap${jsMin}.css"/>
+<link rel="stylesheet" type="text/css" href="webjars/bootstrap/${bootstrapVersion}/css/bootstrap${jsMin}.css"/>
+<script type="text/javascript" src="webjars/bootstrap/${bootstrapVersion}/js/bootstrap${jsMin}.js"></script>
 
 <!-- USGS CSS -->
-<link rel="stylesheet" type="text/css" href="${context}/css/usgs_common.css"/>
-<link rel="stylesheet" type="text/css" href="${context}/css/usgs_style_main.css"/>
+<link rel="stylesheet" type="text/css" href="css/usgs_common.css"/>
+<link rel="stylesheet" type="text/css" href="css/usgs_style_main.css"/>
 
 <!-- Site CSS -->
-<link rel="stylesheet" type="text/css" href="${context}/css/custom.css"/>
-<link rel="stylesheet" type="text/css" href="${context}/webjars/font-awesome/${fontawesomeVersion}/css/font-awesome${jsMin}.css"/>
+<link rel="stylesheet" type="text/css" href="css/custom.css"/>
+<link rel="stylesheet" type="text/css" href="webjars/font-awesome/${fontawesomeVersion}/css/font-awesome${jsMin}.css"/>
 
 <!-- Our Bootstrap Theme -->
-<script type="text/javascript" src="${context}/themes/theme1/theme1.js"></script>
-<link rel="stylesheet" type="text/css" href="${context}/themes/theme1/theme1.css"/>
+<link rel="stylesheet" type="text/css" href="themes/theme1/theme1.css"/>
 
 <% 
     String gaAccountCode = request.getParameter("google-analytics-account-code");

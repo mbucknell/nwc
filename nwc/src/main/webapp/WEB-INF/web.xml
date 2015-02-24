@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <description>National Water Census - Data Portal</description>
+    <display-name>NWC Data Portal</display-name>
+    <session-config>
+        <session-timeout>
+			30
+		</session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+	<servlet>
+        <servlet-name>GeoserverProxy</servlet-name>
+        <servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+        <init-param>
+            <param-name>forward-url-param</param-name>
+            <param-value>nwc.endpoint.geoserver</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forward-url</param-name>
+            <param-value>http://localhost:8080/proxygeoserver</param-value>
+        </init-param>
+    </servlet>
+	<servlet>
+        <servlet-name>ThreddsProxy</servlet-name>
+        <servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+        <init-param>
+            <param-name>forward-url-param</param-name>
+            <param-value>nwc.endpoint.thredds</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forward-url</param-name>
+            <param-value>http://localhost:8080/proxythredds</param-value>
+        </init-param>
+    </servlet>
+	<servlet>
+        <servlet-name>WPSProxy</servlet-name>
+        <servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+        <init-param>
+            <param-name>forward-url-param</param-name>
+            <param-value>nwc.endpoint.wps</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forward-url</param-name>
+            <param-value>http://localhost:8080/proxywps</param-value>
+        </init-param>
+    </servlet>
+	<servlet-mapping>
+        <servlet-name>GeoserverProxy</servlet-name>
+         <url-pattern>/proxygeoserver/*</url-pattern>
+    </servlet-mapping>	
+	<servlet-mapping>
+        <servlet-name>ThreddsProxy</servlet-name>
+         <url-pattern>/proxythredds/*</url-pattern>
+    </servlet-mapping>	
+	<servlet-mapping>
+        <servlet-name>WPSProxy</servlet-name>
+         <url-pattern>/proxywps/*</url-pattern>
+    </servlet-mapping>	
+
+</web-app>
