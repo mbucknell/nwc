@@ -1,5 +1,45 @@
 <div class="row" style="margin: 0px;">
 	<div class="col-xs-12 nwc-container">
-		Water budget content
+		<div class="row">
+			<div class="col-xs-12">
+				<h3>Available Water Budget Components</h3>
+				<div>
+					<em>
+						Discover and access precipitation and evapotranspiration data for watersheds and counties.
+						<ol>	
+							<li>Zoom to a your location of interest.</li>
+							<li>Turn on the watersheds map layer.</li>
+							<li>Select a watershed of interest.</li>
+							<li>Water use data for counties intersecting the watershed are available on the next page.</li>
+						</ol>
+					</em>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="spacer spacer_down col-xs-12">
+				Map Controls:
+				<div class="btn-group" data-toggle="buttons">
+					<label class="btn btn-primary active">
+						<input type="radio" checked />Select
+					</label>
+					<label class="btn btn-primary">
+						<input type="radio" />Pan
+					</label>
+					<label class="btn btn-primary">
+						<input type="radio" class="btn btn-primary" />Zoom
+					</label>
+				</div>
+				<span>Single click selects sites or watershed. Pan by click and drag. Zoom with double click, 
+					map buttons or scroll wheel.</span>
+				<br />
+				<a class="btn btn-primary" data-toggle="button">Turn Watersheds {{watershedLayerOn}}</a>
+				<span>Turn on/off map-display of <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_documentation.php" target="_blank">Watershed Boundary Dataset</a> <i class="fa fa-external-link"></i> for which water budget information is available.</span>
+
+			</div>
+			<div class="col-xs-12">
+				<div id="hucSelectMap"style="height: 500px;"></div>
+			</div>
+		</div>
 	</div>
 </div>

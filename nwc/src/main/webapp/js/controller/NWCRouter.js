@@ -21,7 +21,7 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	},
 
 	waterbudget : function() {
-		this.showView(NWC.view.WaterBudgetMapView);
+		this.showView(NWC.view.WaterBudgetMapView, {mapDiv : 'hucSelectMap'});
 	},
 
 	streamflowStats : function() {
