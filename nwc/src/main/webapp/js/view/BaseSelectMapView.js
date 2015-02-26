@@ -1,7 +1,11 @@
 var NWC = NWC || {};
 
 NWC.view = NWC.view || {};
-
+/**
+ * Abstract view for pages in the workflow used to select a feature.
+ * Assumes that the template contains map controls for select, pan, and zoom
+ * @constructor extends NWC.view.BaseView
+ */
 NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 
 	events : {
@@ -56,6 +60,7 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 		this.mapDiv = options.mapDiv;
 
 		this.map.addControl(this.zoomBoxControl);
+		this.map.addControl(this.selectControl);
 
 		this.listenTo(this.model, 'change:control', this.updateSelection);
 
@@ -75,9 +80,15 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 
 		if (newSelection === 'zoom') {
 			this.zoomBoxControl.activate();
+			this.selectControl.deactivate();
+		}
+		else if (newSelection === 'select') {
+			this.zoomBoxControl.deactivate();
+			this.selectControl.activate();
 		}
 		else {
 			this.zoomBoxControl.deactivate();
+			this.selectControl.deactivate();
 		}
 	}
 

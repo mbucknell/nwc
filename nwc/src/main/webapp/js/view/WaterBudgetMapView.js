@@ -12,19 +12,15 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	},
 
 	initialize : function(options) {
-		$.extend(this.events, NWC.view.BaseSelectMapView.prototype.events);
-		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
-
 		this.hucLayer = NWC.util.mapUtils.createHucLayer({
 			visibility : false
 		});
-		this.map.addLayer(this.hucLayer);
 
-		this.hucsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
+		this.selectControl = new OpenLayers.Control.WMSGetFeatureInfo({
 			title: 'huc-identify-control',
 			hover: false,
 			layers: [
-				hucLayer
+				this.hucLayer
 			],
 			queryVisible: true,
 			infoFormat: 'application/vnd.ogc.gml',
@@ -44,19 +40,21 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			}
 			else {
 				var actualFeature = actualFeatures[0];
-				var fid = actualFeature.fid;
-				console.log('Go to next step with id ' + fid);
-
+				var huc12 = actualFeature.attributes.HU_12_DS;
+				this.router.navigate('/waterbudget/huc/' + huc12, {trigger : true});
 			}
-
-
 		};
-        this.hucsGetFeatureInfoControl.events.register("getfeatureinfo", {}, featureInfoHandler);
-		this.map.addControl(this.hucsGetFeatureInfoControl);
+        this.selectControl.events.register("getfeatureinfo", this, featureInfoHandler);
 
+		$.extend(this.events, NWC.view.BaseSelectMapView.prototype.events);
+		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
+
+		this.map.addLayer(this.hucLayer);
 	},
 
 	toggleHucVisibility : function() {
+		var isVisible = !this.hucLayer.getVisibility();
+		this.$el.find('#toggle-huc-layer-span').html(isVisible ? 'Off' : 'On');
 		this.hucLayer.setVisibility(!this.hucLayer.getVisibility());
 	}
 });
