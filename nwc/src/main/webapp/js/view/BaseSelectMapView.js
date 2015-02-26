@@ -13,6 +13,7 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 		this.map.render(this.mapDiv);
 		this.map.zoomToExtent(this.map.getMaxExtent(), true);
 	},
+	model : new NWC.model.BaseSelectMapModel(),
 
 	initialize : function(options) {
 		var controls = [
@@ -30,14 +31,33 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
             }),
             new OpenLayers.Control.Zoom()
         ];
-		this.map = NWC.util.mapUtils.createMap(NWC.util.mapUtils.createAllBaseLayers(), controls);
+		this.zoomBoxControl = new OpenLayers.Control.ZoomBox();
+
+		this.flowLinesData = NWC.util.mapUtils.createFlowLinesData();
+		this.flowLinesRaster = NWC.util.mapUtils.createFlowLinesRaster(this.flowLinesData);
+
+		this.map = NWC.util.mapUtils.createMap(
+			NWC.util.mapUtils.createAllBaseLayers().concat([this.flowLinesData, this.flowLinesRaster]),
+			controls
+		);
+		this.map.events.register(
+			'zoomend',
+			this,
+			function () {
+				var zoom = this.map.zoom;
+				this.flowLinesRaster.updateFromClipValue(this.flowLinesRaster.getClipValueForZoom(zoom));
+			},
+			true
+		);
+
+		this.flowLinesRaster.setStreamOrderClipValues(this.map.getNumZoomLevels());
+        this.flowLinesRaster.updateFromClipValue(this.flowLinesRaster.getClipValueForZoom(this.map.zoom));
+
 		this.mapDiv = options.mapDiv;
 
-		this.selection = new NWC.model.BaseSelectMapModel();
+		this.map.addControl(this.zoomBoxControl);
 
-		this.map.addControl(this.selection.get('zoomBoxControl'));
-
-		this.listenTo(this.selection, 'change:control', this.updateSelection);
+		this.listenTo(this.model, 'change:control', this.updateSelection);
 
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 		this.updateSelection();
@@ -45,19 +65,19 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 
 	changeControl : function(ev) {
 		var newSelection = ev.target.value;
-		this.selection.set('control', newSelection);
+		this.model.set('control', newSelection);
 	},
 
 	updateSelection : function() {
-		var newSelection = this.selection.get('control');
+		var newSelection = this.model.get('control');
 		$('#map-controls-div span').not('#map-control-' + newSelection).hide();
 		$('#map-control-' + newSelection).show();
 
 		if (newSelection === 'zoom') {
-			this.selection.get('zoomBoxControl').activate();
+			this.zoomBoxControl.activate();
 		}
 		else {
-			this.selection.get('zoomBoxControl').deactivate();
+			this.zoomBoxControl.deactivate();
 		}
 	}
 

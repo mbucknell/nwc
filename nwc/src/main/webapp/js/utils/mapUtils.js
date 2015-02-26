@@ -99,6 +99,43 @@ NWC.util.mapUtils = (function () {
 		return new OpenLayers.Map(defaultConfig);
 	};
 
+	that.defaultWorkflowLayerProperties = {
+		opacity: 0.6,
+		displayInLayerSwitcher: false,
+		visibility: true,
+		isBaseLayer: false,
+		tiled: true
+	};
+
+	that.createHucLayer = function(config) {
+		return new OpenLayers.Layer.WMS('National WBD Snapshot',
+			CONFIG.endpoint.geoserver + 'ows?',
+			{
+				layers: 'NHDPlusHUCs:NationalWBDSnapshot',
+				transparent: true,
+				styles: ['polygon'],
+				tiled: true
+			},
+			$.extend({}, that.defaultWorkflowLayerProperties, config)
+		);
+	};
+
+	that.createFlowLinesData = function() {
+		return new OpenLayers.Layer.FlowlinesData(
+			"Flowline WMS (Data)",
+			CONFIG.endpoint.geoserver + 'gwc/service/wms'
+		);
+	};
+
+	that.createFlowLinesRaster = function(flowlinesData) {
+		return new OpenLayers.Layer.FlowlinesRaster({
+			name: "NHD Flowlines",
+			dataLayer: flowlinesData,
+			streamOrderClipValue: 0,
+			displayInLayerSwitcher: false
+		});
+	};
+
 	return that;
 }());
 

@@ -130,6 +130,7 @@
 					</sourceIncludes>
 					<sourceExcludes>
 						<include>init.js</include>
+						<include>utils/openLayersExtensions/**/*.js</include>
 					</sourceExcludes>
 					<specExcludes>
 						<include>old_specs/*.js</include>
