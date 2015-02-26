@@ -17,13 +17,13 @@ OpenLayers.Layer.FlowlinesRaster = OpenLayers.Class(OpenLayers.Layer.Raster, {
     flowlineAboveClipPixelB: 255,
     flowlineAboveClipPixelA: 128,
     CLASS_NAME: "OpenLayers.Layer.FlowlinesRaster",
-    
+
     streamOrderClipValue: 0,
     streamOrderTable: new Array(21),
     streamOrderSlider: undefined,
     streamOrderLock: true,
     streamOrderClipValues: new Array(21),
-    
+
     initialize: function (config) {
         this.createFlowlineAboveClipPixel();
         config.isBaseLayer = false;
@@ -97,5 +97,5 @@ OpenLayers.Layer.FlowlinesRaster = OpenLayers.Class(OpenLayers.Layer.Raster, {
             this.streamOrderClipValues[cInd] = Math.ceil((tableLength - cInd) * (clipCount / tableLength));
         }
     }
-    
+
 });

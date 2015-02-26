@@ -35,6 +35,9 @@
 <!-- Our Bootstrap Theme -->
 <link rel="stylesheet" type="text/css" href="themes/theme1/theme1.css"/>
 
+<!-- OpenLayers Theme -->
+<link rel="stylesheet" type="text/css" href="webjars/openlayers/${openlayersVersion}/theme/default/style.css" />
+
 <% 
     String gaAccountCode = request.getParameter("google-analytics-account-code");
     String[] gaCommandList = request.getParameterValues("google-analytics-command-set");

@@ -62,9 +62,27 @@
 		<script type="text/javascript" src="webjars/flot/${flotchartsVersion}/jquery.flot${jsMin}.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/javascript.util.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/jsts.js"></script>
+		
+		<!-- order is important -->
+		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster.js"></script>
+		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Layer/Raster.js"></script>
+		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Grid.js"></script>
+		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Operation.js"></script>
+		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Composite.js"></script>
+		
+		<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesData.js"></script>
+		<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesRaster.js"></script>
 
 		<script type="text/javascript" src="js/utils/templateLoader.js"></script>
+		<script type="text/javascript" src="js/utils/mapUtils.js"></script>
+		
+		<script type="text/javascript" src="js/model/BaseSelectMapModel.js"></script>
+		
+		<script type="text/javascript" src="js/model/WaterBudgetSelectMapModel.js"></script>
+		
 		<script type="text/javascript" src="js/view/BaseView.js"></script>
+		<script type="text/javascript" src="js/view/BaseSelectMapView.js"></script>
+		
 		<script type="text/javascript" src="js/view/HomeView.js"></script>
 		<script type="text/javascript" src="js/view/AquaticBiologyMapView.js"></script>
 		<script type="text/javascript" src="js/view/DataDiscoveryView.js"></script>
