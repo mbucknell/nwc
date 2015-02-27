@@ -1,0 +1,55 @@
+<div class="row" style="margin: 0px;">
+	<div class="col-xs-12 nwc-container">
+		<div class="row">
+			<div class="col-xs-12">
+				<h3>Available Water Budget Components</h3>
+				<div>
+					<em>
+						Discover and access precipitation and evapotranspiration data for watersheds and counties.
+					</em>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="spacer">
+				<div class="col-xs-4">
+					<div class="row col-xs-12"">
+						<button class="btn btn-primary county-button">Plot County Water Withdrawal Data <span class="glyphicon glyphicon-arrow-right"></span></button>
+					</div>
+				</div>
+			</div>
+			<div class="row spacer">
+				<div class="col-xs-4"></div>
+				<div class="col-xs-4">
+					<div class="btn-group">
+						<button type="button" class="btn btn-primary customary-button" btn-radio="'usCustomary'">US Customary</button>
+						<button type="button" class="btn btn-primary metric-button" btn-radio="'metric'">Metric</button>
+					</div>
+				</div>
+				<div class="col-xs-4"></div>
+			</div>
+
+			<div class="col-xs-12">
+				<h4>Precipitation and Evapotranspiration for the Selected HUC</h4>
+
+						<div>
+							<dl>
+								<dt>Hydrologic Unit Code</dt>
+									<dd class="hucId"></dd>
+								<dt>HUC Name</dt>
+									<dd class="hucName"></dd>
+<!--
+								<div ng-if="info.drainageArea">
+									<dt>Drainage Area (km&sup2;)</dt>
+										<dd ng-bind="info.drainageArea"></dd>
+								</div>
+-->
+							</dl>
+						</div>
+
+			</div>
+		
+		</div>
+	</div>
+</div>
