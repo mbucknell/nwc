@@ -122,7 +122,7 @@
 						<source>webjars/underscore.js</source>
 						<source>webjars/backbone.js</source>
 						<source>webjars/handlebars.js</source>
-						<source>webjars/OpenLayers.js</source>					
+						<source>webjars/OpenLayers.js</source>	
 					</preloadSources>
 					<sourceIncludes>
 						<include>view/BaseView.js</include>

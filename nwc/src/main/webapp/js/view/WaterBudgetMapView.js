@@ -2,15 +2,26 @@ var NWC = NWC || {};
 
 NWC.view = NWC.view || {};
 
+/*
+ * View for the water budget huc selection page
+ *
+ * @constructor extends NWC.BaseSelectMapView
+ */
+
 NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	templateName : 'waterbudget',
 
-	model : new NWC.model.WaterBudgetSelectMapModel(),
+	Model : NWC.model.WaterBudgetSelectMapModel,
 
 	events: {
 		'click #toggle-huc-layer' : 'toggleHucVisibility'
 	},
 
+	/**
+	 * @constructs
+	 * @param {Object} options
+	 *	@prop {String} mapDiv
+	 */
 	initialize : function(options) {
 		this.hucLayer = NWC.util.mapUtils.createHucLayer({
 			visibility : false
@@ -32,7 +43,6 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 
 
 		var featureInfoHandler = function (responseObject) {
-			//for some reason the real features are inside an array
 			var actualFeatures = responseObject.features;
 			var hucCount = actualFeatures.length;
 			if (0 === hucCount) {
@@ -50,12 +60,24 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
 
 		this.map.addLayer(this.hucLayer);
+		this.listenTo(this.model, 'change:watershedLayerOn', this.updateLayerVisibility);
+		this.updateLayerVisibility();
 	},
 
+	/**
+	 * Toggles the model's waterShedLayerOn attribute
+	 */
 	toggleHucVisibility : function() {
-		var isVisible = !this.hucLayer.getVisibility();
+		this.model.set('watershedLayerOn', !this.model.get('watershedLayerOn'));
+	},
+
+	/**
+	 * Sets the hucLayer visibility to match this.model's watershedLayerOn attribute.
+	 */
+	updateLayerVisibility : function() {
+		var isVisible = this.model.get('watershedLayerOn');
 		this.$el.find('#toggle-huc-layer-span').html(isVisible ? 'Off' : 'On');
-		this.hucLayer.setVisibility(!this.hucLayer.getVisibility());
+		this.hucLayer.setVisibility(isVisible);
 	}
 });
 
