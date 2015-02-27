@@ -80,20 +80,6 @@
                     <version>1.9.2</version>
                 </configuration>
             </plugin>
-            
-            <plugin>
-                <groupId>com.github.timurstrekalov</groupId>
-                <artifactId>saga-maven-plugin</artifactId>
-                <version>1.5.3</version>
-                <configuration>
-                    <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
-                    <outputDir>${project.build.directory}/coverage</outputDir>
-                    <noInstrumentPatterns>
-<!--                        <pattern>.*/.+_spec\.js</pattern>-->
-                        <!-- Add patterns for files that don't need to be analyzed such as library files -->
-                    </noInstrumentPatterns>
-                </configuration>
-            </plugin>
 			<plugin>
 				<groupId>com.github.searls</groupId>
 				<artifactId>jasmine-maven-plugin</artifactId>
@@ -122,14 +108,13 @@
 						<source>webjars/underscore.js</source>
 						<source>webjars/backbone.js</source>
 						<source>webjars/handlebars.js</source>
-						<source>webjars/OpenLayers.js</source>					
+						<source>webjars/OpenLayers.js</source>	
 					</preloadSources>
 					<sourceIncludes>
 						<include>view/BaseView.js</include>
 						<include>**/*.js</include>
 					</sourceIncludes>
 					<sourceExcludes>
-						<include>init.js</include>
 						<include>utils/openLayersExtensions/**/*.js</include>
 					</sourceExcludes>
 					<specExcludes>
@@ -137,27 +122,56 @@
 					</specExcludes>
 				</configuration>		
 			</plugin>
-            <plugin>
-                <groupId>com.github.goldin</groupId>
-                <artifactId>copy-maven-plugin</artifactId>
-                <version>0.2.5</version>
-                <configuration>      <!-- use copy:copy to run-->
-                    <failIfNotFound>false</failIfNotFound>
-                    <resource>
-                        <targetPath>${project.build.directory}/jasmine</targetPath>
-                        <file>${project.build.directory}/coverage/total-coverage.dat</file>
-                        <destFileName>total-coverage.dat</destFileName>
-                        <replaces>
-                            <replace>
-                                <from>src/</from>
-                                <!-- Regex to replace src/ with correct path name -->
-                                <to>${project.basedir}/src/main/webapp/client/nwc</to>
-                                <!-- Replacement String to my JS src files -->
-                            </replace>
-                        </replaces>
-                    </resource>
+			<plugin>
+                <groupId>com.github.timurstrekalov</groupId>
+                <artifactId>saga-maven-plugin</artifactId>
+                <version>1.5.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>coverage</goal>
+						</goals>
+					</execution>
+				</executions> 
+                <configuration>
+                    <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
+                    <outputDir>${project.build.directory}/coverage</outputDir>
+                    <noInstrumentPatterns>
+                        <pattern>.*/.+_spec\.js</pattern>
+						<pattern>.*/client/*\.js</pattern>
+						<pattern>.*/openLayersExtensions/*/*\.js</pattern>
+						<pattern>.*/sinon.+\.js</pattern>
+						<!-- couldn't figure out how to exclude all webjars so doing them individually -->
+						<pattern>.*/jquery.js</pattern>
+						<pattern>.*/sugar.min.js</pattern>
+						<pattern>.*/underscore.js</pattern>
+						<pattern>.*/backbone.js</pattern>
+						<pattern>.*/handlebars.js</pattern>
+						<pattern>.*/OpenLayers.js</pattern>
+						<!-- Add patterns for files that don't need to be analyzed such as library files -->
+                    </noInstrumentPatterns>
                 </configuration>
             </plugin>
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+				<version>1.5.3</version>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<file>${project.build.directory}/coverage/total-coverage.dat</file>
+					<outputFile>${project.build.directory}/jasmine/total-coverage.dat</outputFile>
+					<regex>false</regex>
+					<token>src/</token>
+					<value>${project.basedir}/src/main/webapp/</value>
+				</configuration>
+			</plugin>
         </plugins>
         <finalName>${warName}</finalName>
     </build>

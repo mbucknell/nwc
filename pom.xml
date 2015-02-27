@@ -120,21 +120,18 @@
         <spring.version>3.2.2.RELEASE</spring.version>
         <warName>nwc</warName>
         <!-- where to extract webjars to -->
-        <webjars.base>target/nwc/client/webjars</webjars.base>
+        <webjars.base>target/nwc/js/webjars</webjars.base>
 
         <mavenCruft>META-INF/resources</mavenCruft>
         <!-- webjars base path plus the maven cruft needed to access the actual libraries -->
         <webjars.libs>${webjars.base}/${mavenCruft}/webjars</webjars.libs>
                 
         <!--third party js libs checked into source -->
-        <thirdParty.base>target/nwc/client/3rdparty</thirdParty.base>
+        <thirdParty.base>target/nwc/js/3rdparty</thirdParty.base>
                 
         <!-- third party js libs that cida has packaged in webjars-style -->
         <thirdParty.libs>${thirdParty.base}/${mavenCruft}/gov.usgs.cida.jslibs</thirdParty.libs>
                 
-        <!-- main app code -->
-
-        <nwcClientBase>src/main/webapp/client/nwc/</nwcClientBase>
         <!-- js lib versions -->
         <jquery.version>1.10.2</jquery.version>
         <bootstrap.version>3.0.3</bootstrap.version>
