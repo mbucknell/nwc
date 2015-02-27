@@ -3,7 +3,10 @@ var NWC = NWC || {};
 NWC.view = NWC.view || {};
 /**
  * Abstract view for pages in the workflow used to select a feature.
- * Assumes that the template contains map controls for select, pan, and zoom
+ * Assumes that the template contains map controls for select, pan, and zoom.
+ * When extending the view,define the selectControl property which should have
+ * an activate and deactivate method.
+ *
  * @constructor extends NWC.view.BaseView
  */
 NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
@@ -12,14 +15,27 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 		'change #map-controls-group input' : 'changeControl'
 	},
 
+	selectControl : function() { return; },
+
+	Model : NWC.model.BaseSelectMapModel,
+
+	/**
+	 * renders the view and sets the map's bounding box
+	 * @returns {undefined}
+	 */
 	render : function() {
 		NWC.view.BaseView.prototype.render.apply(this, arguments);
 		this.map.render(this.mapDiv);
 		this.map.zoomToExtent(this.map.getMaxExtent(), true);
 	},
-	model : new NWC.model.BaseSelectMapModel(),
 
+	/**
+	 * @constructs
+	 * @param {Object} options
+	 *	@prop {String} mapDiv
+	 */
 	initialize : function(options) {
+		this.model = new this.Model();
 		var controls = [
             new OpenLayers.Control.Navigation(),
             new OpenLayers.Control.MousePosition({
@@ -35,44 +51,41 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
             }),
             new OpenLayers.Control.Zoom()
         ];
-		this.zoomBoxControl = new OpenLayers.Control.ZoomBox();
-
-		this.flowLinesData = NWC.util.mapUtils.createFlowLinesData();
-		this.flowLinesRaster = NWC.util.mapUtils.createFlowLinesRaster(this.flowLinesData);
-
-		this.map = NWC.util.mapUtils.createMap(
-			NWC.util.mapUtils.createAllBaseLayers().concat([this.flowLinesData, this.flowLinesRaster]),
-			controls
-		);
-		this.map.events.register(
-			'zoomend',
-			this,
-			function () {
-				var zoom = this.map.zoom;
-				this.flowLinesRaster.updateFromClipValue(this.flowLinesRaster.getClipValueForZoom(zoom));
-			},
-			true
-		);
-
-		this.flowLinesRaster.setStreamOrderClipValues(this.map.getNumZoomLevels());
-        this.flowLinesRaster.updateFromClipValue(this.flowLinesRaster.getClipValueForZoom(this.map.zoom));
 
 		this.mapDiv = options.mapDiv;
 
+		this.map = NWC.util.mapUtils.createMap(
+			NWC.util.mapUtils.createAllBaseLayers(),
+			controls
+		);
+
+		NWC.util.mapUtils.addFlowLinesToMap(this.map);
+
+		// Add controls which will be are tied to the model data.
+		this.zoomBoxControl = new OpenLayers.Control.ZoomBox();
 		this.map.addControl(this.zoomBoxControl);
 		this.map.addControl(this.selectControl);
 
-		this.listenTo(this.model, 'change:control', this.updateSelection);
-
+		//Initialize and render the view
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
+
+		// Add listeners to model and initialize the view.
+		this.listenTo(this.model, 'change:control', this.updateSelection);
 		this.updateSelection();
 	},
 
+	/**
+	 * Updates the model from the data in ev.
+	 * @param {jquery.Event} ev
+	 */
 	changeControl : function(ev) {
 		var newSelection = ev.target.value;
 		this.model.set('control', newSelection);
 	},
 
+	/**
+	 * Updates the view to reflect the model data.
+	 */
 	updateSelection : function() {
 		var newSelection = this.model.get('control');
 		$('#map-controls-div span').not('#map-control-' + newSelection).hide();

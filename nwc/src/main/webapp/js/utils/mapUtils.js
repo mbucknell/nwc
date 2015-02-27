@@ -136,6 +136,25 @@ NWC.util.mapUtils = (function () {
 		});
 	};
 
+	that.addFlowLinesToMap = function(map) {
+		var flData = that.createFlowLinesData();
+		var flRaster = that.createFlowLinesRaster(flData);
+
+		map.addLayers([flData, flRaster]);
+		map.events.register(
+			'zoomend',
+			this,
+			function () {
+				var zoom = map.zoom;
+				flRaster.updateFromClipValue(flRaster.getClipValueForZoom(zoom));
+			},
+			true
+		);
+
+		flRaster.setStreamOrderClipValues(map.getNumZoomLevels());
+        flRaster.updateFromClipValue(flRaster.getClipValueForZoom(map.zoom));
+	};
+
 	return that;
 }());
 
