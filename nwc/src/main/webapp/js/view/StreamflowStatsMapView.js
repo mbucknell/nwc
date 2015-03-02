@@ -41,13 +41,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 				visibility: false
 			}
 		);
-		// WATERSMART-398 - Due to page shifting on load, the streamgage locations shift and the
-		// click event doesn't seem to line up with where the gages actually are. Updating the map's size
-		// after the layer loads fixes the issue
-		this.gagesLayer.events.register('loadend', {}, function(event) {
-			event.object.map.updateSize();
-		});
-
+		
 		this.hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
 			CONFIG.endpoint.geoserver + 'gwc/service/wms',
 			{
