@@ -54,6 +54,8 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 			}
 		);
 
+		this.legendControl = new OpenLayers.Control.Attribution();
+
 		var gageFeatureInfoHandler = function(responseObject) {
 			if (responseObject.features.length === 0) {
 				// nothing
@@ -124,6 +126,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		this.map.addLayers([this.gagesLayer, this.hucLayer]);
 		this.addFlowLines();
 
+		this.map.addControl(this.legendControl);
 		this.map.addControl(this.hucsControl);
 
 		this.listenTo(this.model, 'change:streamflowType', this.updateSelectionLayer);
@@ -136,6 +139,8 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 	updateSelectionLayer : function() {
 		var $modeledInfo = $('#modeled-streamflow-warning-div');
 		var $observedInfo = $('#observed-streamflow-info-div');
+		var $gageFilteringDiv = $('#stream-gage-filters-div');
+
 		var streamflowType = this.model.get('streamflowType');
 
 		var gageVisible = streamflowType === 'observed';
@@ -154,6 +159,8 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		this.gagesLayer.setVisibility(gageVisible);
 		this.hucLayer.setVisibility(hucVisible);
 
+		setControlActive(this.legendControl, gageVisible);
+
 		if (hucVisible) {
 			$modeledInfo.show();
 			setControlActive(this.hucsControl, this.selectControl.active);
@@ -166,12 +173,14 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 
 		if (gageVisible) {
 			$observedInfo.show();
+			$gageFilteringDiv.show();
 			setControlActive(this.gageControl, this.selectControl.active);
 			this.hucsControl.deactivate();
 			this.selectControl = this.gageControl;
 		}
 		else {
 			$observedInfo.hide();
+			$gageFilteringDiv.hide();
 		}
 
 		// Because this shifts the map's location on the page, call updateSize
@@ -190,7 +199,14 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 	updateGageFilter : function() {
 		var filterVal = this.model.get('gageFilter');
 		var filterDescr = $('#stream-gage-filters-div a[data-value="' + filterVal + '"]').html();
+		var legendUrl = function(style) {
+			return CONFIG.endpoint.geoserver + 'NWC/wms?request=GetLegendGraphic&format=image/png&width=20&height=20' +
+				"&layer=gagesII&style=" + style +
+				"&legend_options=forceLabels:on;fontName:Times New Roman;fontAntiAliasing:true;fontColor:0x000033;fontSize:8px;bgColor:0xFFFFEE;dpi:100";
+		};
+
 		$('#filter-label').html(filterDescr);
+		this.gagesLayer.addOptions({attribution: '<img src="' + legendUrl(this.model.getFilterStyle()) + '"/>'});
 		this.gagesLayer.mergeNewParams({STYLES : this.model.getFilterStyle()});
 	}
 });
