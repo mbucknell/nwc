@@ -58,20 +58,36 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		$.extend(this.events, NWC.view.BaseSelectMapView.prototype.events);
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
 
-		this.addFlowLines();
 		this.map.addLayers([this.gagesLayer, this.hucLayer]);
+		this.addFlowLines();
 
 		this.listenTo(this.model, 'change:streamflowType', this.updateSelectionLayer);
 		this.updateSelectionLayer();
 	},
 
 	updateSelectionLayer : function() {
+		var $modeledInfo = $('#modeled-streamflow-warning-div');
+		var $observedInfo = $('#observed-streamflow-info-div');
 		var streamflowType = this.model.get('streamflowType');
 		var gageVisible = streamflowType === 'observed';
 		var hucVisible = streamflowType === 'modeled';
-
+$
 		this.gagesLayer.setVisibility(gageVisible);
 		this.hucLayer.setVisibility(hucVisible);
+		if (hucVisible) {
+			$modeledInfo.show();
+		}
+		else {
+			$modeledInfo.hide();
+		}
+		if (gageVisible) {
+			$observedInfo.show();
+		}
+		else {
+			$observedInfo.hide();
+		}
+		// Because this shifts the map's location on the page, call updateSize
+		this.map.updateSize();
 	},
 
 	changeStreamflowType : function(ev) {
