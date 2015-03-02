@@ -114,6 +114,9 @@
 						<include>view/BaseView.js</include>
 						<include>**/*.js</include>
 					</sourceIncludes>
+					<sourceExcludes>
+						<include>utils/openLayersExtensions/**/*.js</include>
+					</sourceExcludes>
 					<specExcludes>
 						<include>old_specs/*.js</include>
 					</specExcludes>
