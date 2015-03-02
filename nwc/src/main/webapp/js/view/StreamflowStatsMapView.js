@@ -136,6 +136,16 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		this.updateGageFilter();
 	},
 
+	changeStreamflowType : function(ev) {
+		this.model.set('streamflowType', ev.target.value);
+	},
+
+	changeGageFilter : function(ev) {
+		ev.preventDefault();
+		this.model.set('gageFilter', $(ev.target).data('value'));
+	},
+
+
 	updateSelectionLayer : function() {
 		var $modeledInfo = $('#modeled-streamflow-warning-div');
 		var $observedInfo = $('#observed-streamflow-info-div');
@@ -185,15 +195,6 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 
 		// Because this shifts the map's location on the page, call updateSize
 		this.map.updateSize();
-	},
-
-	changeStreamflowType : function(ev) {
-		this.model.set('streamflowType', ev.target.value);
-	},
-
-	changeGageFilter : function(ev) {
-		ev.preventDefault();
-		this.model.set('gageFilter', $(ev.target).data('value'));
 	},
 
 	updateGageFilter : function() {
