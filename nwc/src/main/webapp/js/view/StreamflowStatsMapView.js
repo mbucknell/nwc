@@ -2,11 +2,6 @@ var NWC = NWC || {};
 
 NWC.view = NWC.view || {};
 
-/*
- * View for the streamflow stats selection page
- *
- * @constructor extends NWC.BaseSelectMapView
- */
 NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 	templateName : 'streamflowStats',
 
@@ -17,11 +12,6 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 
 	Model : NWC.model.StreamflowStatsSelectMapModel,
 
-	/*
-	 * @constructs
-	 * @param {Object options}
-	 *	@prop {String} mapDiv
-	 */
 	initialize : function(options) {
 		this.model = new this.Model();
 
@@ -146,28 +136,16 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		this.updateGageFilter();
 	},
 
-	/**
-	 * Updates the view's model's streamflowType attribute with data from the event
-	 * @param {jquery.Event} ev
-	 */
 	changeStreamflowType : function(ev) {
 		this.model.set('streamflowType', ev.target.value);
 	},
 
-	/**
-	 * Updates the view's model's gageFilter attribute with data from the event
-	 * @param {jquery.Event} ev
-	 * @returns {undefined}
-	 */
 	changeGageFilter : function(ev) {
 		ev.preventDefault();
 		this.model.set('gageFilter', $(ev.target).data('value'));
 	},
 
 
-	/*
-	 * Updates the view to reflect the the view's model's streamflowType attribute
-	 */
 	updateSelectionLayer : function() {
 		var $modeledInfo = $('#modeled-streamflow-warning-div');
 		var $observedInfo = $('#observed-streamflow-info-div');
@@ -219,9 +197,6 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		this.map.updateSize();
 	},
 
-	/*
-	 * Updates the view to reflect the view's model's gageFilter attribute
-	 */
 	updateGageFilter : function() {
 		var filterVal = this.model.get('gageFilter');
 		var filterDescr = $('#stream-gage-filters-div a[data-value="' + filterVal + '"]').html();
