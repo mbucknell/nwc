@@ -74,6 +74,7 @@
 -->
 		<script type="text/javascript" src="js/utils/templateLoader.js"></script>
 		<script type="text/javascript" src="js/utils/mapUtils.js"></script>
+		<script type="text/javascript" src="js/utils/Conversion.js"></script>
 		
 		<script type="text/javascript" src="js/model/BaseSelectMapModel.js"></script>
 		
