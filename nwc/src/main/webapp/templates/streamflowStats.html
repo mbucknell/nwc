@@ -58,14 +58,14 @@
 				<div id="stream-gage-filters-div">
 					Stream Gage Filters:
 					<div class="btn-group">
-						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-							Gages for Evaluating Streamflow<span> <i class="caret"></i></span>
+						<button id="gage-filtering-button" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+							<span id="filter-label">Gages for Evaluating Streamflow</span><span> <i class="caret"></i></span>
 						</button>
 						<ul class="dropdown-menu" role="menu">
-							<li role="menuitem"><a  btn-radio="'default'">Gages for Evalulating Streamflow</a></li>
-							<li role="menuitem"><a btn-radio="'active'">Gages Active in 2009</a></li>
-							<li role="menuitem"><a btn-radio="'reference'">Gages II Reference Gages</a></li>
-							<li role="menuitem"><a btn-radio="'por'">Gages Sorted by Period of Record</a></li>
+							<li role="menuitem"><a href="#" data-value="default">Gages for Evaluating Streamflow</a></li>
+							<li role="menuitem"><a href="#" data-value="active">Gages Active in 2009</a></li>
+							<li role="menuitem"><a href="#" data-value="reference">Gages II Reference Gages</a></li>
+							<li role="menuitem"><a href="#" data-value="por">Gages Sorted by Period of Record</a></li>
 						</ul>
 					</div>
 					Options to filter displayed stream gages from the <a href="http://pubs.er.usgs.gov/publication/70046617" target="_blank">Gages II dataset <i class="fa fa-external-link"></i></a>

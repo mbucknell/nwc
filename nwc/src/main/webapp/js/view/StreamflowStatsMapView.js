@@ -6,7 +6,8 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 	templateName : 'streamflowStats',
 
 	events : {
-		'change #map-streamflow-type-group input' : 'changeStreamflowType'
+		'change #map-streamflow-type-group input' : 'changeStreamflowType',
+		'click #stream-gage-filters-div a' : 'changeGageFilter'
 	},
 
 	Model : NWC.model.StreamflowStatsSelectMapModel,
@@ -126,7 +127,10 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		this.map.addControl(this.hucsControl);
 
 		this.listenTo(this.model, 'change:streamflowType', this.updateSelectionLayer);
+		this.listenTo(this.model, 'change:gageFilter', this.updateGageFilter);
+
 		this.updateSelectionLayer();
+		this.updateGageFilter();
 	},
 
 	updateSelectionLayer : function() {
@@ -176,6 +180,18 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 
 	changeStreamflowType : function(ev) {
 		this.model.set('streamflowType', ev.target.value);
+	},
+
+	changeGageFilter : function(ev) {
+		ev.preventDefault();
+		this.model.set('gageFilter', $(ev.target).data('value'));
+	},
+
+	updateGageFilter : function() {
+		var filterVal = this.model.get('gageFilter');
+		var filterDescr = $('#stream-gage-filters-div a[data-value="' + filterVal + '"]').html();
+		$('#filter-label').html(filterDescr);
+		this.gagesLayer.mergeNewParams({STYLES : this.model.getFilterStyle()});
 	}
 });
 
