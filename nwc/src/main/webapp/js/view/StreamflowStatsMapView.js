@@ -2,6 +2,11 @@ var NWC = NWC || {};
 
 NWC.view = NWC.view || {};
 
+/*
+ * View for the streamflow stats selection page
+ *
+ * @constructor extends NWC.BaseSelectMapView
+ */
 NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 	templateName : 'streamflowStats',
 
@@ -12,6 +17,11 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 
 	Model : NWC.model.StreamflowStatsSelectMapModel,
 
+	/*
+	 * @constructs
+	 * @param {Object options}
+	 *	@prop {String} mapDiv
+	 */
 	initialize : function(options) {
 		this.model = new this.Model();
 
