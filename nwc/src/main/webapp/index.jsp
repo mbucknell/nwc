@@ -75,6 +75,8 @@
 
 		<script type="text/javascript" src="js/utils/templateLoader.js"></script>
 		<script type="text/javascript" src="js/utils/mapUtils.js"></script>
+		<script type="text/javascript" src="js/utils/sosSources.js"></script>
+		<script type="text/javascript" src="js/utils/sosResponseParser.js"></script>
 		
 		<script type="text/javascript" src="js/model/BaseSelectMapModel.js"></script>
 		
