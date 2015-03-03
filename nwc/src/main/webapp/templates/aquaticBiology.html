@@ -1,5 +1,54 @@
 <div class="row" style="margin: 0px;">
 	<div class="col-xs-12 nwc-container">
-		Aquatic Biology content
+		<div class="col-xs-12">
+			<h3>Aquatic Biology Data and Related Streamflow Statistics</h3>
+			<div>
+				<em>
+					Access aquatic biology data from the
+					<a href="https://aquatic.biodata.usgs.gov" target="_blank">BioData</a>
+					database and calculate streamflow statistics for near-by stream gages
+					or model results.
+					<ol>
+						<li>Turn on the stream flow data source desired.</li>
+						<li>Zoom to the region of interest.</li>
+						<li>Select a collection of sites.</li>
+						<li>Access data from the BioData system and/or get streamflow statistics.</li>
+					</ol>
+					Software to calculate these statistics is also available as an open-source R package
+					on GitHub: 
+					<a href="https://github.com/USGS-R/EflowStats" target="_blank">
+						https://github.com/USGS-R/EflowStats <i class="fa fa-external-link"></i>
+					</a>
+				</em>
+			</div>
+		</div>
+		<div class="col-xs-12">
+			Streamflow Type:
+			<div class="btn-group">
+				<button id="gage-layer-button" class="btn btn-primary">Observed</button>
+				<button id="huc-layer-button" class="btn btn-primary">Modeled</button>
+			</div>
+			<button id="both-layers-button" type="button" class="btn btn-primary">Both</button>
+			<button id="no-layers-button" type="button" class="btn btn-primary">None</button>
+			<div id="streamflow-observed-info">
+				Observed streamflow from 
+				<a href="http://waterdata.usgs.gov/nwis" target="_blank">
+					National Water Information System <i class=\"fa fa-external-link\"></i>
+				</a> 
+				&nbsp;Gages.
+			</div>
+			<div id="modeled-streamflow-info">
+				Modeled streamflow is <strong>preliminary</strong> and subject to change.&nbsp;
+				<a href="#/workflow/streamflow-statistics/model-info" target="_blank">
+					Documentation in Review. <i class=\"fa fa-external-link\"></i>
+				</a>
+			</div>
+		</div>
+		<div class="spacer spacer_down col-xs-12">
+			{{> mapControls }}		
+		</div>
+		<div class="col-xs-12">
+			<div id="aquatic-biology-map" style="height: 500px;"></div>
+		</div>
 	</div>
 </div>

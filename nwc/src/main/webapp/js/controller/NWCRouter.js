@@ -44,7 +44,7 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	},
 
 	aquaticBiology : function() {
-		this.showView(NWC.view.AquaticBiologyMapView);
+		this.showView(NWC.view.AquaticBiologyMapView, {mapDiv : 'aquatic-biology-map'});
 	},
 
 	dataDiscovery : function() {
