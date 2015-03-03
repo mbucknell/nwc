@@ -41,7 +41,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 				visibility: false
 			}
 		);
-		
+
 		this.hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
 			CONFIG.endpoint.geoserver + 'gwc/service/wms',
 			{
@@ -65,7 +65,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 				// nothing
 			}
 			else {
-				console.log('Selected a feature');
+				this.router.navigate('/streamflow-stats/gage/' + responseObject.features[0].attributes.STAID, {trigger : true});
 			}
 		};
 		this.gageControl = new OpenLayers.Control.WMSGetFeatureInfo({
@@ -105,7 +105,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 			if (km2 > 2000) {
 				alert("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km^2), please choose a smaller watershed.");
 			} else {
-				console.log('Go to huc 12 ' + sortedFeature.attributes.HUC12);
+				this.router.navigate('/streamflow-stats/huc/' + sortedFeature.attributes.HUC12, {trigger : true});
 			}
 		};
 
@@ -120,7 +120,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 				radius: 5
 			}
 		});
-		this.hucsControl.events.register('getfeatureinfo', {}, hucFeatureHandler);
+		this.hucsControl.events.register('getfeatureinfo', this, hucFeatureHandler);
 
 		this.selectControl = this.gageControl;
 

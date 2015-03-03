@@ -169,9 +169,9 @@
 					<outputFile>${project.build.directory}/jasmine/total-coverage.dat</outputFile>
 					<regex>false</regex>
 					<token>src/</token>
-					<value>${project.basedir}/src/main/webapp/</value>
+					<value>${project.basedir}/src/main/webapp/js/</value>
 				</configuration>
-			</plugin>
+			</plugin> 
         </plugins>
         <finalName>${warName}</finalName>
     </build>
