@@ -37,6 +37,24 @@ NWC.util.templateLoader = function() {
 		return $.when.apply(null, loadingDeferreds);
 	};
 
+	self.registerPartials = function(names) {
+		var i;
+		var loadingDeferreds = [];
+		for (i = 0; i < names.length; i++) {
+			loadingDeferreds.push($.ajax({
+				url : 'templates/partials/' + names[i] + '.html',
+				success : function(data) {
+					Handlebars.registerPartial(this, data);
+				},
+				error : function() {
+					Handlebars.registerPartial(this, 'Can\'t retrieve partial template');
+				},
+				context : names[i]
+			}));
+		}
+		return $.when.apply(null, loadingDeferreds);
+	};
+
 	return self;
 };
 

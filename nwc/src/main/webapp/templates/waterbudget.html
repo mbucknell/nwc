@@ -18,24 +18,7 @@
 		</div>
 		<div class="row">
 			<div class="spacer spacer_down col-xs-12">
-				<div id="map-controls-div">
-					Map Controls:
-					<div id="map-controls-group" class="btn-group" data-toggle="buttons">
-						<label class="btn btn-primary active">
-							<input type="radio" name="map-controls" value="select"/>Select
-						</label>
-						<label class="btn btn-primary">
-							<input type="radio" name="map-controls" value="pan"/>Pan
-						</label>
-						<label class="btn btn-primary">
-							<input type="radio" name="map-controls"class="btn btn-primary" value="zoom" />Zoom
-						</label>
-					</div>
-					<span id="map-control-select">Single click selects sites or watershed. Pan by click and drag. Zoom with double click, 
-						map buttons or scroll wheel.</span>
-					<span id="map-control-pan">Can pan by click and drag. Zoom with double click, map buttons or scroll wheel</span>
-					<span id="map-control-zoom">Click and hold to drag a bounding box to zoom.</span>
-				</div>
+				{{> mapControls }}
 				<a id="toggle-huc-layer" class="btn btn-primary" data-toggle="button">Turn Watersheds <span id="toggle-huc-layer-span">On</span></a>
 				<span>Turn on/off map-display of <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_documentation.php" target="_blank">Watershed Boundary Dataset</a> <i class="fa fa-external-link"></i> for which water budget information is available.</span>
 

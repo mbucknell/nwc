@@ -30,7 +30,7 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	},
 
 	streamflowStats : function() {
-		this.showView(NWC.view.StreamflowStatsMapView);
+		this.showView(NWC.view.StreamflowStatsMapView, {mapDiv : 'streamflow-select-map'});
 	},
 
 	aquaticBiology : function() {

@@ -1,10 +1,9 @@
 describe('Convert', function() {
-    var $injector = angular.injector(['nwc.conversion']);
-    var Convert = $injector.get('Convert');
-    
+    var Convert = NWC.util.Convert;
+
     var incomingValue = 123.456;
     var decimalPlaces = 3;
-    
+
     describe('mgdToMmAcresPerDay', function() {
         it('should be there', function() {
             expect(Convert.mgdToMmAcresPerDay).toBeDefined();
@@ -85,14 +84,13 @@ describe('Convert', function() {
 });
 
 describe('Units', function() {
-    var $injector = angular.injector(['nwc.conversion']);
-    var Units = $injector.get('Units');
-    
+    var Units = NWC.util.Units;
+
     describe('measurementSystem', function() {
         it('should have metric and us customary', function() {
             expect(Units.metric).toBeDefined();
             expect(Units.usCustomary).toBeDefined();
         });
     });
-    
+
 });

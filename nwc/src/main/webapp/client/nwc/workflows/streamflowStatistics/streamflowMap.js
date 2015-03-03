@@ -4,13 +4,13 @@
     streamflowMap.factory('StreamflowMap', ['StoredState', 'CommonState', '$state', 'BaseMap', '$log', 'util', 'Convert',
         function (StoredState, CommonState, $state, BaseMap, $log, util, Convert) {
             var map;
-            
+
             var initMap = function () {
                 var mapLayers = [];
                 var initialControls = [];
 
                 var flowlineRaster;
-                
+
                 // ////////////////////////////////////////////// GAGES
                 var gageFeatureLayer = new OpenLayers.Layer.WMS(
                     "Gage Location",
@@ -29,13 +29,13 @@
                     }
                 );
                 gageFeatureLayer.id = 'gage-feature-layer';
-                // WATERSMART-398 - Due to page shifting on load, the streamgage locations shift and the 
+                // WATERSMART-398 - Due to page shifting on load, the streamgage locations shift and the
                 // click event doesn't seem to line up with where the gages actually are. Updating the map's size
                 // after the layer loads fixes the issue
                 gageFeatureLayer.events.register('loadend', {}, function(event) {
                     event.object.map.updateSize();
                 });
-				
+
                 mapLayers.push(gageFeatureLayer);
 
                 var hucLayerOptions = BaseMap.getWorkflowLayerOptions();
@@ -51,16 +51,16 @@
                     hucLayerOptions
                 );
                 hucLayer.id = 'hucs';
-                
+
                 mapLayers.push(hucLayer);
-                
+
                 initialControls.push(new OpenLayers.Control.Navigation({
                     id: 'nwc-navigation'
                 }));
                 initialControls.push(new OpenLayers.Control.ZoomBox({
                     id: 'nwc-zoom'
                 }));
-                
+
                 var wmsGetFeatureInfoHandler = function(responseObject){
                     if(responseObject.features && responseObject.features.length){
                         //OpenLayers stores the actual features in a weird spot of the response
@@ -73,7 +73,7 @@
                         }
                     }
                 };
-                
+
                 var wmsGetFeatureInfoControl = new OpenLayers.Control.WMSGetFeatureInfo({
                     id: 'nwc-streamflow-gage-identify-control',
                     title: 'gage-identify-control',
@@ -93,7 +93,7 @@
 
                 wmsGetFeatureInfoControl.events.register("getfeatureinfo", {}, wmsGetFeatureInfoHandler);
                 initialControls.push(wmsGetFeatureInfoControl);
-                
+
                 var wfsProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(hucLayer, {
                     url : CONFIG.endpoint.geoserver + "wfs",
                     srsName : "EPSG:3857",
@@ -121,12 +121,12 @@
                     } else {
                         var sortedFeature = actualFeatures.min(function(el){
                             var result = Infinity;
-                            
+
                             var mi2 = parseFloat(el.data.mi2);
                             if (mi2) {
                                 result = mi2;
                             }
-                            
+
                             return result;
                         });
                         StoredState.streamFlowStatHucFeature = sortedFeature;
@@ -146,14 +146,14 @@
                         }
                     }
                 };
-                
+
                 var eventToHandle = "featuresselected"
                 hucsGetFeatureControl.events.register(eventToHandle, {}, featureHandler.fill(eventToHandle));
                 initialControls.push(hucsGetFeatureControl);
-                
+
                 var legend = new OpenLayers.Control.Attribution();
                 initialControls.push(legend);
-                
+
                 map = BaseMap.new({
                     layers: mapLayers,
                     controls: initialControls
@@ -251,9 +251,9 @@
 
                 };
                 addFlowLinesLayer(map);
-                
+
                 /**
-                 * 
+                 *
                  * @param {String} interest one of 'observed' or 'modeled'
                  */
                 map.switchToInterest = function(interest){
@@ -261,13 +261,13 @@
                         hucsGetFeatureControl.deactivate();
                         hucLayer.setVisibility(false);
                         StoredState.streamFlowStatHucFeature = undefined;
-                        
+
                         gageFeatureLayer.setVisibility(true);
                         flowlineRaster.setVisibility(true);
                         wmsGetFeatureInfoControl.activate();
                     }
                     else if('modeled' === interest){
-                        
+
                         gageFeatureLayer.setVisibility(false);
                         flowlineRaster.setVisibility(true);
                         wmsGetFeatureInfoControl.deactivate();
@@ -297,15 +297,15 @@
                 }
                 return map;
             };
-            
+
             var updateMapSize = function() {
                 if (!map || !map.viewPortDiv.parentNode) {
                     initMap();
                 }
                 map.updateSize();
             };
-            
-            
+
+
             return {
                 initMap: initMap,
                 getMap: getMap,
