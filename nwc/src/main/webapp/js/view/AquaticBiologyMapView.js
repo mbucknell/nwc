@@ -77,7 +77,8 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 			}
 		});
 		this.selectControl.events.register('getfeatureinfo', this, getFeatureInfoHandler);
-
+		
+		$.extend(this.events, NWC.view.BaseSelectMapView.prototype.events);
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
 
 		this.addFlowLines();
@@ -90,7 +91,7 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 		this.updateHucLayer();
 	},
 
-	_setCheckBox : function(el, on) {
+	_setButtonActive : function(el, on) {
 		if (on) {
 			el.addClass('active');
 		}
@@ -99,15 +100,32 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 		}
 	},
 
+	_setVisibility : function(el, on) {
+		if (on) {
+			el.show();
+		}
+		else {
+			el.hide();
+		}
+	},
+
 	updateGageLayer : function() {
 		var gageOn = this.model.get('gageLayerOn');
 		this.gageFeatureLayer.setVisibility(gageOn);
-		this._setCheckBox($('#gage-layer-button'), gageOn);
+		this._setButtonActive($('#gage-layer-button'), gageOn);
+		this._setVisibility($('#streamflow-observed-info'), gageOn);
+
+		// Because this shifts the map's location on the page, call updateSize
+		this.map.updateSize();
 	},
 	updateHucLayer : function() {
 		var hucOn = this.model.get('hucLayerOn');
 		this.hucLayer.setVisibility(hucOn);
-		this._setCheckBox($('#huc-layer-button'), hucOn);
+		this._setButtonActive($('#huc-layer-button'), hucOn);
+		this._setVisibility($('#modeled-streamflow-info'), hucOn);
+
+		// Because this shifts the map's location on the page, call updateSize
+		this.map.updateSize();
 	},
 
 	toggleGageLayer : function(ev) {
