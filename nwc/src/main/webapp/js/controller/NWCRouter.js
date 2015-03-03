@@ -14,6 +14,8 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 		'waterbudget/huc/:huc' : 'waterbudgetHucData',
 		'waterbudget' : 'waterbudget',
 		'streamflow-stats' : 'streamflowStats',
+		'streamflow-stats/gage/:gageid' : 'streamflowStatsGageData',
+		'streamflow-stats/huc/:huc' : 'streamflowStatsHucData',
 		'aquatic-biology' : 'aquaticBiology',
 		'data-discovery' : 'dataDiscovery'
 	},
@@ -33,7 +35,15 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	},
 
 	streamflowStats : function() {
-		this.showView(NWC.view.StreamflowStatsMapView);
+		this.showView(NWC.view.StreamflowStatsMapView, {mapDiv : 'streamflow-select-map'});
+	},
+
+	streamflowStatsGageData : function(gageid) {
+		$(this.applicationContextDiv).html('Streamflow Stats for gage ' + gageid);
+	},
+
+	streamflowStatsHucData : function(huc) {
+		$(this.applicationContextDiv).html('Streamflow Stats  for HUC 12 ' + huc);
 	},
 
 	aquaticBiology : function() {

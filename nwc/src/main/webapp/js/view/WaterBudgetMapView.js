@@ -23,6 +23,8 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	 *	@prop {String} mapDiv
 	 */
 	initialize : function(options) {
+		this.model = new this.Model();
+
 		this.hucLayer = NWC.util.mapUtils.createHucLayer({
 			visibility : false
 		});
@@ -60,6 +62,8 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
 
 		this.map.addLayer(this.hucLayer);
+		this.addFlowLines();
+		
 		this.listenTo(this.model, 'change:watershedLayerOn', this.updateLayerVisibility);
 		this.updateLayerVisibility();
 	},

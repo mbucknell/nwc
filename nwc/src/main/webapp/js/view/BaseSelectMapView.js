@@ -29,13 +29,19 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 		this.map.zoomToExtent(this.map.getMaxExtent(), true);
 	},
 
+	addFlowLines : function() {
+		NWC.util.mapUtils.addFlowLinesToMap(this.map);
+	},
+
 	/**
 	 * @constructs
 	 * @param {Object} options
 	 *	@prop {String} mapDiv
 	 */
 	initialize : function(options) {
-		this.model = new this.Model();
+		if (!Object.has(this, 'model')) {
+			this.model = new this.Model();
+		}
 		var controls = [
             new OpenLayers.Control.Navigation(),
             new OpenLayers.Control.MousePosition({
@@ -58,8 +64,6 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 			NWC.util.mapUtils.createAllBaseLayers(),
 			controls
 		);
-
-		NWC.util.mapUtils.addFlowLinesToMap(this.map);
 
 		// Add controls which will be are tied to the model data.
 		this.zoomBoxControl = new OpenLayers.Control.ZoomBox();

@@ -69,18 +69,19 @@
 		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Grid.js"></script>
 		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Operation.js"></script>
 		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Composite.js"></script>
-		
-		<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesData.js"></script>
-		<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesRaster.js"></script>
-
+				<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesData.js"></script>
+<!--	<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesRaster.js"></script>
+-->
 		<script type="text/javascript" src="js/utils/templateLoader.js"></script>
 		<script type="text/javascript" src="js/utils/mapUtils.js"></script>
 		<script type="text/javascript" src="js/utils/sosSources.js"></script>
 		<script type="text/javascript" src="js/utils/sosResponseParser.js"></script>
+		<script type="text/javascript" src="js/utils/Conversion.js"></script>
 		
 		<script type="text/javascript" src="js/model/BaseSelectMapModel.js"></script>
 		
 		<script type="text/javascript" src="js/model/WaterBudgetSelectMapModel.js"></script>
+		<script type="text/javascript" src="js/model/StreamflowStatsSelectMapModel.js"></script>
 		
 		<script type="text/javascript" src="js/view/BaseView.js"></script>
 		<script type="text/javascript" src="js/view/BaseSelectMapView.js"></script>

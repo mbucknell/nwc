@@ -1,5 +1,80 @@
 <div class="row" style="margin: 0px;">
 	<div class="col-xs-12 nwc-container">
-		Streamflow stats content
-	</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<h3>Streamflow Statistics Calculator</h3>
+				<div>
+					<em>
+						Access streamflow statistics for National Water Information System gages 
+						and modeled daily flow in some regions.
+						<ol>	
+							<li>Set the map layer to display the desired streamflow type. Notice the different stream gage views.</li>
+							<li>Select a gage or watershed to get statistics for.</li>
+							<li>Choose a time period and statistics group on the next page.</li>
+						</ol>
+						Software to calculate these statistics is also available as an open-source R package on GitHub:
+						<a href="https://github.com/USGS-R/EflowStats" target="_blank">
+							https://github.com/USGS-R/EflowStats <i class="fa fa-external-link"></i>
+						</a>.
+					</em>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<div id="modeled-streamflow-warning-div">
+					<h4 class="important">Preliminary Subject to Change</h4>
+					Modeled streamflow is <strong>preliminary</strong> and subject to 
+					change. 
+					<a href="/streamflow-statistics/model-info" target="_blank">
+						Documentation in Review. <i class="fa fa-external-link"></i>
+					</a>
+				</div>
+			</div>
+			<div class="spacer col-xs-12">
+				<div id="map-streamflow-type-div">
+					Streamflow Type:
+					<div id="map-streamflow-type-group" class="btn-group" data-toggle="buttons">
+						<label class="btn btn-primary active">
+							<input type="radio" name="streamflow-type" value="observed" />Observed
+						</label>
+						<label class="btn btn-primary">
+							<input type="radio" name="streamflow-type" value="modeled" />Modeled
+						</label>
+					</div>
+					<span id="observed-streamflow-info-div">
+						Observed streamflow from 
+						<a href=\"http://waterdata.usgs.gov/nwis\" target=\"_blank\">
+							National Water Information System <i class=\"fa fa-external-link\"></i>
+						</a> 
+						Gages.
+					</span>
+				</div>
+			</div>
+			<div class="spacer col-xs-12">
+				{{> mapControls }}		
+			</div>
+			<div class="spacer spacer_down col-xs-12">
+				<div id="stream-gage-filters-div">
+					Stream Gage Filters:
+					<div class="btn-group">
+						<button id="gage-filtering-button" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+							<span id="filter-label">Gages for Evaluating Streamflow</span><span> <i class="caret"></i></span>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li role="menuitem"><a href="#" data-value="default">Gages for Evaluating Streamflow</a></li>
+							<li role="menuitem"><a href="#" data-value="active">Gages Active in 2009</a></li>
+							<li role="menuitem"><a href="#" data-value="reference">Gages II Reference Gages</a></li>
+							<li role="menuitem"><a href="#" data-value="por">Gages Sorted by Period of Record</a></li>
+						</ul>
+					</div>
+					Options to filter displayed stream gages from the <a href="http://pubs.er.usgs.gov/publication/70046617" target="_blank">Gages II dataset <i class="fa fa-external-link"></i></a>
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div id="streamflow-select-map" style="height: 500px;"></div>
+			</div>
+		</div>	
+    </div>
 </div>
+
