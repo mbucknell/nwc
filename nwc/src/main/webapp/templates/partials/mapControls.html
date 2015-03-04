@@ -1,15 +1,9 @@
 <div id="map-controls-div">
 	Map Controls:
-	<div id="map-controls-group" class="btn-group" data-toggle="buttons">
-		<label class="btn btn-primary active">
-			<input type="radio" name="map-controls" value="select"/>Select
-		</label>
-		<label class="btn btn-primary">
-			<input type="radio" name="map-controls" value="pan"/>Pan
-		</label>
-		<label class="btn btn-primary">
-			<input type="radio" name="map-controls"class="btn btn-primary" value="zoom" />Zoom
-		</label>
+	<div id="map-controls-group" class="btn-group">
+		<button type="button" id="select-button" class="btn btn-primary" value="select">Select</button>
+		<button type="button" id="pan-button" class="btn btn-primary" value="pan">Pan</button>
+		<button type="button" id="zoom-button" class="btn btn-primary" value="zoom">Zoom</button>
 	</div>
 	{{#if selectBox }}
 		<span id="map-control-select">Click and hold to drag a bounding box around sites</span>
