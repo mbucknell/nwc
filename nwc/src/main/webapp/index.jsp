@@ -80,6 +80,8 @@
 		
 		<script type="text/javascript" src="js/model/WaterBudgetSelectMapModel.js"></script>
 		<script type="text/javascript" src="js/model/StreamflowStatsSelectMapModel.js"></script>
+		<script type="text/javascript" src="js/model/AquaticBiologySelectMapModel.js"></script>
+		<script type="text/javascript" src="js/model/AquaticBiologyFeaturesModel.js"></script>
 		
 		<script type="text/javascript" src="js/view/BaseView.js"></script>
 		<script type="text/javascript" src="js/view/BaseSelectMapView.js"></script>

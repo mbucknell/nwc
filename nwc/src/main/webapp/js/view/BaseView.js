@@ -16,7 +16,7 @@ NWC.view.BaseView = Backbone.View.extend({
 	 * @returns {BaseViewAnonym$0}
 	 */
 	render : function() {
-		var html = NWC.templates.getTemplate(this.templateName)(this.context);
+		var html = this.template(this.context);
 		this.$el.html(html);
 
 		return this;
@@ -26,6 +26,7 @@ NWC.view.BaseView = Backbone.View.extend({
 	 * @constructs
 	 * @param Object} options
 	 *		@prop router {Backbone.Router instance} - defaults to null
+	 *		@prop template {Handlers template function} - defaults to loading the template from NWC.templates - this is useful for testing
 	 *		@prop context {Object} to be used when rendering templateName - defaults to {}
 	 * @returns NWC.view.BaseView
 	 */
@@ -33,9 +34,14 @@ NWC.view.BaseView = Backbone.View.extend({
 		options = options || {};
 
 		this.router = options.router || null;
-		if (Object.has(options, 'context')) {
-			this.context = options.context;
+
+		if (Object.has(options, 'template')) {
+			this.template = options.template;
 		}
+		else {
+			this.template = NWC.templates.getTemplate(this.templateName);
+		}
+		
 		Backbone.View.prototype.initialize.apply(this, arguments);
 		this.render();
 	}

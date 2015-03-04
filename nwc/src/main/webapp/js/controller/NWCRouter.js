@@ -8,6 +8,8 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 
 	applicationContextDiv : '#site_content',
 
+	aquaticBiologyFeaturesModel : new NWC.model.AquaticBiologyFeaturesModel(),
+
 	routes: {
 		'' : 'home',
 		'waterbudget/huc/:huc' : 'waterbudgetHucData',
@@ -16,6 +18,7 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 		'streamflow-stats/gage/:gageid' : 'streamflowStatsGageData',
 		'streamflow-stats/huc/:huc' : 'streamflowStatsHucData',
 		'aquatic-biology' : 'aquaticBiology',
+		'aquatic-biology/select-features' : 'aquaticBiologySelectFeatures',
 		'data-discovery' : 'dataDiscovery'
 	},
 
@@ -44,7 +47,17 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	},
 
 	aquaticBiology : function() {
-		this.showView(NWC.view.AquaticBiologyMapView);
+		this.showView(NWC.view.AquaticBiologyMapView, {
+			mapDiv : 'aquatic-biology-map',
+			aquaticBiologyFeaturesModel : this.aquaticBiologyFeaturesModel
+		});
+	},
+
+	aquaticBiologySelectFeatures : function() {
+		$(this.applicationContextDiv).html('Select features: site count: ' +
+			this.aquaticBiologyFeaturesModel.get('sites').length + ', Gage count: ' +
+			this.aquaticBiologyFeaturesModel.get('gages').length + ', Huc count: ' +
+			this.aquaticBiologyFeaturesModel.get('hucs').length);
 	},
 
 	dataDiscovery : function() {

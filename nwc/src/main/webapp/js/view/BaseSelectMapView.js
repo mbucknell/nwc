@@ -12,7 +12,7 @@ NWC.view = NWC.view || {};
 NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 
 	events : {
-		'change #map-controls-group input' : 'changeControl'
+		'click #map-controls-group button' : 'changeControl'
 	},
 
 	selectControl : function() { return; },
@@ -83,6 +83,7 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 	 * @param {jquery.Event} ev
 	 */
 	changeControl : function(ev) {
+		ev.preventDefault();
 		var newSelection = ev.target.value;
 		this.model.set('control', newSelection);
 	},
@@ -92,14 +93,22 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 	 */
 	updateSelection : function() {
 		var newSelection = this.model.get('control');
+		var selectActive = newSelection === 'select';
+		var panActive = newSelection === 'pan';
+		var zoomActive = newSelection === 'zoom';
+
 		$('#map-controls-div span').not('#map-control-' + newSelection).hide();
 		$('#map-control-' + newSelection).show();
 
-		if (newSelection === 'zoom') {
+		this._setButtonActive($('#select-button'), selectActive);
+		this._setButtonActive($('#pan-button'), panActive);
+		this._setButtonActive($('#zoom-button'), zoomActive);
+
+		if (zoomActive) {
 			this.zoomBoxControl.activate();
 			this.selectControl.deactivate();
 		}
-		else if (newSelection === 'select') {
+		else if (selectActive) {
 			this.zoomBoxControl.deactivate();
 			this.selectControl.activate();
 		}
@@ -107,7 +116,16 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 			this.zoomBoxControl.deactivate();
 			this.selectControl.deactivate();
 		}
-	}
+	},
+
+		_setButtonActive : function(el, on) {
+		if (on) {
+			el.addClass('active');
+		}
+		else {
+			el.removeClass('active');
+		}
+	},
 
 
 });
