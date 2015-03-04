@@ -111,7 +111,6 @@
 						<source>webjars/OpenLayers.js</source>	
 					</preloadSources>
 					<sourceIncludes>
-						<include>model/BaseSelectMapModel.js</include>
 						<include>model/*.js</include>
 						<include>util/*.js</include>
 						<include>view/BaseView.js</include>
@@ -122,9 +121,6 @@
 						<include>utils/openLayersExtensions/**/*.js</include>
 					</sourceExcludes>
 					<specExcludes>
-						<include>spec/templateLoader_spec.js</include>
-						<!-- Test this next one first because it sets up templateLoader spies -->
-						<include>spec/BaseSelectMapView/**/*.js</include>
 						<include>old_specs/*.js</include>
 					</specExcludes>
 				</configuration>		

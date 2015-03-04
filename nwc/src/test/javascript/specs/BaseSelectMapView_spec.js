@@ -5,14 +5,10 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 		}
 	};
 
-	var selectControl, mapSpy, NewView;
+	var selectControl, mapSpy, NewView, template;
 
 	beforeEach(function() {
-		$('body').append('<div id="map-div"></div>');
-
-		var templateSpy = jasmine.createSpy('templateSpy');
-		NWC.templates = jasmine.createSpyObj('NWCTemplates', ['getTemplate', 'loadTemplates']);
-		NWC.templates.getTemplate.andReturn(templateSpy);
+		template = Handlebars.compile('<div id="map-div"></div>');
 
 		selectControl = jasmine.createSpyObj('selectControl', ['activate', 'deactivate']);
 
@@ -40,14 +36,20 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 	});
 
 	it('Expects the appropriate properties to be defined for the view at construction', function() {
-		var view = new NewView({mapDiv : 'map-div'});
+		var view = new NewView({
+			mapDiv : 'map-div',
+			template : template
+		});
 		expect(view.map).toBeDefined();
 		expect(view.zoomBoxControl).toBeDefined();
 		expect(view.selectControl).toBe(selectControl);
 	});
 
 	it('Expects the map to be rendered and the controls added to the map', function() {
-		var view = new NewView({mapDiv : 'map-div'});
+		var view = new NewView({
+			mapDiv : 'map-div',
+			template : template
+		});
 		expect(mapSpy.render).toHaveBeenCalled();
 		expect(mapSpy.addControl).toHaveBeenCalledWith(view.selectControl);
 		expect(mapSpy.addControl).toHaveBeenCalledWith(view.zoomBoxControl);
@@ -57,7 +59,10 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 		var view;
 
 		beforeEach(function() {
-			view = new NewView({mapDiv : 'map-div'});
+			view = new NewView({
+				mapDiv : 'map-div',
+				template : template
+			});
 			spyOn(view.zoomBoxControl, 'activate');
 			spyOn(view.zoomBoxControl, 'deactivate');
 
@@ -90,7 +95,10 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 	});
 
 	it('Expects changeControl to update the model', function() {
-		var view = new NewView({ mapDiv : 'map-div' });
+		var view = new NewView({
+			mapDiv : 'map-div',
+			template : template
+		});
 
 		view.changeControl({ target : { value : 'zoom' } });
 		expect(view.model.get('control')).toEqual('zoom');

@@ -1,6 +1,8 @@
 describe('Test for NWC.view.StreamflowStatsMapView', function() {
 	var addLayerSpy;
 	var addControlSpy;
+	var thisTemplate;
+	var view;
 
 	beforeEach(function() {
 		$('body').append('<div id="stream-gage-filters-div"><span id="filter-label"></span>' +
@@ -10,6 +12,7 @@ describe('Test for NWC.view.StreamflowStatsMapView', function() {
 			'<a data-value="por">Por</a>' +
 			'</div>'
 		);
+		thisTemplate = jasmine.createSpy('thisTemplate');
 		addLayerSpy = jasmine.createSpy('addLayerSpy');
 		addControlSpy = jasmine.createSpy('addControlSpy');
 		spyOn(NWC.util.mapUtils, 'addFlowLinesToMap');
@@ -21,15 +24,16 @@ describe('Test for NWC.view.StreamflowStatsMapView', function() {
 			};
 			this.model = new this.Model();
 		});
+		view = new NWC.view.StreamflowStatsMapView({
+			template : thisTemplate
+		});
+	});
 
-		afterEach(function() {
-			$('#stream-gage-filters-div').remove();
-		})
+	afterEach(function() {
+		$('#stream-gage-filters-div').remove();
 	});
 
 	it('Expects the appropriate properties to be defined after instantiation', function() {
-		var view = new NWC.view.StreamflowStatsMapView();
-
 		expect(NWC.view.BaseSelectMapView.prototype.initialize).toHaveBeenCalled();
 		expect(view.gagesLayer).toBeDefined();
 		expect(view.hucLayer).toBeDefined();
@@ -40,8 +44,6 @@ describe('Test for NWC.view.StreamflowStatsMapView', function() {
 	});
 
 	it('Expects updates to the model\'s streamflowType will update the selectControl, visible layer, and the legend control', function() {
-		var view = new NWC.view.StreamflowStatsMapView();
-
 		spyOn(view.hucsControl, 'activate');
 		spyOn(view.hucsControl, 'deactivate');
 		spyOn(view.gageControl, 'activate');
@@ -80,8 +82,6 @@ describe('Test for NWC.view.StreamflowStatsMapView', function() {
 	});
 
 	it('Expects update to the model\'s gageFilter to update the attribution control and gagelayer', function() {
-		var view = new NWC.view.StreamflowStatsMapView();
-
 		spyOn(view.gagesLayer, 'addOptions');
 		spyOn(view.gagesLayer, 'mergeNewParams');
 
@@ -90,5 +90,4 @@ describe('Test for NWC.view.StreamflowStatsMapView', function() {
 		expect(view.gagesLayer.addOptions.mostRecentCall.args[0].attribution).toMatch(view.model.getFilterStyle());
 		expect(view.gagesLayer.mergeNewParams.mostRecentCall.args[0].STYLES).toMatch(view.model.getFilterStyle());
 	});
-
 });
