@@ -15,7 +15,6 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 		'click #no-layers-button' : 'turnOffLayers'
 	},
 
-
 	initialize : function(options) {
 		this.model = new this.Model();
 		this.context = {selectBox : true};
@@ -94,13 +93,15 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 			else if (featureType === 'huc12_SE_Basins_v2') {
 				return this.hucLayer.getVisibility();
 			}
-		}
+		};
 
 		var getFeatureProtocolList = [gageProtocol, hucProtocol, biodataProtocol];
 
 		/**
 		 * Create a protocol which will issue all three getFeatureInfo requests and
 		 * combine the results into a single results array.
+		 * @param {Array of OpenLayers.Protocols} protocols
+		 * @param {Object} scope - the scope to be used when processing the individual protocol objects.
 		 */
 		var joinedProtocol = new (function(protocols, scope) {
 			this.protocols = protocols;
@@ -121,12 +122,11 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 					deferreds.push(thisDeferred);
 					if (featureTypeIsVisible.apply(scope, [el.featureType])) {
 						var newCallback = function(result) {
-							console.log('In new callback');
 							if (result.success()) {
 								theResults = theResults.concat(result.features);
 							}
 							thisDeferred.resolve();
-						}
+						};
 						var newRequest = Object.clone(request);
 						newRequest.callback = newCallback;
 						el.read(newRequest);
@@ -151,7 +151,7 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 		})(getFeatureProtocolList, this);
 
 		var getFeatureHandler = function(responseObject) {
-			var features = responseObject.features
+			var features = responseObject.features;
 			if (responseObject.type === 'featuresselected') {
 				var siteFeatures = features.findAll(function(f) {
 					return f.fid.startsWith('SiteInfo');
@@ -163,8 +163,6 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 					return f.fid.startsWith('huc12_SE_Basins_v2');
 				});
 
-				console.log('Site feature count : ' + siteFeatures.length + ' gage feature count: ' +
-					gageFeatures.length + ' huc feature count : ' + hucFeatures.length);
 				this.aquaticBiologyFeaturesModel.set({
 					sites : siteFeatures.map(function(f) { return f.attributes; }),
 					gages : gageFeatures.map(function(f) { return f.attributes; }),

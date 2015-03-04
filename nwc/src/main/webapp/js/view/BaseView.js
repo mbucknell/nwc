@@ -11,6 +11,7 @@ NWC.view.BaseView = Backbone.View.extend({
 
 	templateName : '',
 
+
 	/**
 	 * Renders the object's template using it's context into the view's element.
 	 * @returns {BaseViewAnonym$0}
@@ -35,6 +36,9 @@ NWC.view.BaseView = Backbone.View.extend({
 		this.router = options.router || null;
 		if (Object.has(options, 'context')) {
 			this.context = options.context;
+		}
+		else {
+			this.context = {};
 		}
 		Backbone.View.prototype.initialize.apply(this, arguments);
 		this.render();
