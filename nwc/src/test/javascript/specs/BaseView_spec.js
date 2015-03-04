@@ -13,8 +13,11 @@ describe('Tests for NWC.BaseView', function() {
 	});
 
 	it('Expects a context property to be used when rendering a view', function() {
-		var NewView = NWC.view.BaseView.extend({templateName : 'base'});
-		var view = new NewView({context : {a : 'this'}});
+		var NewView = NWC.view.BaseView.extend({
+			templateName : 'base',
+			context : {a : 'this'}
+		});
+		var view = new NewView({});
 		expect(templateSpy).toHaveBeenCalledWith({a : 'this'});
 	});
 

@@ -41,12 +41,7 @@ NWC.view.BaseView = Backbone.View.extend({
 		else {
 			this.template = NWC.templates.getTemplate(this.templateName);
 		}
-		if (Object.has(options, 'context')) {
-			this.context = options.context;
-		}
-		else {
-			this.context = {};
-		}
+		
 		Backbone.View.prototype.initialize.apply(this, arguments);
 		this.render();
 	}
