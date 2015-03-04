@@ -5,7 +5,9 @@ describe('Test for NWC.view.StreamflowStatsMapView', function() {
 	var view;
 
 	beforeEach(function() {
-		$('body').append('<div id="stream-gage-filters-div"><span id="filter-label"></span>' +
+		$('body').append('<div id="test-div"></div');
+		$('#test-div').append('<button id="observed-button"></button><button id="modeled-button"></button>')
+		$('#test-div').append('<div id="stream-gage-filters-div"><span id="filter-label"></span>' +
 			'<a data-value="default">Default</a>' +
 			'<a data-value="active">Active</a>' +
 			'<a data-value="reference">Reference</a>' +
@@ -30,7 +32,7 @@ describe('Test for NWC.view.StreamflowStatsMapView', function() {
 	});
 
 	afterEach(function() {
-		$('#stream-gage-filters-div').remove();
+		$('#test-div').remove();
 	});
 
 	it('Expects the appropriate properties to be defined after instantiation', function() {
@@ -67,6 +69,8 @@ describe('Test for NWC.view.StreamflowStatsMapView', function() {
 
 		expect(view.legendControl.activate).not.toHaveBeenCalled();
 		expect(view.legendControl.deactivate).toHaveBeenCalled();
+		expect($('#modeled-button').hasClass('active')).toBe(true);
+		expect($('#observed-button').hasClass('active')).toBe(false);
 
 		view.gageControl.active = false;
 		view.hucsControl.active = true;
@@ -79,6 +83,8 @@ describe('Test for NWC.view.StreamflowStatsMapView', function() {
 		expect(view.gageControl.activate).toHaveBeenCalled();
 		expect(view.selectControl).toBe(view.gageControl);
 		expect(view.legendControl.activate).toHaveBeenCalled();
+		expect($('#modeled-button').hasClass('active')).toBe(false);
+		expect($('#observed-button').hasClass('active')).toBe(true);
 	});
 
 	it('Expects update to the model\'s gageFilter to update the attribution control and gagelayer', function() {

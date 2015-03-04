@@ -34,13 +34,9 @@
 			<div class="spacer col-xs-12">
 				<div id="map-streamflow-type-div">
 					Streamflow Type:
-					<div id="map-streamflow-type-group" class="btn-group" data-toggle="buttons">
-						<label class="btn btn-primary active">
-							<input type="radio" name="streamflow-type" value="observed" />Observed
-						</label>
-						<label class="btn btn-primary">
-							<input type="radio" name="streamflow-type" value="modeled" />Modeled
-						</label>
+					<div id="map-streamflow-type-group" class="btn-group">
+						<button type="button" id="observed-button" value="observed" class="btn btn-primary">Observed</button>
+						<button type="button" id="modeled-button" value="modeled" class="btn btn-primary">Modeled</button>
 					</div>
 					<span id="observed-streamflow-info-div">
 						Observed streamflow from 
