@@ -111,6 +111,7 @@
 						<source>webjars/OpenLayers.js</source>	
 					</preloadSources>
 					<sourceIncludes>
+						<include>model/BaseSelectMapModel.js</include>
 						<include>model/*.js</include>
 						<include>util/*.js</include>
 						<include>view/BaseView.js</include>
