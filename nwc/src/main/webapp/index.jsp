@@ -58,7 +58,7 @@
 		<script type="text/javascript" src="webjars/underscorejs/${underscoreVersion}/underscore.js"></script>
 		<script type="text/javascript" src="webjars/backbonejs/${backboneVersion}/backbone.js"></script>
 		<script type="text/javascript" src="webjars/handlebars/${handlebarsVersion}/handlebars${jsMin}.js"></script>
-		<script type="text/javascript" src="webjars/openlayers/${openlayersVersion}/OpenLayers.js"></script>
+		<script type="text/javascript" src="webjars/openlayers/${openlayersVersion}/OpenLayers.debug.js"></script>
 		<script type="text/javascript" src="webjars/flot/${flotchartsVersion}/jquery.flot${jsMin}.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/javascript.util.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/jsts.js"></script>
@@ -81,6 +81,7 @@
 		<script type="text/javascript" src="js/model/WaterBudgetSelectMapModel.js"></script>
 		<script type="text/javascript" src="js/model/StreamflowStatsSelectMapModel.js"></script>
 		<script type="text/javascript" src="js/model/AquaticBiologySelectMapModel.js"></script>
+		<script type="text/javascript" src="js/model/AquaticBiologyFeaturesModel.js"></script>
 		
 		<script type="text/javascript" src="js/view/BaseView.js"></script>
 		<script type="text/javascript" src="js/view/BaseSelectMapView.js"></script>

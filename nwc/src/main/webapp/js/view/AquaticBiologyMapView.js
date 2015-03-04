@@ -15,8 +15,11 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 		'click #no-layers-button' : 'turnOffLayers'
 	},
 
+
 	initialize : function(options) {
 		this.model = new this.Model();
+		this.context = {selectBox : true};
+		this.aquaticBiologyFeaturesModel = options.aquaticBiologyFeaturesModel;
 
 		this.bioDataSitesLayer = new OpenLayers.Layer.WMS(
 			"BioData Sites",
@@ -58,26 +61,128 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 			}
 		);
 
-		var getFeatureInfoHandler = function(responseObject) {
-			if (responseObject.features.length > 0) {
-				console.log('Got features ' + responseObject.features.length);
+		var biodataProtocol  = new OpenLayers.Protocol.WFS({
+			version: "1.1.0",
+			url: CONFIG.endpoint.geoserver + 'wfs',
+			featureType: 'SiteInfo',
+			featureNS: 'http://cida.usgs.gov/BioData',
+			srsName: 'EPSG:900913',
+			propertyNames: ['SiteNumber', 'SiteName']
+		});
+
+		var gageProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(this.gageFeatureLayer, {
+			url : CONFIG.endpoint.geoserver + "wfs",
+			srsName : "EPSG:3857",
+			propertyNames: ["STAID","STANAME","DRAIN_SQKM"]
+		});
+
+		var hucProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(this.hucLayer, {
+			url : CONFIG.endpoint.geoserver + "wfs",
+			srsName : "EPSG:3857",
+			//TODO! I really don't like this. I'd like to only ask for what I need at this moment, but
+			//this is given to the next step of the workflow, so it relys on this...
+			propertyNames : ["HUC12","DRAIN_SQKM", "HU_12_NAME"]
+		});
+
+		var featureTypeIsVisible = function(featureType) {
+			if (featureType === 'SiteInfo') {
+				return true; // Always visible
 			}
+			else if (featureType === 'gagesII') {
+				return this.gageFeatureLayer.getVisibility();
+			}
+			else if (featureType === 'huc12_SE_Basins_v2') {
+				return this.hucLayer.getVisibility();
+			}
+		}
+
+		var getFeatureProtocolList = [gageProtocol, hucProtocol, biodataProtocol];
+
+		/**
+		 * Create a protocol which will issue all three getFeatureInfo requests and
+		 * combine the results into a single results array.
+		 */
+		var joinedProtocol = new (function(protocols, scope) {
+			this.protocols = protocols;
+
+			/*
+			 * Calls each protocols read function if the associated feature's layer is visible.
+			 * The callback function for each read
+			 * adds the results to the common results, and sets it's deferred to resolved.
+			 * when all reads have finished, the original request's callback is called with
+			 * the common results array.
+			 */
+			this.read = function(request) {
+				var deferreds = [];
+				var theResults = [];
+
+				this.protocols.forEach(function(el) {
+					var thisDeferred = $.Deferred();
+					deferreds.push(thisDeferred);
+					if (featureTypeIsVisible.apply(scope, [el.featureType])) {
+						var newCallback = function(result) {
+							console.log('In new callback');
+							if (result.success()) {
+								theResults = theResults.concat(result.features);
+							}
+							thisDeferred.resolve();
+						}
+						var newRequest = Object.clone(request);
+						newRequest.callback = newCallback;
+						el.read(newRequest);
+					}
+					else {
+						thisDeferred.resolve();
+					}
+				}, scope);
+
+				$.when.apply(this, deferreds).done(function() {
+					request.callback.apply(request.scope, [{
+						success : function() { return true; },
+						features: theResults
+					}]);
+				});
+			};
+			this.abort = function(abortParam) {
+				this.protocols.each(function(el) {
+					el.abort(abortParam);
+				});
+			};
+		})(getFeatureProtocolList, this);
+
+		var getFeatureHandler = function(responseObject) {
+			var features = responseObject.features
+			if (responseObject.type === 'featuresselected') {
+				var siteFeatures = features.findAll(function(f) {
+					return f.fid.startsWith('SiteInfo');
+				});
+				var gageFeatures = features.findAll(function(f) {
+					return f.fid.startsWith('gagesII');
+				});
+				var hucFeatures = features.findAll(function(f) {
+					return f.fid.startsWith('huc12_SE_Basins_v2');
+				});
+
+				console.log('Site feature count : ' + siteFeatures.length + ' gage feature count: ' +
+					gageFeatures.length + ' huc feature count : ' + hucFeatures.length);
+				this.aquaticBiologyFeaturesModel.set({
+					sites : siteFeatures.map(function(f) { return f.attributes; }),
+					gages : gageFeatures.map(function(f) { return f.attributes; }),
+					hucs : hucFeatures.map(function(f) { return f.attributes; })
+				});
+				this.router.navigate('/aquatic-biology/select-features', {trigger : true});
+			};
 		};
 
-		this.selectControl = new OpenLayers.Control.WMSGetFeatureInfo({
-			title : 'select-control',
-			hover : false,
-			autoActivate : false,
-			drillDown : true,
-			layers : [this.bioDataSitesLayer, this.gageFeatureLayer, this.hucLayer],
-			queryVisible : true,
-			infoFormat: 'application/vnd.ogc.gml',
-			vendorParams: {
-				radius: 5
-			}
+		this.selectControl = new OpenLayers.Control.GetFeature({
+			protocol : joinedProtocol,
+			box: true
 		});
-		this.selectControl.events.register('getfeatureinfo', this, getFeatureInfoHandler);
-		
+
+		this.selectControl.events.register('featuresselected', this, getFeatureHandler);
+		this.selectControl.events.register('clickout', this, getFeatureHandler);
+		this.selectControl.events.register('endselect', this, function() {console.log('endselect event handler');});
+
 		$.extend(this.events, NWC.view.BaseSelectMapView.prototype.events);
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
 
