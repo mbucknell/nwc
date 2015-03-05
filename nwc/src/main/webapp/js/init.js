@@ -11,7 +11,8 @@ $(document).ready(function() {
 	];
 
 	var PARTIALS = [
-		'mapControls'
+		'mapControls',
+		'warningModal'
 	];
 
 	NWC.templates = NWC.util.templateLoader();

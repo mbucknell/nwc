@@ -33,6 +33,13 @@ NWC.view.BaseView = Backbone.View.extend({
 	initialize : function(options) {
 		options = options || {};
 
+		if (!this.context) {
+			this.context = {};
+		}
+		if (options.context) {
+			$.extend(this.context, options.context);
+		}
+
 		this.router = options.router || null;
 
 		if (Object.has(options, 'template')) {
@@ -41,7 +48,7 @@ NWC.view.BaseView = Backbone.View.extend({
 		else {
 			this.template = NWC.templates.getTemplate(this.templateName);
 		}
-		
+
 		Backbone.View.prototype.initialize.apply(this, arguments);
 		this.render();
 	}
