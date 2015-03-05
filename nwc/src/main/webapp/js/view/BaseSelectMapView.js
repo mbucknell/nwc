@@ -125,7 +125,7 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 		else {
 			el.removeClass('active');
 		}
-	},
+	}
 
 
 });
