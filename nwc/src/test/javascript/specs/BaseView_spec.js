@@ -1,5 +1,6 @@
 describe('Tests for NWC.BaseView', function() {
 	var templateSpy;
+
 	beforeEach(function() {
 		templateSpy = jasmine.createSpy('templateSpy');
 	});
