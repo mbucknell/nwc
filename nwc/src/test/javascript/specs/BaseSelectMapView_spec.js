@@ -5,14 +5,29 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 		}
 	};
 
-	var selectControl, mapSpy, NewView;
+	var selectControl, mapSpy, NewView, template;
+	var $selectButton, $panButton, $zoomButton;
+	var $selectInfo, $panInfo, $zoomInfo;
 
 	beforeEach(function() {
-		$('body').append('<div id="map-div"></div>');
+		template = jasmine.createSpy('thisTemplate');
 
-		var templateSpy = jasmine.createSpy('templateSpy');
-		NWC.templates = jasmine.createSpyObj('NWCTemplates', ['getTemplate', 'loadTemplates']);
-		NWC.templates.getTemplate.andReturn(templateSpy);
+		var templateHtml = '<button id="select-button" value="select"></button>' +
+			'<button id="pan-button" value="pan"></button>' +
+			'<button id="zoom-button" value="zoom"></button>' +
+			'<div id="map-controls-div">' +
+			'<span id="map-control-select"></span>' +
+			'<span id="map-control-pan"></span>' +
+			'<span id="map-control-zoom"></span>' +
+			'</div>';
+		$('body').append('<div id="test-div"></div>');
+		$('#test-div').append(templateHtml);
+		$selectButton = $('#select-button');
+		$panButton = $('#pan-button');
+		$zoomButton = $('#zoom-button');
+		$selectInfo = $('#map-controls-div #map-control-select');
+		$panInfo = $('#map-controls-div #map-control-pan');
+		$zoomInfo = $('#map-controls-div #map-control-zoom');
 
 		selectControl = jasmine.createSpyObj('selectControl', ['activate', 'deactivate']);
 
@@ -36,18 +51,24 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 	});
 
 	afterEach(function() {
-		$('#map-div').remove();
+		$('#test-div').remove();
 	});
 
 	it('Expects the appropriate properties to be defined for the view at construction', function() {
-		var view = new NewView({mapDiv : 'map-div'});
+		var view = new NewView({
+			mapDiv : 'map-div',
+			template : template
+		});
 		expect(view.map).toBeDefined();
 		expect(view.zoomBoxControl).toBeDefined();
 		expect(view.selectControl).toBe(selectControl);
 	});
 
 	it('Expects the map to be rendered and the controls added to the map', function() {
-		var view = new NewView({mapDiv : 'map-div'});
+		var view = new NewView({
+			mapDiv : 'map-div',
+			template : template
+		});
 		expect(mapSpy.render).toHaveBeenCalled();
 		expect(mapSpy.addControl).toHaveBeenCalledWith(view.selectControl);
 		expect(mapSpy.addControl).toHaveBeenCalledWith(view.zoomBoxControl);
@@ -57,7 +78,10 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 		var view;
 
 		beforeEach(function() {
-			view = new NewView({mapDiv : 'map-div'});
+			view = new NewView({
+				mapDiv : 'map-div',
+				template : template
+			});
 			spyOn(view.zoomBoxControl, 'activate');
 			spyOn(view.zoomBoxControl, 'deactivate');
 
@@ -69,6 +93,10 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 			expect(view.zoomBoxControl.deactivate).not.toHaveBeenCalled();
 			expect(view.selectControl.activate.calls.length).toBe(1);
 			expect(view.selectControl.deactivate.calls.length).toBe(1);
+
+			expect($zoomButton.hasClass('active')).toBe(true);
+			expect($selectButton.hasClass('active')).toBe(false);
+			expect($panButton.hasClass('active')).toBe(false);
 		});
 
 		it('Expects the select box control to be activated when the model\'s control attribute is set to select', function() {
@@ -78,6 +106,10 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 			expect(view.zoomBoxControl.deactivate.calls.length).toBe(1);
 			expect(view.selectControl.activate.calls.length).toBe(2);
 			expect(view.selectControl.deactivate.calls.length).toBe(1);
+
+			expect($zoomButton.hasClass('active')).toBe(false);
+			expect($selectButton.hasClass('active')).toBe(true);
+			expect($panButton.hasClass('active')).toBe(false);
 		});
 
 		it('Expects both controls to be deactivate if the model\'s control attribute is set to pan', function() {
@@ -86,23 +118,35 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 			expect(view.zoomBoxControl.deactivate).toHaveBeenCalled();
 			expect(view.selectControl.activate.calls.length).toBe(1);
 			expect(view.selectControl.deactivate.calls.length).toBe(1);
+
+			expect($zoomButton.hasClass('active')).toBe(false);
+			expect($selectButton.hasClass('active')).toBe(false);
+			expect($panButton.hasClass('active')).toBe(true);
 		});
 	});
 
 	it('Expects changeControl to update the model', function() {
-		var view = new NewView({ mapDiv : 'map-div' });
+		var view = new NewView({
+			mapDiv : 'map-div',
+			template : template
+		});
+		var preventSpy = jasmine.createSpy('preventDefault');
 
-		view.changeControl({ target : { value : 'zoom' } });
+		view.changeControl({
+			preventDefault : preventSpy,
+			target : { value : 'zoom' } });
 		expect(view.model.get('control')).toEqual('zoom');
 
-		view.changeControl({ target : { value : 'pan' } });
+		view.changeControl({
+			preventDefault : preventSpy,
+			target : { value : 'pan' } });
 		expect(view.model.get('control')).toEqual('pan');
 
-		view.changeControl({ target : { value : 'select' } });
+		view.changeControl({
+			preventDefault : preventSpy,
+			target : { value : 'select' } });
 		expect(view.model.get('control')).toEqual('select');
 	});
-
-
 });
 
 

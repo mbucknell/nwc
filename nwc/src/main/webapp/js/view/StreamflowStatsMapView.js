@@ -11,7 +11,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 	templateName : 'streamflowStats',
 
 	events : {
-		'change #map-streamflow-type-group input' : 'changeStreamflowType',
+		'click #map-streamflow-type-group button' : 'changeStreamflowType',
 		'click #stream-gage-filters-div a' : 'changeGageFilter'
 	},
 
@@ -174,6 +174,9 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		this.hucLayer.setVisibility(hucVisible);
 
 		setControlActive(this.legendControl, gageVisible);
+
+		this._setButtonActive($('#observed-button'), gageVisible);
+		this._setButtonActive($('#modeled-button'), hucVisible);
 
 		if (hucVisible) {
 			$modeledInfo.show();
