@@ -2,11 +2,11 @@ var NWC = NWC || {};
 
 NWC.util = NWC.util || {};
 
-NWC.util.sosResponseParser = (function () {
+(function () {
 
-	var self = this;
+//	var self = this;
 	
-	self.SosResponseParser = function () {
+	NWC.util.SosResponseParser = function () {
             var self = this;
 
             //parses an individual token
@@ -82,7 +82,7 @@ NWC.util.sosResponseParser = (function () {
             };
     };
     
-    self.SosResponseCleaner =  function() {
+    var SosResponseCleaner =  function() {
             var self = this;
             
             var emptyValues = [9.96921e+36, -999];//these values will be considered NaN's
@@ -161,7 +161,7 @@ NWC.util.sosResponseParser = (function () {
             
     };
     
-   self.SosResponseFormatter = function () {
+    NWC.util.SosResponseFormatter = function () {
             var self = this;
             
             self.formatCSVData = function(data) {

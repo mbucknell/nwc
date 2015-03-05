@@ -1,9 +1,18 @@
-/*global angular*/
+var NWC = NWC || {};
+
+NWC.util = NWC.util || {};
+
+NWC.util.DataSeries = (function () {
+
+	/*global angular*/
 (function () {
     var dataSeriesStoreModule = angular.module('nwc.dataSeriesStore', ['nwc.sosSources', 'nwc.conversion']);
 
     dataSeriesStoreModule.service('DataSeries', ['SosSources', 'Units', 'Convert',
         function (SosSources, Units, Convert) {
+    	
+    	
+    	
             var createSeriesLabel = function (metadata) {
                 var label = metadata.seriesName;
                 if (metadata.seriesUnits.length !== 0) {
