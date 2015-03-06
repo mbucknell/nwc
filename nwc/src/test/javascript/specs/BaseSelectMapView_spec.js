@@ -36,7 +36,9 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 			addControl : jasmine.createSpy('addControlSpy'),
 			render : jasmine.createSpy('render'),
 			zoomToExtent : jasmine.createSpy('zoomToExtent'),
-			getMaxExtent : jasmine.createSpy('getMaxExtent')
+			getMaxExtent : jasmine.createSpy('getMaxExtent'),
+			getExtent : jasmine.createSpy('getExtent'),
+			events : jasmine.createSpyObj('eventsSpy', ['register'])
 		};
 
 		//mock methods that are used from NWC.util.mapUtils
