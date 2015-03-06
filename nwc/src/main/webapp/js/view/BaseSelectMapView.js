@@ -26,7 +26,6 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 	render : function() {
 		NWC.view.BaseView.prototype.render.apply(this, arguments);
 		this.map.render(this.mapDiv);
-		this.map.zoomToExtent(this.map.getMaxExtent(), true);
 	},
 
 	addFlowLines : function() {
@@ -74,9 +73,10 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 
 		//Set the initial extent
 		if (this.model.has('extent')) {
-			this.map.zoomToExtent(this.model.get('extent'));
+			this.map.zoomToExtent(this.model.get('extent'), true);
 		}
 		else {
+			this.map.zoomToExtent(this.map.getMaxExtent(), true);
 			this.model.set('extent', this.map.getExtent());
 		}
 		this.map.events.register('move', this, function(ev) {
