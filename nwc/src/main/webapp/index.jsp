@@ -17,6 +17,8 @@
 				CONFIG.endpoint.wps = CONFIG.endpoint.wpsBase + 'WebProcessingService'; //TODO inconsistant use of of URL resources
 				CONFIG.endpoint.nwis = '${context}/proxy/nwis/';
 				
+				CONFIG.endpoint.searchService = '${searchServiceEndpoint}';
+				
 				CONFIG.endpoint.direct.geoserver = '${directGeoserverEndpoint}';
 				CONFIG.endpoint.direct.thredds = '${directThreddsEndpoint}';
 				CONFIG.endpoint.direct.wps = '${directWpsEndpoint}';

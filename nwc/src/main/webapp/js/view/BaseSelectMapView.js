@@ -98,7 +98,7 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 			minimumInputLength: 3,
 			containerCssClass : 'col-sm-6',
 			ajax : {
-				url: "http://txpub.usgs.gov/DSS/search_api/1.0/dataService/dataService.ashx/search?",
+				url: CONFIG.endpoint.searchService,
 				dataType: 'json',
 				quietMillis : 500,
 				data : function(term, page, context) {
