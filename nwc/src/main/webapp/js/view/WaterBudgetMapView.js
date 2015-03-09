@@ -17,6 +17,11 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		'click #toggle-huc-layer' : 'toggleHucVisibility'
 	},
 
+	context : {
+		warningModalText : 'Multiple watersheds have been selected. Please zoom in and select a single watershed',
+		warningModalTitle : 'Selection Warning'
+	},
+
 	/**
 	 * @constructs
 	 * @param {Object} options
@@ -43,14 +48,14 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			autoActivate: false
 		});
 
-
+		
 		var featureInfoHandler = function (responseObject) {
 			var actualFeatures = responseObject.features;
 			var hucCount = actualFeatures.length;
-			if (0 === hucCount) {
-				//nothing
+			if (hucCount > 1) {
+				$('#warning-modal').modal('show');
 			}
-			else {
+			else if (hucCount === 1) {
 				var actualFeature = actualFeatures[0];
 				var huc12 = actualFeature.attributes.HU_12_DS;
 				this.router.navigate('/waterbudget/huc/' + huc12, {trigger : true});
@@ -63,7 +68,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 
 		this.map.addLayer(this.hucLayer);
 		this.addFlowLines();
-		
+
 		this.listenTo(this.model, 'change:watershedLayerOn', this.updateLayerVisibility);
 		this.updateLayerVisibility();
 	},

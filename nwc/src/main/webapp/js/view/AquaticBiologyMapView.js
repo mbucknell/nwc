@@ -78,8 +78,6 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 		var hucProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(this.hucLayer, {
 			url : CONFIG.endpoint.geoserver + "wfs",
 			srsName : "EPSG:3857",
-			//TODO! I really don't like this. I'd like to only ask for what I need at this moment, but
-			//this is given to the next step of the workflow, so it relys on this...
 			propertyNames : ["HUC12","DRAIN_SQKM", "HU_12_NAME"]
 		});
 

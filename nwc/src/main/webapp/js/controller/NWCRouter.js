@@ -10,6 +10,10 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 
 	aquaticBiologyFeaturesModel : new NWC.model.AquaticBiologyFeaturesModel(),
 
+	aquaticBiologySelectMapModel : new NWC.model.AquaticBiologySelectMapModel(),
+	streamflowStatsSelectMapModel : new NWC.model.StreamflowStatsSelectMapModel(),
+	waterBudgetSelectMapModel : new NWC.model.WaterBudgetSelectMapModel(),
+
 	routes: {
 		'' : 'home',
 		'home' : 'home',
@@ -28,8 +32,10 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	},
 
 	waterbudget : function() {
-		//will probably need to pass in model of selected huc
-		this.showView(NWC.view.WaterBudgetMapView, {mapDiv : 'hucSelectMap'});
+		this.showView(NWC.view.WaterBudgetMapView, {
+			mapDiv : 'hucSelectMap',
+			model : this.waterBudgetSelectMapModel
+		});
 	},
 
 	waterbudgetHucData : function(huc) {
@@ -38,7 +44,10 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	},
 
 	streamflowStats : function() {
-		this.showView(NWC.view.StreamflowStatsMapView, {mapDiv : 'streamflow-select-map'});
+		this.showView(NWC.view.StreamflowStatsMapView, {
+			mapDiv : 'streamflow-select-map',
+			model : this.streamflowStatsSelectMapModel
+		});
 	},
 
 	streamflowStatsGageData : function(gageid) {
@@ -52,6 +61,7 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	aquaticBiology : function() {
 		this.showView(NWC.view.AquaticBiologyMapView, {
 			mapDiv : 'aquatic-biology-map',
+			model : this.aquaticBiologySelectMapModel,
 			aquaticBiologyFeaturesModel : this.aquaticBiologyFeaturesModel
 		});
 	},

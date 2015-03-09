@@ -26,7 +26,6 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 	render : function() {
 		NWC.view.BaseView.prototype.render.apply(this, arguments);
 		this.map.render(this.mapDiv);
-		this.map.zoomToExtent(this.map.getMaxExtent(), true);
 	},
 
 	addFlowLines : function() {
@@ -39,9 +38,8 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 	 *	@prop {String} mapDiv
 	 */
 	initialize : function(options) {
-		if (!Object.has(this, 'model')) {
-			this.model = new this.Model();
-		}
+		this.model = Object.has(options, 'model') ? options.model : new this.Model();
+
 		var controls = [
             new OpenLayers.Control.Navigation(),
             new OpenLayers.Control.MousePosition({
@@ -72,6 +70,18 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 
 		//Initialize and render the view
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
+
+		//Set the initial extent
+		if (this.model.has('extent')) {
+			this.map.zoomToExtent(this.model.get('extent'), true);
+		}
+		else {
+			this.map.zoomToExtent(this.map.getMaxExtent(), true);
+			this.model.set('extent', this.map.getExtent());
+		}
+		this.map.events.register('move', this, function(ev) {
+			this.model.set('extent', ev.object.getExtent());
+		});
 
 		// Add listeners to model and initialize the view.
 		this.listenTo(this.model, 'change:control', this.updateSelection);
@@ -125,7 +135,7 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 		else {
 			el.removeClass('active');
 		}
-	},
+	}
 
 
 });
