@@ -51,6 +51,8 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 		spyOn(NWC.util.mapUtils, 'createMap').andReturn(mapSpy);
 		spyOn(NWC.util.mapUtils, 'createAllBaseLayers').andReturn([]);
 
+		spyOn($.fn, 'select2');
+
 		NewView = NWC.view.BaseSelectMapView.extend({
 			selectControl : selectControl,
 			templateName : 'base'
@@ -70,7 +72,7 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 		expect(view.zoomBoxControl).toBeDefined();
 		expect(view.selectControl).toBe(selectControl);
 
-		expect($('#s2id_map-search-box').hasClass('select2-container')).toBe(true);
+		expect($('#map-search-box').select2).toHaveBeenCalled();
 	});
 
 	it('Expects the map to be rendered and the controls added to the map', function() {

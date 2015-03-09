@@ -94,7 +94,7 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 		var lastResults = [];
 		var $searchBox = $('#' + divId);
 		$searchBox.select2({
-			placeholder: 'Location Search',
+			placeholder: 'Hint: Type a place and state (e.g. Franklin AZ), zip code, or area code',
 			minimumInputLength: 3,
 			containerCssClass : 'col-sm-6',
 			ajax : {
@@ -153,7 +153,7 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 		$searchBox.on('select2-selecting', this.map, function(ev) {
 			var result = lastResults[ev.val];
 			var lonLat = new OpenLayers.LonLat(result.x, result.y);
-			ev.data.setCenter(NWC.util.mapUtils.transformWGS84ToMercator(lonLat), 12);
+			ev.data.setCenter(NWC.util.mapUtils.transformWGS84ToMercator(lonLat), 11);
 		});
 	},
 

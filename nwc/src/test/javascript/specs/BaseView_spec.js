@@ -3,6 +3,14 @@ describe('Tests for NWC.BaseView', function() {
 
 	beforeEach(function() {
 		templateSpy = jasmine.createSpy('templateSpy');
+
+		$('body').append('<div id="test-div"><div id="warning-modal" class="modal">' +
+			'<div class="modal-body">Default warning test</div>' +
+			'</div>');
+	});
+
+	afterEach(function() {
+		$("#test-div").remove();
 	});
 
 	it('Expects a context property to be used when rendering a view', function() {
@@ -26,5 +34,25 @@ describe('Tests for NWC.BaseView', function() {
 		expect(view.context).toEqual({a : 'this', b : 'that'});
 		expect(templateSpy).toHaveBeenCalledWith({a : 'this', b : 'that'});
 	});
+
+	it('Expects showWarningDialog to show the warning message', function() {
+		var NewView = NWC.view.BaseView.extend({
+			context : {a : 'this'}
+		});
+		var view = new NewView({
+			template : templateSpy
+		});
+		var $warningModal = $('#warning-modal');
+		spyOn($.fn, 'modal');
+
+		view.showWarningDialog();
+		expect($warningModal.find('.modal-body').html()).toEqual('Default warning test');
+		expect($warningModal.modal).toHaveBeenCalledWith('show');
+
+		view.showWarningDialog("New message");
+		expect($warningModal.find('.modal-body').html()).toEqual('New message');
+		expect($warningModal.modal).toHaveBeenCalledWith('show');
+	});
+
 
 });
