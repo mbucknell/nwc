@@ -92,6 +92,9 @@
 	padding: 			15px;
 }
 
+.select2-container a {
+	font-weight: normal;
+}
 #hucSelectMap {
 	border: 			1px solid #a3a3a3;
 }

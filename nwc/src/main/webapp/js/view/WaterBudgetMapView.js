@@ -19,7 +19,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 
 	context : {
 		warningModalText : 'Multiple watersheds have been selected. Please zoom in and select a single watershed',
-		warningModalTitle : 'Selection Warning'
+		warningModalTitle : 'Warning'
 	},
 
 	/**
@@ -48,7 +48,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			autoActivate: false
 		});
 
-		
+
 		var featureInfoHandler = function (responseObject) {
 			var actualFeatures = responseObject.features;
 			var hucCount = actualFeatures.length;

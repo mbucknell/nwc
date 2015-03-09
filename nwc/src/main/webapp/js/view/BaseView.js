@@ -51,6 +51,14 @@ NWC.view.BaseView = Backbone.View.extend({
 
 		Backbone.View.prototype.initialize.apply(this, arguments);
 		this.render();
+	},
+
+	showWarningDialog : function(msg) {
+		var $warningModal = $('#warning-modal');
+		if (msg) {
+			$warningModal.find('.modal-body').html(msg);
+		}
+		$warningModal.modal('show');
 	}
 
 });

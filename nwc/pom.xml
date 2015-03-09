@@ -104,6 +104,7 @@
                     <jsTestSrcDir>${basedir}/src/test/javascript</jsTestSrcDir>
 					<preloadSources>
 						<source>webjars/jquery.js</source>
+						<source>webjars/select2.js</source>
 						<source>webjars/sugar.min.js</source>
 						<source>webjars/underscore.js</source>
 						<source>webjars/backbone.js</source>
@@ -242,6 +243,14 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
+        </dependency>
+		<dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>select2</artifactId>
+        </dependency>
+		<dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>select2-bootstrap-css</artifactId>
         </dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
