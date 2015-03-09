@@ -4,7 +4,7 @@ NWC.util = NWC.util || {};
 
 NWC.util.templateLoader = function() {
 
-	var self = this;
+	var self = {};
 
 	var templates = {};
 

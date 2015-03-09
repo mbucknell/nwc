@@ -41,7 +41,6 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	 * @param {String} huc 12 digit identifier for the hydrologic unit
 	 */
 	getHucData: function(huc) {
-		var i;
 		var labeledAjaxCalls = [];
 		//grab the sos sources that will be used to display the initial data 
 		//series. ignore other data sources that the user can add later.
@@ -49,23 +48,26 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		var initialSosSources = Object.select(NWC.util.SosSources, initialSosSourceKeys);
 		$.each(initialSosSources, function (sourceId, source) {
 			var url = NWC.util.buildSosUrlFromSource(huc, source);
+			//hacky, need to figure out if better option
+			NWC.util.SosSources.current = sourceId;
 			labeledAjaxCalls.push($.ajax({
 				url : url,
 				success : function(data, textStatus, jqXHR) {
+					var label = NWC.util.SosSources.current;
 					labeledResponses = {};
 					var parsedValues = NWC.util.SosResponseFormatter.formatSosResponse(data);
-					var labeledDataSeries = DataSeries.new();
+					var labeledDataSeries = NWC.util.DataSeries.newSeries();
 					labeledDataSeries.metadata.seriesLabels.push(
 						{
-							seriesName: source[sourceId].propertyLongName,
-							seriesUnits: source[sourceId].units
+							seriesName: NWC.util.SosSources[label].propertyLongName,
+							seriesUnits: NWC.util.SosSources[label].units
 						}
 					);
-					labeledDataSeries.metadata.downloadHeader = source[sourceId].downloadMetadata;
+					labeledDataSeries.metadata.downloadHeader = NWC.util.SosSources[label].downloadMetadata;
 					labeledDataSeries.data = parsedValues;
 			        
-					labeledResponses[sourceId] = labeledDataSeries;
-					DataSeriesStore.updateHucSeries(labeledResponses);
+					labeledResponses[label] = labeledDataSeries;
+					NWC.util.DataSeriesStore.updateHucSeries(labeledResponses);
 				},
 				dataType : "xml",
 				error : function() {
