@@ -66,8 +66,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 
 		var gageFeatureInfoHandler = function(responseObject) {
 			if (responseObject.features.length > 1) {
-				this.$warningModal.find('.modal-body').html('Multiple gages were selected. Please zoom in and select a single gage.');
-				this.$warningModal.modal('show');
+				this.showWarningDialog('Multiple gages were selected. Please zoom in and select a single gage.')
 			}
 			else if (responseObject.features.length === 1) {
 				this.router.navigate('/streamflow-stats/gage/' + responseObject.features[0].attributes.STAID, {trigger : true});
@@ -104,8 +103,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 				var km2 = NWC.util.Convert.acresToSquareKilometers(
 							NWC.util.Convert.squareMilesToAcres(sortedFeature.data.mi2));
 				if (km2 > 2000) {
-					this.$warningModal.find('.modal-body').html("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km^2), please choose a smaller watershed.");
-					this.$warningModal.modal('show');
+					this.showWarningDialog("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km^2), please choose a smaller watershed.");
 				} else {
 					this.router.navigate('/streamflow-stats/huc/' + sortedFeature.attributes.HUC12, {trigger : true});
 				}
@@ -129,8 +127,6 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 
 		$.extend(this.events, NWC.view.BaseSelectMapView.prototype.events);
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
-
-		this.$warningModal = $('#warning-modal');
 
 		this.map.addLayers([this.gagesLayer, this.hucLayer]);
 		this.addFlowLines();

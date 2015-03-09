@@ -53,7 +53,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			var actualFeatures = responseObject.features;
 			var hucCount = actualFeatures.length;
 			if (hucCount > 1) {
-				$('#warning-modal').modal('show');
+				this.showWarningDialog();
 			}
 			else if (hucCount === 1) {
 				var actualFeature = actualFeatures[0];
