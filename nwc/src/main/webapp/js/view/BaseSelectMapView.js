@@ -73,27 +73,6 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 
 		this._initializeSearchBox('map-search-box');
 
-
-//		// Set up the search box
-//		var handleLocationFound = function(location) {
-//			var lonLat = new OpenLayers.LonLat(location.x, location.y);
-//			this.map.setCenter(NWC.mapUtils.transformWGS84ToMercator(lonLat), 10);
-//		};
-//		$.getScript("http://txpub.usgs.gov/DSS/search_api/1.0/api/search_api.js", function() {
-//			search_api.on('load', function() {
-//				search_api.setOpts({});
-//
-//				search_api.on('location-found', handleLocationFound.bind(this));
-
-//				search_api.on('no-result', function() {
-//					this.showWarningDialog('No search results found');
-//				}.bind(this));
-//				search_api.on('timeout', function() {
-//					this.showWarningDialog('Search timed out');
-//				}.bind(this));
-//			}.bind(this));
-//		}.bind(this));
-
 		//Set the initial extent
 		if (this.model.has('extent')) {
 			this.map.zoomToExtent(this.model.get('extent'), true);
