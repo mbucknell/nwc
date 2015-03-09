@@ -83,9 +83,13 @@ NWC.util.mapUtils = (function () {
 		];
 	};
 
+	that.transformWGS84ToMercator = function(lonLat) {
+		return lonLat.transform(that.WGS84_GEOGRAPHIC, that.WGS84_GOOGLE_MERCATOR);
+	}
+
 	that.createMap = function(layers, controls) {
-		var maxExtent = new OpenLayers.Bounds(-179.0, 10.0, -42.0, 75.0).transform(that.WGS84_GEOGRAPHIC, that.WGS84_GOOGLE_MERCATOR);
-        var initialExtent = new OpenLayers.Bounds(-165.0, 10.0, -65.0, 65.0).transform(that.WGS84_GEOGRAPHIC, that.WGS84_GOOGLE_MERCATOR);
+		var maxExtent = that.transformWGS84ToMercator(new OpenLayers.Bounds(-179.0, 10.0, -42.0, 75.0));
+        var initialExtent = that.transformWGS84ToMercator(new OpenLayers.Bounds(-165.0, 10.0, -65.0, 65.0));
 
 		var defaultConfig = {
             extent: initialExtent,

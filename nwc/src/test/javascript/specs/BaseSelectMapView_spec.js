@@ -10,6 +10,10 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 	var $selectInfo, $panInfo, $zoomInfo;
 
 	beforeEach(function() {
+		search_api = {
+			on : jasmine.createSpy('search_api.onSpy'),
+			setOpts : jasmine.createSpy('search_api.setOptsSpy')
+		};
 		template = jasmine.createSpy('thisTemplate');
 
 		var templateHtml = '<button id="select-button" value="select"></button>' +
@@ -19,7 +23,8 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 			'<span id="map-control-select"></span>' +
 			'<span id="map-control-pan"></span>' +
 			'<span id="map-control-zoom"></span>' +
-			'</div>';
+			'</div>' +
+			'<input type="hidden" id="map-search-box"/>';
 		$('body').append('<div id="test-div"></div>');
 		$('#test-div').append(templateHtml);
 		$selectButton = $('#select-button');
@@ -64,6 +69,8 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 		expect(view.map).toBeDefined();
 		expect(view.zoomBoxControl).toBeDefined();
 		expect(view.selectControl).toBe(selectControl);
+
+		expect($('#s2id_map-search-box').hasClass('select2-container')).toBe(true);
 	});
 
 	it('Expects the map to be rendered and the controls added to the map', function() {

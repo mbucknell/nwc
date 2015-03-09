@@ -33,6 +33,7 @@
     request.setAttribute("applicationVersion", props.get("version"));
     request.setAttribute("jqueryVersion", props.get("jquery.version"));
     request.setAttribute("bootstrapVersion", props.get("bootstrap.version"));
+	request.setAttribute("select2Version", props.get("select2.version"));
 	request.setAttribute("backboneVersion", props.get("backbone.version"));
 	request.setAttribute("underscoreVersion", props.get("underscore.version"));
 	request.setAttribute("handlebarsVersion", props.get("handlebars.version"));

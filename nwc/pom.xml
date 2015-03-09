@@ -104,6 +104,7 @@
                     <jsTestSrcDir>${basedir}/src/test/javascript</jsTestSrcDir>
 					<preloadSources>
 						<source>webjars/jquery.js</source>
+						<source>webjars/select2.js</source>
 						<source>webjars/sugar.min.js</source>
 						<source>webjars/underscore.js</source>
 						<source>webjars/backbone.js</source>
@@ -148,6 +149,7 @@
 						<pattern>.*/sinon.+\.js</pattern>
 						<!-- couldn't figure out how to exclude all webjars so doing them individually -->
 						<pattern>.*/jquery.js</pattern>
+						<pattern>.*/select2.js</pattern>
 						<pattern>.*/sugar.min.js</pattern>
 						<pattern>.*/underscore.js</pattern>
 						<pattern>.*/backbone.js</pattern>
@@ -242,6 +244,10 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
+        </dependency>
+		<dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>select2</artifactId>
         </dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>

@@ -71,6 +71,8 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 		//Initialize and render the view
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 
+		this._initializeSearchBox('map-search-box');
+
 		//Set the initial extent
 		if (this.model.has('extent')) {
 			this.map.zoomToExtent(this.model.get('extent'), true);
@@ -86,6 +88,77 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 		// Add listeners to model and initialize the view.
 		this.listenTo(this.model, 'change:control', this.updateSelection);
 		this.updateSelection();
+	},
+
+	_initializeSearchBox : function(divId) {
+		var lastResults = [];
+		var $searchBox = $('#' + divId);
+		$searchBox.select2({
+			placeholder: 'Location Search',
+			minimumInputLength: 3,
+			containerCssClass : 'col-sm-6',
+			ajax : {
+				url: "http://txpub.usgs.gov/DSS/search_api/1.0/dataService/dataService.ashx/search?",
+				dataType: 'json',
+				quietMillis : 500,
+				data : function(term, page, context) {
+					var terms = term.split(' ');
+					var state = '';
+					var thisTerm = '';
+					if (terms.length > 1 && (terms.last().length === 2)) {
+						thisTerm = terms.to(terms.length - 1).join(' ');
+						state = terms.last();
+					}
+					else {
+						thisTerm = term;
+					}
+					return {
+						term: thisTerm,
+						state : state,
+						topN : 50,
+						LATmin : -90,
+						LATmax : 90,
+						LONmin: -180,
+						LONmax : 180,
+						includeGNIS: true,
+						includeState : true,
+						includeUsgsSiteSW : false,
+						includeUsgsSiteGW : false,
+						includeUsgsSiteSP: false,
+						includeUsgsSiteAT : false,
+						includeUsgsSiteOT : false,
+						includeZIPcodes : true,
+						includeAREAcodes : true,
+						useCommonGnisClasses : true
+					};
+				},
+				results : function(data) {
+					var result = [];
+					lastResults = data;
+					data.each(function (el, index) {
+						var elText = el.nm + ' ' + el.st + ' ' + el.ct;
+						result.push({
+							id : index,
+							text : elText
+						});
+					});
+					return {results : result};
+				},
+				params :{
+					timeout : 10000
+				}
+			}
+		});
+
+		$searchBox.on('select2-selecting', this.map, function(ev) {
+			var result = lastResults[ev.val];
+			var lonLat = new OpenLayers.LonLat(result.x, result.y);
+			ev.data.setCenter(NWC.util.mapUtils.transformWGS84ToMercator(lonLat), 12);
+		});
+	},
+
+	changeCenter : function(ev) {
+		console.log('In Change center');
 	},
 
 	/**
