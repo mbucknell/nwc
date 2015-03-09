@@ -136,7 +136,6 @@
         <jquery.version>1.11.1</jquery.version>
         <bootstrap.version>3.3.2</bootstrap.version>
 		<select2.version>3.5.2</select2.version>
-		<select2-bootstrap-css.version>1.4.6</select2-bootstrap-css.version>
 		<backbone.version>1.1.2</backbone.version>
 		<underscore.version>1.6.0</underscore.version>
 		<handlebars.version>3.0.0</handlebars.version>
@@ -261,11 +260,6 @@
 				<groupId>org.webjars</groupId>
 				<artifactId>select2</artifactId>
 				<version>${select2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.webjars</groupId>
-				<artifactId>select2-bootstrap-css</artifactId>
-				<version>${select2-bootstrap-css.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.webjars</groupId>
