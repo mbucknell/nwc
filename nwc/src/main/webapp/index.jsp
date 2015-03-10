@@ -62,6 +62,8 @@
 		<script type="text/javascript" src="webjars/flot/${flotchartsVersion}/jquery.flot${jsMin}.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/javascript.util.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/jsts.js"></script>
+
+		<script type="text/javascript" src="client/3rdparty/dygraphs/dygraph${dygraphsMin}.js"></script>
 		
 		<!-- order is important -->
 		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster.js"></script>
@@ -78,6 +80,7 @@
 		<script type="text/javascript" src="js/utils/SosSources.js"></script>
 		<script type="text/javascript" src="js/utils/SosResponseParser.js"></script>
 		<script type="text/javascript" src="js/utils/dataSeriesStore.js"></script>
+		<script type="text/javascript" src="js/utils/Plotter.js"></script>
 		
 		<script type="text/javascript" src="js/model/BaseSelectMapModel.js"></script>
 		

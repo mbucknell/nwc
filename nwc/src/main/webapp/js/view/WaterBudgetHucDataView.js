@@ -26,14 +26,13 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	initialize : function(options) {
 		
-		this.getHucData(options.hucValue);
-		
 		// call superclass initialize to do default initialize
 		// (includes render)
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 
-		// this may need to be after render...
-		this.displayHucData(options.hucValue);
+		this.getHucData(options.hucValue);
+
+//		this.displayHucData(options.hucValue);
 	},
 
 	/**
@@ -41,20 +40,25 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	 * @param {String} huc 12 digit identifier for the hydrologic unit
 	 */
 	getHucData: function(huc) {
+		var d;
+		var labeledResponses = {};
 		var labeledAjaxCalls = [];
 		//grab the sos sources that will be used to display the initial data 
 		//series. ignore other data sources that the user can add later.
 		var initialSosSourceKeys = ['eta', 'dayMet'];
 		var initialSosSources = Object.select(NWC.util.SosSources, initialSosSourceKeys);
 		$.each(initialSosSources, function (sourceId, source) {
+			d = $.Deferred();
+			labeledAjaxCalls.push(d);
 			var url = NWC.util.buildSosUrlFromSource(huc, source);
-			//hacky, need to figure out if better option
-			NWC.util.SosSources.current = sourceId;
-			labeledAjaxCalls.push($.ajax({
+			$.ajax({
 				url : url,
 				success : function(data, textStatus, jqXHR) {
-					var label = NWC.util.SosSources.current;
-					labeledResponses = {};
+					var i;
+					var label = '';
+					for (i=0; i<this.length; i++){
+						label = label + this[i];
+					}
 					var parsedValues = NWC.util.SosResponseFormatter.formatSosResponse(data);
 					var labeledDataSeries = NWC.util.DataSeries.newSeries();
 					labeledDataSeries.metadata.seriesLabels.push(
@@ -64,11 +68,11 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 						}
 					);
 					labeledDataSeries.metadata.downloadHeader = NWC.util.SosSources[label].downloadMetadata;
-					labeledDataSeries.data = parsedValues;
-			        
+					labeledDataSeries.data = parsedValues;	        
 					labeledResponses[label] = labeledDataSeries;
-					NWC.util.DataSeriesStore.updateHucSeries(labeledResponses);
+					d.resolve();
 				},
+				context : sourceId,
 				dataType : "xml",
 				error : function() {
                     //@todo - setup app level error handling
@@ -76,18 +80,23 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
                     alert(errorMessage);
                     $log.error(errorMessage);
                     $log.error(arguments);
+                    d.reject();
 				}
-			}));
+			});
         });
-		return $.when.apply(null, labeledAjaxCalls);
+		$.when.apply(null, labeledAjaxCalls).then(function(){
+			NWC.util.DataSeriesStore.updateHucSeries(labeledResponses);
+			displayHucData();
+		});
+		return;
 	},
 
 	/**
 	 * This renders the huc info on the view
 	 */
-	displayHucData: function(huc) {
-		this.$(".hucId").html(huc);
-
+	displayHucData: function() {
+//		this.$(".hucId").html(huc);
+		
 		// Create vector layer to show HUC
 //           var layerStyle = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
 //           layerStyle.fillOpacity = 0;
@@ -114,11 +123,14 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 //       }
 //       $scope.selectionInfo = selectionInfo;
 //
-//       var plotDivSelector = '#waterBudgetPlot';
-//       var legendDivSelector = '#waterBudgetLegend';
+       var plotDivSelector = '#waterBudgetPlot';  //get this from router?
+       var legendDivSelector = '#waterBudgetLegend';
 //       StoredState.plotNormalization = StoredState.plotNormalization || 'totalWater';
 //       StoredState.plotTimeDensity  = StoredState.plotTimeDensity || 'daily';
 //       StoredState.measurementSystem = StoredState.measurementSystem || 'usCustomary';
+       var plotNormalization = 'totalWater';
+       var plotTimeDensity  = 'daily';
+       var measurementSystem = 'usCustomary';
 //       $scope.$watch('StoredState.plotNormalization', function(newValue, oldValue){
 //           if(newValue !== oldValue) {
 //               chartWaterUse();
@@ -138,15 +150,16 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
        /**
         * {String} category the category of data to plot (daily or monthly)
         */
-//       var plotPTandETaData = function(){
-//           var normalization = 'normalizedWater';
-//           var values = CommonState.DataSeriesStore[StoredState.plotTimeDensity].getDataAs(StoredState.measurementSystem, normalization);
-//           var labels = CommonState.DataSeriesStore[StoredState.plotTimeDensity].getSeriesLabelsAs(
-//                   StoredState.measurementSystem, normalization, StoredState.plotTimeDensity);
-//           var ylabel = Units[StoredState.measurementSystem][normalization][StoredState.plotTimeDensity];
-//           Plotter.getPlot(plotDivSelector, legendDivSelector, values, labels, ylabel);
-//       };
-//
+       var plotPTandETaData = function(){
+           var normalization = 'normalizedWater';
+           var values = NWC.util.DataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
+           var labels = NWC.util.DataSeriesStore[plotTimeDensity].getSeriesLabelsAs(
+                   measurementSystem, normalization, plotTimeDensity);
+           var ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
+           NWC.util.Plotter.getPlot(plotDivSelector, legendDivSelector, values, labels, ylabel);
+       };
+       plotPTandETaData();
+
 //       var buildName = function(selectionName, selectionId, series) {
 //           var filename = selectionName;
 //           filename += '_' + selectionId;
@@ -165,7 +178,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 //           }
 //           return filename;
 //       };
-	
+       return;
 	},
 
 	displayCountyMap : function() {
@@ -173,27 +186,27 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	toggleMetricLegend : function() {
-		//stub
+		return;
 	},
 
 	toggleCustomaryLegend : function() {
-		//stub
+		return;
 	},
 
 	toggleMonthlyLegend : function() {
-		//stub
+		return;
 	},
 
 	toggleDailyLegend : function() {
-		//stub
+		return;
 	},
 
 	downloadEvapotranspiration : function() {
-		//stub
+		return;
 	},
 
 	downloadPrecipitation : function() {
-		//stub
+		return;
 	}
 });
 

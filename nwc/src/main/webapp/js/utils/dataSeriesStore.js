@@ -38,8 +38,8 @@ NWC.util.DataSeries = function () {
 					return encodeURIComponent(csvHeader + csvValues);
 				},
 				getDataAs: function(measurementSystem, measure, normalizationFn) {
-					var convert = Units[measurementSystem][measure].conversionFromBase;
-					var normalize = normalizationFn || Convert.noop;
+					var convert = NWC.util.Units[measurementSystem][measure].conversionFromBase;
+					var normalize = normalizationFn || NWC.util.Convert.noop;
 					return this.data.map(function(arr) {
 						// Assume All series have untouchable date
 						var date = arr[0];
@@ -49,7 +49,7 @@ NWC.util.DataSeries = function () {
 				getSeriesLabelsAs: function(measurementSystem, measure, timeGranularity) {
 					return this.metadata.seriesLabels.map(function(label) {
 						var seriesMetadata = Object.clone(label);
-						seriesMetadata.seriesUnits = Units[measurementSystem][measure][timeGranularity];
+						seriesMetadata.seriesUnits = NWC.util.Units[measurementSystem][measure][timeGranularity];
 						return createSeriesLabel(seriesMetadata);
 					});
 				}
@@ -75,8 +75,8 @@ NWC.util.DataSeriesStore = function () {
 		/* we are doing union to only get Date once,
 		 * basically we union the series so we need to union the labels
 		 */
-		var labels = self[seriesClass].metadata.seriesLabels;
-		self[seriesClass].metadata.seriesLabels = labels.union(metadata.seriesLabels);
+		var labels = NWC.util.DataSeriesStore[seriesClass].metadata.seriesLabels;
+		NWC.util.DataSeriesStore[seriesClass].metadata.seriesLabels = labels.union(metadata.seriesLabels);
 	};
 
 	/*
@@ -127,7 +127,7 @@ NWC.util.DataSeriesStore = function () {
 			rowToAdd[columnIndices.eta] = averageDailyEta;
 			dailyTable.push(rowToAdd);
 		});
-		self.daily.data = dailyTable;
+		NWC.util.DataSeriesStore.daily.data = dailyTable;
 
 		addSeriesLabel('daily', dayMetSeries.metadata);
 		addSeriesLabel('daily', etaSeries.metadata);
@@ -212,7 +212,7 @@ NWC.util.DataSeriesStore = function () {
 				endOfMonth = undefined;
 			}
 		});
-		self.monthly.data = monthlyTable;
+		NWC.util.DataSeriesStore.monthly.data = monthlyTable;
 
 		addSeriesLabel('monthly', dayMetSeries.metadata);
 		addSeriesLabel('monthly', etaSeries.metadata);
@@ -231,8 +231,8 @@ NWC.util.DataSeriesStore = function () {
 		* DataSeries objects
 		*/
 		updateHucSeries : function (nameToSeriesMap) {
-			self.daily = NWC.util.DataSeries.newSeries();
-			self.monthly = NWC.util.DataSeries.newSeries();
+//			self.daily = NWC.util.DataSeries.newSeries();
+//			self.monthly = NWC.util.DataSeries.newSeries();
                 
 			updateDailyHucSeries(nameToSeriesMap);
 			updateMonthlyHucSeries(nameToSeriesMap);
