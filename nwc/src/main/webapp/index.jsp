@@ -17,6 +17,8 @@
 				CONFIG.endpoint.wps = CONFIG.endpoint.wpsBase + 'WebProcessingService'; //TODO inconsistant use of of URL resources
 				CONFIG.endpoint.nwis = '${context}/proxy/nwis/';
 				
+				CONFIG.endpoint.searchService = '${searchServiceEndpoint}';
+				
 				CONFIG.endpoint.direct.geoserver = '${directGeoserverEndpoint}';
 				CONFIG.endpoint.direct.thredds = '${directThreddsEndpoint}';
 				CONFIG.endpoint.direct.wps = '${directWpsEndpoint}';
@@ -54,6 +56,7 @@
 			<%@include file="/WEB-INF/USGSFooter.jsp" %>
 		</div>
 		<!-- vendor libraries -->
+		<script type="text/javascript" src="webjars/select2/${select2Version}/select2${jsMin}.js"></script>
 		<script type="text/javascript" src="webjars/sugar/${sugarVersion}/sugar.min.js"></script>
 		<script type="text/javascript" src="webjars/underscorejs/${underscoreVersion}/underscore.js"></script>
 		<script type="text/javascript" src="webjars/backbonejs/${backboneVersion}/backbone.js"></script>
@@ -71,7 +74,7 @@
 		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Grid.js"></script>
 		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Operation.js"></script>
 		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Composite.js"></script>
-				<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesData.js"></script>
+		<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesData.js"></script>
 <!--	<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesRaster.js"></script>
 -->
 		<script type="text/javascript" src="js/utils/templateLoader.js"></script>

@@ -23,7 +23,9 @@
 <!-- Twitter Bootstrap -->
 <link rel="stylesheet" type="text/css" href="webjars/bootstrap/${bootstrapVersion}/css/bootstrap${jsMin}.css"/>
 <script type="text/javascript" src="webjars/bootstrap/${bootstrapVersion}/js/bootstrap${jsMin}.js"></script>
-
+<!-- select 2 style -->
+<link rel="stylesheet" type="text/css" href="webjars/select2/${select2Version}/select2.css" />
+<link rel="stylesheet" type="text/css" href="webjars/select2/${select2Version}/select2-bootstrap.css" />
 <!-- USGS CSS -->
 <link rel="stylesheet" type="text/css" href="css/usgs_common.css"/>
 <link rel="stylesheet" type="text/css" href="css/usgs_style_main.css"/>
