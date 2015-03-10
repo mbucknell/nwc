@@ -31,8 +31,6 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 
 		this.getHucData(options.hucValue);
-
-//		this.displayHucData(options.hucValue);
 	},
 
 	/**
@@ -40,7 +38,6 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	 * @param {String} huc 12 digit identifier for the hydrologic unit
 	 */
 	getHucData: function(huc) {
-		var d;
 		var labeledResponses = {};
 		var labeledAjaxCalls = [];
 		//grab the sos sources that will be used to display the initial data 
@@ -48,6 +45,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		var initialSosSourceKeys = ['eta', 'dayMet'];
 		var initialSosSources = Object.select(NWC.util.SosSources, initialSosSourceKeys);
 		$.each(initialSosSources, function (sourceId, source) {
+			var d;
 			d = $.Deferred();
 			labeledAjaxCalls.push(d);
 			var url = NWC.util.buildSosUrlFromSource(huc, source);
@@ -84,10 +82,11 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				}
 			});
         });
-		$.when.apply(null, labeledAjaxCalls).then(function(){
+		var dataHandler = function() {
 			NWC.util.DataSeriesStore.updateHucSeries(labeledResponses);
-			displayHucData();
-		});
+			this.displayHucData();
+		}.bind(this);
+		$.when.apply(null, labeledAjaxCalls).then(dataHandler);
 		return;
 	},
 
@@ -209,5 +208,3 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		return;
 	}
 });
-
-  
