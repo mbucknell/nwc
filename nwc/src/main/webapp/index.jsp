@@ -65,6 +65,8 @@
 		<script type="text/javascript" src="webjars/flot/${flotchartsVersion}/jquery.flot${jsMin}.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/javascript.util.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/jsts.js"></script>
+
+		<script type="text/javascript" src="client/3rdparty/dygraphs/dygraph${dygraphsMin}.js"></script>
 		
 		<!-- order is important -->
 		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster.js"></script>
@@ -76,8 +78,12 @@
 <!--	<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesRaster.js"></script>
 -->
 		<script type="text/javascript" src="js/utils/templateLoader.js"></script>
-		<script type="text/javascript" src="js/utils/mapUtils.js"></script>
 		<script type="text/javascript" src="js/utils/Conversion.js"></script>
+		<script type="text/javascript" src="js/utils/mapUtils.js"></script>
+		<script type="text/javascript" src="js/utils/SosSources.js"></script>
+		<script type="text/javascript" src="js/utils/SosResponseParser.js"></script>
+		<script type="text/javascript" src="js/utils/dataSeriesStore.js"></script>
+		<script type="text/javascript" src="js/utils/Plotter.js"></script>
 		
 		<script type="text/javascript" src="js/model/BaseSelectMapModel.js"></script>
 		
@@ -94,6 +100,7 @@
 		<script type="text/javascript" src="js/view/DataDiscoveryView.js"></script>
 		<script type="text/javascript" src="js/view/StreamflowStatsMapView.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetMapView.js"></script>
+		<script type="text/javascript" src="js/view/WaterBudgetHucDataView.js"></script>
 		<script type="text/javascript" src="js/controller/NWCRouter.js"></script>
 		
 		<script type="text/javascript" src="js/init.js"></script>

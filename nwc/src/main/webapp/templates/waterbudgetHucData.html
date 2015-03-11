@@ -1,0 +1,100 @@
+<div class="row" style="margin: 0px;">
+	<div class="col-xs-12 nwc-container">
+		<div class="row">
+			<div class="col-xs-12">
+				<h3>Available Water Budget Components</h3>
+				<div>
+					<em>
+						Discover and access precipitation and evapotranspiration data for watersheds and counties.
+					</em>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="row spacer">
+				<div class="col-xs-4">
+					<div class="row col-xs-12"">
+						<button class="btn btn-primary county-button">Plot County Water Withdrawal Data <span class="glyphicon glyphicon-arrow-right"></span></button>
+					</div>
+				</div>
+			</div>
+			<div class="row spacer">
+				<div class="col-xs-4"></div>
+				<div class="col-xs-4">
+					<div class="btn-group">
+						<button type="radio" class="btn btn-primary customary-button" disabled>US Customary</button>
+						<button type="radio" class="btn btn-primary metric-button">Metric</button>
+					</div>
+				</div>
+				<div class="col-xs-4"></div>
+			</div>
+
+			<div class="col-xs-12">
+			<h4>Precipitation and Evapotranspiration for the Selected HUC</h4>
+				<div>
+					<dl>
+						<dt>Hydrologic Unit Code</dt>
+							<dd class="hucId"></dd>
+						<dt>HUC Name</dt>
+							<dd class="hucName"></dd>
+<!--
+						<div ng-if="info.drainageArea">
+							<dt>Drainage Area (km&sup2;)</dt>
+								<dd ng-bind="info.drainageArea"></dd>
+						</div>
+-->
+					</dl>
+				</div>
+				<div class="row spacer">
+					<div class="col-xs-4">
+						<div id="hucMap" nwc-feature-map layers="hucLayer" bounds="hucBounds" style="height:200px;width:200px;border-style:solid;border-width:1px;"></div>
+						<div class="btn-group spacer">
+							<button type="radio" class="btn btn-primary monthly-button">Monthly</button>
+							<button type="radio" class="btn btn-primary daily-button" disabled>Daily</button>
+						</div>
+					</div>
+					<div class="col-xs-4"></div>
+				</div>
+				<div style="height: 400px;" id="waterBudgetPlot" class="col-xs-10"></div>
+				<div class="col-xs-2">
+					<div class="row">
+						<div id="waterBudgetLegend" class="col-xs-12"></div>
+					</div>
+				</div>
+				<div class="row col-xs-12 big_spacer">
+				Precipitation and Evapotranspiration data derived from the
+				<a href="http://daymet.ornl.gov/" target="_blank">Daymet <i class="fa fa-external-link"></i></a>
+				and <a href="http://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly" target="_blank">
+				SSEBop <i class="fa fa-external-link"></i></a> datasets, respectively.
+				</div>
+				<div class="row col-xs-12 big_spacer">
+				Drag the handles at then end of the date axis to zoom in. Drag the window you are zoomed on to pan the date window through time.
+				</div>
+				<div class="row col-xs-12 spacer">
+				To access custom subsets of these and other data, visit the <a href="http://cida.usgs.gov/gdp" target="_blank">
+				Geo Data Portal <i class="fa fa-external-link"></i></a>.
+				</div>
+				<div class="row big_spacer">
+					<div class="col-xs-4">
+						<button class="btn btn-success evapotranspiration-download-button">
+						Download Evapotranspiration
+						</button>
+					</div>
+					<div class="col-xs-4">
+						<button class="btn btn-success precipitation-download-button">
+						Download Precipitation
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="row col-xs-12 spacer">
+				<nav class="spacer">
+					<button class="btn back-button"><span class="glyphicon glyphicon-arrow-left"></span> Back</button>
+				</nav>
+			</div>
+		
+		</div>
+	</div>
+</div>

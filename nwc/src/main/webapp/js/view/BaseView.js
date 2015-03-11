@@ -53,6 +53,14 @@ NWC.view.BaseView = Backbone.View.extend({
 		this.render();
 	},
 
+	/** COMMON navigation functions that might be used for many views */
+	goHome: function() {
+		this.router.navigate('home', {trigger: true});
+	},
+	goToWaterbudget: function() {
+		this.router.navigate('waterbudget', {trigger: true});
+	},
+	
 	showWarningDialog : function(msg) {
 		var $warningModal = $('#warning-modal');
 		if (msg) {

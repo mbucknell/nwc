@@ -5,6 +5,7 @@ $(document).ready(function() {
 	var TEMPLATES = [
 		'home',
 		'waterbudget',
+		'waterbudgetHucData',
 		'streamflowStats',
 		'aquaticBiology',
 		'dataDiscovery'
@@ -14,7 +15,7 @@ $(document).ready(function() {
 		'mapControls',
 		'warningModal'
 	];
-
+	
 	NWC.templates = NWC.util.templateLoader();
 	var loadTemplates = NWC.templates.loadTemplates(TEMPLATES);
 	var loadPartials = NWC.templates.registerPartials(PARTIALS);
