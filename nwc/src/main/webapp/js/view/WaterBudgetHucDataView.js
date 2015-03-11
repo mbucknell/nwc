@@ -10,6 +10,12 @@ NWC.view = NWC.view || {};
 
 NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	templateName : 'waterbudgetHucData',
+	ETA : "eta",
+	DAY_MET : "dayMet",
+	DAILY : "daily",
+	MONTHLY : "monthly",
+	METRIC : "metric",
+	CUSTOMARY : "usCustomary",
 
 //	model : new NWC.model.WaterBudgetSelectMapModel(),
 
@@ -42,9 +48,9 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		var labeledAjaxCalls = [];
 		//grab the sos sources that will be used to display the initial data 
 		//series. ignore other data sources that the user can add later.
-		var initialSosSourceKeys = ['eta', 'dayMet'];
+		var initialSosSourceKeys = [this.ETA, this.DAY_MET];
 		var initialSosSources = Object.select(NWC.util.SosSources, initialSosSourceKeys);
-		$.each(initialSosSources, function (sourceId, source) {
+		Object.keys(initialSosSources, function (sourceId, source) {
 			var d;
 			d = $.Deferred();
 			labeledAjaxCalls.push(d);
@@ -122,62 +128,27 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 //       }
 //       $scope.selectionInfo = selectionInfo;
 //
-       var plotDivSelector = '#waterBudgetPlot';  //get this from router?
-       var legendDivSelector = '#waterBudgetLegend';
-//       StoredState.plotNormalization = StoredState.plotNormalization || 'totalWater';
-//       StoredState.plotTimeDensity  = StoredState.plotTimeDensity || 'daily';
-//       StoredState.measurementSystem = StoredState.measurementSystem || 'usCustomary';
-       var plotNormalization = 'totalWater';
-       var plotTimeDensity  = 'daily';
-       var measurementSystem = 'usCustomary';
-//       $scope.$watch('StoredState.plotNormalization', function(newValue, oldValue){
-//           if(newValue !== oldValue) {
-//               chartWaterUse();
-//           }
-//       });
-//       $scope.$watch('StoredState.measurementSystem', function(newValue, oldValue){
-//           if(newValue !== oldValue) {
-//               plotPTandETaData();
-//               chartWaterUse();
-//           }
-//       });
-//       $scope.$watch('StoredState.plotTimeDensity', function(newValue, oldValue){
-//           if(newValue !== oldValue){
-//               plotPTandETaData();
-//           }
-//       });
-       /**
-        * {String} category the category of data to plot (daily or monthly)
-        */
-       var plotPTandETaData = function(){
-           var normalization = 'normalizedWater';
-           var values = NWC.util.DataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
-           var labels = NWC.util.DataSeriesStore[plotTimeDensity].getSeriesLabelsAs(
-                   measurementSystem, normalization, plotTimeDensity);
-           var ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
-           NWC.util.Plotter.getPlot(plotDivSelector, legendDivSelector, values, labels, ylabel);
-       };
-       plotPTandETaData();
+       this.plotPTandETaData(this.DAILY, this.CUSTOMARY);
 
-//       var buildName = function(selectionName, selectionId, series) {
-//           var filename = selectionName;
-//           filename += '_' + selectionId;
-//           filename += '_' + series;
-//           filename += '.csv';
-//           filename = filename.replace(/ /g, '_');
-//           filename = escape(filename);
-//           return filename;
-//       };
-//
-//       $scope.getHucFilename = function (series) {
-//           var filename = 'data.csv';
-//           if (StoredState.waterBudgetHucFeature) {
-//               filename = buildName(StoredState.waterBudgetHucFeature.data.HU_12_NAME,
-//                   StoredState.waterBudgetHucFeature.data.HUC_12, series);
-//           }
-//           return filename;
-//       };
        return;
+	},
+
+    /**
+     * {String} measurement, the quantity scale of data to plot (usCustomary or metric)
+     * {String} time, the time scale of data to plot (daily or monthly)
+     */
+	plotPTandETaData : function(time, measurement) {
+        var plotDivSelector = '#waterBudgetPlot';  //get this from router?
+        var legendDivSelector = '#waterBudgetLegend';
+        var normalization = 'normalizedWater';
+        var plotTimeDensity  = time;
+        var measurementSystem =  measurement;
+        var values = NWC.util.DataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
+        var labels = NWC.util.DataSeriesStore[plotTimeDensity].getSeriesLabelsAs(
+                measurementSystem, normalization, plotTimeDensity);
+        var ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
+        NWC.util.Plotter.getPlot(plotDivSelector, legendDivSelector, values, labels, ylabel);
+        return;
 	},
 
 	displayCountyMap : function() {
@@ -185,26 +156,78 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	toggleMetricLegend : function() {
-		return;
+		this.$(".customary-button").removeAttr("disabled");			
+		this.$(".metric-button").attr("disabled","disabled");			
+		if (this.$(".daily-button").attr("disabled")) {
+			this.plotPTandETaData(this.DAILY, this.METRIC);			
+		}
+		else {
+			this.plotPTandETaData(this.MONTHLY, this.METRIC);						
+		}
 	},
 
 	toggleCustomaryLegend : function() {
-		return;
+		this.$(".metric-button").removeAttr("disabled");			
+		this.$(".customary-button").attr("disabled","disabled");			
+		if (this.$(".daily-button").attr("disabled")) {
+			this.plotPTandETaData(this.DAILY, this.CUSTOMARY);			
+		}
+		else {
+			this.plotPTandETaData(this.MONTHLY, this.CUSTOMARY);						
+		}
 	},
 
-	toggleMonthlyLegend : function() {
-		return;
+	toggleMonthlyLegend : function() {		
+		this.$(".daily-button").removeAttr("disabled");			
+		this.$(".monthly-button").attr("disabled","disabled");			
+		if (this.$(".customary-button").attr("disabled")) {
+			this.plotPTandETaData(this.MONTHLY, this.CUSTOMARY);			
+		}
+		else {
+			this.plotPTandETaData(this.MONTHLY, this.METRIC);						
+		}
 	},
 
 	toggleDailyLegend : function() {
-		return;
+		this.$(".daily-button").attr("disabled","disabled");			
+		this.$(".monthly-button").removeAttr("disabled");
+		if (this.$(".customary-button").attr("disabled")) {
+			this.plotPTandETaData(this.DAILY, this.CUSTOMARY);			
+		}
+		else {
+			this.plotPTandETaData(this.DAILY, this.METRIC);						
+		}
 	},
 
 	downloadEvapotranspiration : function() {
+//		var blob = new Blob([NWC.util.dataSeriesStore.eta.toCSV(true)], {type:'text/csv'});
+//		saveAs(blob, getHucFilename('eta'));
 		return;
 	},
 
 	downloadPrecipitation : function() {
+//		var blob = new Blob([NWC.util.dataSeriesStore.dayMet.toCSV(true)], {type:'text/csv'});
+//		saveAs(blob, getHucFilename('dayMet'));	
 		return;
+	},
+
+	getHucFilename : function (series) {
+		var filename = series + '_data.csv'; //temporary
+//		if (StoredState.waterBudgetHucFeature) {
+//			filename = buildName(StoredState.waterBudgetHucFeature.data.HU_12_NAME,
+//					StoredState.waterBudgetHucFeature.data.HUC_12, series);
+//		}
+		return filename;
+	},
+
+	buildName : function(selectionName, selectionId, series) {
+		var filename = selectionName;
+		filename += '_' + selectionId;
+		filename += '_' + series;
+		filename += '.csv';
+		filename = filename.replace(/ /g, '_');
+		filename = escape(filename);
+		return filename;
 	}
+	
 });

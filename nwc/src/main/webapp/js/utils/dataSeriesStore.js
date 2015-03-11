@@ -223,6 +223,8 @@ NWC.util.DataSeriesStore = function () {
 			return columnIndices[columnName];  
 		},
 		
+		eta : NWC.util.DataSeries.newSeries(),
+		dayMet : NWC.util.DataSeries.newSeries(),
 		daily : NWC.util.DataSeries.newSeries(),
 		monthly : NWC.util.DataSeries.newSeries(),
             
@@ -231,8 +233,8 @@ NWC.util.DataSeriesStore = function () {
 		* DataSeries objects
 		*/
 		updateHucSeries : function (nameToSeriesMap) {
-//			self.daily = NWC.util.DataSeries.newSeries();
-//			self.monthly = NWC.util.DataSeries.newSeries();
+			eta = nameToSeriesMap.eta;
+			daymet = nameToSeriesMap.dayMet;
                 
 			updateDailyHucSeries(nameToSeriesMap);
 			updateMonthlyHucSeries(nameToSeriesMap);

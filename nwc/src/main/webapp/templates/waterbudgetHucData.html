@@ -23,8 +23,8 @@
 				<div class="col-xs-4"></div>
 				<div class="col-xs-4">
 					<div class="btn-group">
-						<button type="button" class="btn btn-primary customary-button" btn-radio="'usCustomary'">US Customary</button>
-						<button type="button" class="btn btn-primary metric-button" btn-radio="'metric'">Metric</button>
+						<button type="radio" class="btn btn-primary customary-button" disabled>US Customary</button>
+						<button type="radio" class="btn btn-primary metric-button">Metric</button>
 					</div>
 				</div>
 				<div class="col-xs-4"></div>
@@ -46,18 +46,16 @@
 -->
 					</dl>
 				</div>
-<!--						
 				<div class="row spacer">
 					<div class="col-xs-4">
 						<div id="hucMap" nwc-feature-map layers="hucLayer" bounds="hucBounds" style="height:200px;width:200px;border-style:solid;border-width:1px;"></div>
 						<div class="btn-group spacer">
-							<button type="button" class="btn btn-primary monthly-button" ng-model="StoredState.plotTimeDensity" btn-radio="'monthly'">Monthly</button>
-							<button type="button" class="btn btn-primary daily-button" ng-model="StoredState.plotTimeDensity" btn-radio="'daily'">Daily</button>
+							<button type="radio" class="btn btn-primary monthly-button">Monthly</button>
+							<button type="radio" class="btn btn-primary daily-button" disabled>Daily</button>
 						</div>
 					</div>
 					<div class="col-xs-4"></div>
 				</div>
--->
 				<div style="height: 400px;" id="waterBudgetPlot" class="col-xs-10"></div>
 				<div class="col-xs-2">
 					<div class="row">
@@ -77,24 +75,18 @@
 				To access custom subsets of these and other data, visit the <a href="http://cida.usgs.gov/gdp" target="_blank">
 				Geo Data Portal <i class="fa fa-external-link"></i></a>.
 				</div>
-<!--					
 				<div class="row big_spacer">
 					<div class="col-xs-4">
-						<download-data-button filename="getHucFilename('eta')"
-								type="'text/csv'"
-								data="CommonState.eta.toCSV()"
-								title="'Download Evapotranspiration'">
-						</download-data-button>
+						<button class="btn btn-success evapotranspiration-download-button">
+						Download Evapotranspiration
+						</button>
 					</div>
 					<div class="col-xs-4">
-						<download-data-button filename="getHucFilename('dayMet')"
-								type="'text/csv'"
-								data="CommonState.dayMet.toCSV()"
-								title="'Download Precipitation'">
-						</download-data-button>
+						<button class="btn btn-success precipitation-download-button">
+						Download Precipitation
+						</button>
 					</div>
 				</div>
--->
 			</div>
 
 			<div class="row col-xs-12 spacer">
