@@ -90,7 +90,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
         });
 		var dataHandler = function() {
 			NWC.util.DataSeriesStore.updateHucSeries(labeledResponses);
-			this.displayHucData();
+			this.displayHucData(huc);
 		}.bind(this);
 		$.when.apply(null, labeledAjaxCalls).then(dataHandler);
 		return;
@@ -99,8 +99,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	/**
 	 * This renders the huc info on the view
 	 */
-	displayHucData: function() {
-//		this.$(".hucId").html(huc);
+	displayHucData: function(huc) {
+		this.$(".hucId").html(huc);
 		
 		// Create vector layer to show HUC
 //           var layerStyle = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
@@ -200,14 +200,14 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	downloadEvapotranspiration : function() {
-//		var blob = new Blob([NWC.util.dataSeriesStore.eta.toCSV(true)], {type:'text/csv'});
-//		saveAs(blob, getHucFilename('eta'));
+		var blob = new Blob([NWC.util.DataSeriesStore.eta.toCSV(true)], {type:'text/csv'});
+		saveAs(blob, this.getHucFilename('eta'));
 		return;
 	},
 
 	downloadPrecipitation : function() {
-//		var blob = new Blob([NWC.util.dataSeriesStore.dayMet.toCSV(true)], {type:'text/csv'});
-//		saveAs(blob, getHucFilename('dayMet'));	
+		var blob = new Blob([NWC.util.DataSeriesStore.dayMet.toCSV(true)], {type:'text/csv'});
+		saveAs(blob, this.getHucFilename('dayMet'));	
 		return;
 	},
 

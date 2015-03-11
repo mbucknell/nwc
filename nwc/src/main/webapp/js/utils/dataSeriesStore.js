@@ -35,7 +35,8 @@ NWC.util.DataSeries = function () {
 					this.data.each(function(row) {
 						csvValues += row.join(",") + "\r\n";
 					});
-					return encodeURIComponent(csvHeader + csvValues);
+//					return encodeURIComponent(csvHeader + csvValues);
+					return csvHeader + csvValues;
 				},
 				getDataAs: function(measurementSystem, measure, normalizationFn) {
 					var convert = NWC.util.Units[measurementSystem][measure].conversionFromBase;
@@ -233,8 +234,8 @@ NWC.util.DataSeriesStore = function () {
 		* DataSeries objects
 		*/
 		updateHucSeries : function (nameToSeriesMap) {
-			eta = nameToSeriesMap.eta;
-			daymet = nameToSeriesMap.dayMet;
+			this.eta = nameToSeriesMap.eta;
+			this.dayMet = nameToSeriesMap.dayMet;
                 
 			updateDailyHucSeries(nameToSeriesMap);
 			updateMonthlyHucSeries(nameToSeriesMap);
