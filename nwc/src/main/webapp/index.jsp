@@ -66,7 +66,8 @@
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/javascript.util.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/jsts.js"></script>
 
-		<script type="text/javascript" src="client/3rdparty/dygraphs/dygraph${dygraphsMin}.js"></script>
+		<script type="text/javascript" src="vendorlibs/dygraphs/dygraph${dygraphsMin}.js"></script>
+		<script type="text/javascript" src="vendorlibs/FileSaver.js-master/FileSaver.js"></script>
 		
 		<!-- order is important -->
 		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster.js"></script>
