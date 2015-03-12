@@ -77,8 +77,8 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 
 		var hucProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(this.hucLayer, {
 			url : CONFIG.endpoint.geoserver + "wfs",
-			srsName : "EPSG:3857"
-//			propertyNames : ["HUC12","DRAIN_SQKM", "HU_12_NAME"]
+			srsName : "EPSG:3857",
+			propertyNames : ["HUC12","DRAIN_SQKM", "HU_12_NAME"]
 		});
 
 		var featureTypeIsVisible = function(featureType) {
