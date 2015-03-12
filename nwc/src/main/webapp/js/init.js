@@ -7,6 +7,7 @@ $(document).ready(function() {
 		'waterbudget',
 		'waterbudgetHucData',
 		'streamflowStats',
+		'streamflowHucStats',
 		'aquaticBiology',
                 'aquaticBiologySelectFeatures',
 		'dataDiscovery'
@@ -16,7 +17,7 @@ $(document).ready(function() {
 		'mapControls',
 		'warningModal'
 	];
-	
+
 	NWC.templates = NWC.util.templateLoader();
 	var loadTemplates = NWC.templates.loadTemplates(TEMPLATES);
 	var loadPartials = NWC.templates.registerPartials(PARTIALS);
