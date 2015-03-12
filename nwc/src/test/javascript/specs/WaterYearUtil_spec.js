@@ -1,7 +1,8 @@
 describe('WaterYear', function () {
-    
-    var $injector = angular.injector(['nwc.waterYear']);
-    var util = $injector.get('WaterYearUtil');
+	var util
+	beforeEach(function() {
+		util = NWC.util.WaterYearUtil;
+	});
 
     describe('WaterYear.dateToWaterYear', function () {
         it('should convert date to correct water year', function () {
@@ -21,7 +22,11 @@ describe('WaterYear', function () {
         });
     });
     describe('WaterYear.waterYearRange', function() {
-        var range = util.waterYearRange(Date.range('1973/01/01', '1995/01/01'));
+		var range;
+		beforeEach(function() {
+			range = util.waterYearRange(Date.range('1973/01/01', '1995/01/01'));
+		});
+
         it('should start on October 1, 1973', function() {
             expect(range.start.is('1973/10/01')).toBe(true);
         });
