@@ -11,7 +11,11 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 
 	templateName : 'streamflowHucStats',
 
-	context : {},
+	MIN_DATE : Date.create('1980/10/01').utc(),
+	MAX_DATE : Date.create('2010/09/30').utc(),
+
+	context : {
+	},
 
 	render : function() {
 		NWC.view.BaseView.prototype.render.apply(this, arguments);
@@ -20,6 +24,7 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 
 	initialize : function(options) {
 		this.context.hucId = options.hucId;
+		this.context.years = NWC.util.WaterYearUtil.yearsAsArray(NWC.util.WaterYearUtil.waterYearRange(Date.range(this.MIN_DATE, this.MAX_DATE)));
 		this.insetMapDiv = options.insetMapDiv;
 
 		var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
@@ -33,7 +38,7 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 			featureadded: function(event){
 				console.log('Feature added');
 				this.map.zoomToExtent(this.getDataExtent());
-				
+
 				$('#huc-name').html(event.feature.attributes.HU_12_NAME);
 				$('#huc-drainage-area').html(event.feature.attributes.DRAIN_SQKM);
 			},
@@ -46,6 +51,10 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 		this.map.zoomToExtent(this.map.getMaxExtent());
+		var $start = $('#start-year option[value="' + this.context.years.first() + '"]');
+		var $end = $('#end-year option[value="' + this.context.years.last() + '"]');
+		$start.prop('selected', true);
+		$end.prop('selected', true);
 	}
 
 });

@@ -35,6 +35,47 @@
 				<div id="huc-inset" style="height:200px;width:200px;border-style:solid;border-width:1px;"></div>
 			</div>
 		</div>
+		<div class="row">
+			<h4 class="text-center">Date Range (Water Years)</h4>
+
+			<div class="col-md-2"></div>
+				<div class="col-md-4">
+					<label>From:</label>
+					<select id="start-year" class="form-control">
+						{{#each years}}
+							<option value="{{this}}">{{this}}</option>
+						{{/each}}
+					</select>
+				</div>
+				<div class="col-md-4">
+					<label>To:</label>
+					<select id="end-year" class="form-control">
+						{{#each years}}
+							<option value="{{this}}">{{this}}</option>
+						{{/each}}
+					</select>
+				</div>
+				<div class="col-md-2"></div>
+		</div>
+		<div class="row col-xs-12">
+			<h4 class="text-center">Statistic Groups</h4>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Select</th>
+						<th>Statistic Group Name</th>
+					</tr>
+				</thead>
+				<tbody ng-repeat="statGroup in streamStatsOptions">
+					<tr>
+						<td class="xs-col-2">
+							<input type="checkbox" name="statGroup.shortName" checklist-model="StoredState.siteStatisticsParameters.statGroups" checklist-value="statGroup.shortName"/>
+						</td>
+						<td class="xs-col-4"><a href="{{statGroup.url}}" target="_blank">{{statGroup.longName}} <i class="fa fa-external-link"></i></a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>		
 	</div>
 </div>
 				

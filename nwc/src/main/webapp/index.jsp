@@ -85,6 +85,7 @@
 		<script type="text/javascript" src="js/utils/SosResponseParser.js"></script>
 		<script type="text/javascript" src="js/utils/dataSeriesStore.js"></script>
 		<script type="text/javascript" src="js/utils/Plotter.js"></script>
+		<script type="text/javascript" src="js/utils/WaterYearUtil.js"></script>
 		
 		<script type="text/javascript" src="js/model/BaseSelectMapModel.js"></script>
 		
