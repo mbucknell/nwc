@@ -58,11 +58,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			$.ajax({
 				url : url,
 				success : function(data, textStatus, jqXHR) {
-					var i;
-					var label = '';
-					for (i=0; i<this.length; i++){
-						label = label + this[i];
-					}
+					var label = this.valueOf();
 					var parsedValues = NWC.util.SosResponseFormatter.formatSosResponse(data);
 					var labeledDataSeries = NWC.util.DataSeries.newSeries();
 					labeledDataSeries.metadata.seriesLabels.push(
@@ -200,13 +196,13 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	downloadEvapotranspiration : function() {
-		var blob = new Blob([NWC.util.DataSeriesStore.eta.toCSV(true)], {type:'text/csv'});
+		var blob = new Blob([NWC.util.DataSeriesStore.eta.toCSV()], {type:'text/csv'});
 		saveAs(blob, this.getHucFilename('eta'));
 		return;
 	},
 
 	downloadPrecipitation : function() {
-		var blob = new Blob([NWC.util.DataSeriesStore.dayMet.toCSV(true)], {type:'text/csv'});
+		var blob = new Blob([NWC.util.DataSeriesStore.dayMet.toCSV()], {type:'text/csv'});
 		saveAs(blob, this.getHucFilename('dayMet'));	
 		return;
 	},
