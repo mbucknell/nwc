@@ -16,6 +16,10 @@
 	box-shadow: 		inset 0 1px 1px rgba(0,0,0,0.05);
 }
 
+h5, h6 {
+	font-weight : bold;
+}
+
 .dashboard div {
     -webkit-transition:	width 0.3s ease, margin 0.3s ease;
     -moz-transition: 	width 0.3s ease, margin 0.3s ease;

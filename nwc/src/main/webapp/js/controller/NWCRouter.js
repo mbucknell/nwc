@@ -55,7 +55,10 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	},
 
 	streamflowStatsHucData : function(huc) {
-		$(this.applicationContextDiv).html('Streamflow Stats  for HUC 12 ' + huc);
+		this.showView(NWC.view.StreamflowStatsHucDataView, {
+			hucId : huc,
+			insetMapDiv : 'huc-inset'
+		});
 	},
 
 	aquaticBiology : function() {
