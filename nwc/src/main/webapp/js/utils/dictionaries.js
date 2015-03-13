@@ -5,7 +5,7 @@ NWC.util = NWC.util || {};
 (function() {
 	NWC.dictionary = {};
 
-	NWC.dictionary.statDic = {
+	NWC.dictionary.statDict = {
             "ma1"         : "Mean of the daily mean flow values for the entire flow record (cubic feet per second - temporal).",
             "ma2"	      : "Median of the daily mean flow values for the entire flow record (cubic feet per second - temporal).",
             "ma3"	      : "Mean (or median - Use Preference option) of the coefficients of variation (standard deviation/mean) for each year. Compute the coefficient of variation for each year of daily flows. Compute the mean of the annual coefficients of variation (percent - temporal).",

@@ -88,6 +88,7 @@
 		<script type="text/javascript" src="js/utils/WaterYearUtil.js"></script>
 	        <script type="text/javascript" src="js/utils/dictionaries.js"></script>	
                 <script type="text/javascript" src="js/utils/wpsClient.js"></script>
+                <script type="text/javascript" src="js/utils/streamStats.js"></script>
 		<script type="text/javascript" src="js/model/BaseSelectMapModel.js"></script>
 		
 		<script type="text/javascript" src="js/model/WaterBudgetSelectMapModel.js"></script>

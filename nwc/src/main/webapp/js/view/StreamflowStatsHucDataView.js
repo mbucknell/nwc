@@ -43,7 +43,6 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		//TODO: take out console.log statements. Leaving in console.log statements for now until HUC feature layer works.
 		hucLayer.events.on({
 			featureadded: function(event){
-				console.log('Feature added');
 				this.map.zoomToExtent(this.getDataExtent());
 
 				$('#huc-name').html(event.feature.attributes.HU_12_NAME);
@@ -51,7 +50,6 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 			},
 			loadend: function(event) {
 				$('#loading-indicator').hide();
-				console.log('Layer loaded');
 			}
 		});
 		this.map.addLayer(hucLayer);
@@ -71,11 +69,11 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		$('#calculate-stats-button').prop('disabled', disable);
 	},
 
-	calculateStats : function() {
-
-		var hucId = this.context.HucId;
-		var startDate = $('#start-year option:selected').val();
-		var endDate = $('#end-year option:selected').val();
+	calculateStats : function(ev) {
+		ev.preventDefault();
+		var hucId = this.context.hucId;
+		var startDate = NWC.util.WaterYearUtil.waterYearStart($('#start-year option:selected').val());
+		var endDate = NWC.util.WaterYearUtil.waterYearEnd($('#end-year option:selected').val());
 
 		var tsvHeader;
 		var streamflowStatistics;
@@ -108,6 +106,9 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 				}
 			}
 			streamflowStatisticsTsv = tsvHeader + tsvValues;
+			$('#stats-results-table-div').html(NWC.templates.getTemplate('statsResults')({streamflowStatistics : streamflowStatistics}));
+			$('#stats-results-div').show();
+			console.log('Collected streamflow stats');
 		};
 
 		var statTypes = [];

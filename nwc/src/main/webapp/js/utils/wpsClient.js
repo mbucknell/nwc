@@ -42,7 +42,7 @@ NWC.util = NWC.util || {};
 	 * @returns {String} Return the request XML as a string
 	 */
 	NWC.util.wps.createWpsExecuteRequestDocument = function (processId, dataInputs, responseForm) {
-		responseForm = responseForm || exports.getDefaultSynchronousResponseForm();
+		responseForm = responseForm || NWC.util.wps.getDefaultSynchronousResponseForm();
 		var formattedData = [];
 		for (var key in dataInputs) {
 			if (dataInputs.hasOwnProperty(key)) {
@@ -123,7 +123,7 @@ NWC.util = NWC.util || {};
 		var statusUrl = $(responseDoc.childNodes[0]).attr('statusLocation') || $(responseDoc.childNodes[1]).attr('statusLocation');
 
 		//Attempt to avoid cross site scripting by stripping out he base url if it matches our proxy destination
-		statusUrl = exports.getProxyUrl(statusUrl);
+		statusUrl = NWC.util.wps.getProxyUrl(statusUrl);
 
 		return statusUrl;
 	};
@@ -194,7 +194,7 @@ NWC.util = NWC.util || {};
 	 * @returns {ProcessStatus.SUCCEEDED|ProcessStatus.FAILED|ProcessStatus.IN_PROGRESS}
 	 */
 	var getStatusFromStatusDoc = function (statusDoc) {
-		var ProcessStatus = exports.getProcessStatusEnum();
+		var ProcessStatus = NWC.util.wps.getProcessStatusEnum();
 		var parentElt = statusDoc.childNodes[1] || statusDoc.childNodes[0]; //IE puts root node at index 1 (xml tag is index 0)
 		var statusElt = extractExactlyOneWpsElementByTagName(parentElt, 'Status');
 		var status = ProcessStatus.IN_PROGRESS;
@@ -220,7 +220,7 @@ NWC.util = NWC.util || {};
 		//assume only one Reference element in doc
 		var referenceElt = getWpsElementsByTagName(rootElt, 'Reference')[0];
 		var resultsUrl = referenceElt.getAttribute('href');
-		return exports.getProxyUrl(resultsUrl);
+		return NWC.util.wps.getProxyUrl(resultsUrl);
 	};
 
 	/**
@@ -325,7 +325,7 @@ NWC.util = NWC.util || {};
 	 * @param {Integer} pollCount
 	 */
 	var pollStatus = function (cfg, statusUrl, pollCount) {
-		var ProcessStatus = exports.getProcessStatusEnum();
+		var ProcessStatus = NWC.util.wps.getProcessStatusEnum();
 		OpenLayers.Request.GET({
 			url: statusUrl,
 			success: function (response) {
@@ -439,7 +439,7 @@ NWC.util = NWC.util || {};
 	NWC.util.wps.executeAsynchronousRequest = function (userConfig) {
 		var cfg = {};
 		//set up default properties in config
-		OpenLayers.Util.extend(cfg, exports.getDefaultExecuteAsynchronousRequestParams());
+		OpenLayers.Util.extend(cfg, NWC.util.wps.getDefaultExecuteAsynchronousRequestParams());
 		//now selectively copy user properties into cfg
 		for(var userPropertyName in userConfig){
 			if(userConfig.hasOwnProperty(userPropertyName)){

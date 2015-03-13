@@ -71,7 +71,7 @@
 						{{#each streamStatsOptions}}
 						<tr>
 							<td class="xs-col-2">
-								<input type="checkbox" name="{{shortName}}"  value="shortName"/>
+								<input type="checkbox" name="{{shortName}}"  value="{{shortName}}"/>
 							</td>
 							<td class="xs-col-4"><a href="{{url}}" target="_blank">{{longName}} <i class="fa fa-external-link"></i></a></td>
 						</tr>
@@ -80,9 +80,15 @@
 				</table>
 			</div>
 			<div class="row col-xs-12 text-center">
-				<button id="calculate-stats-button" disabled="disabled" class="btn btn-success" ng-click="calculateStats()">Calculate Statistics</button>
+				<button id="calculate-stats-button" disabled="disabled" class="btn btn-success">Calculate Statistics</button>
 			</div>
 		</form>
+		<div id="stats-results-div" style="display:none;" class="row col-xs-12 table-responsive">
+			<div id="stats-results-table-div"></div>
+			<div class="col-sm-4 col-sm-offset-8">
+				<button id="download-stats-button" class="btn btn-success">Download These Statistics</button>
+			</div>
+		</div>
 		<div ng-hide="!StoredState.streamFlowStatHucFeature" class="row col-xs-12 text-center spacer">
 			<button type="button" class="btn btn-success" ng-model="CommonState.showStreamflowPlot" btn-checkbox>Streamflow Data Plot</button>
 		</div>

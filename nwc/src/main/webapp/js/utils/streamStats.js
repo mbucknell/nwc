@@ -3,13 +3,22 @@ var NWC = NWC || {};
 NWC.util = NWC.util || {};
 
 (function() {
+	var streamStatsDateFormat = '{yyyy}-{MM}-{dd}';
+    var statTypesToString = function (statTypes) {
+        return statTypes.join(',');
+    };
+    var siteIdsToString = function (siteIds) {
+        return siteIds.join(',');
+    };
+    var dateToString = function (date) {
+        return date.format(streamStatsDateFormat);
+    };
+
 	var resultsCouldNotBeObtained = function (response) {
 		var msg = 'Process Completed, but there was an error retrieving the results';
-		console.log.error(msg);
 		alert(msg);
 	};
-	var resultsHaveBeenObtained = function (response, resultsUrl, callback) {
-		var responseText = response.data;
+	var resultsHaveBeenObtained = function (responseText, resultsUrl, callback) {
 		var statArray = responseText.split('\n');
 		statArray = statArray.map(function (row) {
 			return row.split('\t');
@@ -33,13 +42,10 @@ NWC.util = NWC.util || {};
 		if (pollCount === config.status.maxNumberOfPolls) {
 			var numSeconds = ((config.status.pollFrequency * pollCount) / 1000).toFixed(0);
 			var message = 'The server timed out after ' + pollCount + ' attempts (' + numSeconds + ' seconds).';
-			$log.error(message);
 			alert(message);
 		}
 		else {
 			var message = 'An error occurred during statistics calcuation';
-			$log.error(message);
-			$log.error(response);
 			alert(message);
 		}
 	};
@@ -47,12 +53,19 @@ NWC.util = NWC.util || {};
 		return {
 			success: function (resultsUrl, config) {
 				//now that we have the results url, ajax-get the results.
-				$http.get(NWC.util.wps.getProxyUrl(resultsUrl)).then(
-					function (response) {
+				$.ajax({
+					url : NWC.util.wps.getProxyUrl(resultsUrl),
+					success: function (response) {
 						resultsHaveBeenObtained(response, NWC.util.wps.getProxyUrl(resultsUrl), callback);
 					},
-					resultsCouldNotBeObtained
-				);
+					error: resultsCouldNotBeObtained
+				});
+				//$get(NWC.util.wps.getProxyUrl(resultsUrl)).then(
+				//	function (response) {
+				//		resultsHaveBeenObtained(response, NWC.util.wps.getProxyUrl(resultsUrl), callback);
+				//	},
+				//	resultsCouldNotBeObtained
+				//);
 			}
 		};
 	};
@@ -91,7 +104,7 @@ NWC.util = NWC.util || {};
 					'stats': statTypesString,
 					'sos': CONFIG.endpoint.direct.thredds + 'HUC12_data/HUC12_Q.nc',
 					'observedProperty': 'MEAN_streamflow',
-					'wfsUrl': CONFIG.endpoint.direct.geoserver + 'NWC/ows',
+					'wfsUrl': CONFIG.endpoint.direct.geoserver + 'ows',
 					'wfsTypename': 'NWC:huc12_SE_Basins_v2',
 					'wfsFilterProperty': 'NWC:HUC12',
 					'wfsAreaPropertyname': 'NWC:mi2'
