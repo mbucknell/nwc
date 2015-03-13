@@ -16,7 +16,8 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 
 	events : {
 		'click #calculate-stats-button' : 'calculateStats',
-		'click #available-statistics input' : 'calculateStatsEnable'
+		'click #available-statistics input' : 'calculateStatsEnable',
+		'click #download-stats-button' : 'downloadStats'
 	},
 
 	context : {
@@ -69,60 +70,78 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		$('#calculate-stats-button').prop('disabled', disable);
 	},
 
+	_getStatsTsv : function() {
+		var statistics = this.streamflowStatistics;
+		var tsvHeader = "";
+		var tsvValues = "Name\tValue\tDescription\n";
+		var i;
+
+		tsvHeader = "\"# Data derived from National Water Census daily flow estimates.\"\n";
+		tsvHeader += "\"# HUC " + this.context.hucId +  " was selected.\"\n";
+		tsvHeader += "\"# Statistics calculated using the USGS EflowStats Package\"\n";
+		tsvHeader += "\"# http://cida.usgs.gov/nwc/ang/#/workflow/streamflow-statistics/select-site \"\n";
+		tsvHeader += "\"# http://github.com/USGS-R/EflowStats \"\n";
+		for (i = 0; i < statistics.length; i += 1) {
+			if (statistics[i].name) {
+				tsvValues += statistics[i].name + "\t";
+			}
+			else {
+				tsvValues += "\t";
+			}
+			if (statistics[i].value) {
+				tsvValues += statistics[i].value + "\t";
+			}
+			else {
+				tsvValues += "\t";
+			}
+			if (statistics[i].desc) {
+				tsvValues += statistics[i].desc + "\n";
+			}
+			else {
+				tsvValues += "\n";
+			}
+		}
+		return tsvHeader + tsvValues;
+	},
+
+	_getStatsFilename : function() {
+		return 'eflowstats_HUC_' + this.context.hucId + '.tsv';
+	},
+
 	calculateStats : function(ev) {
-		ev.preventDefault();
 		var hucId = this.context.hucId;
 		var startDate = NWC.util.WaterYearUtil.waterYearStart($('#start-year option:selected').val());
 		var endDate = NWC.util.WaterYearUtil.waterYearEnd($('#end-year option:selected').val());
 
-		var tsvHeader;
-		var streamflowStatistics;
-		var streamflowStatisticsUrl;
-		var streamflowStatisticsTsv;
+		var $loadingIndicator = $('#loading-stats-indicator');
+		var $statsResultsDiv = $('#stats-results-div');
 
 		var callback = function(statistics, resultsUrl){
-			streamflowStatistics = statistics;
-			streamflowStatisticsUrl = resultsUrl;
-			var tsvValues = "Name\tValue\tDescription\n";
-			var i;
-			for (i = 0; i < statistics.length; i += 1) {
-				if (statistics[i].name) {
-					tsvValues += statistics[i].name + "\t";
-				}
-				else {
-					tsvValues += "\t";
-				}
-				if (statistics[i].value) {
-					tsvValues += statistics[i].value + "\t";
-				}
-				else {
-					tsvValues += "\t";
-				}
-				if (statistics[i].desc) {
-					tsvValues += statistics[i].desc + "\n";
-				}
-				else {
-					tsvValues += "\n";
-				}
-			}
-			streamflowStatisticsTsv = tsvHeader + tsvValues;
-			$('#stats-results-table-div').html(NWC.templates.getTemplate('statsResults')({streamflowStatistics : streamflowStatistics}));
-			$('#stats-results-div').show();
-			console.log('Collected streamflow stats');
-		};
+			this.streamflowStatistics = statistics;
+
+			$('#stats-results-table-div').html(NWC.templates.getTemplate('statsResults')({streamflowStatistics : statistics}));
+			$statsResultsDiv.show();
+			$loadingIndicator.hide();
+		}.bind(this);
 
 		var statTypes = [];
+
+		ev.preventDefault();
+
+		$statsResultsDiv.hide();
+		$loadingIndicator.show();
 		$('#available-statistics input:checked').each(function() {
 			statTypes.push($(this).val());
 		});
 
-		tsvHeader = "\"# Data derived from National Water Census daily flow estimates.\"\n";
-			tsvHeader += "\"# HUC " + hucId +  " was selected.\"\n";
-			tsvHeader += "\"# Statistics calculated using the USGS EflowStats Package\"\n";
-			tsvHeader += "\"# http://cida.usgs.gov/nwc/ang/#/workflow/streamflow-statistics/select-site \"\n";
-			tsvHeader += "\"# http://github.com/USGS-R/EflowStats \"\n";
 		NWC.util.streamStats.getHucStats([hucId], statTypes, startDate, endDate, callback);
+	},
 
+	downloadStats : function(ev) {
+		ev.preventDefault();
+
+		var blob = new Blob([this._getStatsTsv()], {type:'text/tsv'});
+		saveAs(blob, this._getStatsFilename());
 	}
 
 });
