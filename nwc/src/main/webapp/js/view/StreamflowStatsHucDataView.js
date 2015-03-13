@@ -14,6 +14,11 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 	MIN_DATE : Date.create('1980/10/01').utc(),
 	MAX_DATE : Date.create('2010/09/30').utc(),
 
+	events : {
+		'click #calculate-stats-button' : 'calculateStats',
+		'click #available-statistics input' : 'calculateStatsEnable'
+	},
+
 	context : {
 	},
 
@@ -25,38 +30,8 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 	initialize : function(options) {
 		this.context.hucId = options.hucId;
 		this.context.years = NWC.util.WaterYearUtil.yearsAsArray(NWC.util.WaterYearUtil.waterYearRange(Date.range(this.MIN_DATE, this.MAX_DATE)));
-		this.context.streamStatsOptions = [
-            {
-                shortName: "magnifSeven",
-                longName: "Seven Fundamental Daily Streamflow Statistics",
-                url: "http://onlinelibrary.wiley.com/doi/10.1002/rra.2710/abstract"
-            },
-            {
-                shortName: "magStat",
-                longName: "Flow Magnitude",
-                url: "http://pubs.er.usgs.gov/publication/ofr20061093"
-            },
-            {
-                shortName: "flowStat",
-                longName: "Flow Frequency",
-                url: "http://pubs.er.usgs.gov/publication/ofr20061093"
-            },
-            {
-                shortName: "durStat",
-                longName: "Flow Duration",
-                url: "http://pubs.er.usgs.gov/publication/ofr20061093"
-            },
-            {
-                shortName: "timStat",
-                longName: "Flow Timing",
-                url: "http://pubs.er.usgs.gov/publication/ofr20061093"
-            },
-            {
-                shortName: "rateStat",
-                longName: "Rate of Change",
-                url: "http://pubs.er.usgs.gov/publication/ofr20061093"
-            }
-        ]
+		this.context.streamStatsOptions = NWC.dictionary.statGroups;
+
 		this.insetMapDiv = options.insetMapDiv;
 
 		var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
@@ -85,12 +60,68 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		this.map.zoomToExtent(this.map.getMaxExtent());
 
 		// Initialize DOM on page
-		var $start = $('#start-year option[value="' + this.context.years.first() + '"]');
-		var $end = $('#end-year option[value="' + this.context.years.last() + '"]');
+		$start = $('#start-year option[value="' + this.context.years.first() + '"]');
+		$end = $('#end-year option[value="' + this.context.years.last() + '"]');
 		$start.prop('selected', true);
 		$end.prop('selected', true);
+	},
 
-		$('#calculate-stats-button').d
+	calculateStatsEnable : function() {
+		var disable = !($('#available-statistics input').is(':checked'));
+		$('#calculate-stats-button').prop('disabled', disable);
+	},
+
+	calculateStats : function() {
+
+		var hucId = this.context.HucId;
+		var startDate = $('#start-year option:selected').val();
+		var endDate = $('#end-year option:selected').val();
+
+		var tsvHeader;
+		var streamflowStatistics;
+		var streamflowStatisticsUrl;
+		var streamflowStatisticsTsv;
+
+		var callback = function(statistics, resultsUrl){
+			streamflowStatistics = statistics;
+			streamflowStatisticsUrl = resultsUrl;
+			var tsvValues = "Name\tValue\tDescription\n";
+			var i;
+			for (i = 0; i < statistics.length; i += 1) {
+				if (statistics[i].name) {
+					tsvValues += statistics[i].name + "\t";
+				}
+				else {
+					tsvValues += "\t";
+				}
+				if (statistics[i].value) {
+					tsvValues += statistics[i].value + "\t";
+				}
+				else {
+					tsvValues += "\t";
+				}
+				if (statistics[i].desc) {
+					tsvValues += statistics[i].desc + "\n";
+				}
+				else {
+					tsvValues += "\n";
+				}
+			}
+			streamflowStatisticsTsv = tsvHeader + tsvValues;
+		};
+
+		var statTypes = [];
+		$('#available-statistics input:checked').each(function() {
+			statTypes.push($(this).val());
+		});
+
+		tsvHeader = "\"# Data derived from National Water Census daily flow estimates.\"\n";
+			tsvHeader += "\"# HUC " + hucId +  " was selected.\"\n";
+			tsvHeader += "\"# Statistics calculated using the USGS EflowStats Package\"\n";
+			tsvHeader += "\"# http://cida.usgs.gov/nwc/ang/#/workflow/streamflow-statistics/select-site \"\n";
+			tsvHeader += "\"# http://github.com/USGS-R/EflowStats \"\n";
+		NWC.util.streamStats.getHucStats([hucId], statTypes, startDate, endDate, callback);
+
 	}
 
 });
