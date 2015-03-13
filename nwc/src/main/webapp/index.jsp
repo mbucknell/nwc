@@ -98,6 +98,7 @@
 		
 		<script type="text/javascript" src="js/view/HomeView.js"></script>
 		<script type="text/javascript" src="js/view/AquaticBiologyMapView.js"></script>
+                <script type="text/javascript" src="js/view/AquaticBiologySelectFeaturesView.js"></script>
 		<script type="text/javascript" src="js/view/DataDiscoveryView.js"></script>
 		<script type="text/javascript" src="js/view/StreamflowStatsMapView.js"></script>
                 <script type="text/javascript" src="js/view/StreamflowStatsHucDataView.js"></script>
