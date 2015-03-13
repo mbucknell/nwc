@@ -10,6 +10,7 @@ $(document).ready(function() {
 		'streamflowHucStats',
 		'aquaticBiology',
                 'aquaticBiologySelectFeatures',
+                'aquaticBiologySitesList',
 		'dataDiscovery'
 	];
 

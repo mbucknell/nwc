@@ -68,7 +68,6 @@
 
 		<script type="text/javascript" src="vendorlibs/dygraphs/dygraph${dygraphsMin}.js"></script>
 		<script type="text/javascript" src="vendorlibs/FileSaver.js-master/FileSaver.js"></script>
-                <script type="text/javascript" src="vendorlibs/backgrid-0.3.5/lib/backgrid${backgridMin}.js"></script>
 		
 		<!-- order is important -->
 		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster.js"></script>
