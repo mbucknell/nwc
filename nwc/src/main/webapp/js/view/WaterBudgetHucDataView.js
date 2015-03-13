@@ -29,23 +29,10 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		'click .precipitation-download-button' : 'downloadPrecipitation'
 	},
 
-	render : function() {
-		NWC.view.BaseView.prototype.render.apply(this, arguments);
-		this.map.render(this.insetMapDiv);
-	},
-	
-	huc12 : null,
-	hu12Name : null,
-
 	initialize : function(options) {
 		
-		if (options.hucId) {
-			this.hucId = options.hucId;
-			this.insetMapDiv = options.insetMapDiv;
-		}
-		else {
-			//do we want to check the url query string?
-		}
+		this.hucId = options.hucId;
+		this.insetMapDiv = options.insetMapDiv;
 
 		var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
 
@@ -57,11 +44,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			featureadded: function(event){
 				this.map.zoomToExtent(this.getDataExtent());
 				
-				this.huc12 = event.feature.attributes.HUC_12;
-				this.hu12Name = event.feature.attributes.HU_12_NAME;
 				$('#huc-id').html(event.feature.attributes.HUC_12);
-				$('#huc-name').html(event.feature.attributes.HU_10_NAME);
-//				$('#huc-drainage-area').html(event.feature.attributes.DRAIN_SQKM);
+				$('#huc-name').html(event.feature.attributes.HU_12_NAME);
 			},
 			loadend: function(event) {
 				$('#loading-indicator').hide();
@@ -69,17 +53,18 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		});
 		
 		this.map.addLayer(hucLayer);
-
-		this.getHucData(this.hucId);
-		
+		this.map.zoomToExtent(this.map.getMaxExtent());
+	
 		// call superclass initialize to do default initialize
 		// (includes render)
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
-		this.map.zoomToExtent(this.map.getMaxExtent());
+		this.map.render(this.insetMapDiv);
+		this.getHucData(this.hucId);
 	},
 
 	/**
 	 * This makes a Web service call to get huc data
+	 * then makes call to render the data on a plot
 	 * @param {String} huc 12 digit identifier for the hydrologic unit
 	 */
 	getHucData: function(huc) {
@@ -117,8 +102,6 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
                     //@todo - setup app level error handling
                     var errorMessage = 'error retrieving time series data';
                     alert(errorMessage);
-                    $log.error(errorMessage);
-                    $log.error(arguments);
                     d.reject();
 				}
 			});
@@ -136,7 +119,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
      * {String} time, the time scale of data to plot (daily or monthly)
      */
 	plotPTandETaData : function(time, measurement) {
-        var plotDivSelector = '#waterBudgetPlot';  //get this from router?
+        var plotDivSelector = '#waterBudgetPlot';
         var legendDivSelector = '#waterBudgetLegend';
         var normalization = 'normalizedWater';
         var plotTimeDensity  = time;
@@ -211,8 +194,9 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	getHucFilename : function (series) {
 		var filename = series + '_data.csv';
-        if (this.hu12Name || this.huc12) {
-        	filename = this.buildName(this.hu12Name, this.huc12, series);
+		var hucName = $('#huc-name').html();
+        if (hucName || this.hucId) {
+        	filename = this.buildName(hucName, this.hucId, series);
         }
 		return filename;
 	},
