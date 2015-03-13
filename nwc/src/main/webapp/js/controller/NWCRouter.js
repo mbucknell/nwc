@@ -39,8 +39,9 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	},
 
 	waterbudgetHucData : function(huc) {
-		this.showView(NWC.view.WaterBudgetHucDataView, {hucValue : huc, plotDiv : 'waterBudgetPlot'});
-//		$(this.applicationContextDiv).html('Water Budget Huc Data for Huc 12 ' + huc);
+		this.showView(NWC.view.WaterBudgetHucDataView, {
+			hucId : huc, 
+			insetMapDiv : 'huc-inset'});
 	},
 
 	streamflowStats : function() {
