@@ -79,60 +79,6 @@ NWC.util.DataSeriesStore = function () {
 		var labels = NWC.util.DataSeriesStore[seriesClass].metadata.seriesLabels;
 		NWC.util.DataSeriesStore[seriesClass].metadata.seriesLabels = labels.union(metadata.seriesLabels);
 	};
-
-	/*
-	daymet comes in daily
-	eta comes in monthly
-	Presume both series' data arrays are sorted in order of ascending date.
-            
-	Every day-row of every month must have a daymet value as-is
-	If a given month has a monthly eta value, you must divide the value 
-	by the number of days in the month and insert the result in 
-	every day-row for that month. If a given month has no eta value,
-	insert NaN in every day-row for that month.
-	 */
-	var updateDailyHucSeries = function (nameToSeriesMap) {
-		var dailyTable = [],
-		etaIndex = 0,
-		//set eta for daily 
-		etaForCurrentMonth = NaN,
-		dayMetSeries = nameToSeriesMap.dayMet,
-		etaSeries = nameToSeriesMap.eta;
-
-		dayMetSeries.data.each(function (dayMetRow) {
-			var dayMetDateStr = dayMetRow[0],
-			dayMetValue = dayMetRow[1],
-			dayMetDay = getDayNumberFromDateString(dayMetDateStr);
-			//if looking at the first day of a month
-			if (1 === dayMetDay) {
-				var etaRow = etaSeries.data[etaIndex];
-				//check to see if you've fallen off the end of the eta data
-				if (etaRow) {
-					var etaDateStr = etaRow[0];
-					var etaValue = etaRow[1];
-					//ensure that there is eta data for this month.
-					if (etaDateStr === dayMetDateStr) {
-						etaForCurrentMonth = etaValue;
-						etaIndex++;
-					}
-				}//else we have fallen off the end of the eta array
-				else {
-					etaForCurrentMonth = NaN;
-				}
-			}
-			var date = Date.create(dayMetDateStr).utc();
-			var averageDailyEta = etaForCurrentMonth / date.daysInMonth();
-			var rowToAdd = [];
-			rowToAdd[columnIndices.date] = date;
-			rowToAdd[columnIndices.dayMet] = dayMetValue;
-			rowToAdd[columnIndices.eta] = averageDailyEta;
-			dailyTable.push(rowToAdd);
-		});
-		NWC.util.DataSeriesStore.daily.data = dailyTable;
-
-		addSeriesLabel('daily', dayMetSeries.metadata);
-		addSeriesLabel('daily', etaSeries.metadata);
-	};
             
 	//these string helpers that are called 100's of times per time series
 	//are faster than constructing a new date from the string and 
@@ -151,73 +97,6 @@ NWC.util.DataSeriesStore = function () {
 	var saferAdd = function (value1, value2) {
 		return (value1 + value2).round(roundConstant);
 	};
-            
-	/*
-	daymet comes in daily
-	eta comes in monthly
-	Presume both series' data arrays are sorted in order of ascending date.
-                
-	Every month-row must have an eta value as-is
-            
-	If there are daily daymet records for that month, we must accumulate all of them
-	and put them in the daymet value for that month-row. If there are no daily daymet records for that month,
-	let the daymet value for that month-row be NaN
-            
-	If the first day of a month has daymet values, daymet values will be present for every day of a month, 
-	except if the month in question is the last month in the period of record, in which case it might not have daymet values
- 	for every day of the month. If there is not a complete set of daily values for the last month, omit the month.
-	*/
-	var updateMonthlyHucSeries = function (nameToSeriesMap) {
-		var monthlyTable = [],
-		etaIndex = 0,
-		etaForCurrentMonth = NaN,
-		dayMetSeries = nameToSeriesMap.dayMet,
-		monthlyAccumulation = 0,
-		monthDateStr = '', //stored at the beginning of every month, used later once the totals have been accumulated for the month
-		endOfMonth, //stores the end of the current month of iteration
-		etaSeries = nameToSeriesMap.eta;
-
-		dayMetSeries.data.each(function (dayMetRow) {
-			var dayMetDateStr = dayMetRow[0],
-			dayMetValue = dayMetRow[1],
-			dayMetDay = getDayNumberFromDateString(dayMetDateStr);
-			if (undefined === endOfMonth) {
-				endOfMonth = Date.create(dayMetDateStr).utc().daysInMonth();
-				monthDateStr = dayMetDateStr;
-			}
-			monthlyAccumulation = saferAdd(monthlyAccumulation, dayMetValue);
-			if (dayMetDay === endOfMonth) {
-				//join the date, accumulation and the eta for last month
-				var etaRow = etaSeries.data[etaIndex];
-				if (etaRow) {
-					var etaDateStr = etaRow[0];
-					var etaValue = etaRow[1];
-					if (etaDateStr === monthDateStr) {
-						etaForCurrentMonth = etaValue;
-						etaIndex++;
-					}
-				}
-				//else we have fallen off the end of the eta array
-				else {
-					etaForCurrentMonth = NaN;
-				}
-				var date = Date.create(monthDateStr).utc();
-				var rowToAdd = [];
-				rowToAdd[columnIndices.date] = date;
-				rowToAdd[columnIndices.dayMet] = monthlyAccumulation;
-				rowToAdd[columnIndices.eta] = etaForCurrentMonth;
-				monthlyTable.push(rowToAdd);
-                        
-				//reset for the next months
-				monthlyAccumulation = 0;
-				endOfMonth = undefined;
-			}
-		});
-		NWC.util.DataSeriesStore.monthly.data = monthlyTable;
-
-		addSeriesLabel('monthly', dayMetSeries.metadata);
-		addSeriesLabel('monthly', etaSeries.metadata);
-	};
 
 	return {
 		getIndexOfColumnNamed : function(columnName) {
@@ -228,6 +107,127 @@ NWC.util.DataSeriesStore = function () {
 		dayMet : NWC.util.DataSeries.newSeries(),
 		daily : NWC.util.DataSeries.newSeries(),
 		monthly : NWC.util.DataSeries.newSeries(),
+
+		/*
+		daymet comes in daily
+		eta comes in monthly
+		Presume both series' data arrays are sorted in order of ascending date.
+	            
+		Every day-row of every month must have a daymet value as-is
+		If a given month has a monthly eta value, you must divide the value 
+		by the number of days in the month and insert the result in 
+		every day-row for that month. If a given month has no eta value,
+		insert NaN in every day-row for that month.
+		 */
+		updateDailyHucSeries : function (nameToSeriesMap) {
+			var dailyTable = [],
+			etaIndex = 0,
+			//set eta for daily 
+			etaForCurrentMonth = NaN,
+			dayMetSeries = nameToSeriesMap.dayMet,
+			etaSeries = nameToSeriesMap.eta;
+
+			dayMetSeries.data.each(function (dayMetRow) {
+				var dayMetDateStr = dayMetRow[0],
+				dayMetValue = dayMetRow[1],
+				dayMetDay = getDayNumberFromDateString(dayMetDateStr);
+				//if looking at the first day of a month
+				if (1 === dayMetDay) {
+					var etaRow = etaSeries.data[etaIndex];
+					//check to see if you've fallen off the end of the eta data
+					if (etaRow) {
+						var etaDateStr = etaRow[0];
+						var etaValue = etaRow[1];
+						//ensure that there is eta data for this month.
+						if (etaDateStr === dayMetDateStr) {
+							etaForCurrentMonth = etaValue;
+							etaIndex++;
+						}
+					}//else we have fallen off the end of the eta array
+					else {
+						etaForCurrentMonth = NaN;
+					}
+				}
+				var date = Date.create(dayMetDateStr).utc();
+				var averageDailyEta = etaForCurrentMonth / date.daysInMonth();
+				var rowToAdd = [];
+				rowToAdd[columnIndices.date] = date;
+				rowToAdd[columnIndices.dayMet] = dayMetValue;
+				rowToAdd[columnIndices.eta] = averageDailyEta;
+				dailyTable.push(rowToAdd);
+			});
+			NWC.util.DataSeriesStore.daily.data = dailyTable;
+
+			addSeriesLabel('daily', dayMetSeries.metadata);
+			addSeriesLabel('daily', etaSeries.metadata);
+		},
+        
+		/*
+		daymet comes in daily
+		eta comes in monthly
+		Presume both series' data arrays are sorted in order of ascending date.
+	                
+		Every month-row must have an eta value as-is
+	            
+		If there are daily daymet records for that month, we must accumulate all of them
+		and put them in the daymet value for that month-row. If there are no daily daymet records for that month,
+		let the daymet value for that month-row be NaN
+	            
+		If the first day of a month has daymet values, daymet values will be present for every day of a month, 
+		except if the month in question is the last month in the period of record, in which case it might not have daymet values
+	 	for every day of the month. If there is not a complete set of daily values for the last month, omit the month.
+		*/
+		updateMonthlyHucSeries : function (nameToSeriesMap) {
+			var monthlyTable = [],
+			etaIndex = 0,
+			etaForCurrentMonth = NaN,
+			dayMetSeries = nameToSeriesMap.dayMet,
+			monthlyAccumulation = 0,
+			monthDateStr = '', //stored at the beginning of every month, used later once the totals have been accumulated for the month
+			endOfMonth, //stores the end of the current month of iteration
+			etaSeries = nameToSeriesMap.eta;
+
+			dayMetSeries.data.each(function (dayMetRow) {
+				var dayMetDateStr = dayMetRow[0],
+				dayMetValue = dayMetRow[1],
+				dayMetDay = getDayNumberFromDateString(dayMetDateStr);
+				if (undefined === endOfMonth) {
+					endOfMonth = Date.create(dayMetDateStr).utc().daysInMonth();
+					monthDateStr = dayMetDateStr;
+				}
+				monthlyAccumulation = saferAdd(monthlyAccumulation, dayMetValue);
+				if (dayMetDay === endOfMonth) {
+					//join the date, accumulation and the eta for last month
+					var etaRow = etaSeries.data[etaIndex];
+					if (etaRow) {
+						var etaDateStr = etaRow[0];
+						var etaValue = etaRow[1];
+						if (etaDateStr === monthDateStr) {
+							etaForCurrentMonth = etaValue;
+							etaIndex++;
+						}
+					}
+					//else we have fallen off the end of the eta array
+					else {
+						etaForCurrentMonth = NaN;
+					}
+					var date = Date.create(monthDateStr).utc();
+					var rowToAdd = [];
+					rowToAdd[columnIndices.date] = date;
+					rowToAdd[columnIndices.dayMet] = monthlyAccumulation;
+					rowToAdd[columnIndices.eta] = etaForCurrentMonth;
+					monthlyTable.push(rowToAdd);
+	                        
+					//reset for the next months
+					monthlyAccumulation = 0;
+					endOfMonth = undefined;
+				}
+			});
+			NWC.util.DataSeriesStore.monthly.data = monthlyTable;
+
+			addSeriesLabel('monthly', dayMetSeries.metadata);
+			addSeriesLabel('monthly', etaSeries.metadata);
+		},
             
 		/*
 		* @param {Map<String, DataSeries>} nameToSeriesMap A map of series id to
@@ -237,8 +237,8 @@ NWC.util.DataSeriesStore = function () {
 			this.eta = nameToSeriesMap.eta;
 			this.dayMet = nameToSeriesMap.dayMet;
                 
-			updateDailyHucSeries(nameToSeriesMap);
-			updateMonthlyHucSeries(nameToSeriesMap);
+			this.updateDailyHucSeries(nameToSeriesMap);
+			this.updateMonthlyHucSeries(nameToSeriesMap);
 		}
 	};
 }();

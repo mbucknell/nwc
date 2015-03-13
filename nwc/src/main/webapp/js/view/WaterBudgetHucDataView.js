@@ -4,20 +4,19 @@ NWC.view = NWC.view || {};
 
 /*
  * View for the water budget huc data page
- *
- * @constructor extends NWC.BaseSelectMapView
+ * @constructor extends NWC.BaseView
  */
 
 NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
+	
 	templateName : 'waterbudgetHucData',
+	
 	ETA : "eta",
 	DAY_MET : "dayMet",
 	DAILY : "daily",
 	MONTHLY : "monthly",
 	METRIC : "metric",
 	CUSTOMARY : "usCustomary",
-
-//	model : new NWC.model.WaterBudgetSelectMapModel(),
 
 	events: {
 		'click .back-button' : 'goToWaterbudget',
@@ -30,13 +29,53 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		'click .precipitation-download-button' : 'downloadPrecipitation'
 	},
 
+	render : function() {
+		NWC.view.BaseView.prototype.render.apply(this, arguments);
+		this.map.render(this.insetMapDiv);
+	},
+	
+	huc12 : null,
+	hu12Name : null,
+
 	initialize : function(options) {
+		
+		if (options.hucId) {
+			this.hucId = options.hucId;
+			this.insetMapDiv = options.insetMapDiv;
+		}
+		else {
+			//do we want to check the url query string?
+		}
+
+		var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
+
+		this.map = NWC.util.mapUtils.createMap([baseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
+
+		var hucLayer = NWC.util.mapUtils.createHucFeatureLayer(this.hucId);
+
+		hucLayer.events.on({
+			featureadded: function(event){
+				this.map.zoomToExtent(this.getDataExtent());
+				
+				this.huc12 = event.feature.attributes.HUC_12;
+				this.hu12Name = event.feature.attributes.HU_12_NAME;
+				$('#huc-id').html(event.feature.attributes.HUC_12);
+				$('#huc-name').html(event.feature.attributes.HU_10_NAME);
+//				$('#huc-drainage-area').html(event.feature.attributes.DRAIN_SQKM);
+			},
+			loadend: function(event) {
+				$('#loading-indicator').hide();
+			}
+		});
+		
+		this.map.addLayer(hucLayer);
+
+		this.getHucData(this.hucId);
 		
 		// call superclass initialize to do default initialize
 		// (includes render)
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
-
-		this.getHucData(options.hucValue);
+		this.map.zoomToExtent(this.map.getMaxExtent());
 	},
 
 	/**
@@ -58,11 +97,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			$.ajax({
 				url : url,
 				success : function(data, textStatus, jqXHR) {
-					var i;
-					var label = '';
-					for (i=0; i<this.length; i++){
-						label = label + this[i];
-					}
+					var label = this.valueOf();
 					var parsedValues = NWC.util.SosResponseFormatter.formatSosResponse(data);
 					var labeledDataSeries = NWC.util.DataSeries.newSeries();
 					labeledDataSeries.metadata.seriesLabels.push(
@@ -90,47 +125,10 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
         });
 		var dataHandler = function() {
 			NWC.util.DataSeriesStore.updateHucSeries(labeledResponses);
-			this.displayHucData(huc);
+			this.plotPTandETaData(this.DAILY, this.CUSTOMARY);
 		}.bind(this);
 		$.when.apply(null, labeledAjaxCalls).then(dataHandler);
 		return;
-	},
-
-	/**
-	 * This renders the huc info on the view
-	 */
-	displayHucData: function(huc) {
-		this.$(".hucId").html(huc);
-		
-		// Create vector layer to show HUC
-//           var layerStyle = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
-//           layerStyle.fillOpacity = 0;
-//           layerStyle.graphicOpacity = 1;
-//           layerStyle.strokeColor = "black";
-//           layerStyle.strokeWidth = 2;
-//           var hucVectorLayer = new OpenLayers.Layer.Vector("Simple Geometry Huc", {
-//              	style: layerStyle
-//           });
-//
-//       	var hucFeature = new OpenLayers.Feature.Vector(StoredState.waterBudgetHucFeature.geometry);
-//       	hucVectorLayer.addFeatures([hucFeature]);
-//
-//		$scope.hucLayer = [hucVectorLayer];
-//		$scope.hucBounds = hucVectorLayer.getDataExtent();
-//
-//       var selectionInfo = {};
-//       if (StoredState.waterBudgetHucFeature) {
-//           selectionInfo.hucId = StoredState.waterBudgetHucFeature.data.HUC_12;
-//           selectionInfo.hucName = StoredState.waterBudgetHucFeature.data.HU_10_NAME;
-//       } else {
-//           $state.go("^.selectHuc");
-//           return;
-//       }
-//       $scope.selectionInfo = selectionInfo;
-//
-       this.plotPTandETaData(this.DAILY, this.CUSTOMARY);
-
-       return;
 	},
 
     /**
@@ -200,23 +198,22 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	downloadEvapotranspiration : function() {
-		var blob = new Blob([NWC.util.DataSeriesStore.eta.toCSV(true)], {type:'text/csv'});
+		var blob = new Blob([NWC.util.DataSeriesStore.eta.toCSV()], {type:'text/csv'});
 		saveAs(blob, this.getHucFilename('eta'));
 		return;
 	},
 
 	downloadPrecipitation : function() {
-		var blob = new Blob([NWC.util.DataSeriesStore.dayMet.toCSV(true)], {type:'text/csv'});
+		var blob = new Blob([NWC.util.DataSeriesStore.dayMet.toCSV()], {type:'text/csv'});
 		saveAs(blob, this.getHucFilename('dayMet'));	
 		return;
 	},
 
 	getHucFilename : function (series) {
-		var filename = series + '_data.csv'; //temporary
-//		if (StoredState.waterBudgetHucFeature) {
-//			filename = buildName(StoredState.waterBudgetHucFeature.data.HU_12_NAME,
-//					StoredState.waterBudgetHucFeature.data.HUC_12, series);
-//		}
+		var filename = series + '_data.csv';
+        if (this.hu12Name || this.huc12) {
+        	filename = this.buildName(this.hu12Name, this.huc12, series);
+        }
 		return filename;
 	},
 
