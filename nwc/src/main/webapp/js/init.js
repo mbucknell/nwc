@@ -10,13 +10,12 @@ $(document).ready(function() {
 		'streamflowHucStats',
 		'aquaticBiology',
                 'aquaticBiologySelectFeatures',
-                'aquaticBiologySitesList',
 		'dataDiscovery'
 	];
 
 	var PARTIALS = [
 		'mapControls',
-		'warningModal'
+		'warningModal'                
 	];
 
 	NWC.templates = NWC.util.templateLoader();
