@@ -6,7 +6,6 @@ NWC.view = NWC.view || {};
  * View for the streamflow stats huc data page
  * @constructor extends NWC.BaseView
  */
-
 NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 
 	templateName : 'streamflowHucStats',
@@ -220,7 +219,6 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 
 		var blob = new Blob([this.modeledDataSeries.toCSV()], {type:'text/tsv'});
 		saveAs(blob, filename);
-
 	}
 
 });

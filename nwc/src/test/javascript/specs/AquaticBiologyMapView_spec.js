@@ -9,8 +9,14 @@ describe('Tests for NWC.view.AquaticBiologyMapView', function() {
 	var $gageLayerButton, $hucLayerButton, $observedInfo, $modeledInfo
 
 	beforeEach(function() {
+		CONFIG = {
+			endpoint : {
+				geoserver : 'http://fakeserver.com'
+			}
+		};
+
 		thisTemplate = jasmine.createSpy();
-		
+
 		templateHtml = '<div id="map-div"></div>' +
 			'<button id="gage-layer-button"></button>' +
 			'<button id="huc-layer-button"></button>' +
