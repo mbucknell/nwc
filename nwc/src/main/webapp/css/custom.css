@@ -103,6 +103,10 @@ h5, h6 {
 	border: 			1px solid #a3a3a3;
 }
 
+#statistics-calculation-div {
+	margin-top : 20px;
+}
+
 .huc_table tbody tr:hover {
 	background-color:	#C8D0DD !important;
 }

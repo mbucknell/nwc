@@ -167,7 +167,7 @@ NWC.util.mapUtils = (function () {
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
 			featureType: 'huc12_SE_Basins_v2',
-			featureNS: "NWC",
+			featureNS: "http://cida.usgs.gov/NWC",
 			version: "1.1.0",
 			geometryName: "the_geom",
 			srsName : "EPSG:900913"

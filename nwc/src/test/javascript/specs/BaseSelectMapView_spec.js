@@ -1,15 +1,16 @@
 describe('Tests for NWC.view.BaseSelectMapView', function() {
-	CONFIG = {
-		endpoint : {
-			geoserver : 'http://fakeserver.com'
-		}
-	};
 
 	var selectControl, mapSpy, NewView, template;
 	var $selectButton, $panButton, $zoomButton;
 	var $selectInfo, $panInfo, $zoomInfo;
 
 	beforeEach(function() {
+		CONFIG = {
+			endpoint : {
+				geoserver : 'http://fakeserver.com'
+			}
+		};
+
 		search_api = {
 			on : jasmine.createSpy('search_api.onSpy'),
 			setOpts : jasmine.createSpy('search_api.setOptsSpy')
