@@ -17,7 +17,9 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 	events : {
 		'click #calculate-stats-button' : 'calculateStats',
 		'click #available-statistics input' : 'calculateStatsEnable',
-		'click #download-stats-button' : 'downloadStats'
+		'click #download-stats-button' : 'downloadStats',
+		'click #streamflow-data-plot-button' : 'plotStreamFlowData',
+		'click #streamflow-data-download-button' : 'downloadModeledData'
 	},
 
 	context : {
@@ -39,28 +41,29 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 
 		this.map = NWC.util.mapUtils.createMap([baseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
 
-		var hucLayer = NWC.util.mapUtils.createHucSEBasinFeatureLayer(options.hucId);
+		this.hucLayer = NWC.util.mapUtils.createHucSEBasinFeatureLayer(options.hucId);
 
-		//TODO: take out console.log statements. Leaving in console.log statements for now until HUC feature layer works.
-		hucLayer.events.on({
+		this.hucLayer.events.on({
 			featureadded: function(event){
-				this.map.zoomToExtent(this.getDataExtent());
+				this.hucName = event.feature.attributes.HU_12_NAME;
+				this.map.zoomToExtent(this.hucLayer.getDataExtent());
 
-				$('#huc-name').html(event.feature.attributes.HU_12_NAME);
+				$('#huc-name').html(this.hucName);
 				$('#huc-drainage-area').html(event.feature.attributes.DRAIN_SQKM);
 			},
 			loadend: function(event) {
 				$('#loading-indicator').hide();
-			}
+			},
+			scope : this
 		});
-		this.map.addLayer(hucLayer);
+		this.map.addLayer(this.hucLayer);
 
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 		this.map.zoomToExtent(this.map.getMaxExtent());
 
 		// Initialize DOM on page
-		$start = $('#start-year option[value="' + this.context.years.first() + '"]');
-		$end = $('#end-year option[value="' + this.context.years.last() + '"]');
+		var $start = $('#start-year option[value="' + this.context.years.first() + '"]');
+		var $end = $('#end-year option[value="' + this.context.years.last() + '"]');
 		$start.prop('selected', true);
 		$end.prop('selected', true);
 	},
@@ -142,6 +145,82 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 
 		var blob = new Blob([this._getStatsTsv()], {type:'text/tsv'});
 		saveAs(blob, this._getStatsFilename());
+	},
+
+	plotStreamFlowData : function(ev) {
+		var sosUrl = NWC.util.buildSosUrlFromSource(this.context.hucId, NWC.util.SosSources.modeledQ);
+
+		var strToDate = function(dateStr){
+		  return Date.create(dateStr).utc();
+		};
+
+		var modeledFailure = function (response) {
+			var message = 'An error occurred while retrieving water withdrawals data from:\n' +
+					'See browser logs for details';
+			alert(message);
+		};
+
+		var modeledSuccess = function (data) {
+			$('#streamflow-data-plot-button').hide();
+			$('#streamflow-data-download-button').show();
+			$('#streamflow-plot-div').show();
+			var parsedTable = NWC.util.SosResponseFormatter.formatSosResponse(data);
+			var convertedTable = parsedTable.map(function(row) {
+				return row.map(function(column, index){
+					var val = column;
+					if (index === 0) {
+						val = strToDate(column);
+					}
+					return val;
+				});
+			});
+
+			var modeledDataSeries = NWC.util.DataSeries.newSeries();
+			var TIME_DENSITY = 'daily';
+			var MEASUREMENT_SYSTEM = 'usCustomary';
+
+			var plotDivSelector = '#modeledQPlot';
+			var legendDivSelector = '#modeledQLegend';
+
+			modeledDataSeries.data = convertedTable;
+
+			//use the series metadata as labels
+			var additionalSeriesLabels = NWC.util.SosSources.modeledQ.propertyLongName.split(',');
+			additionalSeriesLabels.each(function(label) {
+				modeledDataSeries.metadata.seriesLabels.push({
+					seriesName: label,
+					seriesUnits: NWC.util.SosSources.modeledQ.units
+				});
+			});
+			modeledDataSeries.metadata.downloadHeader = NWC.util.SosSources.modeledQ.downloadMetadata;
+
+			this.modeledDataSeries = modeledDataSeries;
+
+			var values = this.modeledDataSeries.getDataAs(MEASUREMENT_SYSTEM, 'streamflow');
+			var labels = this.modeledDataSeries.getSeriesLabelsAs(MEASUREMENT_SYSTEM, 'streamflow', TIME_DENSITY);
+			var ylabel = NWC.util.Units[MEASUREMENT_SYSTEM].streamflow[TIME_DENSITY];
+			var title = "Modeled Streamflow for the " + this.hucName + ' Watershed.';
+			NWC.util.Plotter.getPlot(plotDivSelector, legendDivSelector, values, labels, ylabel, title);
+		}.bind(this);
+
+		ev.preventDefault();
+		$('#plot-loading-indicator').show();
+		$.ajax({
+			url: sosUrl,
+			success : modeledSuccess,
+			error : modeledFailure
+		}).always(function() {
+			$('#plot-loading-indicator').hide();
+		});
+
+	},
+	downloadModeledData : function(ev) {
+		ev.preventDefault();
+		var filename = this.hucName + '_' + this.context.hucId + '_Q.csv';
+
+		var blob = new Blob([this.modeledDataSeries.toCSV()], {type:'text/tsv'});
+		saveAs(blob, filename);
+
 	}
 
 });

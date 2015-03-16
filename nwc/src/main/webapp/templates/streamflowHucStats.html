@@ -35,13 +35,23 @@
 				<div id="huc-inset" style="height:200px;width:200px;border-style:solid;border-width:1px;"></div>
 			</div>
 		</div>
-		<div ng-hide="!StoredState.streamFlowStatHucFeature" class="row col-xs-12 text-center spacer spacer-down">
-			<button type="button" class="btn btn-success" ng-model="CommonState.showStreamflowPlot" btn-checkbox>Streamflow Data Plot</button>
+		<div class="row col-xs-12 text-center spacer spacer_down">
+			<button id="streamflow-data-plot-button" type="button" class="btn btn-success">Streamflow Data Plot</button>
+			<button style="display:none;" id="streamflow-data-download-button" type="button" class="btn btn-success">Download Modeled Streamflow</button>
 		</div>
-		<div class="row col-xs-12 text-center spacer spacer-down">
+		<h4 id="plot-loading-indicator" style="display:none">Loading plot data <i class="fa fa-spinner fa-spin"></i></h4>
+		<div id="streamflow-plot-div" class="row col-xs-12 spacer spacer_down" style="display: none;">
+			<div style="height: 400px;" id="modeledQPlot" class="col-xs-10"></div>
+			<div class="col-xs-2">
+				<div class="row">
+					<div id="modeledQLegend" class="col-xs-12"></div>
+				</div>
+			</div>
+		</div>
+		<div id="statistics-calculation-div" class="row col-xs-12 text-center spacer_down">
 			<button id="calculate-stats-button" disabled="disabled" class="btn btn-success">Calculate Statistics</button>
 		</div>
-		<form class="row" name="statsParams" novalidate>
+		<form class="row spacer spacer_down" name="statsParams" novalidate>
 			<div class="col-xs-12 spacer">
 				<h4 class="text-center">Date Range (Water Years)</h4>
 
@@ -85,7 +95,7 @@
 					</tbody>
 				</table>
 			</div>
-			
+
 		</form>
 		<h4 id="loading-stats-indicator" style="display:none;">Calculating statistics <i class="fa fa-spinner fa-spin"></i></h4>
 		<div id="stats-results-div" style="display:none;" class="row col-xs-12 table-responsive">
@@ -94,7 +104,6 @@
 			</div>
 			<div id="stats-results-table-div"></div>
 		</div>
-		
 	</div>
 </div>
 				
