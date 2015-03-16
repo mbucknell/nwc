@@ -13,10 +13,10 @@
                         {{#if biodataSites}}
                         <h4>Aquatic Biology Data Sites</h4>
                         <div id="sites-table-div">
-                            <table class="table table-striped">
+                            <table class="table table-striped sites-table">
                                 <thead>
                                     <tr>
-                                        <th><input type="checkbox" class="allSelected" ng-change="processSelectAll()"/>
+                                        <th><input type="checkbox" id="allSelected" name="allSelected"/>
                                             &nbsp;Select</th>
                                         <th>Site Number</th>
                                         <th>Site Name</th>
@@ -26,7 +26,7 @@
                                     {{#each biodataSites}}
                                     <tr>
                                         <td class="xs-col-2">
-                                            <input type="checkbox" class="toggle" name="{{SiteNumber}}" value="{{SiteNumber}}"/>
+                                            <input type="checkbox" class="sites" name="{{SiteNumber}}" value="{{SiteNumber}}"/>
                                         </td>
                                         <td class="xs-col-4">{{SiteNumber}}</td>
                                         <td class="xs-col-4">{{SiteName}}</td>
