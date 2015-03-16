@@ -7,12 +7,8 @@ NWC.model.AquaticBiologyFeaturesModel =  Backbone.Model.extend({
         defaults : {
             sites : [],
             gages : [],
-            hucs : []
-        }                       
+            hucs : [],
+            selected : []
+        }
                         
-});
-
-
-NWC.collection.Features = Backbone.Collection.extend({
-  model: NWC.model.AquaticBiologyFeaturesModel
 });

@@ -3,7 +3,7 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<h3>Aquatic Biology Data and Related Streamflow Statistics</h3>
-                                <p></p>
+                                <p><button id="selected-sites-button" class="btn btn-primary">show selected sites</button></p>
                                 <p></p>
                                 <p></p>
 			</div>
@@ -16,7 +16,7 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th><input type="checkbox" ng-model="allSelected" ng-change="processSelectAll()"/>
+                                        <th><input type="checkbox" class="allSelected" ng-change="processSelectAll()"/>
                                             &nbsp;Select</th>
                                         <th>Site Number</th>
                                         <th>Site Name</th>
@@ -26,7 +26,7 @@
                                     {{#each biodataSites}}
                                     <tr>
                                         <td class="xs-col-2">
-                                            <input type="checkbox" name="{{SiteNumber}}" value="{{SiteNumber}}"/>
+                                            <input type="checkbox" class="toggle" name="{{SiteNumber}}" value="{{SiteNumber}}"/>
                                         </td>
                                         <td class="xs-col-4">{{SiteNumber}}</td>
                                         <td class="xs-col-4">{{SiteName}}</td>
