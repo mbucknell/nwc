@@ -35,7 +35,6 @@ NWC.util.DataSeries = function () {
 					this.data.each(function(row) {
 						csvValues += row.join(",") + "\r\n";
 					});
-//					return encodeURIComponent(csvHeader + csvValues);
 					return csvHeader + csvValues;
 				},
 				getDataAs: function(measurementSystem, measure, normalizationFn) {
