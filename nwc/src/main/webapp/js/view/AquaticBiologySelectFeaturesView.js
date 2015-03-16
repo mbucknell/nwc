@@ -8,8 +8,12 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
         },
         
         initialize : function() {
-            NWC.view.BaseView.prototype.initialize.apply(this, arguments);
             this.context.biodataSites = this.model.get('sites');
-            $('#sites-table-div').html(NWC.templates.getTemplate('aquaticBiologySitesList')({biodataSites : this.model.get('sites')}));
+            this.context.gages = this.model.get('gages');
+            this.context.hucs = this.model.get('hucs');
+            $('#sites-table-div').html({biodataSites : this.model.get('sites')});
+            $('#gages-table-div').html({gages : this.model.get('gages')});
+            $('#hucs-table-div').html({hucs : this.model.get('hucs')});
+            NWC.view.BaseView.prototype.initialize.apply(this, arguments);
             }
 });
