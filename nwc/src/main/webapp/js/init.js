@@ -10,7 +10,10 @@ $(document).ready(function() {
 		'streamflowHucStats',
 		'aquaticBiology',
 		'dataDiscovery',
-		'statsResults'
+		'statsResults',
+		'aquaticBiologySelectFeatures',
+		'aquaticBiologySitesList',
+		'dataDiscovery'
 	];
 
 	var PARTIALS = [

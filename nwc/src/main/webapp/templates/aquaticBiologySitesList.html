@@ -1,0 +1,20 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Select</th>
+            <th>Site Number</th>
+            <th>Site Name</th>
+        </tr>
+    </thead>
+    <tbody id="sites">
+        {{#each biodataSites}}
+        <tr ng-repeat="site in CommonState.biodataSites">
+            <td class="xs-col-2">
+                <input type="checkbox" name="{{this.SiteNumber}}" value="{{this.SiteNumber}}"/>
+            </td>
+            <td class="xs-col-4">{{this.SiteNumber}}</td>
+            <td class="xs-col-4">{{this.SiteName}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
