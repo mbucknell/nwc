@@ -29,8 +29,12 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		'click .precipitation-download-button' : 'downloadPrecipitation'
 	},
 
+	context : {
+	},
+
 	initialize : function(options) {
 		
+		this.context.hucId = options.hucId;
 		this.hucId = options.hucId;
 		this.insetMapDiv = options.insetMapDiv;
 
@@ -38,21 +42,21 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		this.map = NWC.util.mapUtils.createMap([baseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
 
-		var hucLayer = NWC.util.mapUtils.createHucFeatureLayer(this.hucId);
+		this.hucLayer = NWC.util.mapUtils.createHucFeatureLayer(options.hucId);
 
-		hucLayer.events.on({
+		this.hucLayer.events.on({
 			featureadded: function(event){
 				this.map.zoomToExtent(this.getDataExtent());
 				
-				$('#huc-id').html(event.feature.attributes.HUC_12);
 				$('#huc-name').html(event.feature.attributes.HU_12_NAME);
 			},
 			loadend: function(event) {
 				$('#loading-indicator').hide();
-			}
+			},
+			scope : this
 		});
 		
-		this.map.addLayer(hucLayer);
+		this.map.addLayer(this.hucLayer);
 		this.map.zoomToExtent(this.map.getMaxExtent());
 	
 		// call superclass initialize to do default initialize
@@ -195,7 +199,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	getHucFilename : function (series) {
 		var filename = series + '_data.csv';
 		var hucName = $('#huc-name').html();
-        if (hucName || this.hucId) {
+        if (hucName && this.hucId) {
         	filename = this.buildName(hucName, this.hucId, series);
         }
 		return filename;
