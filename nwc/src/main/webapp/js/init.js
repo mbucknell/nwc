@@ -9,13 +9,14 @@ $(document).ready(function() {
 		'streamflowStats',
 		'streamflowHucStats',
 		'aquaticBiology',
-                'aquaticBiologySelectFeatures',
-		'dataDiscovery'
+		'aquaticBiologySelectFeatures',
+		'dataDiscovery',
+		'statsResults'
 	];
 
 	var PARTIALS = [
 		'mapControls',
-		'warningModal'                
+		'warningModal'
 	];
 
 	NWC.templates = NWC.util.templateLoader();

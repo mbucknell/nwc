@@ -111,6 +111,7 @@
 						<source>webjars/backbone.js</source>
 						<source>webjars/handlebars.js</source>
 						<source>webjars/OpenLayers.js</source>	
+						<source>${basedir}/src/main/webapp/vendorlibs/FileSaver.js-master/FileSaver.js</source>
 					</preloadSources>
 					<sourceIncludes>
 						<include>model/BaseSelectMapModel.js</include>
@@ -157,6 +158,7 @@
 						<pattern>.*/backbone.js</pattern>
 						<pattern>.*/handlebars.js</pattern>
 						<pattern>.*/OpenLayers.js</pattern>
+						<pattern>.*/FileSaver.js</pattern>
 						<!-- Add patterns for files that don't need to be analyzed such as library files -->
                     </noInstrumentPatterns>
                 </configuration>
