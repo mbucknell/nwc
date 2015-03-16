@@ -71,10 +71,13 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	},
 
 	aquaticBiologySelectFeatures : function() {
-		$(this.applicationContextDiv).html('Select features: site count: ' +
-			this.aquaticBiologyFeaturesModel.get('sites').length + ', Gage count: ' +
-			this.aquaticBiologyFeaturesModel.get('gages').length + ', Huc count: ' +
-			this.aquaticBiologyFeaturesModel.get('hucs').length);
+            this.showView(NWC.view.AquaticBiologySelectFeaturesView, {
+                model : this.aquaticBiologyFeaturesModel
+            });
+		//$(this.applicationContextDiv).html('Select features: site count: ' +
+		//	this.aquaticBiologyFeaturesModel.get('sites').length + ', Gage count: ' +
+		//	this.aquaticBiologyFeaturesModel.get('gages').length + ', Huc count: ' +
+		//	this.aquaticBiologyFeaturesModel.get('hucs').length);
 	},
 
 	dataDiscovery : function() {

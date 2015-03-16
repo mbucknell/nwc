@@ -1,0 +1,18 @@
+<table class="table table-striped huc_table">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Value</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each streamflowStatistics}}
+		<tr ng-repeat="stat in CommonState.streamflowStatistics">
+			<td>{{this.name}}</td>
+			<td>{{this.value}}</td>
+			<td>{{this.desc}}</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>

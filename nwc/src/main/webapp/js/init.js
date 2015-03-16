@@ -9,7 +9,9 @@ $(document).ready(function() {
 		'streamflowStats',
 		'streamflowHucStats',
 		'aquaticBiology',
-		'dataDiscovery'
+		'aquaticBiologySelectFeatures',
+		'dataDiscovery',
+		'statsResults'
 	];
 
 	var PARTIALS = [
