@@ -89,6 +89,8 @@
 	        <script type="text/javascript" src="js/utils/dictionaries.js"></script>	
                 <script type="text/javascript" src="js/utils/wpsClient.js"></script>
                 <script type="text/javascript" src="js/utils/streamStats.js"></script>
+                <script type="text/javascript" src="js/utils/RdbParser.js"></script>
+
 		<script type="text/javascript" src="js/model/BaseSelectMapModel.js"></script>
 		
 		<script type="text/javascript" src="js/model/WaterBudgetSelectMapModel.js"></script>
@@ -104,6 +106,7 @@
                 <script type="text/javascript" src="js/view/AquaticBiologySelectFeaturesView.js"></script>
 		<script type="text/javascript" src="js/view/DataDiscoveryView.js"></script>
 		<script type="text/javascript" src="js/view/StreamflowStatsMapView.js"></script>
+                <script type="text/javascript" src="js/view/StreamflowStatsGageDataView.js"></script>
                 <script type="text/javascript" src="js/view/StreamflowStatsHucDataView.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetMapView.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetHucDataView.js"></script>
