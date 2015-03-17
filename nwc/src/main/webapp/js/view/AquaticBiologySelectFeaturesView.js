@@ -16,11 +16,12 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
         },
 
         initialize : function() {
+            var tempHucs = [];
             var filteredHucs = [];
             this.context.biodataSites = this.model.get('sites');
             this.context.gages = this.model.get('gages');
-            this.context.hucs = this.model.get('hucs');
-            $.each(this.context.hucs, function(key, huc) {
+            tempHucs = this.model.get('hucs');
+            $.each(tempHucs, function(key, huc) {
             if ( parseFloat(huc.DRAIN_SQKM) < 2000 ) {
                     filteredHucs.push(huc);
                 }
@@ -29,9 +30,6 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
             $('#sites-table-div').html({biodataSites : this.model.get('sites')});
             $('#gages-table-div').html({gages : this.model.get('gages')});
             $('#hucs-table-div').html({hucs : this.context.hucs});
-            var getHucStreamStats = function(hucID) {
-               this.router.navigate('/streamflow-stats/huc/' + hucID, {trigger : true});
-            };
             NWC.view.BaseView.prototype.initialize.apply(this, arguments);
         },
        
