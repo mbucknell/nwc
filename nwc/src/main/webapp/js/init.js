@@ -17,7 +17,8 @@ $(document).ready(function() {
 
 	var PARTIALS = [
 		'mapControls',
-		'warningModal'
+		'warningModal',
+		'streamflowCalcStats'
 	];
 
 	NWC.templates = NWC.util.templateLoader();

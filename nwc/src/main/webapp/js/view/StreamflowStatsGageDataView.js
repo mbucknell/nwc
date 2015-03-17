@@ -187,10 +187,52 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 		});
 
 		NWC.util.streamStats.getSiteStats([gageId], statTypes, startDate, endDate, callback);
+	},
+
+	_getStatsTsv : function() {
+		var statistics = this.streamflowStatistics;
+		var tsvHeader = "";
+		var tsvValues = "Name\tValue\tDescription\n";
+		var i;
+
+		tsvHeader = "\"# Data derived from National Water Census daily flow estimates.\"\n";
+		tsvHeader += "\"# HUC " + this.context.hucId +  " was selected.\"\n";
+		tsvHeader += "\"# Statistics calculated using the USGS EflowStats Package\"\n";
+		tsvHeader += "\"# http://cida.usgs.gov/nwc/ang/#/workflow/streamflow-statistics/select-site \"\n";
+		tsvHeader += "\"# http://github.com/USGS-R/EflowStats \"\n";
+		for (i = 0; i < statistics.length; i += 1) {
+			if (statistics[i].name) {
+				tsvValues += statistics[i].name + "\t";
+			}
+			else {
+				tsvValues += "\t";
+			}
+			if (statistics[i].value) {
+				tsvValues += statistics[i].value + "\t";
+			}
+			else {
+				tsvValues += "\t";
+			}
+			if (statistics[i].desc) {
+				tsvValues += statistics[i].desc + "\n";
+			}
+			else {
+				tsvValues += "\n";
+			}
+		}
+		return tsvHeader + tsvValues;
+	},
+
+
+	_getStatsFilename : function() {
+		return 'eflowstats_NWIS_' + this.context.gageId + '.tsv';
+	},
+
+	downloadStats : function(ev) {
+		ev.preventDefault();
+
+		var blob = new Blob([this._getStatsTsv()], {type:'text/tsv'});
+		saveAs(blob, this._getStatsFilename());
 	}
-
-
-
-
 });
 
