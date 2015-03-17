@@ -196,9 +196,8 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 		var i;
 
 		tsvHeader = "\"# Data derived from National Water Census daily flow estimates.\"\n";
-		tsvHeader += "\"# HUC " + this.context.hucId +  " was selected.\"\n";
 		tsvHeader += "\"# Statistics calculated using the USGS EflowStats Package\"\n";
-		tsvHeader += "\"# http://cida.usgs.gov/nwc/ang/#/workflow/streamflow-statistics/select-site \"\n";
+		tsvHeader += "\"# http://waterdata.usgs.gov/nwis/nwisman/?site_no=" + this.context.gageId + "\"\n";
 		tsvHeader += "\"# http://github.com/USGS-R/EflowStats \"\n";
 		for (i = 0; i < statistics.length; i += 1) {
 			if (statistics[i].name) {
