@@ -15,7 +15,7 @@
 				CONFIG.endpoint.thredds = 'proxythredds/';
 				CONFIG.endpoint.wpsBase = 'proxywps/';
 				CONFIG.endpoint.wps = CONFIG.endpoint.wpsBase + 'WebProcessingService'; //TODO inconsistant use of of URL resources
-				CONFIG.endpoint.nwis = '${context}/proxy/nwis/';
+				CONFIG.endpoint.nwis = '${directNwisEndpoint}';
 				
 				CONFIG.endpoint.searchService = '${searchServiceEndpoint}';
 				

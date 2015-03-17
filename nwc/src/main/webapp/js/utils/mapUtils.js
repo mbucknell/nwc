@@ -155,8 +155,6 @@ NWC.util.mapUtils = (function () {
 		return hucLayer;
 	};
 
-	// TODO Fix this call.This call does not return a loaded feature. We are exploring
-	// fixes to this by changing what geoserver returns in the request. Leaving it in for now.
 	that.createHucSEBasinFeatureLayer = function(huc12) {
 		var filter = new OpenLayers.Filter.Comparison({
 			type: OpenLayers.Filter.Comparison.EQUAL_TO,
@@ -186,6 +184,30 @@ NWC.util.mapUtils = (function () {
 			filter:filter
 		});
 		return hucLayer;
+	};
+
+	that.createGageFeatureLayer = function(gageId) {
+		var filter = new OpenLayers.Filter.Comparison({
+			type: OpenLayers.Filter.Comparison.EQUAL_TO,
+			property: "STAID",
+			value: gageId
+		});
+
+		var protocol = new OpenLayers.Protocol.WFS({
+			url : CONFIG.endpoint.geoserver + 'wfs',
+			featureType: 'gagesII',
+			featureNS: "http://cida.usgs.gov/NWC",
+			version: "1.1.0",
+			geometryName: "the_geom",
+			srsName : "EPSG:900913"
+		});
+
+		var gageLayer = new OpenLayers.Layer.Vector("WFS", {
+			strategies: [new OpenLayers.Strategy.Fixed()],
+			protocol: protocol,
+			filter:filter
+		});
+		return gageLayer;
 	};
 
 	that.addFlowLinesToMap = function(map) {

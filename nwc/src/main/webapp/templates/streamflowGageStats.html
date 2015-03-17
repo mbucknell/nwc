@@ -9,43 +9,32 @@
 						https://github.com/USGS-R/EflowStats <i class=\"fa fa-external-link\"></i>
 					</a>.
 				</em>
-				<h4 class="important">Preliminary Subject to Change</h4>
-				<span>
-					Modeled streamflow is <strong>preliminary</strong> and subject to 
-					change. 
-					<a href="#/workflow/streamflow-statistics/model-info" target="_blank">
-						Documentation in Review. <i class="fa fa-external-link"></i>
-					</a>
-				</span>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-xs-12 map_container">
 				<h4 id="loading-indicator">Loading data <i class="fa fa-spinner fa-spin"></i></h4>
-				<h4>Select Streamflow Statistics Parameters</h4>
+				<h4>Select Streamflow Statistics Paramaeters</h4>
 				<p>
 					Select a subset of the time series for which you would like to calculate various statistics.
 				</p>
-				<h5>Hydrologic Unit Code</h6>
-				<div id="huc-id">{{ hucId }}</div>
-				<h5>HUC Name</h6>
-				<div id="huc-name"></div>
-				<h5>Drainage Area (km<sup>2</sup>)</h6>
-				<div id="huc-drainage-area"></div>
-				<div id="huc-inset" style="height:200px;width:200px;border-style:solid;border-width:1px;"></div>
-			</div>
-		</div>
-		<div class="row col-xs-12 text-center spacer spacer_down">
-			<button id="streamflow-data-plot-button" type="button" class="btn btn-success">Streamflow Data Plot</button>
-			<button style="display:none;" id="streamflow-data-download-button" type="button" class="btn btn-success">Download Modeled Streamflow</button>
-		</div>
-		<h4 id="plot-loading-indicator" style="display:none">Loading plot data <i class="fa fa-spinner fa-spin"></i></h4>
-		<div id="streamflow-plot-div" class="row col-xs-12 spacer spacer_down" style="display: none;">
-			<div style="height: 400px;" id="modeledQPlot" class="col-xs-10"></div>
-			<div class="col-xs-2">
-				<div class="row">
-					<div id="modeledQLegend" class="col-xs-12"></div>
+				<h5>Gage ID</h5>
+				<div id="gage-id">{{ gageId }}</div>
+				<div>
+					Access data for this site from&nbsp;
+					<a href="http://waterdata.usgs.gov/nwis/nwisman/?site_no={{ gageId }}">
+						NWIS-Web <i class=\"fa fa-external-link\"></i>
+					</a>
 				</div>
+				<h5>Gage Name</h5>
+				<div id="gage-name"></div>
+				<h5>Drainage Area (km<sup>2</sup>)</h5>
+				<div id="drainage-area"></div>
+				<h5>Period of Record</h5>
+				<div id="start-period-of-record"></div>
+				<div id="end-period-of-record"></div>
+				<br />
+				<div id="gage-inset" style="height:200px; width: 200px; border-style: solid;border-width:1px;"></div>
 			</div>
 		</div>
 		<div id="statistics-calculation-div" class="row col-xs-12 text-center spacer_down">
@@ -58,19 +47,11 @@
 				<div class="col-md-2"></div>
 				<div class="col-md-4">
 					<label>From:</label>
-					<select id="start-year" class="form-control">
-						{{#each years}}
-							<option value="{{this}}">{{this}}</option>
-						{{/each}}
-					</select>
+					<select id="start-year" class="form-control"></select>
 				</div>
 				<div class="col-md-4">
 					<label>To:</label>
-					<select id="end-year" class="form-control">
-						{{#each years}}
-							<option value="{{this}}">{{this}}</option>
-						{{/each}}
-					</select>
+					<select id="end-year" class="form-control"></select>
 				</div>
 				<div class="col-md-2"></div>
 			</div>
@@ -98,14 +79,11 @@
 
 		</form>
 		<h4 id="loading-stats-indicator" style="display:none;">Calculating statistics <i class="fa fa-spinner fa-spin"></i></h4>
-		<div id="stats-results-div" style="display:none;" class="row col-xs-12 table-responsive">
+		<div id="stats-results-div" style="display:none;" class="col-xs-12 table-responsive">
 			<div class="col-sm-4 col-sm-offset-8">
 				<button id="download-stats-button" class="btn btn-success">Download These Statistics</button>
 			</div>
 			<div id="stats-results-table-div"></div>
-		</div>
+		</div>		
 	</div>
 </div>
-				
-			
-			

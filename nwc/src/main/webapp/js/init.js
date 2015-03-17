@@ -7,6 +7,7 @@ $(document).ready(function() {
 		'waterbudget',
 		'waterbudgetHucData',
 		'streamflowStats',
+		'streamflowGageStats',
 		'streamflowHucStats',
 		'aquaticBiology',
 		'aquaticBiologySelectFeatures',
