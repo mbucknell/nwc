@@ -12,7 +12,8 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
             'click #selected-sites-button' : 'showSites',
             'click #allSelected' : 'selectAll',
             'click #biodata-form-button' : 'sitesDoc',
-            'click #hucs-table-div tr' : 'onHucSelect'
+            'click #hucs-table-div tr' : 'onHucSelect',
+            'click #gages-table-div tr' : 'onGageSelect'
         },
 
         initialize : function() {
@@ -115,6 +116,12 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                 $cb = $(e.currentTarget);
                 hucID = $cb.attr('id');
                 this.router.navigate('/streamflow-stats/huc/' + hucID, {trigger : true});
+            } ,
+            onGageSelect : function(e){
+                e.preventDefault();
+                $cb = $(e.currentTarget);
+                gageID = $cb.attr('id');
+                this.router.navigate('/streamflow-stats/gage/' + gageID, {trigger : true});
             } 
         
 });
