@@ -11,16 +11,27 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
             'change input[type=checkbox]': ('checkboxChanged','biodataFormEnable'),
             'click #selected-sites-button' : 'showSites',
             'click #allSelected' : 'selectAll',
-            'click #biodata-form-button' : 'sitesDoc'
+            'click #biodata-form-button' : 'sitesDoc',
+            'click #hucs-table-div tr' : 'onHucSelect'
         },
 
         initialize : function() {
+            var filteredHucs = [];
             this.context.biodataSites = this.model.get('sites');
             this.context.gages = this.model.get('gages');
             this.context.hucs = this.model.get('hucs');
+            $.each(this.context.hucs, function(key, huc) {
+            if ( parseFloat(huc.DRAIN_SQKM) < 2000 ) {
+                    filteredHucs.push(huc);
+                }
+            });
+            this.context.hucs = filteredHucs;
             $('#sites-table-div').html({biodataSites : this.model.get('sites')});
             $('#gages-table-div').html({gages : this.model.get('gages')});
-            $('#hucs-table-div').html({hucs : this.model.get('hucs')});
+            $('#hucs-table-div').html({hucs : this.context.hucs});
+            var getHucStreamStats = function(hucID) {
+               this.router.navigate('/streamflow-stats/huc/' + hucID, {trigger : true});
+            };
             NWC.view.BaseView.prototype.initialize.apply(this, arguments);
         },
        
@@ -100,6 +111,12 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                         context : this
                     });
                 }
-            }
+            },
+            onHucSelect : function(e){
+                e.preventDefault();
+                $cb = $(e.currentTarget);
+                hucID = $cb.attr('id');
+                this.router.navigate('/streamflow-stats/huc/' + hucID, {trigger : true});
+            } 
         
 });
