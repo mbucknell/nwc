@@ -1,58 +1,122 @@
-describe('Tests for NWC.view.WaterBudgetHucDataView', function() {
-	it("has these dependencies", function() {
-		expect(NWC.view.BaseView).toBeDefined();
+describe('Tests for WaterBudgetHucDataView', function() {0
+	var $testDiv;
+	var testView;
+	var addLayerSpy, renderSpy, getHucDataSpy;
+
+	beforeEach(function() {
+		CONFIG = {
+			endpoint : {
+				geoserver : 'http://fakeserver.com'
+			}
+		};
+
+		$('body').append('<div id="test-div"></div>');
+		$testDiv = $('#test-div');
+		$testDiv.append('<div id="inset-map-div"></div>');
+		$testDiv.append('<button class="customary-button" disabled>US Customary</button>');
+		$testDiv.append('<button class="metric-button">Metric</button>');
+		$testDiv.append('<button class="daily-button">Daily</button>');
+		$testDiv.append('<button class="monthly-button" disabled>Monthly</button>');
+
+		addLayersSpy = jasmine.createSpy('addLayersSpy');
+		renderSpy = jasmine.createSpy('renderSpy');
+		getHucDataSpy = jasmine.createSpy('getHucDataSpy');
+//		plotPTandETDataSpy = jasmine.createSpy('plotPTandETDataSpy');
+		spyOn(NWC.view.BaseView.prototype, 'initialize').andCallFake(function() {
+			this.getHucData = getHucDataSpy			
+			this.map = {
+				addLayers : addLayersSpy,
+				zoomToExtent : jasmine.createSpy('zoomToExtentSpy'),
+				getMaxExtent : jasmine.createSpy('getMaxExtentSpy'),
+				render : renderSpy
+			}
+		});
+		
+		testView = new NWC.view.WaterBudgetHucDataView({
+			hucId : '12345678',
+			insetMapDiv : 'inset-map-div'
+		});
 	});
 
-	it("has these API functions defined", function() {
-		expect(NWC.view.WaterBudgetHucDataView.prototype.templateName).toBeDefined();
-		expect(NWC.view.WaterBudgetHucDataView.prototype.events).toBeDefined();
-		expect(NWC.view.WaterBudgetHucDataView.prototype.getHucData).toBeDefined();
+	afterEach(function() {
+		$testDiv.remove();
 	});
 
-	it("retrieves the huc data calls function to render plot", function() {
-		//TODO
+	it('Expects view\'s constructor to set the context property', function() {
+		expect(testView.context.hucId).toEqual('12345678');
 	});
-	
-//	var addLayerSpy;
-//	beforeEach(function() {
-//		addLayerSpy = jasmine.createSpy('addLayerSpy');
-//		spyOn(view.WaterBudgetHucDataView.prototype, 'initialize').andCallFake(function() {
-//			this.map = {
-//				addLayer : addLayerSpy
-//			};
-//		});
-//	});
 
-	it('Expects appropriate properties to be defined after instantiation', function() {
-//		var view = new NWC.view.WaterBudgetHucDataView('test');
+	it('Expects view\'s constructor to create properties for the inset map and hucLayer', function() {
+		expect(testView.map).toBeDefined();
+		expect(testView.hucLayer).toBeDefined();
+	});
 
-//		expect(NWC.view.BaseView.prototype.initialize).toHaveBeenCalled();
-//		expect(view.baseLayer).toBeDefined();
-//		expect(view.hucLayer).toBeDefined();
-//		expect(addLayerSpy).toHaveBeenCalledWith(view.hucLayer);
+	it('Expects the view\'s constructor to call BaseView initialize', function() {
+		expect(NWC.view.BaseView.prototype.initialize).toHaveBeenCalled();
 	});
 
 	it('Expect that event handler calls exist and behave as expected', function() {
-//		var view = new NWC.view.WaterBudgetHucDataView('test');
-//
-//		//the view has an event to wire up the clickable plot options
-//		expect(view.events['click .back-button']).toBeDefined();
-//		expect(view.events['click .counties-button']).toBeDefined();
-//		expect(view.events['click .metric-button']).toBeDefined();
-//		expect(view.events['click .customary-button']).toBeDefined();
-//		expect(view.events['click .monthly-button']).toBeDefined();
-//		expect(view.events['click .daily-button']).toBeDefined();
-//		expect(view.events['click .evapotranspiration-download-button']).toBeDefined();
-//		expect(view.events['click .precipitation-download-button']).toBeDefined();
-//
-//		//plot buttons exist and get set with the proper disabled attribute
-//		view.toggleMetricLegend();
-//		expect($(view.$('.metric-button').attr("disabled")).toBe("disabled"));
-//		view.toggleCustomaryLegend();
-//		expect($(view.$('.customary-button').attr("disabled")).toBe("disabled"));
-//		view.toggleMonthlyLegend();
-//		expect($(view.$('.monthly-button').attr("disabled")).toBe("disabled"));
-//		view.toggleDailyLegend();
-//		expect($(view.$('.daily-button').attr("disabled")).toBe("disabled"));
+
+		//the view has an event to wire up the clickable plot options
+		expect(testView.events['click .back-button']).toBeDefined();
+		expect(testView.events['click .counties-button']).toBeDefined();
+		expect(testView.events['click .metric-button']).toBeDefined();
+		expect(testView.events['click .customary-button']).toBeDefined();
+		expect(testView.events['click .monthly-button']).toBeDefined();
+		expect(testView.events['click .daily-button']).toBeDefined();
+		expect(testView.events['click .evapotranspiration-download-button']).toBeDefined();
+		expect(testView.events['click .precipitation-download-button']).toBeDefined();
+
+		//plot buttons exist and get set with the proper disabled attribute
+		testView.plotPTandETaData = jasmine.createSpy('plotPTandETaDataSpy')
+		testView.toggleMetricLegend();
+		expect($('.customary-button').prop('disabled')).toBe(false);
+		expect($('.metric-button').prop('disabled')).toBe(true);
+		testView.toggleCustomaryLegend();
+		expect($('.customary-button').prop('disabled')).toBe(true);
+		expect($('.metric-button').prop('disabled')).toBe(false);
+		testView.toggleMonthlyLegend();
+		expect($('.monthly-button').prop('disabled')).toBe(true);
+		expect($('.daily-button').prop('disabled')).toBe(false);
+		testView.toggleDailyLegend();
+		expect($('.monthly-button').prop('disabled')).toBe(false);
+		expect($('.daily-button').prop('disabled')).toBe(true);
 	});
+
+	it('Expects downloadEvapotranspiration to save to appropriate filename', function() {
+		spyOn(window, 'saveAs');
+		spyOn(window, 'Blob');
+		testView.dataSeriesStore = {
+			eta : {
+			toCSV : jasmine.createSpy('toCSVSpy')
+			}
+		};
+		testView.fileName = 'test_' + testView.hucId + '_eta.csv';
+		testView.hucName = 'test';
+		testView.downloadEvapotranspiration();
+
+		expect(saveAs).toHaveBeenCalled();
+		expect(saveAs.calls[0].args[1]).toMatch(testView.fileName);
+		expect(saveAs.calls[0].args[1]).toMatch(testView.context.hucId);
+		expect(testView.dataSeriesStore.eta.toCSV).toHaveBeenCalled();
+	});
+
+	it('Expects downloadPrecipitation to save to appropriate filename', function() {
+		spyOn(window, 'saveAs');
+		spyOn(window, 'Blob');
+		testView.dataSeriesStore = {
+			dayMet : {
+			toCSV : jasmine.createSpy('toCSVSpy')
+			}
+		};
+		testView.fileName = 'test_' + testView.hucId + '_dayMet.csv';
+		testView.hucName = 'test';
+		testView.downloadPrecipitation();
+
+		expect(saveAs).toHaveBeenCalled();
+		expect(saveAs.calls[0].args[1]).toMatch(testView.fileName);
+		expect(saveAs.calls[0].args[1]).toMatch(testView.context.hucId);
+		expect(testView.dataSeriesStore.dayMet.toCSV).toHaveBeenCalled();
+	});
+
 });

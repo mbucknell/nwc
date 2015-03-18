@@ -1,6 +1,6 @@
 describe('DataSeriesStore', function(){
     var DataSeries = NWC.util.DataSeries;
-    var DataSeriesStore = NWC.util.DataSeriesStore;
+    var DataSeriesStore = new NWC.util.DataSeriesStore();
     var dateRangeStart = Date.create('March 1951').utc();
     var dateRangeEnd = Date.create('July 1956').utc().endOfMonth();
     var dateRange = Date.range(
@@ -8,12 +8,12 @@ describe('DataSeriesStore', function(){
         dateRangeEnd
     );
     var monthsInDateRange = dateRangeEnd.monthsSince(dateRangeStart);
-    
+
     var formatDate = function(date){
         return date.format('{yyyy}/{MM}/{dd}');
     };
     //setup test data
-    
+
     var dayMetData = [];
     var dayMetValue = 1.0;
     dateRange.every('day', function(date){
@@ -22,14 +22,14 @@ describe('DataSeriesStore', function(){
         var dateStr = formatDate(date);
         dayMetData.push([dateStr, dayMetValue]);
     });
-    
+
     var dayMetDataSeries = DataSeries.newSeries();
     dayMetDataSeries.data = dayMetData;
     dayMetDataSeries.metadata.seriesLabels.push('mm ppt');
     //first month will have no eta data. Second month will.
     var etaDefaultValue = 1.0;
     var etaOffsetInMonths = 1;
-    
+
     var etaDateRangeStart = Date.create(dateRangeStart).utc().addMonths(etaOffsetInMonths);
     //all tests currently presume only 1 month of eta values.
     var etaData = [
@@ -102,7 +102,7 @@ describe('DataSeriesStore', function(){
 
         it('if eta data is present for a month, it should divide the monthly eta value ' + 
             'by the number of days in the month and place that value in each day-row of the month', function(){
-          
+
            var expectedDailyEtaValue = etaDefaultValue / numDaysInFirstMonthWithEtaData;
            var firstMonthOfEtaData = dss.daily.data.from(numDaysBetweenStartOfDataAndStartOfEtaData).to(numDaysInFirstMonthWithEtaData);
            firstMonthOfEtaData.each(function(dayRow, index){
@@ -110,11 +110,11 @@ describe('DataSeriesStore', function(){
            });
         });
         it('if eta data is not present for a month, it should place NaN in the eta field for all of the day-rows of the month', function(){
-            
+
             var assertNanEta = function(dayRow, index){
                 expect(isNaN(dayRow[etaIndex])).toBe(true);
             };
-            
+
             //test before the daymet values start
             var numDaysInMonthBeforeEtaData = dateRangeStart.daysInMonth();
             var monthBeforeEtaData = dss.daily.data.from(0).to(numDaysInMonthBeforeEtaData);
@@ -125,8 +125,8 @@ describe('DataSeriesStore', function(){
             var numDaysBetweenStartOfDataAndStartOfMonthAfterEtaData = numDaysBetweenStartOfDataAndStartOfEtaData + numDaysInFirstMonthWithEtaData;
             var monthAfterEtaData = dss.daily.data.from(numDaysBetweenStartOfDataAndStartOfMonthAfterEtaData).to(numDaysInMonthAfterEtaData);
             monthAfterEtaData.each(assertNanEta);
-            
+
         });
     });
-    
+
 });
