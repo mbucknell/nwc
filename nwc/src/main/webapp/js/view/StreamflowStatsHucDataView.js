@@ -19,7 +19,7 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.exten
 	},
 
 	render : function() {
-		NWC.view.BaseView.prototype.render.apply(this, arguments);
+		NWC.view.BaseStreamflowStatsDataView.prototype.render.apply(this, arguments);
 		this.map.render(this.insetMapDiv);
 	},
 
