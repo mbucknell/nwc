@@ -23,22 +23,43 @@ describe('WaterYear', function () {
     });
     describe('WaterYear.waterYearRange', function() {
 		var range;
-		beforeEach(function() {
-			range = util.waterYearRange(Date.range('1973/01/01', '1995/01/01'));
+		describe('WaterYear.waterYearRange with start and end with water year same as calendar year', function() {
+			beforeEach(function() {
+				range = util.waterYearRange(Date.range('1973/02/01', '1995/03/01'));
+			});
+
+			it('should start on October 1, 1973', function() {
+				expect(range.start.is('1973/10/01')).toBe(true);
+			});
+			it('should not contain September 30, 1973', function() {
+				expect(range.contains('1973/09/30')).toBe(false);
+			});
+			it('should not contain October 1, 1994', function() {
+				expect(range.contains('1994/10/01')).toBe(false);
+			});
+			it('should end on September 30, 1994', function() {
+				expect(range.end.is('1994/09/30')).toBe(true);
+			});
 		});
 
-        it('should start on October 1, 1973', function() {
-            expect(range.start.is('1973/10/01')).toBe(true);
-        });
-        it('should not contain September 30, 1973', function() {
-            expect(range.contains('1973/09/30')).toBe(false);
-        });
-        it('should not contain October 1, 1994', function() {
-            expect(range.contains('1994/10/01')).toBe(false);
-        });
-        it('should end on September 30, 1994', function() {
-            expect(range.end.is('1994/09/30')).toBe(true);
-        });
+		describe('WaterYear.waterYearRange with start in previous calendar and end in previous calendar year', function() {
+			beforeEach(function() {
+				range = util.waterYearRange(Date.range('1972/11/01', '1994/10/15'));
+			});
+			it('should start on October 1, 1973', function() {
+				expect(range.start.is('1973/10/01')).toBe(true);
+			});
+			it('should not contain September 30, 1973', function() {
+				expect(range.contains('1973/09/30')).toBe(false);
+			});
+			it('should not contain October 1, 1994', function() {
+				expect(range.contains('1994/10/01')).toBe(false);
+			});
+			it('should end on September 30, 1994', function() {
+				expect(range.end.is('1994/09/30')).toBe(true);
+			});
+		});
+
     });
     describe('WaterYear.yearsAsArray', function() {
         it('should give you empty array on null input', function() {

@@ -1,0 +1,42 @@
+<div class="row">
+	<div class="col-xs-12 nwc-container">
+		<div class="row">
+			<div class="col-xs-12">
+				<h3>Streamflow Statistics Calculator</h3>
+				<em>Software to calculate these statistics is also available as an open-source R package on
+					GitHub:
+					<a href="https://github.com/USGS-R/EflowStats" target="_blank">
+						https://github.com/USGS-R/EflowStats <i class=\"fa fa-external-link\"></i>
+					</a>.
+				</em>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 map_container">
+				<h4 id="loading-indicator">Loading data <i class="fa fa-spinner fa-spin"></i></h4>
+				<h4>Select Streamflow Statistics Paramaeters</h4>
+				<p>
+					Select a subset of the time series for which you would like to calculate various statistics.
+				</p>
+				<h5>Gage ID</h5>
+				<div id="gage-id">{{ gageId }}</div>
+				<div>
+					Access data for this site from&nbsp;
+					<a href="http://waterdata.usgs.gov/nwis/nwisman/?site_no={{ gageId }}">
+						NWIS-Web <i class=\"fa fa-external-link\"></i>
+					</a>
+				</div>
+				<h5>Gage Name</h5>
+				<div id="gage-name"></div>
+				<h5>Drainage Area (km<sup>2</sup>)</h5>
+				<div id="drainage-area"></div>
+				<h5>Period of Record</h5>
+				<div id="start-period-of-record"></div>
+				<div id="end-period-of-record"></div>
+				<br />
+				<div id="gage-inset" style="height:200px; width: 200px; border-style: solid;border-width:1px;"></div>
+			</div>
+		</div>
+		{{> streamflowCalcStats }}
+	</div>
+</div>

@@ -15,7 +15,7 @@
 				CONFIG.endpoint.thredds = 'proxythredds/';
 				CONFIG.endpoint.wpsBase = 'proxywps/';
 				CONFIG.endpoint.wps = CONFIG.endpoint.wpsBase + 'WebProcessingService'; //TODO inconsistant use of of URL resources
-				CONFIG.endpoint.nwis = '${context}/proxy/nwis/';
+				CONFIG.endpoint.nwis = '${directNwisEndpoint}';
 				
 				CONFIG.endpoint.searchService = '${searchServiceEndpoint}';
 				
@@ -89,6 +89,8 @@
 	        <script type="text/javascript" src="js/utils/dictionaries.js"></script>	
                 <script type="text/javascript" src="js/utils/wpsClient.js"></script>
                 <script type="text/javascript" src="js/utils/streamStats.js"></script>
+                <script type="text/javascript" src="js/utils/RdbParser.js"></script>
+
 		<script type="text/javascript" src="js/model/BaseSelectMapModel.js"></script>
 		
 		<script type="text/javascript" src="js/model/WaterBudgetSelectMapModel.js"></script>
@@ -98,12 +100,14 @@
 		
 		<script type="text/javascript" src="js/view/BaseView.js"></script>
 		<script type="text/javascript" src="js/view/BaseSelectMapView.js"></script>
+                <script type="text/javascript" src="js/view/BaseStreamflowStatsDataView.js"></script>
 		
 		<script type="text/javascript" src="js/view/HomeView.js"></script>
 		<script type="text/javascript" src="js/view/AquaticBiologyMapView.js"></script>
                 <script type="text/javascript" src="js/view/AquaticBiologySelectFeaturesView.js"></script>
 		<script type="text/javascript" src="js/view/DataDiscoveryView.js"></script>
 		<script type="text/javascript" src="js/view/StreamflowStatsMapView.js"></script>
+                <script type="text/javascript" src="js/view/StreamflowStatsGageDataView.js"></script>
                 <script type="text/javascript" src="js/view/StreamflowStatsHucDataView.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetMapView.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetHucDataView.js"></script>
