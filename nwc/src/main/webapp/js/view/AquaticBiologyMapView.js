@@ -160,11 +160,14 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 				var hucFeatures = features.findAll(function(f) {
 					return f.fid.startsWith('huc12_SE_Basins_v2');
 				});
-
+                                //Hydrologic model results are not valid for watersheds > 2000 km2, so only populate list with those < 2000 km2
+                                var filteredHucFeatures = hucFeatures.filter(function(n){
+                                    return n.attributes.DRAIN_SQKM < 2000;
+                                });
 				this.aquaticBiologyFeaturesModel.set({
 					sites : siteFeatures.map(function(f) { return f.attributes; }),
 					gages : gageFeatures.map(function(f) { return f.attributes; }),
-					hucs : hucFeatures.map(function(f) { return f.attributes; })
+					hucs : filteredHucFeatures.map(function(f) { return f.attributes; })
 				});
 				this.router.navigate('/aquatic-biology/select-features', {trigger : true});
 			};

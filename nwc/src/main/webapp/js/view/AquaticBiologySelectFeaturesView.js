@@ -21,13 +21,13 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
             var filteredHucs = [];
             this.context.biodataSites = this.model.get('sites');
             this.context.gages = this.model.get('gages');
-            tempHucs = this.model.get('hucs');
-            $.each(tempHucs, function(key, huc) {
-            if ( parseFloat(huc.DRAIN_SQKM) < 2000 ) {
-                    filteredHucs.push(huc);
-                }
-            });
-            this.context.hucs = filteredHucs;
+            this.context.hucs = this.model.get('hucs');
+            //$.each(tempHucs, function(key, huc) {
+            //if ( parseFloat(huc.DRAIN_SQKM) < 2000 ) {
+            //        filteredHucs.push(huc);
+            //    }
+            //});
+            //this.context.hucs = filteredHucs;
             NWC.view.BaseView.prototype.initialize.apply(this, arguments);
         },
        
