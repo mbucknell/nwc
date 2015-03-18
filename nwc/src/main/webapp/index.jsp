@@ -100,6 +100,7 @@
 		
 		<script type="text/javascript" src="js/view/BaseView.js"></script>
 		<script type="text/javascript" src="js/view/BaseSelectMapView.js"></script>
+                <script type="text/javascript" src="js/view/BaseStreamflowStatsDataView.js"></script>
 		
 		<script type="text/javascript" src="js/view/HomeView.js"></script>
 		<script type="text/javascript" src="js/view/AquaticBiologyMapView.js"></script>

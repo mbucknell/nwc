@@ -2,22 +2,9 @@ var NWC = NWC || {};
 
 NWC.view = NWC.view || {}
 
-NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
+NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.extend({
 
 	templateName : 'streamflowGageStats',
-
-	events : {
-		'click #calculate-stats-button' : 'calculateStats',
-		'click #available-statistics input' : 'calculateStatsEnable',
-		'click #download-stats-button' : 'downloadStats'
-	},
-
-	context : {},
-
-	render : function() {
-		NWC.view.BaseView.prototype.render.apply(this, arguments);
-		this.map.render(this.insetMapDiv);
-	},
 
 	_retrieveNWISData : function() {
 		var NWIS_QUERY_PARAMS = {
@@ -93,9 +80,18 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 		return deferred;
 	},
 
+	render : function() {
+		NWC.view.BaseStreamflowStatsDataView.prototype.render.apply(this, arguments);
+		this.map.render(this.insetMapDiv);
+
+		return this;
+	},
+
 	initialize : function(options) {
+		if (!Object.has(this, 'context')) {
+			this.context = {};
+		}
 		this.context.gageId = options.gageId;
-		this.context.streamStatsOptions = NWC.dictionary.statGroups;
 
 		this.insetMapDiv = options.insetMapDiv;
 
@@ -127,7 +123,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 		this.map.addLayers([this.gageLayer, this.gageMarkerLayer]);
 
 
-		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
+		NWC.view.BaseStreamflowStatsDataView.prototype.initialize.apply(this, arguments);
 		this.map.zoomToExtent(this.map.getMaxExtent());
 
 		nwisDataRetrieved.always(function(dates) {
@@ -155,83 +151,29 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 
 	},
 
-	calculateStatsEnable : function() {
-		var disable = !($('#available-statistics input').is(':checked'));
-		$('#calculate-stats-button').prop('disabled', disable);
+	getStats : function(statTypes, startDate, endDate) {
+		var d = $.Deferred();
+		var callback = function(statistics) {
+			d.resolve(statistics);
+		};
+
+		NWC.util.streamStats.getSiteStats([this.context.gageId], statTypes, startDate, endDate, callback);
+
+		return d;
 	},
 
-	calculateStats : function(ev) {
-		var gageId = this.context.gageId;
-		var startDate = NWC.util.WaterYearUtil.waterYearStart($('#start-year option:selected').val());
-		var endDate = NWC.util.WaterYearUtil.waterYearEnd($('#end-year option:selected').val());
-
-		var $loadingIndicator = $('#loading-stats-indicator');
-		var $statsResultsDiv = $('#stats-results-div');
-
-		var callback = function(statistics, resultsUrl){
-			this.streamflowStatistics = statistics;
-
-			$('#stats-results-table-div').html(NWC.templates.getTemplate('statsResults')({streamflowStatistics : statistics}));
-			$statsResultsDiv.show();
-			$loadingIndicator.hide();
-		}.bind(this);
-
-		var statTypes = [];
-
-		ev.preventDefault();
-
-		$statsResultsDiv.hide();
-		$loadingIndicator.show();
-		$('#available-statistics input:checked').each(function() {
-			statTypes.push($(this).val());
-		});
-
-		NWC.util.streamStats.getSiteStats([gageId], statTypes, startDate, endDate, callback);
-	},
-
-	_getStatsTsv : function() {
-		var statistics = this.streamflowStatistics;
+	getStatsTsvHeader : function() {
 		var tsvHeader = "";
-		var tsvValues = "Name\tValue\tDescription\n";
-		var i;
-
 		tsvHeader = "\"# Data derived from National Water Census daily flow estimates.\"\n";
 		tsvHeader += "\"# Statistics calculated using the USGS EflowStats Package\"\n";
 		tsvHeader += "\"# http://waterdata.usgs.gov/nwis/nwisman/?site_no=" + this.context.gageId + "\"\n";
 		tsvHeader += "\"# http://github.com/USGS-R/EflowStats \"\n";
-		for (i = 0; i < statistics.length; i += 1) {
-			if (statistics[i].name) {
-				tsvValues += statistics[i].name + "\t";
-			}
-			else {
-				tsvValues += "\t";
-			}
-			if (statistics[i].value) {
-				tsvValues += statistics[i].value + "\t";
-			}
-			else {
-				tsvValues += "\t";
-			}
-			if (statistics[i].desc) {
-				tsvValues += statistics[i].desc + "\n";
-			}
-			else {
-				tsvValues += "\n";
-			}
-		}
-		return tsvHeader + tsvValues;
+
+		return tsvHeader;
 	},
 
-
-	_getStatsFilename : function() {
+	getStatsFilename : function() {
 		return 'eflowstats_NWIS_' + this.context.gageId + '.tsv';
-	},
-
-	downloadStats : function(ev) {
-		ev.preventDefault();
-
-		var blob = new Blob([this._getStatsTsv()], {type:'text/tsv'});
-		saveAs(blob, this._getStatsFilename());
 	}
 });
 
