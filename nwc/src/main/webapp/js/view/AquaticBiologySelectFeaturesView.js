@@ -8,19 +8,18 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
         },
         
         events: {
-            'change input[type=checkbox]': ('checkboxChanged','biodataFormEnable'),
+            'change input[type=checkbox]': 'checkboxChanged',
             'click #selected-sites-button' : 'showSites',
             'click #allSelected' : 'selectAll',
-            'click #biodata-form-button' : 'sitesDoc'
+            'click #biodata-form-button' : 'sitesDoc',
+            'click #hucs-table-div tr' : 'onHucSelect',
+            'click #gages-table-div tr' : 'onGageSelect'
         },
 
         initialize : function() {
             this.context.biodataSites = this.model.get('sites');
             this.context.gages = this.model.get('gages');
             this.context.hucs = this.model.get('hucs');
-            $('#sites-table-div').html({biodataSites : this.model.get('sites')});
-            $('#gages-table-div').html({gages : this.model.get('gages')});
-            $('#hucs-table-div').html({hucs : this.model.get('hucs')});
             NWC.view.BaseView.prototype.initialize.apply(this, arguments);
         },
        
@@ -28,6 +27,8 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
             
             $cb      = $(evt.target),
             name     = $cb.attr('name');
+            var disable = !($('#sites-table-div input').is(':checked'));
+            $('#biodata-form-button').prop('disabled', disable);
             if (name !== 'allSelected') {
                 if ($cb.is(':checked')) {
                     this.model.set({ 
@@ -44,11 +45,6 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
             }
         },
         
-        biodataFormEnable : function() {
-		var disable = !($('#sites-table-div input').is(':checked'));
-		$('#biodata-form-button').prop('disabled', disable);
-	},
-
         selectAll : function(evt){
             $cb      = $(evt.target);
             var checkAll = ($cb.prop('checked'));
@@ -56,7 +52,7 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                 $(this).prop('checked', checkAll).change();
             });
         },
-        
+        // send selected sites to Bioshare and pre-populate the sites filter with those sites
         sitesDoc : function () {
                 var bioDataSiteSelectionDoc;
                 var preselectBioDataSites = function (siteIds) {
@@ -100,6 +96,18 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                         context : this
                     });
                 }
-            }
+            },
+            onHucSelect : function(e){
+                e.preventDefault();
+                $cb = $(e.currentTarget);
+                hucID = $cb.attr('id');
+                this.router.navigate('/streamflow-stats/huc/' + hucID, {trigger : true});
+            } ,
+            onGageSelect : function(e){
+                e.preventDefault();
+                $cb = $(e.currentTarget);
+                gageID = $cb.attr('id');
+                this.router.navigate('/streamflow-stats/gage/' + gageID, {trigger : true});
+            } 
         
 });
