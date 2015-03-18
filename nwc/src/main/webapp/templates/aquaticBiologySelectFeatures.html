@@ -1,10 +1,12 @@
+<form id="bioData_form" style="display:none" method="POST" action="https://aquatic.biodata.usgs.gov/restoreCriteria.action" target="_blank">
+    <input type="hidden" name="currentQuery"/>
+</form>
 <div class="row" style="margin: 0px;">
 	<div class="col-xs-12 nwc-container">
 		<div class="row">
 			<div class="col-xs-12">
 				<h3>Aquatic Biology Data and Related Streamflow Statistics</h3>
-                                <p></p>
-                                <p></p>
+                                <p></p>   
                                 <p></p>
 			</div>
 		</div>
@@ -13,10 +15,11 @@
                         {{#if biodataSites}}
                         <h4>Aquatic Biology Data Sites</h4>
                         <div id="sites-table-div">
-                            <table class="table table-striped">
+                            <button id="biodata-form-button" disabled="disabled" class="btn btn-success">Explore Selected Sites In Biodata <span class="glyphicon glyphicon-arrow-right"></span></button>
+                            <table class="table table-striped sites-table">
                                 <thead>
                                     <tr>
-                                        <th><input type="checkbox" ng-model="allSelected" ng-change="processSelectAll()"/>
+                                        <th><input type="checkbox" id="allSelected" name="allSelected"/>
                                             &nbsp;Select</th>
                                         <th>Site Number</th>
                                         <th>Site Name</th>
@@ -26,7 +29,7 @@
                                     {{#each biodataSites}}
                                     <tr>
                                         <td class="xs-col-2">
-                                            <input type="checkbox" name="{{SiteNumber}}" value="{{SiteNumber}}"/>
+                                            <input type="checkbox" class="sites" name="{{SiteNumber}}" value="{{SiteNumber}}"/>
                                         </td>
                                         <td class="xs-col-4">{{SiteNumber}}</td>
                                         <td class="xs-col-4">{{SiteName}}</td>
@@ -50,7 +53,7 @@
                                 </thead>
                                 <tbody id="gageList">
                                     {{#each gages}}
-                                    <tr>
+                                    <tr id="{{STAID}}">
                                         <td class="xs-col-3">{{STAID}}</td>
                                         <td class="xs-col-4">{{STANAME}}</td>
                                         <td class="xs-col-3">{{DRAIN_SQKM}}</td>
@@ -74,7 +77,7 @@
                                 </thead>
                                 <tbody id="hucList">
                                     {{#each hucs}}
-                                    <tr>
+                                    <tr id="{{HUC12}}">
                                         <td class="xs-col-2">{{HUC12}}</td>
                                         <td class="xs-col-4">{{HU_12_NAME}}</td>
                                         <td class="xs-col-4">{{DRAIN_SQKM}}</td>
