@@ -90,7 +90,45 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		expect($('#end-year option:selected').val()).toEqual('1997');
 	});
 
-	//TODO test _retrieveNWSIDATA
+	it('Expects _retrieveNWISData to make an ajax call', function(){
+		testView = new NWC.view.StreamflowStatsGageDataView(options);
+
+		var requestCount = server.requests.length;
+
+		testView._retrieveNWISData();
+		expect(server.requests.length).toBe(requestCount + 1);
+		var thisRequest = server.requests.last();
+		expect(thisRequest.url).toMatch(CONFIG.endpoint.nwis);
+		expect(thisRequest.url).toMatch(options.gageId);
+	});
+
+	it('Expects a successful _retrieveNWISData to return a deferred which resolves to the start and end date in the data', function() {
+		testView = new NWC.view.StreamflowStatsGageDataView(options);
+		var doneSpy = jasmine.createSpy('doneSpy');
+
+		var response = '# Comments \nsite_no\tbegin_date\tend_date\n';
+		response += '15s\t20d\t20d\n';
+		response += options.gageId + '\t1944-10-01\t1977-09-30';
+
+		testView._retrieveNWISData().done(doneSpy);
+		expect(doneSpy).not.toHaveBeenCalled();
+		server.respond([200, {"Content-Type": 'text/plain'}, response]);
+		expect(doneSpy).toHaveBeenCalledWith({startDate : Date.create('1944/10/01').utc(), endDate : Date.create('1977/09/30').utc()});
+	});
+
+	it('Expects a failed _retrieveNWISData to return a deferred which resolves to a default start and end date', function() {
+		spyOn(window, 'alert');
+		testView = new NWC.view.StreamflowStatsGageDataView(options);
+		var doneSpy = jasmine.createSpy('doneSpy');
+
+		testView._retrieveNWISData().done(doneSpy);
+		expect(doneSpy).not.toHaveBeenCalled();
+		server.respond([500, {"Content-Type": 'text/plain'}, "Server Error"]);
+		expect(doneSpy).toHaveBeenCalledWith({
+			startDate : NWC.util.WaterYearUtil.waterYearStart(1981),
+			endDate : NWC.util.WaterYearUtil.waterYearEnd(2010)
+		});
+	});
 
 	it('Expects calling rendering to call the map\s render method', function() {
 		testView = new NWC.view.StreamflowStatsGageDataView(options);
@@ -128,6 +166,6 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		testView = new NWC.view.StreamflowStatsGageDataView(options);
 		var fname = testView.getStatsFilename();
 		expect(fname).toMatch(options.gageId)
-	})
+	});
 
 });

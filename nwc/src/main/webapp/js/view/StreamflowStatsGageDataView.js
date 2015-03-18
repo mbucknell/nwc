@@ -6,6 +6,12 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 
 	templateName : 'streamflowGageStats',
 
+	/*
+	 * Query NWIS for information about this.context.gageId. If the call fails
+	 * the deferred will be rejected with a default start and end date. Otherwise the start and
+	 * end date will be determined from the returned data.
+	 * @return {Jquery.deferred}
+	 */
 	_retrieveNWISData : function() {
 		var NWIS_QUERY_PARAMS = {
 			'format': 'rdb',
@@ -71,8 +77,8 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 				deferred.resolve(dates);
 			},
 			error : function() {
-				var dates = gageInfoFailure()
-				deferred.reject(dates);
+				var dates = gageInfoFailure();
+				deferred.resolve(dates);
 			},
 			context : this
 		});
@@ -104,6 +110,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 		this.gageLayer = NWC.util.mapUtils.createGageFeatureLayer(options.gageId);
 		this.gageMarkerLayer = new OpenLayers.Layer.Markers("Markers");
 
+		// featureLoaded will be resolved when the gageLayer feature has been loaded.
 		var featureLoaded = $.Deferred();
 		this.gageLayer.events.on({
 			featureadded : function(event) {
