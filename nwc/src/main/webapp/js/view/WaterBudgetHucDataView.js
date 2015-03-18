@@ -76,6 +76,11 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		return;
 	},
 
+	/* then makes call to render the data on a plot
+	 * @param {String} huc 12 digit identifier for the hydrologic unit
+	 */
+	dataSeriesStore : new NWC.util.DataSeriesStore(),
+
 	/**
 	 * This makes a Web service call to get huc data
 	 * then makes call to render the data on a plot
