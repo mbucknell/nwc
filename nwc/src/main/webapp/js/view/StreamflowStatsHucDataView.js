@@ -83,6 +83,8 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.exten
 		tsvHeader += "\"# Statistics calculated using the USGS EflowStats Package\"\n";
 		tsvHeader += "\"# http://cida.usgs.gov/nwc/#streamflow-stats/huc/" + this.context.hucId + "\"\n";
 		tsvHeader += "\"# http://github.com/USGS-R/EflowStats \"\n";
+
+		return tsvHeader;
 	},
 
 	getStatsFilename : function() {
