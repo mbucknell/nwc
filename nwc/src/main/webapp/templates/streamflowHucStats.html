@@ -48,62 +48,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="statistics-calculation-div" class="row col-xs-12 text-center spacer_down">
-			<button id="calculate-stats-button" disabled="disabled" class="btn btn-success">Calculate Statistics</button>
-		</div>
-		<form class="row spacer spacer_down" name="statsParams" novalidate>
-			<div class="col-xs-12 spacer">
-				<h4 class="text-center">Date Range (Water Years)</h4>
-
-				<div class="col-md-2"></div>
-					<div class="col-md-4">
-						<label>From:</label>
-						<select id="start-year" class="form-control">
-							{{#each years}}
-								<option value="{{this}}">{{this}}</option>
-							{{/each}}
-						</select>
-					</div>
-					<div class="col-md-4">
-						<label>To:</label>
-						<select id="end-year" class="form-control">
-							{{#each years}}
-								<option value="{{this}}">{{this}}</option>
-							{{/each}}
-						</select>
-					</div>
-					<div class="col-md-2"></div>
-			</div>
-			<div class="row col-xs-12 spacer">
-				<h4 class="text-center">Statistic Groups</h4>
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>Select</th>
-							<th>Statistic Group Name</th>
-						</tr>
-					</thead>
-					<tbody id="available-statistics">
-						{{#each streamStatsOptions}}
-						<tr>
-							<td class="xs-col-2">
-								<input type="checkbox" name="{{shortName}}"  value="{{shortName}}"/>
-							</td>
-							<td class="xs-col-4"><a href="{{url}}" target="_blank">{{longName}} <i class="fa fa-external-link"></i></a></td>
-						</tr>
-						{{/each}}
-					</tbody>
-				</table>
-			</div>
-
-		</form>
-		<h4 id="loading-stats-indicator" style="display:none;">Calculating statistics <i class="fa fa-spinner fa-spin"></i></h4>
-		<div id="stats-results-div" style="display:none;" class="row col-xs-12 table-responsive">
-			<div class="col-sm-4 col-sm-offset-8">
-				<button id="download-stats-button" class="btn btn-success">Download These Statistics</button>
-			</div>
-			<div id="stats-results-table-div"></div>
-		</div>
+		{{> streamflowCalcStats }}
 	</div>
 </div>
 				

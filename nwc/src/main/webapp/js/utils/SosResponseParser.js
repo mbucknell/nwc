@@ -30,28 +30,28 @@ NWC.util.SosResponseParser = function () {
 		if (0 === valuesTxt.length) {
 			valuesTxt = $(response).find('values').text();
 		}
-        
+
 		//IE parsing of xml
 		if (0 === valuesTxt.length) {
 			valuesTxt = $($.parseXML(response)).find('swe\\:values').text();
 		}
-        
+
 		return valuesTxt;
 	};
-    
+
 	var getRowStringsFromCSV = function(data) {
 		var result = [];
-        
+
 		if (data) {
 			var trimmedData = data.trim();//kill terminal space and newline (' \n')
 			if (trimmedData) {
 				result = trimmedData.split(/\s+/);
 			}
 		}
-        
+
 		return result;
 	};
-    
+
 	return {
 		parseCSVData : function(data) {
 			var result = [];
@@ -61,7 +61,7 @@ NWC.util.SosResponseParser = function () {
 			}
 			return result;
 		},
-            
+
 		parseSosResponse : function (response) {
 			var result = null;
 			if (response) {
@@ -74,21 +74,21 @@ NWC.util.SosResponseParser = function () {
 		methodsForTesting : {
 			parseToken : parseToken,
 			breakRowStringsIntoColumns : breakRowStringsIntoColumns
-		},
+		}
 	};
 }();
 
 NWC.util.SosResponseFormatter = function () {
-	
+
 //	var SosResponseCleaner =  function() {
 //		var self = this;
-            
+
 		var emptyValues = [9.96921e+36, -999];//these values will be considered NaN's
 		var numberOfDatesPerRow = 1;//just one at the beginning
-            
+
 		var cleanRow = function(row) {
 			var result = row;
-                
+
 			if (row) {
 				var dates = row.slice(0, numberOfDatesPerRow);
 				var values = row.slice(numberOfDatesPerRow);
@@ -103,33 +103,33 @@ NWC.util.SosResponseFormatter = function () {
 					}
 					return next;
 				}, []);
-                    
+
 				if (reducedVals) {
 					result = dates.concat(reducedVals);
 				} else {
 					result = dates;
 				}
 			}
-			
+
 			return result;
 		};
-            
+
 		var trimRows = function(rows) {
 			var result = rows;
-                
+
 			var firstRowIndex = rows.findIndex(function(row) {
 				return row.length > numberOfDatesPerRow;
 			});
-                
+
 			if (0 > firstRowIndex) {
 				result = [];
 			} else {
 				result = rows.slice(firstRowIndex);
 			}
-                
+
 			return result;
 		};
-            
+
 		var fillRow = function(fillLength, fillVal, row) {
 			var result = row.clone();
 			while (result.length - numberOfDatesPerRow < fillLength) {
@@ -137,14 +137,14 @@ NWC.util.SosResponseFormatter = function () {
 			}
 			return result;
 		};
-            
+
 		var cleanRows = function(rows) {
 			var result = rows;
-                
+
 			if (rows) {
 				var cleanedRows = rows.map(cleanRow);
 				var trimmedRows = trimRows(cleanedRows);
-                    
+
 				if (trimmedRows.length > 0) {
 					var rowLength = trimmedRows[0].length;
 					var filledRows = trimmedRows.map(fillRow.fill(rowLength - numberOfDatesPerRow, NaN));
@@ -155,34 +155,34 @@ NWC.util.SosResponseFormatter = function () {
 			}
 
 			return result;
-		};        
+		};
 //	};
 
     return {
     	formatCSVData : function(data) {
     		var result = null;
-                
+
     		var rows = NWC.util.SosResponseParser.parseCSVData(data);
     		var cleaned = cleanRows(rows);
-                
+
     		result = cleaned;
-                
+
     		return result;
     	},
-            
+
     	/**
-    	 * 
+    	 *
     	 * @param {XMLHttpResponse} response Sos GetObservation ajax response
     	 * @returns {Array} a table of native data type results
     	 */
     	formatSosResponse : function (response) {
     		var result = null;
-                
+
     		var rows = NWC.util.SosResponseParser.parseSosResponse(response);
     		var cleaned = cleanRows(rows);
-                
+
     		result = cleaned;
-                
+
     		return result;
     	}
     };

@@ -4,6 +4,7 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 	var testView;
 	var addLayerSpy, renderSpy;
 	var eventSpy;
+	var server;
 
 	beforeEach(function() {
 		CONFIG = {
@@ -15,16 +16,13 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 		$('body').append('<div id="test-div"></div>');
 		$testDiv = $('#test-div');
 		$testDiv.append('<div id="inset-map-div"></div>');
-		$testDiv.append('<div id="available-statistics"><input id="as1" type="checkbox"/><input id="as2" type="chckbox"/></div>');
-		$testDiv.append('<button id="calculate-stats-button"></button>');
-		$testDiv.append('<select id="start-year"><option value="1991"></option></select>');
-		$testDiv.append('<select id="end-year"><option value="1992"></option></select');
 
 		addLayerSpy = jasmine.createSpy('addLayerSpy');
 		renderSpy = jasmine.createSpy('renderSpy');
-		spyOn(NWC.view.BaseView.prototype, 'render');
-		spyOn(NWC.view.BaseView.prototype, 'initialize').andCallFake(function() {
-			this.map = {
+		spyOn(NWC.view.BaseStreamflowStatsDataView.prototype, 'render');
+		spyOn(NWC.view.BaseStreamflowStatsDataView.prototype, 'initialize');
+		spyOn(NWC.util.mapUtils, 'createMap').andCallFake(function() {
+			return {
 				addLayer : addLayerSpy,
 				zoomToExtent : jasmine.createSpy('zoomToExtentSpy'),
 				getMaxExtent : jasmine.createSpy('getMaxExtentSpy'),
@@ -33,6 +31,7 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 		});
 
 		eventSpy = jasmine.createSpyObj('eventSpy', ['preventDefault']);
+		server = sinon.fakeServer.create();
 
 		testView = new NWC.view.StreamflowStatsHucDataView({
 			hucId : '123456789012',
@@ -42,13 +41,13 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 
 	afterEach(function() {
 		$testDiv.remove();
+		server.restore();
 	});
 
 	it('Expects view\'s constructor to set the context property', function() {
 		expect(testView.context.hucId).toEqual('123456789012');
 		expect(testView.context.years.first()).toEqual(testView.MIN_DATE.getFullYear() + 1);
 		expect(testView.context.years.last()).toEqual(testView.MAX_DATE.getFullYear());
-		expect(testView.context.streamStatsOptions).toEqual(NWC.dictionary.statGroups);
 	});
 
 	it('Expects view\'s constructor to create properties for the inset map and hucLayer', function() {
@@ -56,65 +55,41 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 		expect(testView.hucLayer).toBeDefined();
 	});
 
-	it('Expects the view\'s constructor to call BaseView initialize', function() {
-		expect(NWC.view.BaseView.prototype.initialize).toHaveBeenCalled();
+	it('Expects the view\'s constructor to call BaseStreamflowStatsDataView initialize', function() {
+		expect(NWC.view.BaseStreamflowStatsDataView.prototype.initialize).toHaveBeenCalled();
 	});
 
-	it('Expect when the view\'s render method is called that BaseViw render is called and the map is rendered', function() {
+	it('Expect when the view\'s render method is called that BaseStreamflowStatsDataView render is called and the map is rendered', function() {
 		testView.render();
-		expect(NWC.view.BaseView.prototype.render).toHaveBeenCalled();
+		expect(NWC.view.BaseStreamflowStatsDataView.prototype.render).toHaveBeenCalled();
 		expect(renderSpy).toHaveBeenCalledWith('inset-map-div');
 	});
 
-	it('Expects view.calculateStatsEnable to enabe the calculate stats button if any of the stat checkboxes have been checked', function() {
-		$('#as1').prop('checked', true);
-		testView.calculateStatsEnable();
-		expect($('#calculate-stats-button').prop('disabled')).toBe(false);
-
-		$('#as1').prop('checked', false);
-		testView.calculateStatsEnable();
-		expect($('#calculate-stats-button').prop('disabled')).toBe(true);
-	});
-
-	describe('Tests for calculateStats', function() {
-		var getTemplateSpy
-		beforeEach(function() {
-			getTemplateSpy = jasmine.createSpy('getTemplateSpy');
-
-			NWC.templates = {
-				'getTemplate' : getTemplateSpy
-			};
+	it('Expects getStats to call getHucStats and resolves the deferred when data is retrieved', function() {
 			spyOn(NWC.util.streamStats, 'getHucStats');
-			testView.calculateStats(eventSpy);
-		});
-
-		it('Expects calculateStats to use streamStats.getHucStats to retrieve the statistics', function() {
+			var doneSpy = jasmine.createSpy('doneSpy')
+			var d = testView.getStats(['s1', 's2'], '1990', '1991').done(doneSpy);
 			expect(NWC.util.streamStats.getHucStats).toHaveBeenCalled();
 			expect(NWC.util.streamStats.getHucStats.calls[0].args[0]).toEqual(['123456789012']);
-			expect(NWC.util.streamStats.getHucStats.calls[0].args[2]).toEqual(NWC.util.WaterYearUtil.waterYearStart('1991'));
-			expect(NWC.util.streamStats.getHucStats.calls[0].args[3]).toEqual(NWC.util.WaterYearUtil.waterYearEnd('1992'));
-		});
+			expect(NWC.util.streamStats.getHucStats.calls[0].args[1]).toEqual(['s1', 's2']);
+			expect(NWC.util.streamStats.getHucStats.calls[0].args[2]).toEqual('1990');
+			expect(NWC.util.streamStats.getHucStats.calls[0].args[3]).toEqual('1991');
+			expect(doneSpy).not.toHaveBeenCalled();
 
-		it('Expects the callback function to getHucStats to assign the statistics to the view', function() {
-			var templateSpy = jasmine.createSpy('templateSpy');
-			var statsResults = ['1', '2'];
-			getTemplateSpy.andReturn(templateSpy);
+			var callback = NWC.util.streamStats.getHucStats.calls[0].args[4];
+			callback(['1', '2']);
 
-			NWC.util.streamStats.getHucStats.calls[0].args[4](statsResults, '');
-			expect(templateSpy).toHaveBeenCalledWith({streamflowStatistics : statsResults});
-			expect(testView.streamflowStatistics).toEqual(statsResults);
-		});
+			expect(doneSpy).toHaveBeenCalledWith(['1', '2']);
 	});
 
-	//TODO write test for creating tsv
+	it('Expects the hucId to be in the tsv header', function() {
+		var header = testView.getStatsTsvHeader();
+		expect(header).toMatch('123456789012');
+	});
 
-	it('Expects downloadStats to save to the correct filename', function() {
-		spyOn(window, 'saveAs');
-		spyOn(window, 'Blob');
-		spyOn(testView, '_getStatsTsv');
-		testView.downloadStats(eventSpy);
-		expect(saveAs).toHaveBeenCalled();
-		expect(saveAs.calls[0].args[1]).toMatch(testView.context.hucId);
+	it('Expects the hucId to be in the stats file name', function() {
+		var fname = testView.getStatsFilename();
+		expect(fname).toMatch('123456789012');
 	});
 
 	it('Expects downloadModeledData to save to appropriate filename', function() {
@@ -130,6 +105,30 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 		expect(saveAs.calls[0].args[1]).toMatch(testView.hucName);
 		expect(saveAs.calls[0].args[1]).toMatch(testView.context.hucId);
 		expect(testView.modeledDataSeries.toCSV).toHaveBeenCalled();
+	});
+
+	describe('Tests for plotStreamflowData', function() {
+		beforeEach(function() {
+			spyOn(NWC.util.Plotter, 'getPlot');
+			spyOn(NWC.util, 'buildSosUrlFromSource').andCallFake(function() {
+				return 'http://fakesos.org';
+			});
+		});
+
+		it('Expects plotStreamflowData to call buildSosUrlFromSource with the hucId', function() {
+			testView.plotStreamFlowData(eventSpy);
+			expect(NWC.util.buildSosUrlFromSource).toHaveBeenCalled();
+			expect(NWC.util.buildSosUrlFromSource.calls[0].args[0]).toEqual('123456789012');
+		});
+
+		it('Expects plotStreamflowData to make an ajax call to the sos', function() {
+			var requestCount = server.requests.length;
+			testView.plotStreamFlowData(eventSpy);
+			expect(server.requests.length).toBe(requestCount + 1);
+			expect(server.requests.last().url).toMatch('http://fakesos.org');
+		});
+
+		//TODO figure out how to fake out the SOS response formatter in order ot test the successful response
 	});
 
 

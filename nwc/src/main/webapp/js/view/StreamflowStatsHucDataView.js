@@ -6,7 +6,7 @@ NWC.view = NWC.view || {};
  * View for the streamflow stats huc data page
  * @constructor extends NWC.BaseView
  */
-NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
+NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.extend({
 
 	templateName : 'streamflowHucStats',
 
@@ -14,25 +14,21 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 	MAX_DATE : Date.create('2010/09/30').utc(),
 
 	events : {
-		'click #calculate-stats-button' : 'calculateStats',
-		'click #available-statistics input' : 'calculateStatsEnable',
-		'click #download-stats-button' : 'downloadStats',
 		'click #streamflow-data-plot-button' : 'plotStreamFlowData',
 		'click #streamflow-data-download-button' : 'downloadModeledData'
 	},
 
-	context : {
-	},
-
 	render : function() {
-		NWC.view.BaseView.prototype.render.apply(this, arguments);
+		NWC.view.BaseStreamflowStatsDataView.prototype.render.apply(this, arguments);
 		this.map.render(this.insetMapDiv);
 	},
 
 	initialize : function(options) {
+		if (!Object.has(this, 'context')) {
+			this.context = {};
+		}
 		this.context.hucId = options.hucId;
 		this.context.years = NWC.util.WaterYearUtil.yearsAsArray(NWC.util.WaterYearUtil.waterYearRange(Date.range(this.MIN_DATE, this.MAX_DATE)));
-		this.context.streamStatsOptions = NWC.dictionary.statGroups;
 
 		this.insetMapDiv = options.insetMapDiv;
 
@@ -57,7 +53,8 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		});
 		this.map.addLayer(this.hucLayer);
 
-		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
+		$.extend(this.events, NWC.view.BaseStreamflowStatsDataView.prototype.events);
+		NWC.view.BaseStreamflowStatsDataView.prototype.initialize.apply(this, arguments);
 		this.map.zoomToExtent(this.map.getMaxExtent());
 
 		// Initialize DOM on page
@@ -67,83 +64,31 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		$end.prop('selected', true);
 	},
 
-	calculateStatsEnable : function() {
-		var disable = !($('#available-statistics input').is(':checked'));
-		$('#calculate-stats-button').prop('disabled', disable);
+	getStats : function(statTypes, startDate, endDate) {
+		var d = $.Deferred();
+		var callback = function(statistics) {
+			d.resolve(statistics);
+		};
+
+		NWC.util.streamStats.getHucStats([this.context.hucId], statTypes, startDate, endDate, callback);
+
+		return d;
 	},
 
-	_getStatsTsv : function() {
-		var statistics = this.streamflowStatistics;
+	getStatsTsvHeader : function() {
 		var tsvHeader = "";
-		var tsvValues = "Name\tValue\tDescription\n";
-		var i;
 
 		tsvHeader = "\"# Data derived from National Water Census daily flow estimates.\"\n";
 		tsvHeader += "\"# HUC " + this.context.hucId +  " was selected.\"\n";
 		tsvHeader += "\"# Statistics calculated using the USGS EflowStats Package\"\n";
-		tsvHeader += "\"# http://cida.usgs.gov/nwc/ang/#/workflow/streamflow-statistics/select-site \"\n";
+		tsvHeader += "\"# http://cida.usgs.gov/nwc/#streamflow-stats/huc/" + this.context.hucId + "\"\n";
 		tsvHeader += "\"# http://github.com/USGS-R/EflowStats \"\n";
-		for (i = 0; i < statistics.length; i += 1) {
-			if (statistics[i].name) {
-				tsvValues += statistics[i].name + "\t";
-			}
-			else {
-				tsvValues += "\t";
-			}
-			if (statistics[i].value) {
-				tsvValues += statistics[i].value + "\t";
-			}
-			else {
-				tsvValues += "\t";
-			}
-			if (statistics[i].desc) {
-				tsvValues += statistics[i].desc + "\n";
-			}
-			else {
-				tsvValues += "\n";
-			}
-		}
-		return tsvHeader + tsvValues;
+
+		return tsvHeader;
 	},
 
-	_getStatsFilename : function() {
+	getStatsFilename : function() {
 		return 'eflowstats_HUC_' + this.context.hucId + '.tsv';
-	},
-
-	calculateStats : function(ev) {
-		var hucId = this.context.hucId;
-		var startDate = NWC.util.WaterYearUtil.waterYearStart($('#start-year option:selected').val());
-		var endDate = NWC.util.WaterYearUtil.waterYearEnd($('#end-year option:selected').val());
-
-		var $loadingIndicator = $('#loading-stats-indicator');
-		var $statsResultsDiv = $('#stats-results-div');
-
-		var callback = function(statistics, resultsUrl){
-			this.streamflowStatistics = statistics;
-
-			$('#stats-results-table-div').html(NWC.templates.getTemplate('statsResults')({streamflowStatistics : statistics}));
-			$statsResultsDiv.show();
-			$loadingIndicator.hide();
-		}.bind(this);
-
-		var statTypes = [];
-
-		ev.preventDefault();
-
-		$statsResultsDiv.hide();
-		$loadingIndicator.show();
-		$('#available-statistics input:checked').each(function() {
-			statTypes.push($(this).val());
-		});
-
-		NWC.util.streamStats.getHucStats([hucId], statTypes, startDate, endDate, callback);
-	},
-
-	downloadStats : function(ev) {
-		ev.preventDefault();
-
-		var blob = new Blob([this._getStatsTsv()], {type:'text/tsv'});
-		saveAs(blob, this._getStatsFilename());
 	},
 
 	plotStreamFlowData : function(ev) {
@@ -213,6 +158,7 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		});
 
 	},
+
 	downloadModeledData : function(ev) {
 		ev.preventDefault();
 		var filename = this.hucName + '_' + this.context.hucId + '_Q.csv';
@@ -220,5 +166,4 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		var blob = new Blob([this.modeledDataSeries.toCSV()], {type:'text/tsv'});
 		saveAs(blob, filename);
 	}
-
 });
