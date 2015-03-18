@@ -61,8 +61,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				this.map.zoomToExtent(this.hucLayer.getDataExtent());
 
 				$('#huc-name').html(event.feature.attributes.HU_12_NAME);
-				this.$(".evapotranspiration-download-button").removeAttr("disabled");			
-				this.$(".precipitation-download-button").removeAttr("disabled");			
+				$('.evapotranspiration-download-button').prop('disabled', false);			
+				$('.precipitation-download-button').prop('disabled', false);			
 			},
 			loadend: function(event) {
 				$('#loading-indicator').hide();
@@ -156,9 +156,9 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	toggleMetricLegend : function() {
-		$(".customary-button").removeAttr("disabled");
-		$(".metric-button").attr("disabled","disabled");
-		if ($(".daily-button").attr("disabled")) {
+		$('.customary-button').prop('disabled', false);
+		$('.metric-button').prop('disabled','disabled');
+		if ($('.daily-button').prop('disabled')) {
 			this.plotPTandETaData(this.DAILY, this.METRIC);
 		}
 		else {
@@ -167,9 +167,9 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	toggleCustomaryLegend : function() {
-		$(".metric-button").removeAttr("disabled");
-		$(".customary-button").attr("disabled","disabled");
-		if ($(".daily-button").attr("disabled")) {
+		$('.metric-button').prop('disabled', false);
+		$('.customary-button').prop('disabled','disabled');
+		if ($('.daily-button').prop('disabled')) {
 			this.plotPTandETaData(this.DAILY, this.CUSTOMARY);
 		}
 		else {
@@ -178,9 +178,9 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	toggleMonthlyLegend : function() {
-		$(".daily-button").removeAttr("disabled");
-		$(".monthly-button").attr("disabled","disabled");
-		if ($(".customary-button").attr("disabled")) {
+		$('.daily-button').prop('disabled', false);
+		$('.monthly-button').prop('disabled','disabled');
+		if ($('.customary-button').prop('disabled')) {
 			this.plotPTandETaData(this.MONTHLY, this.CUSTOMARY);
 		}
 		else {
@@ -189,9 +189,9 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	toggleDailyLegend : function() {
-		$(".daily-button").attr("disabled","disabled");
-		$(".monthly-button").removeAttr("disabled");
-		if (this.$(".customary-button").attr("disabled")) {
+		$('.daily-button').prop('disabled','disabled');
+		$('.monthly-button').prop('disabled', false);
+		if (this.$('.customary-button').prop('disabled')) {
 			this.plotPTandETaData(this.DAILY, this.CUSTOMARY);
 		}
 		else {

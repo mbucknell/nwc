@@ -16,7 +16,7 @@ describe('Tests for WaterBudgetHucDataView', function() {0
 		$testDiv.append('<button class="customary-button" disabled>US Customary</button>');
 		$testDiv.append('<button class="metric-button">Metric</button>');
 		$testDiv.append('<button class="daily-button">Daily</button>');
-		$testDiv.append('<button class="monthly-button">Monthly</button>');
+		$testDiv.append('<button class="monthly-button" disabled>Monthly</button>');
 
 		addLayersSpy = jasmine.createSpy('addLayersSpy');
 		renderSpy = jasmine.createSpy('renderSpy');
@@ -70,17 +70,17 @@ describe('Tests for WaterBudgetHucDataView', function() {0
 		//plot buttons exist and get set with the proper disabled attribute
 		testView.plotPTandETaData = jasmine.createSpy('plotPTandETaDataSpy')
 		testView.toggleMetricLegend();
-		expect($('.customary-button').attr('disabled')).toBeUndefined();
-		expect($('.metric-button').attr('disabled')).toBe('disabled');
+		expect($('.customary-button').prop('disabled')).toBe(false);
+		expect($('.metric-button').prop('disabled')).toBe(true);
 		testView.toggleCustomaryLegend();
-		expect($('.customary-button').attr('disabled')).toBe('disabled');
-		expect($('.metric-button').attr('disabled')).toBeUndefined();
+		expect($('.customary-button').prop('disabled')).toBe(true);
+		expect($('.metric-button').prop('disabled')).toBe(false);
 		testView.toggleMonthlyLegend();
-		expect($('.monthly-button').attr('disabled')).toBe('disabled');
-		expect($('.daily-button').attr('disabled')).toBeUndefined();
+		expect($('.monthly-button').prop('disabled')).toBe(true);
+		expect($('.daily-button').prop('disabled')).toBe(false);
 		testView.toggleDailyLegend();
-		expect($('.monthly-button').attr('disabled')).toBeUndefined();
-		expect($('.daily-button').attr('disabled')).toBe('disabled');
+		expect($('.monthly-button').prop('disabled')).toBe(false);
+		expect($('.daily-button').prop('disabled')).toBe(true);
 	});
 
 	it('Expects downloadEvapotranspiration to save to appropriate filename', function() {
