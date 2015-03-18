@@ -4,6 +4,7 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 	var testView;
 	var addLayerSpy, renderSpy;
 	var eventSpy;
+	var server;
 
 	beforeEach(function() {
 		CONFIG = {
@@ -30,6 +31,7 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 		});
 
 		eventSpy = jasmine.createSpyObj('eventSpy', ['preventDefault']);
+		server = sinon.fakeServer.create();
 
 		testView = new NWC.view.StreamflowStatsHucDataView({
 			hucId : '123456789012',
@@ -39,6 +41,7 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 
 	afterEach(function() {
 		$testDiv.remove();
+		server.restore();
 	});
 
 	it('Expects view\'s constructor to set the context property', function() {
@@ -102,6 +105,30 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 		expect(saveAs.calls[0].args[1]).toMatch(testView.hucName);
 		expect(saveAs.calls[0].args[1]).toMatch(testView.context.hucId);
 		expect(testView.modeledDataSeries.toCSV).toHaveBeenCalled();
+	});
+
+	describe('Tests for plotStreamflowData', function() {
+		beforeEach(function() {
+			spyOn(NWC.util.Plotter, 'getPlot');
+			spyOn(NWC.util, 'buildSosUrlFromSource').andCallFake(function() {
+				return 'http://fakesos.org';
+			});
+		});
+
+		it('Expects plotStreamflowData to call buildSosUrlFromSource with the hucId', function() {
+			testView.plotStreamFlowData(eventSpy);
+			expect(NWC.util.buildSosUrlFromSource).toHaveBeenCalled();
+			expect(NWC.util.buildSosUrlFromSource.calls[0].args[0]).toEqual('123456789012');
+		});
+
+		it('Expects plotStreamflowData to make an ajax call to the sos', function() {
+			var requestCount = server.requests.length;
+			testView.plotStreamFlowData(eventSpy);
+			expect(server.requests.length).toBe(requestCount + 1);
+			expect(server.requests.last().url).toMatch('http://fakesos.org');
+		});
+
+		//TODO figure out how to fake out the SOS response formatter in order ot test the successful response
 	});
 
 
