@@ -8,7 +8,7 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
         },
         
         events: {
-            'change input[type=checkbox]': ('checkboxChanged','biodataFormEnable'),
+            'change input[type=checkbox]': 'checkboxChanged',
             'click #selected-sites-button' : 'showSites',
             'click #allSelected' : 'selectAll',
             'click #biodata-form-button' : 'sitesDoc',
@@ -28,9 +28,6 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                 }
             });
             this.context.hucs = filteredHucs;
-            $('#sites-table-div').html({biodataSites : this.model.get('sites')});
-            $('#gages-table-div').html({gages : this.model.get('gages')});
-            $('#hucs-table-div').html({hucs : this.context.hucs});
             NWC.view.BaseView.prototype.initialize.apply(this, arguments);
         },
        
@@ -38,6 +35,8 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
             
             $cb      = $(evt.target),
             name     = $cb.attr('name');
+            var disable = !($('#sites-table-div input').is(':checked'));
+            $('#biodata-form-button').prop('disabled', disable);
             if (name !== 'allSelected') {
                 if ($cb.is(':checked')) {
                     this.model.set({ 
@@ -54,11 +53,6 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
             }
         },
         
-        biodataFormEnable : function() {
-		var disable = !($('#sites-table-div input').is(':checked'));
-		$('#biodata-form-button').prop('disabled', disable);
-	},
-
         selectAll : function(evt){
             $cb      = $(evt.target);
             var checkAll = ($cb.prop('checked'));
@@ -66,7 +60,7 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                 $(this).prop('checked', checkAll).change();
             });
         },
-        
+        // send selected sites to Bioshare and pre-populate the sites filter with those sites
         sitesDoc : function () {
                 var bioDataSiteSelectionDoc;
                 var preselectBioDataSites = function (siteIds) {
