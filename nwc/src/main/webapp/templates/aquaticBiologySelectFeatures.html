@@ -1,10 +1,12 @@
+<form id="bioData_form" style="display:none" method="POST" action="https://aquatic.biodata.usgs.gov/restoreCriteria.action" target="_blank">
+    <input type="hidden" name="currentQuery"/>
+</form>
 <div class="row" style="margin: 0px;">
 	<div class="col-xs-12 nwc-container">
 		<div class="row">
 			<div class="col-xs-12">
 				<h3>Aquatic Biology Data and Related Streamflow Statistics</h3>
-                                <p><button id="selected-sites-button" class="btn btn-primary">show selected sites</button></p>
-                                <p></p>
+                                <p></p>   
                                 <p></p>
 			</div>
 		</div>
@@ -13,6 +15,7 @@
                         {{#if biodataSites}}
                         <h4>Aquatic Biology Data Sites</h4>
                         <div id="sites-table-div">
+                            <button id="biodata-form-button" disabled="disabled" class="btn btn-success">Explore Selected Sites In Biodata <span class="glyphicon glyphicon-arrow-right"></span></button>
                             <table class="table table-striped sites-table">
                                 <thead>
                                     <tr>
