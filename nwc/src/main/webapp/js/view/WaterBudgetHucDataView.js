@@ -20,7 +20,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	events: {
 		'click .back-button' : 'goToWaterbudget',
-		'click .counties-button' : 'displayCountyMap',
+		'click #counties-button' : 'displayCountyMap',
 		'click .metric-button' : 'toggleMetricLegend',
 		'click .customary-button' : 'toggleCustomaryLegend',
 		'click .monthly-button' : 'toggleMonthlyLegend',
@@ -61,8 +61,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				this.map.zoomToExtent(this.hucLayer.getDataExtent());
 
 				$('#huc-name').html(event.feature.attributes.HU_12_NAME);
-				$('.evapotranspiration-download-button').prop('disabled', false);			
-				$('.precipitation-download-button').prop('disabled', false);			
+				$('.evapotranspiration-download-button').prop('disabled', false);
+				$('.precipitation-download-button').prop('disabled', false);
 			},
 			loadend: function(event) {
 				$('#loading-indicator').hide();
@@ -152,7 +152,12 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	displayCountyMap : function() {
-		return;
+		$('#county-selection-div').show();
+		var countyMapBaseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
+		this.countyMap = NWC.util.mapUtils.createMap([countyMapBaseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
+
+		this.countyMap.render('county-selection-map');
+		this.countyMap.zoomToExtent(this.countyMap.getMaxExtent());
 	},
 
 	toggleMetricLegend : function() {
@@ -207,7 +212,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	downloadPrecipitation : function() {
 		var blob = new Blob([this.dataSeriesStore.dayMet.toCSV()], {type:'text/csv'});
-		saveAs(blob, this.getHucFilename('dayMet'));	
+		saveAs(blob, this.getHucFilename('dayMet'));
 		return;
 	},
 
