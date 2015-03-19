@@ -22,6 +22,7 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 		'streamflow-stats' : 'streamflowStats',
 		'streamflow-stats/gage/:gageid' : 'streamflowStatsGageData',
 		'streamflow-stats/huc/:huc' : 'streamflowStatsHucData',
+		'streamflow-stats/model-info' : 'streamflowStatsModeledInfo',
 		'aquatic-biology' : 'aquaticBiology',
 		'aquatic-biology/select-features' : 'aquaticBiologySelectFeatures',
 		'data-discovery' : 'dataDiscovery'
@@ -63,6 +64,10 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 			hucId : huc,
 			insetMapDiv : 'huc-inset'
 		});
+	},
+
+	streamflowStatsModeledInfo : function() {
+		this.showView(NWC.view.StreamflowStatsModeledInfoView, {});
 	},
 
 	aquaticBiology : function() {

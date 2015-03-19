@@ -9,6 +9,7 @@ $(document).ready(function() {
 		'streamflowStats',
 		'streamflowGageStats',
 		'streamflowHucStats',
+		'modeledInfoPage',
 		'aquaticBiology',
 		'aquaticBiologySelectFeatures',
 		'dataDiscovery',

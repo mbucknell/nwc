@@ -35,16 +35,19 @@ NWC.util = NWC.util || {};
             units: NWC.util.Units.usCustomary.streamflow.daily,
             dataset: 'HUC12_data',
             fileName: 'HUC12_Q.nc',
-            downloadMetadata: 'Data provided by a USGS research study that is in review. This information is\npreliminary and is subject to revision. It is being provided to meet the need for\ntimely \"best science\" information. The assessment is provided on the condition that\nneither the U.S. Geological Survey nor the United States Government may be\nheld liable for any damages resulting from the authorized or unauthorized use of\nthe assessment. Documentation can be found here:\nhttp://cida.usgs.gov/nwc/ang/#/workflow/streamflow-statistics/model-info'
-        }
-//        current : '' //very hacky, need to figure out better option
+            downloadMetadata: 'Data provided by a USGS research study that is in review. This information is\npreliminary and is subject to revision. ' +
+				'It is being provided to meet the need for\ntimely \"best science\" information. The assessment is provided on the condition ' +
+				'that\nneither the U.S. Geological Survey nor the United States Government may be\nheld liable for any damages resulting from ' +
+				'the authorized or unauthorized use of\nthe assessment. Documentation can be found ' +
+				'here:\nhttp://cida.usgs.gov/nwc/#streamflow-stats/model-info'
+		}
     };
 
 	/**
 	 * @param {String} offering The offerring id as appears in SOS GetCapabilities
 	 * @param {String} observedProperty The property of the offering to return
 	 * @param {String} dataset The folder below the SOS provider namespace
-	 * @param {String} fileName The filename of the data of interest. The last 
+	 * @param {String} fileName The filename of the data of interest. The last
 	 * component of the path prior to the arguments
 	 */
 	var buildSosUrl = function (offering, observedProperty, dataset, fileName) {
@@ -57,10 +60,10 @@ NWC.util = NWC.util || {};
 	    });
 	    return CONFIG.endpoint.thredds + dataset + '/' + fileName + '?' + $.param(sosParams);
 	};
-	
+
 	/**
 	 * @param {String} offerring The offerring id as appears in SOS GetCapabilities
-	 * @param {object - NWCUI.data.SosSources entry} source 
+	 * @param {object - NWCUI.data.SosSources entry} source
 	 */
 	NWC.util.buildSosUrlFromSource = function (offering, source) {
 	    return buildSosUrl(offering, source.observedProperty, source.dataset, source.fileName);
