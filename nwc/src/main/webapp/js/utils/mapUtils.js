@@ -210,6 +210,30 @@ NWC.util.mapUtils = (function () {
 		return gageLayer;
 	};
 
+	that.createCountyFeatureLayer = function(fips) {
+		var filter = new OpenLayers.Filter.Comparison({
+			type: OpenLayers.Filter.Comparison.EQUAL_TO,
+			property: "FIPS",
+			value: fips
+		});
+
+		var protocol = new OpenLayers.Protocol.WFS({
+			url : CONFIG.endpoint.geoserver + 'wfs',
+			featureType: 'US_Historical_Counties',
+			featureNS: "http://cida.usgs.gov/NWC",
+			version: "1.1.0",
+			geometryName: "the_geom",
+			srsName : "EPSG:900913"
+		});
+
+		var countyLayer = new OpenLayers.Layer.Vector("WFS", {
+			strategies: [new OpenLayers.Strategy.Fixed()],
+			protocol: protocol,
+			filter:filter
+		});
+		return countyLayer;
+	};
+
 	that.addFlowLinesToMap = function(map) {
 		var streamOrderClipValues = [
 			7, // 0

@@ -23,7 +23,7 @@ describe('Tests for WaterBudgetHucDataView', function() {0
 		getHucDataSpy = jasmine.createSpy('getHucDataSpy');
 //		plotPTandETDataSpy = jasmine.createSpy('plotPTandETDataSpy');
 		spyOn(NWC.view.BaseView.prototype, 'initialize').andCallFake(function() {
-			this.getHucData = getHucDataSpy			
+			this.getHucData = getHucDataSpy
 			this.map = {
 				addLayers : addLayersSpy,
 				zoomToExtent : jasmine.createSpy('zoomToExtentSpy'),
@@ -31,7 +31,7 @@ describe('Tests for WaterBudgetHucDataView', function() {0
 				render : renderSpy
 			}
 		});
-		
+
 		testView = new NWC.view.WaterBudgetHucDataView({
 			hucId : '12345678',
 			insetMapDiv : 'inset-map-div'
@@ -59,7 +59,7 @@ describe('Tests for WaterBudgetHucDataView', function() {0
 
 		//the view has an event to wire up the clickable plot options
 		expect(testView.events['click .back-button']).toBeDefined();
-		expect(testView.events['click .counties-button']).toBeDefined();
+		expect(testView.events['click #counties-button']).toBeDefined();
 		expect(testView.events['click .metric-button']).toBeDefined();
 		expect(testView.events['click .customary-button']).toBeDefined();
 		expect(testView.events['click .monthly-button']).toBeDefined();
