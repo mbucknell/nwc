@@ -61,7 +61,7 @@
 		<script type="text/javascript" src="webjars/underscorejs/${underscoreVersion}/underscore.js"></script>
 		<script type="text/javascript" src="webjars/backbonejs/${backboneVersion}/backbone.js"></script>
 		<script type="text/javascript" src="webjars/handlebars/${handlebarsVersion}/handlebars${jsMin}.js"></script>
-		<script type="text/javascript" src="webjars/openlayers/${openlayersVersion}/OpenLayers.js"></script>
+		<script type="text/javascript" src="webjars/openlayers/${openlayersVersion}/OpenLayers.debug.js"></script>
 		<script type="text/javascript" src="webjars/flot/${flotchartsVersion}/jquery.flot${jsMin}.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/javascript.util.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/jsts.js"></script>
@@ -71,10 +71,10 @@
 		
 		<!-- order is important -->
 		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster.js"></script>
-		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Layer/Raster.js"></script>
-		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Grid.js"></script>
-		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Operation.js"></script>
-		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Composite.js"></script>
+                <script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Layer/Raster.js"></script>
+                <script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Grid.js"></script>	
+                <script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Composite.js"></script>
+<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Operation.js"></script>
 		<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesData.js"></script>
 <!--	<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesRaster.js"></script>
 -->
@@ -111,6 +111,7 @@
                 <script type="text/javascript" src="js/view/StreamflowStatsGageDataView.js"></script>
                 <script type="text/javascript" src="js/view/StreamflowStatsHucDataView.js"></script>
                 <script type="text/javascript" src="js/view/StreamflowStatsModeledInfoView.js"></script>
+                <script type="text/javascript" src="js/view/HucCountyMapView.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetMapView.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetHucDataView.js"></script>
 		<script type="text/javascript" src="js/controller/NWCRouter.js"></script>

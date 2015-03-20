@@ -17,6 +17,7 @@ describe('Tests for WaterBudgetHucDataView', function() {0
 		$testDiv.append('<button class="metric-button">Metric</button>');
 		$testDiv.append('<button class="daily-button">Daily</button>');
 		$testDiv.append('<button class="monthly-button" disabled>Monthly</button>');
+		$testDiv.append('<div id="county-selection-div" style="display:none;"></div>');
 
 		addLayersSpy = jasmine.createSpy('addLayersSpy');
 		renderSpy = jasmine.createSpy('renderSpy');
@@ -117,6 +118,13 @@ describe('Tests for WaterBudgetHucDataView', function() {0
 		expect(saveAs.calls[0].args[1]).toMatch(testView.fileName);
 		expect(saveAs.calls[0].args[1]).toMatch(testView.context.hucId);
 		expect(testView.dataSeriesStore.dayMet.toCSV).toHaveBeenCalled();
+	});
+
+	it('Expects displayCountyMap to show the county dif and to create the huc/county map view', function() {
+		spyOn(NWC.view, 'HucCountyMapView');
+		testView.displayCountyMap();
+		expect($('#county-selection-div').is(':visible')).toBe(true);
+		expect(NWC.view.HucCountyMapView).toHaveBeenCalled();
 	});
 
 });

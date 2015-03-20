@@ -71,6 +71,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			},
 			loadend: function(event) {
 				$('#loading-indicator').hide();
+				$('#counties-button').show();
 			},
 			scope : this
 		});
@@ -156,97 +157,14 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
         return;
 	},
 
-	_addIntersectingCountiesLayer: function(hucFeature, map) {
-		var intersectionFilter = new OpenLayers.Filter.Spatial({
-			type: OpenLayers.Filter.Spatial.INTERSECTS,
-			property: 'the_geom',
-			value: hucFeature.geometry
-		});
-
-		var intersectingCountiesLayer = new OpenLayers.Layer.Vector(
-			'Historical Counties',
-			{
-				displayInLayerSwitcher: false,
-				strategies: [new OpenLayers.Strategy.Fixed()],
-				styleMap: new OpenLayers.StyleMap({
-					strokeWidth: 3,
-					strokeColor: '#333333',
-					fillColor: '#FF9900',
-					fillOpacity: 0.4,
-					//Display County Name
-					label: '${NAME}',
-					fontSize: '2em',
-					fontWeight: 'bold',
-					labelOutlineColor: "white",
-					labelOutlineWidth: 1,
-					labelAlign: 'cm',
-					cursor: 'pointer'
-				}),
-				filter: intersectionFilter,
-				protocol: new OpenLayers.Protocol.WFS({
-					version: '1.1.0',
-					url: CONFIG.endpoint.geoserver + 'wfs',
-					featureType: "US_Historical_Counties",
-					featureNS: 'http://cida.usgs.gov/NWC',
-					geometryName: 'the_geom',
-					srsName: 'EPSG:900913'
-				})
-			}
-		);
-		map.addLayer(intersectingCountiesLayer);
-
-		intersectingCountiesLayer.events.register('featuresadded',
-			intersectingCountiesLayer,
-			function() {
-				console.log('added county layer');
-				var countyFeatures = intersectingCountiesLayer.features;
-
-				var countiesHucInfo = NWC.util.hucCountiesIntersector.getCountiesIntersectionInfo(hucFeature, countyFeatures);
-				$('#county-table-div').html(NWC.templates.getTemplate('countyHucTable')({countiesHucInfo : countiesHucInfo}));
-
-				var countiesExtent = intersectingCountiesLayer.getDataExtent();
-				map.zoomToExtent(countiesExtent);
-			}
-		);
-		return intersectingCountiesLayer;
-	},
-
 	displayCountyMap : function() {
 		$('#county-selection-div').show();
-		var countyMapBaseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
-		this.countyMap = NWC.util.mapUtils.createMap([countyMapBaseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
-
-		// Get huc feature from the this.hucLayer
-		var hucFeatures = this.hucLayer.features;
-		this.countyHucFeatureLayer = new OpenLayers.Layer.Vector('County Huc Layer', {
-			displayInLayerSwitcher : false,
-			isBaseLayer : false,
-			visibility : true,
-			opacity: 0.6,
-			style : {
-				fillColor: '#00FF00',
-				fillOpacity: 0.6
-			}
+		this.hucCountMapView = new NWC.view.HucCountyMapView({
+			mapDiv : 'county-selection-map',
+			hucFeature : this.hucLayer.features[0],
+			router : this.router,
+			el : $('#county-selection-div')
 		});
-		this.countyHucFeatureLayer.addFeatures(hucFeatures);
-		this.countyMap.addLayer(this.countyHucFeatureLayer);
-
-		var countiesLayer = this._addIntersectingCountiesLayer(hucFeatures[0], this.countyMap);
-
-		// Set up control
-		var selectControl = new OpenLayers.Control.SelectFeature(countiesLayer, {
-			onSelect : (function(feature) {
-				this.router.navigate('/waterbudget/huc/' + this.hucId + '/county/' + feature.attributes.FIPS, {
-					trigger : true
-				});
-			}).bind(this)
-		});
-		this.countyMap.addControl(selectControl);
-		selectControl.activate();
-
-		this.countyMap.render('county-selection-map');
-		// Need to zoom to extent of county layer.
-		this.countyMap.zoomToExtent(this.countyHucFeatureLayer.getDataExtent());
 	},
 
 	toggleMetricLegend : function() {
@@ -321,6 +239,14 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		filename = filename.replace(/ /g, '_');
 		filename = escape(filename);
 		return filename;
+	},
+
+	remove : function() {
+		if (Object.has(this, 'hucCountyMapView')) {
+			this.hucCountyMapView.remove();
+		}
+		NWC.view.BaseView.prototype.remove.apply(this, arguments);
+
 	}
 
 });
