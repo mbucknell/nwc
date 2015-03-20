@@ -162,7 +162,7 @@
 						<pattern>.*/OpenLayers.js</pattern>
 						<pattern>.*/FileSaver.js</pattern>
 						<pattern>.*/javascript.util.js</pattern>
-						<pattern>/*/jsts.js</pattern>
+						<pattern>.*/jsts.js</pattern>
 						<!-- Add patterns for files that don't need to be analyzed such as library files -->
                     </noInstrumentPatterns>
                 </configuration>
