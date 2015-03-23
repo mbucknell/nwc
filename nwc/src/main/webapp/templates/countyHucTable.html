@@ -1,0 +1,20 @@
+<table id="county-huc-table" class="table table-striped">
+	<thead>
+		<tr>
+			<th>County Name</th>
+			<th>County Id</th>
+			<th>% HUC in County</th>
+			<th>% County in HUC</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each countiesHucInfo }}
+			<tr>
+				<td>{{this.countyName}}</td>
+				<td>{{this.countyId}}</td>
+				<td>{{this.hucInCounty}}</td>
+				<td>{{this.countyInHuc}}</td>
+			</tr>
+		{{/each}}
+	</tbday>
+</table>	

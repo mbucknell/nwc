@@ -110,7 +110,9 @@
 						<source>webjars/underscore.js</source>
 						<source>webjars/backbone.js</source>
 						<source>webjars/handlebars.js</source>
-						<source>webjars/OpenLayers.js</source>	
+						<source>webjars/OpenLayers.js</source>
+						<source>webjars/javascript.util.js</source>	
+						<source>webjars/jsts.js</source>
 						<source>${basedir}/src/main/webapp/vendorlibs/FileSaver.js-master/FileSaver.js</source>
 					</preloadSources>
 					<sourceIncludes>
@@ -159,6 +161,8 @@
 						<pattern>.*/handlebars.js</pattern>
 						<pattern>.*/OpenLayers.js</pattern>
 						<pattern>.*/FileSaver.js</pattern>
+						<pattern>.*/javascript.util.js</pattern>
+						<pattern>.*/jsts.js</pattern>
 						<!-- Add patterns for files that don't need to be analyzed such as library files -->
                     </noInstrumentPatterns>
                 </configuration>

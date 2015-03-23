@@ -20,7 +20,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	events: {
 		'click .back-button' : 'goToWaterbudget',
-		'click .counties-button' : 'displayCountyMap',
+		'click #counties-button' : 'displayCountyMap',
 		'click .metric-button' : 'toggleMetricLegend',
 		'click .customary-button' : 'toggleCustomaryLegend',
 		'click .monthly-button' : 'toggleMonthlyLegend',
@@ -37,6 +37,11 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		this.context.hucId = options.hucId;
 		this.hucId = options.hucId;
 		this.insetHucMapDiv = options.insetHucMapDiv;
+		//TODO take out
+		if (Object.has(options, 'fips')) {
+			this.fips = options.fips;
+			console.log('Passed in fips ' + options.fips);
+		}
 
 		// call superclass initialize to do default initialize
 		// (includes render)
@@ -63,11 +68,12 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				this.map.zoomToExtent(this.hucLayer.getDataExtent());
 
 				$('#huc-name').html(event.feature.attributes.HU_12_NAME);
-				$('.evapotranspiration-download-button').prop('disabled', false);			
-				$('.precipitation-download-button').prop('disabled', false);			
+				$('.evapotranspiration-download-button').prop('disabled', false);
+				$('.precipitation-download-button').prop('disabled', false);
 			},
 			loadend: function(event) {
 				$('#huc-loading-indicator').hide();
+				$('#counties-button').show();
 			},
 			scope : this
 		});
@@ -152,7 +158,13 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	displayCountyMap : function() {
-		return;
+		$('#county-selection-div').show();
+		this.hucCountMapView = new NWC.view.HucCountyMapView({
+			mapDiv : 'county-selection-map',
+			hucFeature : this.hucLayer.features[0],
+			router : this.router,
+			el : $('#county-selection-div')
+		});
 	},
 
 	toggleMetricLegend : function() {
@@ -207,7 +219,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	downloadPrecipitation : function() {
 		var blob = new Blob([this.dataSeriesStore.dayMet.toCSV()], {type:'text/csv'});
-		saveAs(blob, this.getHucFilename('dayMet'));	
+		saveAs(blob, this.getHucFilename('dayMet'));
 		return;
 	},
 
@@ -227,6 +239,14 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		filename = filename.replace(/ /g, '_');
 		filename = escape(filename);
 		return filename;
+	},
+
+	remove : function() {
+		if (Object.has(this, 'hucCountyMapView')) {
+			this.hucCountyMapView.remove();
+		}
+		NWC.view.BaseView.prototype.remove.apply(this, arguments);
+
 	}
 
 });

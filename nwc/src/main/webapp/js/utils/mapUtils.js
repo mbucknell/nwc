@@ -210,6 +210,72 @@ NWC.util.mapUtils = (function () {
 		return gageLayer;
 	};
 
+	that.createCountyFeatureLayer = function(fips) {
+		var filter = new OpenLayers.Filter.Comparison({
+			type: OpenLayers.Filter.Comparison.EQUAL_TO,
+			property: "FIPS",
+			value: fips
+		});
+
+		var protocol = new OpenLayers.Protocol.WFS({
+			url : CONFIG.endpoint.geoserver + 'wfs',
+			featureType: 'US_Historical_Counties',
+			featureNS: "http://cida.usgs.gov/NWC",
+			version: "1.1.0",
+			geometryName: "the_geom",
+			srsName : "EPSG:900913"
+		});
+
+		var countyLayer = new OpenLayers.Layer.Vector("WFS", {
+			strategies: [new OpenLayers.Strategy.Fixed()],
+			protocol: protocol,
+			filter:filter
+		});
+		return countyLayer;
+	};
+
+	that.createIntersectingCountiesLayer = function(geometry) {
+		var filter = new OpenLayers.Filter.Spatial({
+			type: OpenLayers.Filter.Spatial.INTERSECTS,
+			property: 'the_geom',
+			value: geometry
+		});
+
+		var protocol = new OpenLayers.Protocol.WFS({
+			version: '1.1.0',
+			url: CONFIG.endpoint.geoserver + 'wfs',
+			featureType: "US_Historical_Counties",
+			featureNS: 'http://cida.usgs.gov/NWC',
+			geometryName: 'the_geom',
+			srsName: 'EPSG:900913'
+		});
+
+		var intersectingCountiesLayer = new OpenLayers.Layer.Vector(
+			'Historical Counties',
+			{
+				displayInLayerSwitcher: false,
+				strategies: [new OpenLayers.Strategy.Fixed()],
+				styleMap: new OpenLayers.StyleMap({
+					strokeWidth: 3,
+					strokeColor: '#333333',
+					fillColor: '#FF9900',
+					fillOpacity: 0.4,
+					//Display County Name
+					label: '${NAME}',
+					fontSize: '2em',
+					fontWeight: 'bold',
+					labelOutlineColor: "white",
+					labelOutlineWidth: 1,
+					labelAlign: 'cm',
+					cursor: 'pointer'
+				}),
+				filter: filter,
+				protocol : protocol
+			}
+		);
+		return intersectingCountiesLayer;
+	};
+
 	that.addFlowLinesToMap = function(map) {
 		var streamOrderClipValues = [
 			7, // 0

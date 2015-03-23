@@ -9,10 +9,13 @@ $(document).ready(function() {
 		'streamflowStats',
 		'streamflowGageStats',
 		'streamflowHucStats',
+		'modeledInfoPage',
 		'aquaticBiology',
 		'aquaticBiologySelectFeatures',
 		'dataDiscovery',
-		'statsResults'
+		'statsResults',
+		'countyHucTable',
+		'countyHucMap'
 	];
 
 	var PARTIALS = [

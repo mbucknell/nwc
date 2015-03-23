@@ -17,13 +17,14 @@ describe('Tests for WaterBudgetHucDataView', function() {0
 		$testDiv.append('<button class="metric-button">Metric</button>');
 		$testDiv.append('<button class="daily-button">Daily</button>');
 		$testDiv.append('<button class="monthly-button" disabled>Monthly</button>');
+		$testDiv.append('<div id="county-selection-div" style="display:none;"></div>');
 
 		addLayersSpy = jasmine.createSpy('addLayersSpy');
 		renderSpy = jasmine.createSpy('renderSpy');
 		getHucDataSpy = jasmine.createSpy('getHucDataSpy');
 //		plotPTandETDataSpy = jasmine.createSpy('plotPTandETDataSpy');
 		spyOn(NWC.view.BaseView.prototype, 'initialize').andCallFake(function() {
-			this.getHucData = getHucDataSpy			
+			this.getHucData = getHucDataSpy
 			this.map = {
 				addLayers : addLayersSpy,
 				zoomToExtent : jasmine.createSpy('zoomToExtentSpy'),
@@ -31,7 +32,7 @@ describe('Tests for WaterBudgetHucDataView', function() {0
 				render : renderSpy
 			}
 		});
-		
+
 		testView = new NWC.view.WaterBudgetHucDataView({
 			hucId : '12345678',
 			insetHucMapDiv : 'inset-map-div'
@@ -59,7 +60,7 @@ describe('Tests for WaterBudgetHucDataView', function() {0
 
 		//the view has an event to wire up the clickable plot options
 		expect(testView.events['click .back-button']).toBeDefined();
-		expect(testView.events['click .counties-button']).toBeDefined();
+		expect(testView.events['click #counties-button']).toBeDefined();
 		expect(testView.events['click .metric-button']).toBeDefined();
 		expect(testView.events['click .customary-button']).toBeDefined();
 		expect(testView.events['click .monthly-button']).toBeDefined();
@@ -117,6 +118,13 @@ describe('Tests for WaterBudgetHucDataView', function() {0
 		expect(saveAs.calls[0].args[1]).toMatch(testView.fileName);
 		expect(saveAs.calls[0].args[1]).toMatch(testView.context.hucId);
 		expect(testView.dataSeriesStore.dayMet.toCSV).toHaveBeenCalled();
+	});
+
+	it('Expects displayCountyMap to show the county dif and to create the huc/county map view', function() {
+		spyOn(NWC.view, 'HucCountyMapView');
+		testView.displayCountyMap();
+		expect($('#county-selection-div').is(':visible')).toBe(true);
+		expect(NWC.view.HucCountyMapView).toHaveBeenCalled();
 	});
 
 });
