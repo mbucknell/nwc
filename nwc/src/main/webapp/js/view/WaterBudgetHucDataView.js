@@ -36,27 +36,29 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		this.context.hucId = options.hucId;
 		this.hucId = options.hucId;
-		this.insetMapDiv = options.insetMapDiv;
+		this.insetHucMapDiv = options.insetHucMapDiv;
 
 		// call superclass initialize to do default initialize
 		// (includes render)
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
+		$('#wateruse').hide();
 
-		this.buildMap(this.hucId);
+		this.buildHucMap(this.hucId);
 		this.getHucData(this.hucId);
-		this.map.render(this.insetMapDiv);
+		this.hucMap.render(this.insetHucMapDiv);
 	},
 
-	buildMap : function(huc) {
+	buildHucMap : function(huc) {
 
 		var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
 
-		this.map = NWC.util.mapUtils.createMap([baseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
+		this.hucMap = NWC.util.mapUtils.createMap([baseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
 
 		this.hucLayer = NWC.util.mapUtils.createHucFeatureLayer(huc);
 
 		this.hucLayer.events.on({
 			featureadded: function(event){
+				this.hucEvent = event;
 				this.hucName = event.feature.attributes.HU_12_NAME;
 				this.map.zoomToExtent(this.hucLayer.getDataExtent());
 
@@ -65,20 +67,18 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				$('.precipitation-download-button').prop('disabled', false);			
 			},
 			loadend: function(event) {
-				$('#loading-indicator').hide();
+				$('#huc-loading-indicator').hide();
 			},
 			scope : this
 		});
 
-		this.map.addLayer(this.hucLayer);
-		this.map.zoomToExtent(this.map.getMaxExtent());
+		this.hucMap.addLayer(this.hucLayer);
+		this.hucMap.zoomToExtent(this.hucMap.getMaxExtent());
 
 		return;
 	},
 
-	/* then makes call to render the data on a plot
-	 * @param {String} huc 12 digit identifier for the hydrologic unit
-	 */
+	//get and instance of dataSeriesStore
 	dataSeriesStore : new NWC.util.DataSeriesStore(),
 
 	/**
@@ -157,7 +157,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	toggleMetricLegend : function() {
 		$('.customary-button').prop('disabled', false);
-		$('.metric-button').prop('disabled','disabled');
+		$('.metric-button').prop('disabled', true);
 		if ($('.daily-button').prop('disabled')) {
 			this.plotPTandETaData(this.DAILY, this.METRIC);
 		}
@@ -168,7 +168,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	toggleCustomaryLegend : function() {
 		$('.metric-button').prop('disabled', false);
-		$('.customary-button').prop('disabled','disabled');
+		$('.customary-button').prop('disabled', true);
 		if ($('.daily-button').prop('disabled')) {
 			this.plotPTandETaData(this.DAILY, this.CUSTOMARY);
 		}
@@ -179,7 +179,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	toggleMonthlyLegend : function() {
 		$('.daily-button').prop('disabled', false);
-		$('.monthly-button').prop('disabled','disabled');
+		$('.monthly-button').prop('disabled', true);
 		if ($('.customary-button').prop('disabled')) {
 			this.plotPTandETaData(this.MONTHLY, this.CUSTOMARY);
 		}
@@ -189,7 +189,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	toggleDailyLegend : function() {
-		$('.daily-button').prop('disabled','disabled');
+		$('.daily-button').prop('disabled', true);
 		$('.monthly-button').prop('disabled', false);
 		if (this.$('.customary-button').prop('disabled')) {
 			this.plotPTandETaData(this.DAILY, this.CUSTOMARY);

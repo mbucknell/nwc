@@ -85,6 +85,8 @@
 		<script type="text/javascript" src="js/utils/SosResponseParser.js"></script>
 		<script type="text/javascript" src="js/utils/dataSeriesStore.js"></script>
 		<script type="text/javascript" src="js/utils/Plotter.js"></script>
+		<script type="text/javascript" src="js/utils/WaterUsageChart.js"></script>
+		<script type="text/javascript" src="js/utils/WaterBudgetServices.js"></script>
 		<script type="text/javascript" src="js/utils/WaterYearUtil.js"></script>
 	        <script type="text/javascript" src="js/utils/dictionaries.js"></script>	
                 <script type="text/javascript" src="js/utils/wpsClient.js"></script>
@@ -111,6 +113,7 @@
                 <script type="text/javascript" src="js/view/StreamflowStatsHucDataView.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetMapView.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetHucDataView.js"></script>
+		<script type="text/javascript" src="js/view/WaterBudgetHucCountyDataView.js"></script>
 		<script type="text/javascript" src="js/controller/NWCRouter.js"></script>
 		
 		<script type="text/javascript" src="js/init.js"></script>

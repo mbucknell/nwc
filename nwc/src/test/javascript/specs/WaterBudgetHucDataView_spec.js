@@ -34,7 +34,7 @@ describe('Tests for WaterBudgetHucDataView', function() {0
 		
 		testView = new NWC.view.WaterBudgetHucDataView({
 			hucId : '12345678',
-			insetMapDiv : 'inset-map-div'
+			insetHucMapDiv : 'inset-map-div'
 		});
 	});
 
