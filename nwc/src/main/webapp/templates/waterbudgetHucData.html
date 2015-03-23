@@ -13,13 +13,6 @@
 		
 		<div class="row">
 			<div class="row spacer">
-				<div class="col-xs-4">
-					<div class="row col-xs-12"">
-						<button class="btn btn-primary county-button">Plot County Water Withdrawal Data <span class="glyphicon glyphicon-arrow-right"></span></button>
-					</div>
-				</div>
-			</div>
-			<div class="row spacer">
 				<div class="col-xs-4"></div>
 				<div class="col-xs-4">
 					<div class="btn-group">
@@ -31,32 +24,42 @@
 			</div>
 
 			<div class="col-xs-12">
-			<h4 id="loading-indicator">Loading data <i class="fa fa-spinner fa-spin"></i></h4>
-			<h4>Precipitation and Evapotranspiration for the Selected HUC</h4>
-				<div>
-					<dl>
-						<dt>Hydrologic Unit Code</dt>
-							<dd id="huc-id">{{ hucId }}</dd>
-						<dt>HUC Name</dt>
-							<dd id="huc-name"></dd>
-<!--
-						<div ng-if="info.drainageArea">
-							<dt>Drainage Area (km&sup2;)</dt>
-								<dd ng-bind="info.drainageArea"></dd>
-						</div>
--->
-					</dl>
-				</div>
-				<div class="row spacer">
-					<div class="col-xs-4">
-						<div id="huc-inset" nwc-feature-map layers="hucLayer" bounds="hucBounds" style="height:200px;width:200px;border-style:solid;border-width:1px;"></div>
-						<div class="btn-group spacer">
-							<button type="radio" class="btn btn-primary monthly-button">Monthly</button>
-							<button type="radio" class="btn btn-primary daily-button" disabled>Daily</button>
-						</div>
+				<h4 id="loading-indicator">Loading data <i class="fa fa-spinner fa-spin"></i></h4>
+				<div class="col-md-6">
+					<h4>Precipitation and Evapotranspiration for the Selected HUC</h4>
+					<div>
+						<dl>
+							<dt>Hydrologic Unit Code</dt>
+								<dd id="huc-id">{{ hucId }}</dd>
+							<dt>HUC Name</dt>
+								<dd id="huc-name"></dd>
+	<!--
+							<div ng-if="info.drainageArea">
+								<dt>Drainage Area (km&sup2;)</dt>
+									<dd ng-bind="info.drainageArea"></dd>
+							</div>
+	-->
+						</dl>
 					</div>
-					<div class="col-xs-4"></div>
+					<div class="row spacer spacer-down">
+						<div class="col-xs-4">
+							<div id="huc-inset" style="height:200px;width:200px;border-style:solid;border-width:1px;"></div>
+							<div class="btn-group spacer">
+								<button type="radio" class="btn btn-primary monthly-button">Monthly</button>
+								<button type="radio" class="btn btn-primary daily-button" disabled>Daily</button>
+							</div>
+						</div>
+						<div class="col-xs-4"></div>
+					</div>
 				</div>
+				<div class="col-md-6">
+					<div class="row spacer space-down text-center">
+						<button id="counties-button" class="btn btn-primary" style="display:none";>Plot County Water Withdrawal Data <span class="glyphicon glyphicon-arrow-down"></span></button>
+					</div>
+					<div class="spacer" id="county-selection-div"></div>
+				</div>
+			</div>
+			<div class="spacer col-xs-12">
 				<div style="height: 400px;" id="waterBudgetPlot" class="col-xs-10"></div>
 				<div class="col-xs-2">
 					<div class="row">

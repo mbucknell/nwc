@@ -13,7 +13,9 @@ $(document).ready(function() {
 		'aquaticBiology',
 		'aquaticBiologySelectFeatures',
 		'dataDiscovery',
-		'statsResults'
+		'statsResults',
+		'countyHucTable',
+		'countyHucMap'
 	];
 
 	var PARTIALS = [

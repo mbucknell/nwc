@@ -72,9 +72,9 @@
 		<!-- order is important -->
 		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster.js"></script>
 		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Layer/Raster.js"></script>
-		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Grid.js"></script>
-		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Operation.js"></script>
+		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Grid.js"></script>	
 		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Composite.js"></script>
+		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Operation.js"></script>
 		<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesData.js"></script>
 <!--	<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesRaster.js"></script>
 -->
@@ -86,10 +86,11 @@
 		<script type="text/javascript" src="js/utils/dataSeriesStore.js"></script>
 		<script type="text/javascript" src="js/utils/Plotter.js"></script>
 		<script type="text/javascript" src="js/utils/WaterYearUtil.js"></script>
-	        <script type="text/javascript" src="js/utils/dictionaries.js"></script>	
-                <script type="text/javascript" src="js/utils/wpsClient.js"></script>
-                <script type="text/javascript" src="js/utils/streamStats.js"></script>
-                <script type="text/javascript" src="js/utils/RdbParser.js"></script>
+		<script type="text/javascript" src="js/utils/dictionaries.js"></script>	
+		<script type="text/javascript" src="js/utils/wpsClient.js"></script>
+		<script type="text/javascript" src="js/utils/streamStats.js"></script>
+		<script type="text/javascript" src="js/utils/RdbParser.js"></script>
+		<script type="text/javascript" src="js/utils/hucCountiesIntersector.js"></script>
 
 		<script type="text/javascript" src="js/model/BaseSelectMapModel.js"></script>
 		
@@ -100,16 +101,17 @@
 		
 		<script type="text/javascript" src="js/view/BaseView.js"></script>
 		<script type="text/javascript" src="js/view/BaseSelectMapView.js"></script>
-                <script type="text/javascript" src="js/view/BaseStreamflowStatsDataView.js"></script>
+		<script type="text/javascript" src="js/view/BaseStreamflowStatsDataView.js"></script>
 		
 		<script type="text/javascript" src="js/view/HomeView.js"></script>
 		<script type="text/javascript" src="js/view/AquaticBiologyMapView.js"></script>
-                <script type="text/javascript" src="js/view/AquaticBiologySelectFeaturesView.js"></script>
+		<script type="text/javascript" src="js/view/AquaticBiologySelectFeaturesView.js"></script>
 		<script type="text/javascript" src="js/view/DataDiscoveryView.js"></script>
 		<script type="text/javascript" src="js/view/StreamflowStatsMapView.js"></script>
-                <script type="text/javascript" src="js/view/StreamflowStatsGageDataView.js"></script>
-                <script type="text/javascript" src="js/view/StreamflowStatsHucDataView.js"></script>
-                <script type="text/javascript" src="js/view/StreamflowStatsModeledInfoView.js"></script>
+		<script type="text/javascript" src="js/view/StreamflowStatsGageDataView.js"></script>
+		<script type="text/javascript" src="js/view/StreamflowStatsHucDataView.js"></script>
+		<script type="text/javascript" src="js/view/StreamflowStatsModeledInfoView.js"></script>
+		<script type="text/javascript" src="js/view/HucCountyMapView.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetMapView.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetHucDataView.js"></script>
 		<script type="text/javascript" src="js/controller/NWCRouter.js"></script>
