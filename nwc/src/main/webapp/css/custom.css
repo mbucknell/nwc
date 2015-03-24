@@ -116,12 +116,9 @@ h5, h6 {
 	margin-top : 20px;
 }
 
-.stats-table tbody tr:hover {
+.selectable-table tbody tr:hover {
 	background-color:	#C8D0DD !important;
-}
-
-.stats-table tbody tr:nth-child(odd):hover td {
-	background-color:	#C8D0DD !important;
+	cursor: pointer;
 }
 
 .axisLabels {
