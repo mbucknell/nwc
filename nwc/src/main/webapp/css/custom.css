@@ -18,6 +18,7 @@
 
 h5, h6 {
 	font-weight : bold;
+	margin-bottom: 5px;
 }
 
 .dashboard div {
@@ -99,19 +100,27 @@ h5, h6 {
 .select2-container a {
 	font-weight: normal;
 }
-#hucSelectMap {
-	border: 			1px solid #a3a3a3;
+.select-map {
+	border: 1px solid #a3a3a3;
+	height: 500px;
+}
+
+.inset-map {
+	height : 200px;
+	width: 200px;
+	border-style: solid;
+	border-width:1px;
 }
 
 #statistics-calculation-div {
 	margin-top : 20px;
 }
 
-.huc_table tbody tr:hover {
+.stats-table tbody tr:hover {
 	background-color:	#C8D0DD !important;
 }
 
-.huc_table tbody tr:nth-child(odd):hover td {
+.stats-table tbody tr:nth-child(odd):hover td {
 	background-color:	#C8D0DD !important;
 }
 
@@ -146,12 +155,6 @@ h5, h6 {
 .caution {
     color: #ff0000;
     font-weight: bold;
-}
-
-[ng-click],
-[data-ng-click],
-[x-ng-click] {
-    cursor: pointer;
 }
 
 input[disabled],

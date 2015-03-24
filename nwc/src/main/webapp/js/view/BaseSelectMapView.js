@@ -201,7 +201,7 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 		}
 	},
 
-		_setButtonActive : function(el, on) {
+	_setButtonActive : function(el, on) {
 		if (on) {
 			el.addClass('active');
 		}
