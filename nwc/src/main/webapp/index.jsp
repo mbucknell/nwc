@@ -63,6 +63,7 @@
 		<script type="text/javascript" src="webjars/handlebars/${handlebarsVersion}/handlebars${jsMin}.js"></script>
 		<script type="text/javascript" src="webjars/openlayers/${openlayersVersion}/OpenLayers.js"></script>
 		<script type="text/javascript" src="webjars/flot/${flotchartsVersion}/jquery.flot${jsMin}.js"></script>
+		<script type="text/javascript" src="webjars/flot/${flotchartsVersion}/jquery.flot.time${jsMin}.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/javascript.util.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/jsts.js"></script>
 
@@ -81,12 +82,12 @@
 		<script type="text/javascript" src="js/utils/templateLoader.js"></script>
 		<script type="text/javascript" src="js/utils/Conversion.js"></script>
 		<script type="text/javascript" src="js/utils/mapUtils.js"></script>
+		<script type="text/javascript" src="js/utils/CountyWaterUseProperties.js"></script>
 		<script type="text/javascript" src="js/utils/SosSources.js"></script>
 		<script type="text/javascript" src="js/utils/SosResponseParser.js"></script>
 		<script type="text/javascript" src="js/utils/dataSeriesStore.js"></script>
 		<script type="text/javascript" src="js/utils/Plotter.js"></script>
-		<script type="text/javascript" src="js/utils/WaterUsageChart.js"></script>
-		<script type="text/javascript" src="js/utils/WaterBudgetServices.js"></script>
+		<script type="text/javascript" src="js/utils/waterUsageChart.js"></script>
 		<script type="text/javascript" src="js/utils/WaterYearUtil.js"></script>
 		<script type="text/javascript" src="js/utils/dictionaries.js"></script>	
 		<script type="text/javascript" src="js/utils/wpsClient.js"></script>

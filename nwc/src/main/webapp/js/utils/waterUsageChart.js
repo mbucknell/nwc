@@ -2,10 +2,12 @@ NWC = NWC || {};
 
 NWC.util = NWC.util || {};
 
-NWC.util.WaterUsageChart = function () {
+NWC.util.WaterUsageChart = (function () {
+	var that = {};
+	
     var numberOfDatesPerRow = 1; //TODO[Sibley] Copy paste from SosResponseParser, figure out a better place for this
 
-    var splitRow = function(row) {
+    that.splitRow = function(row) {
     	var result = null;
     	if (row) {
     		result = {
@@ -20,7 +22,7 @@ NWC.util.WaterUsageChart = function () {
     	return (val || 0 === val);
     };
 
-    var combineDataRow = function(row, inLabels, outLabels, lookup) {
+    that.combineDataRow = function(row, inLabels, outLabels, lookup) {
     	var result = null;
     	var segregatedValueHolder = outLabels.reduce(function(prev, curr) {
     		prev[curr] = [];
@@ -48,12 +50,12 @@ NWC.util.WaterUsageChart = function () {
     	return result;
     };
             
-    var combineData = function(rows) {
+    that.combineData = function(rows) {
     	var result = [];
 
     	if (rows) {
     		var splitRows = rows.map(function(row) {
-    			return splitRow(row);
+    			return that.splitRow(row);
     		});
 
     		var inLabels = NWC.util.CountyWaterUseProperties.getObservedProperties();
@@ -61,7 +63,7 @@ NWC.util.WaterUsageChart = function () {
     		var lookup = NWC.util.CountyWaterUseProperties.propertyLongNameLookup();
 
     		result = splitRows.map(function(row) {
-    			return row.dates.concat(combineDataRow(row.values, inLabels, outLabels, lookup));
+    			return row.dates.concat(that.combineDataRow(row.values, inLabels, outLabels, lookup));
     		});
     	}
 
@@ -69,7 +71,7 @@ NWC.util.WaterUsageChart = function () {
     };
 
     var privateChart = {};
-    var setChart = function(chartEltSelector, chartLegendDivSelector, inputData, labels, ylabel, precision) {
+    that.setChart = function(chartEltSelector, chartLegendDivSelector, inputData, labels, ylabel, precision) {
     	if (!inputData || !inputData.length) {
     		if (privateChart.shutdown) {
     			privateChart.shutdown()
@@ -83,7 +85,7 @@ NWC.util.WaterUsageChart = function () {
     	var stack = true,
     	bars = true;
 
-    	var combinedData = combineData(inputData);
+    	var combinedData = that.combineData(inputData);
 
     	//convert all x values from String to Date
     	combinedData = combinedData.map(function(row) {
@@ -198,13 +200,9 @@ NWC.util.WaterUsageChart = function () {
     	})();
     };
 
-    return {
-    	splitRow : splitRow,
-    	combineDataRow : combineDataRow,
-    	combineData : combineData,
-    	setChart: setChart,
-    	getChart: function() {
-    		return privateChart;
-    	}
-    };
-}();
+    that.getChart = function() {
+		return privateChart;
+	};
+
+    return that;
+}());

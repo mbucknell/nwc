@@ -7,7 +7,7 @@ NWC.view = NWC.view || {};
  * @constructor extends NWC.BaseView
  */
 
-NWC.view.WaterBudgetCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
+NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 
 	templateName : 'waterbudgetHucData',
 
@@ -31,7 +31,7 @@ NWC.view.WaterBudgetCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 	initialize : function(options) {
 
 		this.context.hucId = options.hucId;
-		this.countyId = options.countyId;
+		this.fips = options.fips;
 		this.hucId = options.hucId;
 		this.insetHucMapDiv = options.insetHucMapDiv;
 		this.insetCountyMapDiv = options.insetCountyMapDiv;
@@ -40,23 +40,27 @@ NWC.view.WaterBudgetCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 		// (includes render)
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 		$('#wateruse').show();
+		$('#counties-button').hide();
 		$('#normalized-warning').hide();
 
-		this.buildHucMap(this.hucId);
+		var hucMapPromise = this.buildHucMap(this.hucId);		
 		this.getHucData(this.hucId);
 		this.hucMap.render(this.insetHucMapDiv);
-		this.buildCountyMap(this.countyId); //buildHucMap needs to finish first?
-		this.getCountyData(this.countyId);  //buildCountyMap needs to finish first?
+		var countyMapPromise = this.buildCountyMap(this.fips)
+		hucMapPromise.done(this.buildCountyMap(this.fips)); //buildHucMap needs to finish
+		countyMapPromise.done(this.getCountyData(this.fips)); //buildCountyMap needs to finish first?
 		this.countyMap.render(this.insetCountyMapDiv);
 	},
 
-	buildCountyMap : function(county) {
+	buildCountyMap : function(fips) {
+
+		var d = $.Deferred();
 
 		var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
 
 		this.countyMap = NWC.util.mapUtils.createMap([baseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
 
-		this.countyLayer = NWC.util.mapUtils.getCountyFeatureLayer(county);
+		this.countyLayer = NWC.util.mapUtils.createCountyFeatureLayer(fips);
 
 		this.countyLayer.events.on({
 			featureadded: function(event){
@@ -64,15 +68,18 @@ NWC.view.WaterBudgetCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 				this.countyAreaSqmi = event.feature.attributes.AREA_SQMI;
 				this.countyMap.zoomToExtent(this.countyLayer.getDataExtent());
 				var intersectorInfo = NWC.util.hucCountiesIntersector.getCountyIntersectionInfo(
-						this.hucEvent,  //buildHucMap needs to finish first?
-						event);
+					this.hucLayer.features[0],  //buildHucMap needs to finish first?
+					this.countyLayer.features[0]);
 
 				$('#percent-of-huc').html('Percentage of HUC in ' + this.countyName + ' County ' + 
+//						'?%');
 						intersectorInfo.hucInCounty + '%');
 				$('#percent-of-county').html('Percentage of ' + this.countyName + ' County in HUC ' + 
+//						'?%');
 						intersectorInfo.countyInCounty + '%');
 				$('#water-use-chart-title').html('Water Use for ' + this.countyName + ' County');
 				$('.wateruse-download-button').prop('disabled', false);
+				d.resolve();
 			},
 			loadend: function(event) {
 				$('#county-loading-indicator').hide();
@@ -81,40 +88,43 @@ NWC.view.WaterBudgetCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 		});
 
 		this.countyMap.addLayer(this.countyLayer);
+		this.countyMap.addLayer(this.hucLayer);
 		this.countyMap.zoomToExtent(this.countyMap.getMaxExtent());
 
-		return;
+		return d.promise();
 	},
 
 	//get an instance of dataSeries
-	waterUseDataSeries : new NWC.util.DataSeriesStore(),
+//	waterUseDataSeries : new NWC.util.DataSeries.newSeries(),
 
 	/**
 	 * This makes a Web service call to get huc data
 	 * then makes call to render the data on a plot
 	 * @param {String} huc 12 digit identifier for the hydrologic unit
 	 */
-	getCountyData: function(huc) {
+	getCountyData: function(fips) {
         
-        var url = NWC.util.buildSosUrlFromSource(huc, NWC.util.SosSources.countyWaterUse);
+        var url = NWC.util.buildSosUrlFromSource(fips, NWC.util.SosSources.countyWaterUse);
 		var getData = $.ajax({
 			url : url,
 			success : function(data, textStatus, jqXHR) {
 				var parsedTable = NWC.util.SosResponseParser.parseSosResponse(data);
-                
-				this.waterUseDataSeries.data = parsedTable;
+  
+				var waterUseDataSeries = NWC.util.DataSeries.newSeries();
+				waterUseDataSeries.data = parsedTable;
 
                 //use the series metadata as labels
                 var additionalSeriesLabels = NWC.util.SosSources.countyWaterUse.propertyLongName.split(',');
                 additionalSeriesLabels.each(function(label) {
-                    this.waterUseDataSeries.metadata.seriesLabels.push({
-                        seriesName: label,
-                        seriesUnits: SosSources.countyWaterUse.units
+                    waterUseDataSeries.metadata.seriesLabels.push({
+                    	seriesName: label,
+                    	seriesUnits: NWC.util.SosSources.countyWaterUse.units
                     });
                 });
                 
-                this.waterUseDataSeries.metadata.downloadHeader = NWC.util.SosSources.countyWaterUse.downloadMetadata;
-			},
+                waterUseDataSeries.metadata.downloadHeader = NWC.util.SosSources.countyWaterUse.downloadMetadata;
+                this.waterUseDataSeries = waterUseDataSeries;
+			}.bind(this),
 			dataType : "xml",
 			error : function() {
                 //@todo - setup app level error handling
@@ -151,8 +161,8 @@ NWC.view.WaterBudgetCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
         var labels = this.waterUseDataSeries.getSeriesLabelsAs(
             measurementSystem, plotNormalization, plotTimeDensity).from(1);
         var ylabel = NWC.util.Units[measurementSystem][plotNormalization].daily; //is this correct?
-        WaterUsageChart.setChart(chartDivSelector, chartLegendDivSelector, values, labels, ylabel,
-            Units[measurementSystem][plotNormalization].precision);
+        NWC.util.WaterUsageChart.setChart(chartDivSelector, chartLegendDivSelector, values, labels, ylabel,
+            NWC.util.Units[measurementSystem][plotNormalization].precision);
         return;
 	},	
 	
@@ -182,8 +192,7 @@ NWC.view.WaterBudgetCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 				this.chartWaterUse(this.MONTHLY, this.METRIC, this.NORMALIZED_WATER);
 			}						
 		}		
-		//call this.parent.toggleMetricLegend?
-		//disable metric button in parent
+		NWC.view.WaterBudgetHucDataView.prototype.toggleMetricLegend.apply(this, arguments);
 	},
 
 	toggleCustomaryLegend : function() {
@@ -210,8 +219,7 @@ NWC.view.WaterBudgetCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 				this.chartWaterUse(this.MONTHLY, this.CUSTOMARY, this.NORMALIZED_WATER);
 			}						
 		}		
-		//call this.parent.toggleCustomaryLegend?
-		//disable customary button in parent
+		NWC.view.WaterBudgetHucDataView.prototype.toggleCustomaryLegend.apply(this, arguments);
 	},
 
 	toggleTotalCountyWaterUse : function() {
@@ -298,8 +306,7 @@ NWC.view.WaterBudgetCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 				this.chartWaterUse(this.MONTHLY, this.CUSTOMARY, this.NORMALIZED_WATER);
 			}						
 		}		
-		//call this.parent.toggleMonthlyLegend?
-		//disable monthly button in parent
+		NWC.view.WaterBudgetHucDataView.prototype.toggleMonthlyLegend.apply(this, arguments);
 	},
 
 	toggleDailyLegend : function() {
@@ -326,8 +333,7 @@ NWC.view.WaterBudgetCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 				this.chartWaterUse(this.DAILY, this.CUSTOMARY, this.NORMALIZED_WATER);
 			}						
 		}		
-		//call this.parent.toggleDailyLegend?
-		//disable daily button in parent
+		NWC.view.WaterBudgetHucDataView.prototype.toggleDailyLegend.apply(this, arguments);
 	},
 
 	downloadWateruse : function() {

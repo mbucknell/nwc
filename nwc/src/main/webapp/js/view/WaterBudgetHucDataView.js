@@ -54,6 +54,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	buildHucMap : function(huc) {
+		
+		var d = $.Deferred();
 
 		var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
 
@@ -63,9 +65,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		this.hucLayer.events.on({
 			featureadded: function(event){
-				this.hucEvent = event;
 				this.hucName = event.feature.attributes.HU_12_NAME;
-				this.map.zoomToExtent(this.hucLayer.getDataExtent());
+				this.hucMap.zoomToExtent(this.hucLayer.getDataExtent());
 
 				$('#huc-name').html(event.feature.attributes.HU_12_NAME);
 				$('.evapotranspiration-download-button').prop('disabled', false);
@@ -73,7 +74,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			},
 			loadend: function(event) {
 				$('#huc-loading-indicator').hide();
-				$('#counties-button').show();
+				$('#counties-button').prop('disabled', false);
+				d.resolve();
 			},
 			scope : this
 		});
@@ -81,7 +83,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		this.hucMap.addLayer(this.hucLayer);
 		this.hucMap.zoomToExtent(this.hucMap.getMaxExtent());
 
-		return;
+		return d.promise();
 	},
 
 	//get and instance of dataSeriesStore
