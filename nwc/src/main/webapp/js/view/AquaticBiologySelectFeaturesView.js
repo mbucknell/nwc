@@ -25,7 +25,7 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
        
         checkboxChanged: function (evt) {
             
-            $cb      = $(evt.target),
+            var $cb      = $(evt.target),
             name     = $cb.attr('name');
             var disable = !($('#sites-table-div input').is(':checked'));
             $('#biodata-form-button').prop('disabled', disable);
@@ -42,11 +42,11 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                             this.model.set({ 'selected' : selected});        
                         }
                     }
-            }
+            } 
         },
         
         selectAll : function(evt){
-            $cb      = $(evt.target);
+            var $cb      = $(evt.target);
             var checkAll = ($cb.prop('checked'));
             $('.sites-table td input[type="checkbox"]').each(function() {
                 $(this).prop('checked', checkAll).change();
