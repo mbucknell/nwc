@@ -54,5 +54,25 @@ describe('Tests for NWC.BaseView', function() {
 		expect($warningModal.modal).toHaveBeenCalledWith('show');
 	});
 
+	it('Expects setButtonActive to add or remove the active class', function() {
+		$('body').append('<button id="test-button"></button>');
+		var NewView = NWC.view.BaseView.extend({
+			context : {a : 'this'}
+		});
+		var view = new NewView({
+			template : templateSpy
+		});
+		
+		var $button = $('#test-button');
+
+		view.setButtonActive($button, true);
+		expect($button.hasClass('active')).toBe(true);
+
+		view.setButtonActive($button, false);
+		expect($button.hasClass('active')).toBe(false);
+
+		$button.remove();
+	});
+
 
 });

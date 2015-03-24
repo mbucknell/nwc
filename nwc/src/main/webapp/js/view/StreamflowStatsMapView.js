@@ -176,8 +176,8 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 
 		setControlActive(this.legendControl, gageVisible);
 
-		this._setButtonActive($('#observed-button'), gageVisible);
-		this._setButtonActive($('#modeled-button'), hucVisible);
+		this.setButtonActive($('#observed-button'), gageVisible);
+		this.setButtonActive($('#modeled-button'), hucVisible);
 
 		if (hucVisible) {
 			$modeledInfo.show();

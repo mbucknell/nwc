@@ -183,9 +183,9 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 		$('#map-controls-div span').not('#map-control-' + newSelection).hide();
 		$('#map-control-' + newSelection).show();
 
-		this._setButtonActive($('#select-button'), selectActive);
-		this._setButtonActive($('#pan-button'), panActive);
-		this._setButtonActive($('#zoom-button'), zoomActive);
+		this.setButtonActive($('#select-button'), selectActive);
+		this.setButtonActive($('#pan-button'), panActive);
+		this.setButtonActive($('#zoom-button'), zoomActive);
 
 		if (zoomActive) {
 			this.zoomBoxControl.activate();
@@ -198,15 +198,6 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 		else {
 			this.zoomBoxControl.deactivate();
 			this.selectControl.deactivate();
-		}
-	},
-
-	_setButtonActive : function(el, on) {
-		if (on) {
-			el.addClass('active');
-		}
-		else {
-			el.removeClass('active');
 		}
 	}
 
