@@ -62,7 +62,7 @@ describe('Tests for NWC.BaseView', function() {
 		var view = new NewView({
 			template : templateSpy
 		});
-		
+
 		var $button = $('#test-button');
 
 		view.setButtonActive($button, true);
@@ -72,6 +72,24 @@ describe('Tests for NWC.BaseView', function() {
 		expect($button.hasClass('active')).toBe(false);
 
 		$button.remove();
+	});
+
+	it('Expects setVisibility to set the visiblity of the element', function() {
+
+		var NewView = NWC.view.BaseView.extend({
+			context : {a : 'this'}
+		});
+		var view = new NewView({
+			template : templateSpy
+		});
+
+		var $testDiv = $('#test-div');
+
+		expect($testDiv.is(':visible')).toBe(true);
+		view.setVisibility($testDiv, false);
+		expect($testDiv.is(':visible')).toBe(false);
+		view.setVisibility($testDiv, true);
+		expect($testDiv.is(':visible')).toBe(true);
 	});
 
 

@@ -179,26 +179,19 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		this.setButtonActive($('#observed-button'), gageVisible);
 		this.setButtonActive($('#modeled-button'), hucVisible);
 
+		this.setVisibility($modeledInfo, hucVisible);
 		if (hucVisible) {
-			$modeledInfo.show();
 			setControlActive(this.hucsControl, this.selectControl.active);
 			this.gageControl.deactivate();
 			this.selectControl = this.hucsControl;
 		}
-		else {
-			$modeledInfo.hide();
-		}
 
+		this.setVisibility($observedInfo, gageVisible);
+		this.setVisibility($gageFilteringDiv, gageVisible);
 		if (gageVisible) {
-			$observedInfo.show();
-			$gageFilteringDiv.show();
 			setControlActive(this.gageControl, this.selectControl.active);
 			this.hucsControl.deactivate();
 			this.selectControl = this.gageControl;
-		}
-		else {
-			$observedInfo.hide();
-			$gageFilteringDiv.hide();
 		}
 
 		// Because this shifts the map's location on the page, call updateSize

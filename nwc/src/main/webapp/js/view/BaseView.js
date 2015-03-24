@@ -76,6 +76,15 @@ NWC.view.BaseView = Backbone.View.extend({
 		else {
 			el.removeClass('active');
 		}
+	},
+
+	setVisibility : function(el, on) {
+		if (on) {
+			el.show();
+		}
+		else {
+			el.hide();
+		}
 	}
 
 });
