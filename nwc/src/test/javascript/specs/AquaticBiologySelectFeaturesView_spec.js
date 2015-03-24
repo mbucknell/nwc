@@ -1,9 +1,6 @@
 describe('Tests for AquaticBiologySelectFeaturesView', function() {
 	var $testDiv;
 	var testView;
-        var view;
-        var featuresModel;
-        var thisTemplate;
 
 	beforeEach(function() {
             

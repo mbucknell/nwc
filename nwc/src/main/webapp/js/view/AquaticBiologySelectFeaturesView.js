@@ -27,7 +27,6 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
             
             var $cb      = $(evt.target),
             name     = $cb.attr('name');
-            //var checked = ($('#sites-table-div input').is(':checked'));
             var disable = !($('#sites-table-div input').is(':checked'));
             $('#biodata-form-button').prop('disabled', disable);
             if (name !== 'allSelected') {
@@ -43,11 +42,7 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                             this.model.set({ 'selected' : selected});        
                         }
                     }
-            } //else {
-              //  $('.sites-table td input[type="checkbox"]').each(function() {
-              //          $(this).prop('checked', checked).change();
-              //      });
-            //}
+            } 
         },
         
         selectAll : function(evt){
