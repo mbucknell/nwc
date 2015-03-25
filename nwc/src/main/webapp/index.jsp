@@ -7,13 +7,14 @@
 		<script type="text/javascript">
 			(function(){
 				window.CONFIG = {};
+				CONFIG.contextPath = "${pageContext.request.contextPath}";
 				CONFIG.endpoint = {};
 				CONFIG.endpoint.direct = {};
 
 				//point to local proxies
-				CONFIG.endpoint.geoserver = 'proxygeoserver/';
-				CONFIG.endpoint.thredds = 'proxythredds/';
-				CONFIG.endpoint.wpsBase = 'proxywps/';
+				CONFIG.endpoint.geoserver = CONFIG.contextPath + '/proxygeoserver/';
+				CONFIG.endpoint.thredds = CONFIG.contextPath + '/proxythredds/';
+				CONFIG.endpoint.wpsBase = CONFIG.contextPath + '/proxywps/';
 				CONFIG.endpoint.wps = CONFIG.endpoint.wpsBase + 'WebProcessingService'; //TODO inconsistant use of of URL resources
 				CONFIG.endpoint.nwis = '${directNwisEndpoint}';
 				

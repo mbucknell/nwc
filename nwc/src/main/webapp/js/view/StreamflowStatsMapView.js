@@ -103,7 +103,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 				var km2 = NWC.util.Convert.acresToSquareKilometers(
 							NWC.util.Convert.squareMilesToAcres(sortedFeature.data.mi2));
 				if (km2 > 2000) {
-					this.showWarningDialog("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km^2), please choose a smaller watershed.");
+					this.showWarningDialog("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km<sup>2</sup>). Try looking for a nearby observed flow gage.");
 				} else {
 					this.router.navigate('/streamflow-stats/huc/' + sortedFeature.attributes.HUC12, {trigger : true});
 				}
