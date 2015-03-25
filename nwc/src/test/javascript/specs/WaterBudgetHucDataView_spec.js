@@ -121,7 +121,7 @@ describe('Tests for WaterBudgetHucDataView', function() {0
 	});
 
 	it('Expects displayCountyMap to show the county dif and to create the huc/county map view', function() {
-//		spyOn(NWC.view, 'HucCountyMapView');
+		spyOn(NWC.view, 'HucCountyMapView');
 //		testView.displayCountyMap();
 //		expect($('#county-selection-map')).toBeDefined();
 //		expect($('#county-selection-div').is(':visible')).toBe(true);

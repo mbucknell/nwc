@@ -36,12 +36,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		this.context.hucId = options.hucId;
 		this.hucId = options.hucId;
+		this.fips = options.fips;
 		this.insetHucMapDiv = options.insetHucMapDiv;
-		//TODO take out
-		if (Object.has(options, 'fips')) {
-			this.fips = options.fips;
-			console.log('Passed in fips ' + options.fips);
-		}
 
 		// call superclass initialize to do default initialize
 		// (includes render)

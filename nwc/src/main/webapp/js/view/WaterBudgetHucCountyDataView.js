@@ -104,9 +104,6 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 				$('.wateruse-download-button').prop('disabled', false);
 				d.resolve();
 			},
-			loadend: function(event) {
-//				$('#county-loading-indicator').hide();
-			},
 			scope : this
 		});
 
@@ -186,7 +183,7 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
         return;
 	},	
 	
-	//there has got to be a better way to do this....
+	//TODO refactor the toggle functions (WATERSMART-510)
 	
 	toggleMetricLegend : function() {
 		//metric scale selected

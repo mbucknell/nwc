@@ -133,7 +133,7 @@ NWC.util.WaterUsageChart = (function () {
     		 *  #ms in one day = 1000 * 60 * 60 * 24                            =   86400000
     		 */
     		var yearInMilliseconds = 1000 * 60 * 60 * 24 * 365; // 31536000000
-    		$.plot(chartEltSelector, data, {
+    		privateChart = $.plot(chartEltSelector, data, {
     			series: {
     				stack: stack,
     				bars: {
