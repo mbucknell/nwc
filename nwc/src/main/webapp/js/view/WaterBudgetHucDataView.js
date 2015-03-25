@@ -36,55 +36,53 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		this.context.hucId = options.hucId;
 		this.hucId = options.hucId;
-		//TODO take out
-		if (Object.has(options, 'fips')) {
-			this.fips = options.fips;
-			console.log('Passed in fips ' + options.fips);
-		}
-		this.insetMapDiv = options.insetMapDiv;
+		this.fips = options.fips;
+		this.insetHucMapDiv = options.insetHucMapDiv;
 
 		// call superclass initialize to do default initialize
 		// (includes render)
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
+		$('#wateruse').hide();
 
-		this.buildMap(this.hucId);
+		this.buildHucMap(this.hucId);
 		this.getHucData(this.hucId);
-		this.map.render(this.insetMapDiv);
+		this.hucMap.render(this.insetHucMapDiv);
 	},
 
-	buildMap : function(huc) {
+	buildHucMap : function(huc) {
+		
+		var d = $.Deferred();
 
 		var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
 
-		this.map = NWC.util.mapUtils.createMap([baseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
+		this.hucMap = NWC.util.mapUtils.createMap([baseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
 
 		this.hucLayer = NWC.util.mapUtils.createHucFeatureLayer(huc);
 
 		this.hucLayer.events.on({
 			featureadded: function(event){
 				this.hucName = event.feature.attributes.HU_12_NAME;
-				this.map.zoomToExtent(this.hucLayer.getDataExtent());
+				this.hucMap.zoomToExtent(this.hucLayer.getDataExtent());
 
 				$('#huc-name').html(event.feature.attributes.HU_12_NAME);
 				$('.evapotranspiration-download-button').prop('disabled', false);
 				$('.precipitation-download-button').prop('disabled', false);
+				d.resolve();
 			},
 			loadend: function(event) {
-				$('#loading-indicator').hide();
-				$('#counties-button').show();
+				$('#huc-loading-indicator').hide();
+				$('#counties-button').prop('disabled', false);
 			},
 			scope : this
 		});
 
-		this.map.addLayer(this.hucLayer);
-		this.map.zoomToExtent(this.map.getMaxExtent());
+		this.hucMap.addLayer(this.hucLayer);
+		this.hucMap.zoomToExtent(this.hucMap.getMaxExtent());
 
-		return;
+		return d.promise();
 	},
 
-	/* then makes call to render the data on a plot
-	 * @param {String} huc 12 digit identifier for the hydrologic unit
-	 */
+	//get and instance of dataSeriesStore
 	dataSeriesStore : new NWC.util.DataSeriesStore(),
 
 	/**
@@ -161,7 +159,9 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		$('#county-selection-div').show();
 		this.hucCountMapView = new NWC.view.HucCountyMapView({
 			mapDiv : 'county-selection-map',
-			hucFeature : this.hucLayer.features[0],
+			hucFeature : new OpenLayers.Feature.Vector(
+					this.hucLayer.features[0].geometry.clone(),
+					this.hucLayer.features[0].attributes),
 			router : this.router,
 			el : $('#county-selection-div')
 		});
@@ -169,7 +169,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	toggleMetricLegend : function() {
 		$('.customary-button').prop('disabled', false);
-		$('.metric-button').prop('disabled','disabled');
+		$('.metric-button').prop('disabled', true);
 		if ($('.daily-button').prop('disabled')) {
 			this.plotPTandETaData(this.DAILY, this.METRIC);
 		}
@@ -180,7 +180,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	toggleCustomaryLegend : function() {
 		$('.metric-button').prop('disabled', false);
-		$('.customary-button').prop('disabled','disabled');
+		$('.customary-button').prop('disabled', true);
 		if ($('.daily-button').prop('disabled')) {
 			this.plotPTandETaData(this.DAILY, this.CUSTOMARY);
 		}
@@ -191,7 +191,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	toggleMonthlyLegend : function() {
 		$('.daily-button').prop('disabled', false);
-		$('.monthly-button').prop('disabled','disabled');
+		$('.monthly-button').prop('disabled', true);
 		if ($('.customary-button').prop('disabled')) {
 			this.plotPTandETaData(this.MONTHLY, this.CUSTOMARY);
 		}
@@ -201,7 +201,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	toggleDailyLegend : function() {
-		$('.daily-button').prop('disabled','disabled');
+		$('.daily-button').prop('disabled', true);
 		$('.monthly-button').prop('disabled', false);
 		if (this.$('.customary-button').prop('disabled')) {
 			this.plotPTandETaData(this.DAILY, this.CUSTOMARY);
@@ -214,13 +214,11 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	downloadEvapotranspiration : function() {
 		var blob = new Blob([this.dataSeriesStore.eta.toCSV()], {type:'text/csv'});
 		saveAs(blob, this.getHucFilename('eta'));
-		return;
 	},
 
 	downloadPrecipitation : function() {
 		var blob = new Blob([this.dataSeriesStore.dayMet.toCSV()], {type:'text/csv'});
 		saveAs(blob, this.getHucFilename('dayMet'));
-		return;
 	},
 
 	getHucFilename : function (series) {
@@ -246,7 +244,5 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			this.hucCountyMapView.remove();
 		}
 		NWC.view.BaseView.prototype.remove.apply(this, arguments);
-
 	}
-
 });
