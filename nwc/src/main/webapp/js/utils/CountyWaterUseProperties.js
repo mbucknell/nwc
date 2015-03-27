@@ -23,8 +23,7 @@ NWC.util.CountyWaterUseProperties = (function () {
 			}
 		});
 		return result;
-	});
-//	}).once();
+	}).once();
 
 	that.getPropertyLongNames = (function() {
 		var result = [];
