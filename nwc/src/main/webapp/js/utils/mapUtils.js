@@ -158,13 +158,13 @@ NWC.util.mapUtils = (function () {
 	that.createHucSEBasinFeatureLayer = function(huc12) {
 		var filter = new OpenLayers.Filter.Comparison({
 			type: OpenLayers.Filter.Comparison.EQUAL_TO,
-			property: "HUC12",
+			property: "huc12",
 			value: huc12
 		});
 
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
-			featureType: 'huc12_SE_Basins_v2',
+			featureType: 'huc12_se_basins_v2',
 			featureNS: "http://cida.usgs.gov/NWC",
 			version: "1.1.0",
 			geometryName: "the_geom",
