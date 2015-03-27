@@ -36,7 +36,6 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		this.context.hucId = options.hucId;
 		this.hucId = options.hucId;
-		this.fips = options.fips;
 		this.insetHucMapDiv = options.insetHucMapDiv;
 
 		// call superclass initialize to do default initialize
@@ -156,7 +155,6 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	displayCountyMap : function() {
-		$('#county-selection-div').show();
 		this.hucCountMapView = new NWC.view.HucCountyMapView({
 			mapDiv : 'county-selection-map',
 			hucFeature : new OpenLayers.Feature.Vector(
