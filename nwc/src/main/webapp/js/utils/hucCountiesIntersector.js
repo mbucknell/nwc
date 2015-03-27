@@ -34,8 +34,8 @@ NWC.util.hucCountiesIntersector = (function() {
 		var percentCountyInHuc = (intersectingArea / countyArea);
 
 		var countyHucIntersectionInfo = {
-			countyName: countyFeature.attributes.FULL_NAME.capitalize(true),
-			countyId: countyFeature.attributes.FIPS,
+			countyName: countyFeature.attributes.full_name.capitalize(true),
+			countyId: countyFeature.attributes.fips,
 			hucInCounty: 100 * percentHucInCounty,
 			countyInHuc: 100 * percentCountyInHuc
 		};

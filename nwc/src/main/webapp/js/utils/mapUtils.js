@@ -213,13 +213,13 @@ NWC.util.mapUtils = (function () {
 	that.createCountyFeatureLayer = function(fips) {
 		var filter = new OpenLayers.Filter.Comparison({
 			type: OpenLayers.Filter.Comparison.EQUAL_TO,
-			property: "FIPS",
+			property: "fips",
 			value: fips
 		});
 
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
-			featureType: 'US_Historical_Counties',
+			featureType: 'us_historical_counties',
 			featureNS: "http://cida.usgs.gov/NWC",
 			version: "1.1.0",
 			geometryName: "the_geom",
@@ -244,7 +244,7 @@ NWC.util.mapUtils = (function () {
 		var protocol = new OpenLayers.Protocol.WFS({
 			version: '1.1.0',
 			url: CONFIG.endpoint.geoserver + 'wfs',
-			featureType: "US_Historical_Counties",
+			featureType: "us_historical_counties",
 			featureNS: 'http://cida.usgs.gov/NWC',
 			geometryName: 'the_geom',
 			srsName: 'EPSG:900913'
@@ -261,7 +261,7 @@ NWC.util.mapUtils = (function () {
 					fillColor: '#FF9900',
 					fillOpacity: 0.4,
 					//Display County Name
-					label: '${NAME}',
+					label: '${name}',
 					fontSize: '2em',
 					fontWeight: 'bold',
 					labelOutlineColor: "white",

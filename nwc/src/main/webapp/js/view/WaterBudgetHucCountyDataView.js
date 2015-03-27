@@ -97,8 +97,8 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 
 		this.countyLayer.events.on({
 			featureadded: function(event){
-				this.countyName = event.feature.attributes.FULL_NAME.capitalize(true);
-				this.countyAreaSqmi = event.feature.attributes.AREA_SQMI;
+				this.countyName = event.feature.attributes.full_name.capitalize(true);
+				this.countyAreaSqmi = event.feature.attributes.area_sqmi;
 				this.countyMap.zoomToExtent(this.countyLayer.getDataExtent());
 				$('#water-use-chart-title').html('Water Use for ' + this.countyName + ' County');
 				$('.wateruse-download-button').prop('disabled', false);
