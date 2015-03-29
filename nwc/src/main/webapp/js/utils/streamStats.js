@@ -105,8 +105,8 @@ NWC.util = NWC.util || {};
 					'sos': CONFIG.endpoint.direct.thredds + 'HUC12_data/HUC12_Q.nc',
 					'observedProperty': 'MEAN_streamflow',
 					'wfsUrl': CONFIG.endpoint.direct.geoserver + 'ows',
-					'wfsTypename': 'NWC:huc12_SE_Basins_v2',
-					'wfsFilterProperty': 'NWC:HUC12',
+					'wfsTypename': 'NWC:huc12_se_basins_v2',
+					'wfsFilterProperty': 'NWC:huc12',
 					'wfsAreaPropertyname': 'NWC:mi2'
 				},
 				NWC.util.wps.getDefaultAsynchronousResponseForm()

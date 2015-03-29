@@ -40,11 +40,11 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.exten
 
 		this.hucLayer.events.on({
 			featureadded: function(event){
-				this.hucName = event.feature.attributes.HU_12_NAME;
+				this.hucName = event.feature.attributes.hu_12_name;
 				this.map.zoomToExtent(this.hucLayer.getDataExtent());
 
 				$('#huc-name').html(this.hucName);
-				$('#huc-drainage-area').html(event.feature.attributes.DRAIN_SQKM);
+				$('#huc-drainage-area').html(event.feature.attributes.drain_sqkm);
 			},
 			loadend: function(event) {
 				$('#loading-indicator').hide();

@@ -115,7 +115,7 @@ NWC.util.mapUtils = (function () {
 		return new OpenLayers.Layer.WMS('National WBD Snapshot',
 			CONFIG.endpoint.geoserver + 'ows?',
 			{
-				layers: 'NHDPlusHUCs:NationalWBDSnapshot',
+				layers: 'NHDPlusHUCs:nationalwbdsnapshot',
 				transparent: true,
 				styles: ['polygon'],
 				tiled: true
@@ -127,13 +127,13 @@ NWC.util.mapUtils = (function () {
 	that.createHucFeatureLayer = function(huc12) {
 		var filter = new OpenLayers.Filter.Comparison({
 			type: OpenLayers.Filter.Comparison.EQUAL_TO,
-			property: "HUC_12",
+			property: "huc_12",
 			value: huc12
 		});
 
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
-			featureType: 'NationalWBDSnapshot',
+			featureType: 'nationalwbdsnapshot',
 			featureNS: "http://cida.usgs.gov/NHDPlusHUCs",
 			version: "1.1.0",
 			geometryName: "the_geom",
@@ -158,13 +158,13 @@ NWC.util.mapUtils = (function () {
 	that.createHucSEBasinFeatureLayer = function(huc12) {
 		var filter = new OpenLayers.Filter.Comparison({
 			type: OpenLayers.Filter.Comparison.EQUAL_TO,
-			property: "HUC12",
+			property: "huc12",
 			value: huc12
 		});
 
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
-			featureType: 'huc12_SE_Basins_v2',
+			featureType: 'huc12_se_basins_v2',
 			featureNS: "http://cida.usgs.gov/NWC",
 			version: "1.1.0",
 			geometryName: "the_geom",
@@ -213,13 +213,13 @@ NWC.util.mapUtils = (function () {
 	that.createCountyFeatureLayer = function(fips) {
 		var filter = new OpenLayers.Filter.Comparison({
 			type: OpenLayers.Filter.Comparison.EQUAL_TO,
-			property: "FIPS",
+			property: "fips",
 			value: fips
 		});
 
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
-			featureType: 'US_Historical_Counties',
+			featureType: 'us_historical_counties',
 			featureNS: "http://cida.usgs.gov/NWC",
 			version: "1.1.0",
 			geometryName: "the_geom",
@@ -244,7 +244,7 @@ NWC.util.mapUtils = (function () {
 		var protocol = new OpenLayers.Protocol.WFS({
 			version: '1.1.0',
 			url: CONFIG.endpoint.geoserver + 'wfs',
-			featureType: "US_Historical_Counties",
+			featureType: "us_historical_counties",
 			featureNS: 'http://cida.usgs.gov/NWC',
 			geometryName: 'the_geom',
 			srsName: 'EPSG:900913'
@@ -261,7 +261,7 @@ NWC.util.mapUtils = (function () {
 					fillColor: '#FF9900',
 					fillOpacity: 0.4,
 					//Display County Name
-					label: '${NAME}',
+					label: '${name}',
 					fontSize: '2em',
 					fontWeight: 'bold',
 					labelOutlineColor: "white",

@@ -49,7 +49,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		this.hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
 			CONFIG.endpoint.geoserver + 'gwc/service/wms',
 			{
-				layers: 'NWC:huc12_SE_Basins_v2',
+				layers: 'NWC:huc12_se_basins_v2',
 				transparent: true,
 				styles: ['polygon']
 			},
@@ -105,7 +105,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 				if (km2 > 2000) {
 					this.showWarningDialog("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km^2), please choose a smaller watershed.");
 				} else {
-					this.router.navigate('/streamflow-stats/huc/' + sortedFeature.attributes.HUC12, {trigger : true});
+					this.router.navigate('/streamflow-stats/huc/' + sortedFeature.attributes.huc12, {trigger : true});
 				}
 			}
 		};

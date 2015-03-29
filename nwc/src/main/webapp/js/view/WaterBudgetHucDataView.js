@@ -60,10 +60,10 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		this.hucLayer.events.on({
 			featureadded: function(event){
-				this.hucName = event.feature.attributes.HU_12_NAME;
+				this.hucName = event.feature.attributes.hu_12_name;
 				this.hucMap.zoomToExtent(this.hucLayer.getDataExtent());
 
-				$('#huc-name').html(event.feature.attributes.HU_12_NAME);
+				$('#huc-name').html(event.feature.attributes.hu_12_name);
 				$('.evapotranspiration-download-button').prop('disabled', false);
 				$('.precipitation-download-button').prop('disabled', false);
 				d.resolve();
