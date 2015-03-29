@@ -115,7 +115,7 @@ NWC.util.mapUtils = (function () {
 		return new OpenLayers.Layer.WMS('National WBD Snapshot',
 			CONFIG.endpoint.geoserver + 'ows?',
 			{
-				layers: 'NHDPlusHUCs:NationalWBDSnapshot',
+				layers: 'NHDPlusHUCs:nationalwbdsnapshot',
 				transparent: true,
 				styles: ['polygon'],
 				tiled: true
@@ -127,13 +127,13 @@ NWC.util.mapUtils = (function () {
 	that.createHucFeatureLayer = function(huc12) {
 		var filter = new OpenLayers.Filter.Comparison({
 			type: OpenLayers.Filter.Comparison.EQUAL_TO,
-			property: "HUC_12",
+			property: "huc_12",
 			value: huc12
 		});
 
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
-			featureType: 'NationalWBDSnapshot',
+			featureType: 'nationalwbdsnapshot',
 			featureNS: "http://cida.usgs.gov/NHDPlusHUCs",
 			version: "1.1.0",
 			geometryName: "the_geom",

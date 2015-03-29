@@ -162,7 +162,7 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 				});
                                 //Hydrologic model results are not valid for watersheds > 2000 km2, so only populate list with those < 2000 km2
                                 var filteredHucFeatures = hucFeatures.filter(function(n){
-                                    return n.attributes.DRAIN_SQKM < 2000;
+                                    return n.attributes.drain_sqkm < 2000;
                                 });
 				this.aquaticBiologyFeaturesModel.set({
 					sites : siteFeatures.map(function(f) { return f.attributes; }),
