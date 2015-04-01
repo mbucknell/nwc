@@ -49,6 +49,7 @@
     request.setAttribute("directWpsEndpoint", props.get("nwc.endpoint.wps"));
     request.setAttribute("directNwisEndpoint", props.get("nwc.endpoint.nwis"));
 	request.setAttribute("searchServiceEndpoint", props.get("nwc.endpoint.searchService"));
+	request.setAttribute("directSciencebaseEndpoint", props.get("nwc.endpoint.sciencebase"));
 %>
 
 <%
