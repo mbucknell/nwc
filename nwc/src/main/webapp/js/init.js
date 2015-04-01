@@ -15,11 +15,11 @@ $(document).ready(function() {
 		'dataDiscovery',
 		'statsResults',
 		'countyHucTable',
-		'countyHucMap'
+		'countyHucMap',
+	    'allProjects'
 	];
 
 	var PARTIALS = [
-	    'allProjects',
 		'mapControls',
 		'warningModal',
 		'streamflowCalcStats'
