@@ -19,6 +19,7 @@ $(document).ready(function() {
 	];
 
 	var PARTIALS = [
+	    'allProjects',
 		'mapControls',
 		'warningModal',
 		'streamflowCalcStats'
