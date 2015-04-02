@@ -51,10 +51,12 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 			{
 				layers: 'NWC:huc12_se_basins_v2',
 				transparent: true,
-				styles: ['polygon']
+				styles: ['seOutline']
 			},
 			{
-				isBaseLayer : false,
+				opacity: 0.6,
+                                tiled: true,
+                                isBaseLayer : false,
 				displayInLayerSwitcher : false,
 				visibility : false
 			}
