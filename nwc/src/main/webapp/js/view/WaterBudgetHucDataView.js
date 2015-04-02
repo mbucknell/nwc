@@ -41,7 +41,6 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		// call superclass initialize to do default initialize
 		// (includes render)
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
-		$('#wateruse').hide();
 
 		this.buildHucMap(this.hucId);
 		this.getHucData(this.hucId);
@@ -49,7 +48,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	buildHucMap : function(huc) {
-		
+
 		var d = $.Deferred();
 
 		var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
