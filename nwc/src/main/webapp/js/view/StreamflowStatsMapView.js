@@ -51,7 +51,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 			{
 				layers: 'NWC:huc12_se_basins_v2',
 				transparent: true,
-				styles: ['polygon']
+				styles: ['seOutline']
 			},
 			{
 				opacity: 0.6,

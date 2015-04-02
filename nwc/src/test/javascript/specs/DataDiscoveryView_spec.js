@@ -1,114 +1,51 @@
-xdescribe('Tests for WaterBudgetHucDataView', function() {
+
+describe('Tests for DataDiscoveryView', function() {
 	var $testDiv;
 	var testView;
-	var getHucDataSpy;
+	var testList = '{"total":1,"took":"18ms","selflink":{"rel":"self","url":"https://www.sciencebase.gov/catalog/items?facetTermLevelLimit=false&max=100&q=&community=National+Water+Census&filter0=browseCategory%3DProject&format=json"},"items":[{"link":{"rel":"self","url":"https://www.sciencebase.gov/catalog/item/5151f42de4b0f0b3d011a81f"},"relatedItems":{"link":{"url":"https://www.sciencebase.gov/catalog/itemLinks?itemId=5151f42de4b0f0b3d011a81f","rel":"related"}},"id":"5151f42de4b0f0b3d011a81f","title":"Colorado River Geographic Focus Area Study","summary":"Working to better quantify selected components of the water budget in the Colorado River Basin to assist in the assessment of water availability for the region.","hasChildren":true}]}'
 
 	beforeEach(function() {
-		CONFIG = {
-				endpoint : {
-					geoserver : 'http://fakeserver.com'
-				}
-			};
 
 		$('body').append('<div id="test-div"></div>');
 		$testDiv = $('#test-div');
-		$testDiv.append('<div id="inset-map-div"></div>');
-		$testDiv.append('<button class="customary-button" disabled>US Customary</button>');
-		$testDiv.append('<button class="metric-button">Metric</button>');
-		$testDiv.append('<button class="daily-button">Daily</button>');
-		$testDiv.append('<button class="monthly-button" disabled>Monthly</button>');
-		$testDiv.append('<div id="county-selection-div"></div>');
+		$testDiv.append('<div id="project-list-div"></div>');
 
-		getHucDataSpy = jasmine.createSpy('getHucDataSpy');
-		spyOn(NWC.view.BaseView.prototype, 'initialize').andCallFake(function() {
-			this.getHucData = getHucDataSpy
-		});
+		window.CONFIG = {};
+		CONFIG.endpoint = {};
+		CONFIG.endpoint.direct = {};
+		CONFIG.endpoint.direct.sciencebase = 'http://test';
 
-		testView = new NWC.view.WaterBudgetHucDataView({
-			hucId : '123456789',
-			insetHucMapDiv : 'inset-map-div'
-		});
 	});
 
 	afterEach(function() {
 		$testDiv.remove();
 	});
 
-	it('Expects view\'s constructor to set the context property', function() {
-		expect(testView.context.hucId).toEqual('123456789');
-	});
-
-	it('Expects view\'s constructor to create properties for the inset map and hucLayer', function() {
-		expect(testView.hucMap).toBeDefined();
-		expect(testView.hucLayer).toBeDefined();
-	});
-
 	it('Expects the view\'s constructor to call BaseView initialize', function() {
+		spyOn(NWC.view.BaseView.prototype, 'initialize');
+		spyOn($, "ajax");
+		testView = new NWC.view.DataDiscoveryView();
 		expect(NWC.view.BaseView.prototype.initialize).toHaveBeenCalled();
 	});
 
-	it('Expect that event handler calls exist and behave as expected', function() {
-
-		//the view has an event to wire up the clickable plot options
-		expect(testView.events['click .back-button']).toBeDefined();
-		expect(testView.events['click #counties-button']).toBeDefined();
-		expect(testView.events['click .metric-button']).toBeDefined();
-		expect(testView.events['click .customary-button']).toBeDefined();
-		expect(testView.events['click .monthly-button']).toBeDefined();
-		expect(testView.events['click .daily-button']).toBeDefined();
-		expect(testView.events['click .evapotranspiration-download-button']).toBeDefined();
-		expect(testView.events['click .precipitation-download-button']).toBeDefined();
-
-		//plot buttons exist and get set with the proper disabled attribute
-		testView.plotPTandETaData = jasmine.createSpy('plotPTandETaDataSpy')
-		testView.toggleMetricLegend();
-		expect($('.customary-button').prop('disabled')).toBe(false);
-		expect($('.metric-button').prop('disabled')).toBe(true);
-		testView.toggleCustomaryLegend();
-		expect($('.customary-button').prop('disabled')).toBe(true);
-		expect($('.metric-button').prop('disabled')).toBe(false);
-		testView.toggleMonthlyLegend();
-		expect($('.monthly-button').prop('disabled')).toBe(true);
-		expect($('.daily-button').prop('disabled')).toBe(false);
-		testView.toggleDailyLegend();
-		expect($('.monthly-button').prop('disabled')).toBe(false);
-		expect($('.daily-button').prop('disabled')).toBe(true);
+	it('Expects getProjectData to use the correct url for ajax call', function() {
+		spyOn(NWC.view.BaseView.prototype, 'initialize');
+		spyOn($, "ajax");
+		testView = new NWC.view.DataDiscoveryView();
+		expect($.ajax.mostRecentCall.args[0]["url"]).toEqual(CONFIG.endpoint.direct.sciencebase +
+				'/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DProject&max=100&format=json');
 	});
 
-	it('Expects downloadEvapotranspiration to save to appropriate filename', function() {
-		spyOn(window, 'saveAs');
-		spyOn(window, 'Blob');
-		testView.dataSeriesStore = {
-			eta : {
-			toCSV : jasmine.createSpy('toCSVSpy')
-			}
-		};
-		testView.fileName = 'test_' + testView.hucId + '_eta.csv';
-		testView.hucName = 'test';
-		testView.downloadEvapotranspiration();
-
-		expect(saveAs).toHaveBeenCalled();
-		expect(saveAs.calls[0].args[1]).toMatch(testView.fileName);
-		expect(saveAs.calls[0].args[1]).toMatch(testView.context.hucId);
-		expect(testView.dataSeriesStore.eta.toCSV).toHaveBeenCalled();
+	it('Expects getProjectData to receive a successful ajax response', function() {
+//		spyOn(NWC.view.BaseView.prototype, 'initialize');
+//	    spyOn($, "ajax").andCallFake(function(e) {
+//	    	e.success({});
+//	    });
+//		testView = new NWC.view.DataDiscoveryView();
+//		expect(NWC.templates.getTemplate).toHaveBeenCalled();
 	});
 
-	it('Expects downloadPrecipitation to save to appropriate filename', function() {
-		spyOn(window, 'saveAs');
-		spyOn(window, 'Blob');
-		testView.dataSeriesStore = {
-			dayMet : {
-			toCSV : jasmine.createSpy('toCSVSpy')
-			}
-		};
-		testView.fileName = 'test_' + testView.hucId + '_dayMet.csv';
-		testView.hucName = 'test';
-		testView.downloadPrecipitation();
-
-		expect(saveAs).toHaveBeenCalled();
-		expect(saveAs.calls[0].args[1]).toMatch(testView.fileName);
-		expect(saveAs.calls[0].args[1]).toMatch(testView.context.hucId);
-		expect(testView.dataSeriesStore.dayMet.toCSV).toHaveBeenCalled();
+	it('Expects getProjectData to receive a error for no ajax response', function() {
 	});
 
 });
