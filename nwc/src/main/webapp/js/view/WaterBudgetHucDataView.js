@@ -19,7 +19,6 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	CUSTOMARY : "usCustomary",
 
 	events: {
-		'click .back-button' : 'goToWaterbudget',
 		'click #counties-button' : 'displayCountyMap',
 		'click #units-btn-group button' : 'changeUnits',
 		'click #time-scale-btn-group button' : 'changeTimeScale',

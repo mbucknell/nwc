@@ -56,13 +56,11 @@ describe('Tests for WaterBudgetHucCountyDataView', function() {
 	it('Expect that event handler calls exist and behave as expected', function() {
 
 		//the view has an event to wire up the clickable plot options
-		expect(testView.events['click .back-button']).toBeDefined();
-		expect(testView.events['click .metric-button']).toBeDefined();
-		expect(testView.events['click .customary-button']).toBeDefined();
+		expect(testView.events['click #units-btn-group']).toBeDefined();
+		expect(testView.events['click #time-scale-btn-group'])
+		expect(testView.events['click .total-county-button']).toBeDefined();
 		expect(testView.events['click .total-county-button']).toBeDefined();
 		expect(testView.events['click .normalized-county-button']).toBeDefined();
-		expect(testView.events['click .monthly-button']).toBeDefined();
-		expect(testView.events['click .daily-button']).toBeDefined();
 
 		//plot buttons exist and get set with the proper disabled attribute
 		testView.chartWaterUse = jasmine.createSpy('chartWaterUseSpy')
@@ -78,7 +76,7 @@ describe('Tests for WaterBudgetHucCountyDataView', function() {
 		spyOn(window, 'saveAs');
 		spyOn(window, 'Blob');
 		var waterUseDataSeries = NWC.util.DataSeries.newSeries();
-		waterUseDataSeries.data = 
+		waterUseDataSeries.data =
 			 [["1985/01/01",0.25,null,0]];
 		testView.waterUseDataSeries = waterUseDataSeries;
 		spyOn(testView.waterUseDataSeries, 'toCSV');
