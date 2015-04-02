@@ -1,13 +1,7 @@
-<div class="col-xs-12">
+<div class="col-xs-12 spacer spacer_down">
 	<h4 id="county-loading-indicator">Loading county data <i class="fa fa-spinner fa-spin"></i></h4>
 	<div class="row spacer">
-		<div class="col-xs-3"></div>
-		<div class="col-xs-6">
-			<div class="btn-group">
-				<button type="radio" class="btn btn-primary btn-sm total-county-button" disabled>Total County Water Use</button>
-				<button type="radio" class="btn btn-primary btn-sm normalized-county-button">Area Normalized County Water Use</button>
-			</div>
-		</div>
+		
 		<div class="col-xs-3"></div>
 	</div>
 	<div class="col-xs-12">
@@ -26,7 +20,7 @@
 			<div class="col-xs-3"></div>
 		</div>
 		<h4 id="water-use-chart-title"></h4>
-		<div id="normalized-warning">
+		<div class="col-xs-12" id="normalized-warning">
 			<em class="caution">Area Averaged Withdrawal Estimates, Use with Caution!</em>
 			<p>Water use by county area is represented as evenly distributed across the
 				total area of the county. In reality, these water uses are not evenly distributed.
@@ -34,23 +28,32 @@
 				the selected HUC, or may be concentrated in the area of the county which is in
 				the selected HUC. Use these estimates with caution.</p>
 		</div>
+		
+		<div class="col-sm-12 text-center spacer spacer_down">
+			<button class="btn btn-success wateruse-download-button" disabled>
+				Download Water Use
+			</button>
+		</div>
+		<div class="row col-sm-3 spacer_down btn-group">
+			<button type="radio" class="btn btn-primary customary-button" disabled>US Customary</button>
+			<button type="radio" class="btn btn-primary metric-button">Metric</button>
+		</div>
+		<div class="col-sm-6 text-center">
+			<div class="btn-group">
+				<button type="radio" class="btn btn-primary btn-sm total-county-button" disabled>Total County Water Use</button>
+				<button type="radio" class="btn btn-primary btn-sm normalized-county-button">Area Normalized County Water Use</button>
+			</div>
+		</div>
 		<div style="height: 400px;" id="waterUsageChart" class="col-xs-10"></div>
 		<div class="col-xs-2">
 			<div class="row">
 				<div id="waterUsageLegend" class="col-xs-12"></div>
 			</div>
 		</div>
-		<div class="row col-xs-12 big_spacer">
+		<div class="row col-xs-12 spacer spacer_down">
 			Water use estimates derived from the Aggregate Water Use Dataset
 			also available from <a href="http://waterdata.usgs.gov/nwis" target="_blank">
 				NWIS Web <i class="fa fa-external-link"></i></a>.
-		</div>
-		<div class="row big_spacer">
-			<div class="col-xs-4">
-				<button class="btn btn-success wateruse-download-button" disabled>
-				Download Water Use
-				</button>
-			</div>
 		</div>
 	</div>
 </div>
