@@ -57,7 +57,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			}
 			else if (hucCount === 1) {
 				var actualFeature = actualFeatures[0];
-				var huc12 = actualFeature.attributes.HUC_12;
+				var huc12 = actualFeature.attributes.huc_12;
 				this.router.navigate('/waterbudget/huc/' + huc12, {trigger : true});
 			}
 		};

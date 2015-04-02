@@ -36,7 +36,6 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		this.context.hucId = options.hucId;
 		this.hucId = options.hucId;
-		this.fips = options.fips;
 		this.insetHucMapDiv = options.insetHucMapDiv;
 
 		// call superclass initialize to do default initialize
@@ -61,10 +60,10 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		this.hucLayer.events.on({
 			featureadded: function(event){
-				this.hucName = event.feature.attributes.HU_12_NAME;
+				this.hucName = event.feature.attributes.hu_12_name;
 				this.hucMap.zoomToExtent(this.hucLayer.getDataExtent());
 
-				$('#huc-name').html(event.feature.attributes.HU_12_NAME);
+				$('#huc-name').html(event.feature.attributes.hu_12_name);
 				$('.evapotranspiration-download-button').prop('disabled', false);
 				$('.precipitation-download-button').prop('disabled', false);
 				d.resolve();
@@ -156,7 +155,6 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	displayCountyMap : function() {
-		$('#county-selection-div').show();
 		this.hucCountMapView = new NWC.view.HucCountyMapView({
 			mapDiv : 'county-selection-map',
 			hucFeature : new OpenLayers.Feature.Vector(

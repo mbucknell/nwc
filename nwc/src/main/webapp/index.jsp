@@ -24,6 +24,7 @@
 				CONFIG.endpoint.direct.thredds = '${directThreddsEndpoint}';
 				CONFIG.endpoint.direct.wps = '${directWpsEndpoint}';
 				CONFIG.endpoint.direct.nwis = '${directNwisEndpoint}';
+				CONFIG.endpoint.direct.sciencebase = '${directSciencebaseEndpoint}';
 
 				//This is solely to not break IE, TODO: bring in logging lib
 				if(!window.console) {

@@ -49,7 +49,7 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 			"National WBD Snapshot",
 			CONFIG.endpoint.geoserver + 'gwc/service/wms',
 			{
-				layers: 'NWC:huc12_SE_Basins_v2',
+				layers: 'NWC:huc12_se_basins_v2',
 				transparent: true,
 				styles: ['polygon']
 			},
@@ -78,7 +78,7 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 		var hucProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(this.hucLayer, {
 			url : CONFIG.endpoint.geoserver + "wfs",
 			srsName : "EPSG:3857",
-			propertyNames : ["HUC12","DRAIN_SQKM", "HU_12_NAME"]
+			propertyNames : ["huc12","drain_sqkm", "hu_12_name"]
 		});
 
 		var featureTypeIsVisible = function(featureType) {
@@ -88,7 +88,7 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 			else if (featureType === 'gagesII') {
 				return this.gageFeatureLayer.getVisibility();
 			}
-			else if (featureType === 'huc12_SE_Basins_v2') {
+			else if (featureType === 'huc12_se_basins_v2') {
 				return this.hucLayer.getVisibility();
 			}
 		};
@@ -158,11 +158,11 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 					return f.fid.startsWith('gagesII');
 				});
 				var hucFeatures = features.findAll(function(f) {
-					return f.fid.startsWith('huc12_SE_Basins_v2');
+					return f.fid.startsWith('huc12_se_basins_v2');
 				});
                                 //Hydrologic model results are not valid for watersheds > 2000 km2, so only populate list with those < 2000 km2
                                 var filteredHucFeatures = hucFeatures.filter(function(n){
-                                    return n.attributes.DRAIN_SQKM < 2000;
+                                    return n.attributes.drain_sqkm < 2000;
                                 });
 				this.aquaticBiologyFeaturesModel.set({
 					sites : siteFeatures.map(function(f) { return f.attributes; }),

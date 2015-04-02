@@ -18,7 +18,7 @@ NWC.util = NWC.util || {};
             propertyLongName: 'Area Weighted Mean Actual Evapotranspiration',
             units: NWC.util.Units.metric.normalizedWater.monthly,
             dataset: 'HUC12_data',
-            fileName: 'HUC12_eta_fixed.ncml',
+            fileName: 'HUC12_eta.nc',
             downloadMetadata: 'Data derived by sampling the SSEBop Actual Evapotranspiration dataset to NHD+\nVersion II 12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly\nhttp://cida.usgs.gov/gdp/ http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
         },
         countyWaterUse: {
