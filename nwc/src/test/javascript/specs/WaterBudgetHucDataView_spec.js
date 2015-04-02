@@ -2,7 +2,7 @@ describe('Tests for WaterBudgetHucDataView', function() {
 	var $testDiv;
 	var $customaryButton, $metricButton, $dailyButton, $monthlyButton
 	var testView;
-	var getHucDataSpy;
+	var server;
 
 	beforeEach(function() {
 		CONFIG = {
@@ -25,10 +25,20 @@ describe('Tests for WaterBudgetHucDataView', function() {
 		$dailyButton = $('#daily-button');
 		$monthlyButton = $('#monthly-button');
 
-		getHucDataSpy = jasmine.createSpy('getHucDataSpy');
-		spyOn(NWC.view.BaseView.prototype, 'initialize').andCallFake(function() {
-			this.getHucData = getHucDataSpy
+		// Stubbing the createMap call so OpenLayers does not try to make any ajax calls
+		spyOn(NWC.util.mapUtils, 'createMap').andCallFake(function() {
+			return {
+				addLayer : jasmine.createSpy('addLayerSpy'),
+				zoomToExtent : jasmine.createSpy('zoomToExtentSpy'),
+				getMaxExtent : jasmine.createSpy('getMaxExtentSpy'),
+				render : jasmine.createSpy('renderSpy')
+			};
 		});
+
+		spyOn(NWC.view.BaseView.prototype, 'initialize');
+
+		// This prevents any ajax calls to get data
+		server = sinon.fakeServer.create();
 
 		testView = new NWC.view.WaterBudgetHucDataView({
 			hucId : '123456789',
@@ -40,6 +50,7 @@ describe('Tests for WaterBudgetHucDataView', function() {
 
 	afterEach(function() {
 		$testDiv.remove();
+		server.restore();
 	});
 
 	it('Expects view\'s constructor to set the context property', function() {

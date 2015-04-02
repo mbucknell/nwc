@@ -13,10 +13,6 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	ETA : "eta",
 	DAY_MET : "dayMet",
-	DAILY : "daily",
-	MONTHLY : "monthly",
-	METRIC : "metric",
-	CUSTOMARY : "usCustomary",
 
 	events: {
 		'click #counties-button' : 'displayCountyMap',
@@ -123,7 +119,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 					labeledDataSeries.metadata.seriesLabels.push(
 						{
 							seriesName: NWC.util.SosSources[label].propertyLongName,
-							seriesUnits: ''
+							seriesUnits: NWC.util.SosSources[label].units
 						}
 					);
 					labeledDataSeries.metadata.downloadHeader = NWC.util.SosSources[label].downloadMetadata;

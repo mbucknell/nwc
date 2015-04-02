@@ -49,7 +49,7 @@ NWC.util.DataSeries = function () {
 				getSeriesLabelsAs: function(measurementSystem, measure, timeGranularity) {
 					return this.metadata.seriesLabels.map(function(label) {
 						var seriesMetadata = Object.clone(label);
-						seriesMetadata.seriesUnits = '';//NWC.util.Units[measurementSystem][measure][timeGranularity];
+						seriesMetadata.seriesUnits = ''; //NWC.util.Units[measurementSystem][measure][timeGranularity];
 						return createSeriesLabel(seriesMetadata);
 					});
 				}

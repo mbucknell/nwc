@@ -34,14 +34,14 @@
 				Download Water Use
 			</button>
 		</div>
-		<div class="row col-sm-3 spacer_down btn-group">
-			<button type="radio" class="btn btn-primary customary-button" disabled>US Customary</button>
-			<button type="radio" class="btn btn-primary metric-button">Metric</button>
+		<div id="county-units-btn-group" class="row col-sm-3 spacer_down btn-group">
+			<button id="county-customary-button" type="button" class="btn btn-primary" value="usCustomary">US Customary</button>
+			<button id="county-metric-button"type="button" class="btn btn-primary" value="metric">Metric</button>
 		</div>
 		<div class="col-sm-6 text-center">
-			<div class="btn-group">
-				<button type="radio" class="btn btn-primary btn-sm total-county-button" disabled>Total County Water Use</button>
-				<button type="radio" class="btn btn-primary btn-sm normalized-county-button">Area Normalized County Water Use</button>
+			<div id="water-use-type-btn-group" class="btn-group">
+				<button id="total-county-button" type="button" class="btn btn-primary btn-sm" value="totalWater">Total County Water Use</button>
+				<button id="normalized-county-button" type="button" class="btn btn-primary btn-sm" value="normalizedWater">Area Normalized County Water Use</button>
 			</div>
 		</div>
 		<div style="height: 400px;" id="waterUsageChart" class="col-xs-10"></div>
