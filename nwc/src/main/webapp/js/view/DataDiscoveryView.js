@@ -42,8 +42,8 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 	showProjectDetail: function(ev) {
 		var projectId = $(ev.currentTarget).data('id');
 		if ($('#' + projectId).is(':hidden')) {
-			$(ev.currentTarget).removeClass('glyphicon-arrow-up');
-			$(ev.currentTarget).addClass('glyphicon-arrow-down');
+			$(ev.currentTarget).html('-');
+			$(ev.currentTarget).prop('title', 'Hide details');
 			$.ajax({
 				url : CONFIG.endpoint.direct.sciencebase + '/catalog/item/' + projectId + '?format=json',
 				dataType : "json",
@@ -59,8 +59,8 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 			});
 		}
 		else {
-			$(ev.currentTarget).removeClass('glyphicon-arrow-down');
-			$(ev.currentTarget).addClass('glyphicon-arrow-up');
+			$(ev.currentTarget).html('+');
+			$(ev.currentTarget).prop('title', 'Show details');
 			$('#' + projectId).hide();
 		}
 	}
