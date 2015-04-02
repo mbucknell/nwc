@@ -7,20 +7,17 @@ NWC.view = NWC.view || {};
  * @constructor extends NWC.view.WaterBudgetHucDataView
  */
 
+//TODO: Consider extending the standard BaseView and instead create the view in
+// WaterBudgetHucDataView when needed.
 NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 
 	NORMALIZED_WATER : "normalizedWater",
 	TOTAL_WATER : "totalWater",
 
 	events: {
-		'click .back-button' : 'waterbudgetHucData',
-		'click .metric-button' : 'toggleMetricLegend',
-		'click .customary-button' : 'toggleCustomaryLegend',
 		'click .total-county-button' : 'toggleTotalCountyWaterUse',
 		'click .normalized-county-button' : 'toggleNormalizedCountyWaterUse',
 		'click .wateruse-download-button' : 'downloadWaterUse',
-		'click .monthly-button' : 'toggleMonthlyLegend',
-		'click .daily-button' : 'toggleDailyLegend'
 	},
 
 	context : {
@@ -36,7 +33,10 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 
 		// call superclass initialize to do default initialize
 		// (includes render)
+		$.extend(this.events, NWC.view.WaterBudgetHucDataView.prototype.events);
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
+		this.setUpHucPlotModel();
+
 		$('#wateruse').html(NWC.templates.getTemplate('waterbudgetCountyData')());
 		$('#counties-button').hide();
 		$('#normalized-warning').hide();

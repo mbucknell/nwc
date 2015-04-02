@@ -49,7 +49,7 @@ NWC.util.DataSeries = function () {
 				getSeriesLabelsAs: function(measurementSystem, measure, timeGranularity) {
 					return this.metadata.seriesLabels.map(function(label) {
 						var seriesMetadata = Object.clone(label);
-						seriesMetadata.seriesUnits = NWC.util.Units[measurementSystem][measure][timeGranularity];
+						seriesMetadata.seriesUnits = '';//NWC.util.Units[measurementSystem][measure][timeGranularity];
 						return createSeriesLabel(seriesMetadata);
 					});
 				}
@@ -59,7 +59,7 @@ NWC.util.DataSeries = function () {
 }();
 
 /**
-* Given mixed frequency data series metadata and data, converts it to 
+* Given mixed frequency data series metadata and data, converts it to
 * monthly and daily series for Graph to consume.
 * @returns {undefined}
 */
@@ -101,9 +101,9 @@ NWC.util.DataSeriesStore = function () {
 	};
 
 	self.getIndexOfColumnNamed = function(columnName) {
-			return columnIndices[columnName];  
+			return columnIndices[columnName];
 	};
-		
+
 	self.daily = NWC.util.DataSeries.newSeries();
 	self.monthly = NWC.util.DataSeries.newSeries();
 
@@ -113,15 +113,15 @@ NWC.util.DataSeriesStore = function () {
 	Presume both series' data arrays are sorted in order of ascending date.
 
 	Every day-row of every month must have a daymet value as-is
-	If a given month has a monthly eta value, you must divide the value 
-	by the number of days in the month and insert the result in 
+	If a given month has a monthly eta value, you must divide the value
+	by the number of days in the month and insert the result in
 	every day-row for that month. If a given month has no eta value,
 	insert NaN in every day-row for that month.
 	*/
 	self.updateDailyHucSeries = function (nameToSeriesMap) {
 		var dailyTable = [],
 		etaIndex = 0,
-		//set eta for daily 
+		//set eta for daily
 		etaForCurrentMonth = NaN,
 		dayMetSeries = nameToSeriesMap.dayMet,
 		etaSeries = nameToSeriesMap.eta;
@@ -172,7 +172,7 @@ NWC.util.DataSeriesStore = function () {
 	and put them in the daymet value for that month-row. If there are no daily daymet records for that month,
 	let the daymet value for that month-row be NaN
 
-	If the first day of a month has daymet values, daymet values will be present for every day of a month, 
+	If the first day of a month has daymet values, daymet values will be present for every day of a month,
 	except if the month in question is the last month in the period of record, in which case it might not have daymet values
 	for every day of the month. If there is not a complete set of daily values for the last month, omit the month.
 	*/

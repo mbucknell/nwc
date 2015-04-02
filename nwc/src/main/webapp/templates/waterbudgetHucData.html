@@ -33,9 +33,9 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-xs-12 btn-group">
-				<button type="radio" class="btn btn-primary customary-button" disabled>US Customary</button>
-				<button type="radio" class="btn btn-primary metric-button">Metric</button>
+			<div id="units-btn-group" class="col-xs-12 btn-group">
+				<button type="button" class="btn btn-primary" id="customary-button" value="usCustomary">US Customary</button>
+				<button type="button" class="btn btn-primary" id="metric-button" value="metric">Metric</button>
 			</div>			
 		</div>
 		<div class="row">
@@ -57,9 +57,9 @@
 					</div>
 				</div>
 				<div class="col-xs-12 spacer spacer_down">
-					<div class="btn-group">
-						<button type="radio" class="btn btn-primary monthly-button">Monthly</button>
-						<button type="radio" class="btn btn-primary daily-button" disabled>Daily</button>
+					<div id="time-scale-btn-group" class="btn-group">
+						<button id="monthly-button"type="button" class="btn btn-primary" value="monthly">Monthly</button>
+						<button id="daily-button" type="button" class="btn btn-primary" value="daily">Daily</button>
 					</div>
 				</div>
 				<div class="row col-xs-12 big_spacer">

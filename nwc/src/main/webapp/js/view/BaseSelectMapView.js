@@ -157,10 +157,6 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 		});
 	},
 
-	changeCenter : function(ev) {
-		console.log('In Change center');
-	},
-
 	/**
 	 * Updates the model from the data in ev.
 	 * @param {jquery.Event} ev
