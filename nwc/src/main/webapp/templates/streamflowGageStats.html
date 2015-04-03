@@ -12,9 +12,9 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-xs-12 map_container">
+			<div class="col-xs-12 spacer_down">
 				<h4 id="loading-indicator">Loading data <i class="fa fa-spinner fa-spin"></i></h4>
-				<h4>Select Streamflow Statistics Paramaeters</h4>
+				<h4>Select Streamflow Statistics Parameters</h4>
 				<p>
 					Select a subset of the time series for which you would like to calculate various statistics.
 				</p>
@@ -33,8 +33,9 @@
 				<h5>Period of Record</h5>
 				<div id="start-period-of-record"></div>
 				<div id="end-period-of-record"></div>
-				<br />
-				<div id="gage-inset" style="height:200px; width: 200px; border-style: solid;border-width:1px;"></div>
+			</div>
+			<div class="col-xs-12 map-container">
+				<div id="gage-inset" class="inset-map"></div>
 			</div>
 		</div>
 		{{> streamflowCalcStats }}

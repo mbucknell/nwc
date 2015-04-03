@@ -13,18 +13,11 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	ETA : "eta",
 	DAY_MET : "dayMet",
-	DAILY : "daily",
-	MONTHLY : "monthly",
-	METRIC : "metric",
-	CUSTOMARY : "usCustomary",
 
 	events: {
-		'click .back-button' : 'goToWaterbudget',
 		'click #counties-button' : 'displayCountyMap',
-		'click .metric-button' : 'toggleMetricLegend',
-		'click .customary-button' : 'toggleCustomaryLegend',
-		'click .monthly-button' : 'toggleMonthlyLegend',
-		'click .daily-button' : 'toggleDailyLegend',
+		'click #units-btn-group button' : 'changeUnits',
+		'click #time-scale-btn-group button' : 'changeTimeScale',
 		'click .evapotranspiration-download-button' : 'downloadEvapotranspiration',
 		'click .precipitation-download-button' : 'downloadPrecipitation'
 	},
@@ -41,15 +34,31 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		// call superclass initialize to do default initialize
 		// (includes render)
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
-		$('#wateruse').hide();
+
+		this.setUpHucPlotModel();
 
 		this.buildHucMap(this.hucId);
 		this.getHucData(this.hucId);
 		this.hucMap.render(this.insetHucMapDiv);
 	},
 
+	setUpHucPlotModel : function() {
+		// Add listeners to model
+		this.hucPlotModel = new NWC.model.WaterBudgetHucPlotModel();
+		this.listenTo(this.hucPlotModel, 'change:units', this.updateUnits);
+		this.listenTo(this.hucPlotModel, 'change:timeScale', this.updateTimeScale);
+
+		var newTimeScale = this.hucPlotModel.get('timeScale');
+		this.setButtonActive($('#daily-button'), newTimeScale === 'daily');
+		this.setButtonActive($('#monthly-button'), newTimeScale === 'monthly');
+
+		var newUnits = this.hucPlotModel.get('units');
+		this.setButtonActive($('#customary-button'), newUnits === 'usCustomary');
+		this.setButtonActive($('#metric-button'), newUnits === 'metric');
+	},
+
 	buildHucMap : function(huc) {
-		
+
 		var d = $.Deferred();
 
 		var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
@@ -130,7 +139,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
         });
 		var dataHandler = function() {
 			this.dataSeriesStore.updateHucSeries(labeledResponses);
-			this.plotPTandETaData(this.DAILY, this.CUSTOMARY);
+			this.plotPTandETaData(this.hucPlotModel.get('timeScale'), this.hucPlotModel.get('units'));
 		}.bind(this);
 		$.when.apply(null, labeledAjaxCalls).then(dataHandler);
 		return;
@@ -165,48 +174,32 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		});
 	},
 
-	toggleMetricLegend : function() {
-		$('.customary-button').prop('disabled', false);
-		$('.metric-button').prop('disabled', true);
-		if ($('.daily-button').prop('disabled')) {
-			this.plotPTandETaData(this.DAILY, this.METRIC);
-		}
-		else {
-			this.plotPTandETaData(this.MONTHLY, this.METRIC);
-		}
+	changeUnits : function(ev) {
+		ev.preventDefault();
+		var newUnits = ev.target.value;
+		this.hucPlotModel.set('units', newUnits);
 	},
 
-	toggleCustomaryLegend : function() {
-		$('.metric-button').prop('disabled', false);
-		$('.customary-button').prop('disabled', true);
-		if ($('.daily-button').prop('disabled')) {
-			this.plotPTandETaData(this.DAILY, this.CUSTOMARY);
-		}
-		else {
-			this.plotPTandETaData(this.MONTHLY, this.CUSTOMARY);
-		}
+	updateUnits : function(ev) {
+		var newUnits = this.hucPlotModel.get('units');
+		this.setButtonActive($('#customary-button'), newUnits === 'usCustomary');
+		this.setButtonActive($('#metric-button'), newUnits === 'metric');
+
+		this.plotPTandETaData(this.hucPlotModel.get('timeScale'), newUnits);
 	},
 
-	toggleMonthlyLegend : function() {
-		$('.daily-button').prop('disabled', false);
-		$('.monthly-button').prop('disabled', true);
-		if ($('.customary-button').prop('disabled')) {
-			this.plotPTandETaData(this.MONTHLY, this.CUSTOMARY);
-		}
-		else {
-			this.plotPTandETaData(this.MONTHLY, this.METRIC);
-		}
+	changeTimeScale : function(ev) {
+		ev.preventDefault();
+		var newTimeScale = ev.target.value;
+		this.hucPlotModel.set('timeScale', newTimeScale);
 	},
 
-	toggleDailyLegend : function() {
-		$('.daily-button').prop('disabled', true);
-		$('.monthly-button').prop('disabled', false);
-		if (this.$('.customary-button').prop('disabled')) {
-			this.plotPTandETaData(this.DAILY, this.CUSTOMARY);
-		}
-		else {
-			this.plotPTandETaData(this.DAILY, this.METRIC);
-		}
+	updateTimeScale : function(ev) {
+		var newTimeScale = this.hucPlotModel.get('timeScale');
+		this.setButtonActive($('#daily-button'), newTimeScale === 'daily');
+		this.setButtonActive($('#monthly-button'), newTimeScale === 'monthly');
+
+		this.plotPTandETaData(newTimeScale, this.hucPlotModel.get('units'));
 	},
 
 	downloadEvapotranspiration : function() {

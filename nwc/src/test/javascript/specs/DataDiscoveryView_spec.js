@@ -1,7 +1,8 @@
+
 describe('Tests for DataDiscoveryView', function() {
 	var $testDiv;
 	var testView;
-	
+
 	beforeEach(function() {
 
 		$('body').append('<div id="test-div"></div>');
@@ -33,7 +34,7 @@ describe('Tests for DataDiscoveryView', function() {
 	it('Expects getProjectData to use the correct url for ajax call', function() {
 		spyOn($, "ajax");
 		testView = new NWC.view.DataDiscoveryView();
-		expect($.ajax.mostRecentCall.args[0]["url"]).toEqual(CONFIG.endpoint.direct.sciencebase + 
+		expect($.ajax.mostRecentCall.args[0]["url"]).toEqual(CONFIG.endpoint.direct.sciencebase +
 				'/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DProject&max=100&format=json');
 	});
 
@@ -47,7 +48,7 @@ describe('Tests for DataDiscoveryView', function() {
 		NWC.templates = {
 			getTemplate : getTemplateSpy.andReturn(templateSpy)
 		};
-		testView = new NWC.view.DataDiscoveryView();		
+		testView = new NWC.view.DataDiscoveryView();
 		expect(NWC.templates.getTemplate).toHaveBeenCalled();
 	});
 
@@ -56,7 +57,7 @@ describe('Tests for DataDiscoveryView', function() {
 	    	e.error({});
 	    });
 		spyOn(window, 'alert');
-		testView = new NWC.view.DataDiscoveryView();		
+		testView = new NWC.view.DataDiscoveryView();
 		expect(alert).toHaveBeenCalled();
 	});
 
@@ -70,7 +71,7 @@ describe('Tests for DataDiscoveryView', function() {
 		testView = new NWC.view.DataDiscoveryView();
 		var event = {currentTarget : '#show-project-detail-button'}
 		testView.showProjectDetail(event);
-		expect($.ajax.mostRecentCall.args[0]["url"]).toEqual(CONFIG.endpoint.direct.sciencebase + 
+		expect($.ajax.mostRecentCall.args[0]["url"]).toEqual(CONFIG.endpoint.direct.sciencebase +
 				'/catalog/item/12345?format=json');
 	});
 
@@ -95,10 +96,9 @@ describe('Tests for DataDiscoveryView', function() {
 	    	e.error({});
 	    });
 		spyOn(window, 'alert');
-		testView = new NWC.view.DataDiscoveryView();		
+		testView = new NWC.view.DataDiscoveryView();
 		var event = {currentTarget : '#show-project-detail-button'}
 		testView.showProjectDetail(event);
 		expect(alert).toHaveBeenCalled();
 	});
-	
 });

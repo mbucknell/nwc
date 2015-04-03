@@ -7,22 +7,17 @@ NWC.view = NWC.view || {};
  * @constructor extends NWC.view.WaterBudgetHucDataView
  */
 
+//TODO: Consider extending the standard BaseView and instead create the view in
+// WaterBudgetHucDataView when needed.
 NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
-
-	templateName : 'waterbudgetHucData',
 
 	NORMALIZED_WATER : "normalizedWater",
 	TOTAL_WATER : "totalWater",
 
 	events: {
-		'click .back-button' : 'waterbudgetHucData',
-		'click .metric-button' : 'toggleMetricLegend',
-		'click .customary-button' : 'toggleCustomaryLegend',
-		'click .total-county-button' : 'toggleTotalCountyWaterUse',
-		'click .normalized-county-button' : 'toggleNormalizedCountyWaterUse',
-		'click .wateruse-download-button' : 'downloadWaterUse',
-		'click .monthly-button' : 'toggleMonthlyLegend',
-		'click .daily-button' : 'toggleDailyLegend'
+		'click #county-units-btn-group button' : 'changeCountyUnits',
+		'click #water-use-type-btn-group button' : 'changePlotType',
+		'click .wateruse-download-button' : 'downloadWaterUse'
 	},
 
 	context : {
@@ -38,13 +33,16 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 
 		// call superclass initialize to do default initialize
 		// (includes render)
+		$.extend(this.events, NWC.view.WaterBudgetHucDataView.prototype.events);
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
-		$('#wateruse').show();
+		this.setUpHucPlotModel();
+
+		$('#wateruse').html(NWC.templates.getTemplate('waterbudgetCountyData')());
+		this.setUpCountyPlotModel();
 		$('#counties-button').hide();
-		$('#normalized-warning').hide();
 
 		var hucMapPromise = this.buildHucMap(this.hucId);
-		var countyMapPromise = this.buildCountyMap(this.fips)
+		var countyMapPromise = this.buildCountyMap(this.fips);
 
 		this.hucMap.render(this.insetHucMapDiv);
 		this.countyMap.render(this.insetCountyMapDiv);
@@ -65,7 +63,7 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 			var dupHucFeature = new OpenLayers.Feature.Vector(
 					this.hucLayer.features[0].geometry.clone(),
 					this.hucLayer.features[0].attributes);
-			
+
 			countyHucLayer.addFeatures(dupHucFeature);
 			this.countyMap.addLayer(countyHucLayer);
 
@@ -75,14 +73,31 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 				this.countyLayer.features[0]);
 
 			$('#percent-of-huc').html('Percentage of HUC in ' + this.countyName + ' County ' +
-					intersectorInfo.hucInCounty + '%');
+					NWC.util.numberFormat.roundToInteger(intersectorInfo.hucInCounty) + '%');
 			$('#percent-of-county').html('Percentage of ' + this.countyName + ' County in HUC ' +
-					intersectorInfo.countyInHuc + '%');
-			$('#county-loading-indicator').hide();			
+					NWC.util.numberFormat.roundToInteger(intersectorInfo.countyInHuc) + '%');
+			$('#county-loading-indicator').hide();
 		}.bind(this));
-		
+
 		this.getHucData(this.hucId);
 		this.getCountyData(this.fips);
+	},
+
+	setUpCountyPlotModel : function() {
+		// add listeners to model
+		this.countyPlotModel = new NWC.model.WaterBudgetCountyPlotModel();
+		this.listenTo(this.countyPlotModel, 'change:units', this.updateCountyUnits);
+		this.listenTo(this.countyPlotModel, 'change:plotType', this.updatePlotType);
+
+		var newType = this.countyPlotModel.get('plotType');
+		this.setButtonActive($('#total-county-button'), newType === 'totalWater');
+		this.setButtonActive($('#normalized-county-button'), newType === 'normalizedWater');
+
+		var newUnits = this.countyPlotModel.get('units');
+		this.setButtonActive($('#county-customary-button'), newUnits === 'usCustomary');
+		this.setButtonActive($('#county-metric-button'), newUnits === 'metric');
+
+		this.setVisibility($('#normalized-warning'), newType === 'normalizedWater');
 	},
 
 	buildCountyMap : function(fips) {
@@ -119,13 +134,13 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 	 * @param {String} fips identifier for the county
 	 */
 	getCountyData: function(fips) {
-        
+
         var url = NWC.util.buildSosUrlFromSource(fips, NWC.util.SosSources.countyWaterUse);
 		var getData = $.ajax({
 			url : url,
 			success : function(data, textStatus, jqXHR) {
 				var parsedTable = NWC.util.SosResponseParser.parseSosResponse(data);
-  
+
 				var waterUseDataSeries = NWC.util.DataSeries.newSeries();
 				waterUseDataSeries.data = parsedTable;
 
@@ -137,7 +152,7 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
                     	seriesUnits: NWC.util.SosSources.countyWaterUse.units
                     });
                 });
-                
+
                 waterUseDataSeries.metadata.downloadHeader = NWC.util.SosSources.countyWaterUse.downloadMetadata;
                 this.waterUseDataSeries = waterUseDataSeries;
 			}.bind(this),
@@ -150,9 +165,9 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
                 alert(errorMessage);
  			}
 		});
-        
+
 		var dataHandler = function() {
-			this.chartWaterUse(this.DAILY, this.CUSTOMARY, this.TOTAL_WATER);
+			this.chartWaterUse(this.countyPlotModel.get('units'), this.countyPlotModel.get('plotType'));
 		}.bind(this);
 		$.when(getData).then(dataHandler);
 		return;
@@ -163,7 +178,8 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
      * {String} measurement, the quantity scale of data to chart (usCustomary or metric)
      * {String} type, the type of water use to chart (totalWater or normalizedWater)
      */
-	chartWaterUse : function(time, measurement, type) {
+	chartWaterUse : function(measurement, type) {
+		var time = 'daily';
         var chartDivSelector = '#waterUsageChart';
         var chartLegendDivSelector = '#waterUsageLegend';
         var plotNormalization = type;
@@ -177,185 +193,46 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
         // get modified Series labels and throw away "Date"
         var labels = this.waterUseDataSeries.getSeriesLabelsAs(
             measurementSystem, plotNormalization, plotTimeDensity).from(1);
-        var ylabel = NWC.util.Units[measurementSystem][plotNormalization].daily; //is this correct?
+        var ylabel = NWC.util.Units[measurementSystem][plotNormalization][time]
         NWC.util.WaterUsageChart.setChart(chartDivSelector, chartLegendDivSelector, values, labels, ylabel,
             NWC.util.Units[measurementSystem][plotNormalization].precision);
         return;
-	},	
-	
-	//TODO refactor the toggle functions (WATERSMART-510)
-	
-	toggleMetricLegend : function() {
-		//metric scale selected
-		if ($('.daily-button').prop('disabled')) {
-			//daily was selected
-			if ($('.total-county-button').prop('disabled')) {
-				//total was selected
-				this.chartWaterUse(this.DAILY, this.METRIC, this.TOTAL_WATER);
-			}
-			else {
-				//normalized was selected
-				this.chartWaterUse(this.DAILY, this.METRIC, this.NORMALIZED_WATER);
-			}			
-		}
-		else {
-			//monthly was selected
-			if ($('.total-county-button').prop('disabled')) {
-				//total was selected
-				this.chartWaterUse(this.MONTHLY, this.METRIC, this.TOTAL_WATER);
-			}
-			else {
-				//normalized was selected
-				this.chartWaterUse(this.MONTHLY, this.METRIC, this.NORMALIZED_WATER);
-			}						
-		}		
-		NWC.view.WaterBudgetHucDataView.prototype.toggleMetricLegend.apply(this, arguments);
 	},
 
-	toggleCustomaryLegend : function() {
-		//customary scale selected
-		if ($('.daily-button').prop('disabled')) {
-			//daily was selected
-			if ($('.total-county-button').prop('disabled')) {
-				//total was selected
-				this.chartWaterUse(this.DAILY, this.CUSTOMARY, this.TOTAL_WATER);
-			}
-			else {
-				//normalized was selected
-				this.chartWaterUse(this.DAILY, this.CUSTOMARY, this.NORMALIZED_WATER);
-			}			
-		}
-		else {
-			//monthly was selected
-			if ($('.total-county-button').prop('disabled')) {
-				//total was selected
-				this.chartWaterUse(this.MONTHLY, this.CUSTOMARY, this.TOTAL_WATER);
-			}
-			else {
-				//normalized was selected
-				this.chartWaterUse(this.MONTHLY, this.CUSTOMARY, this.NORMALIZED_WATER);
-			}						
-		}		
-		NWC.view.WaterBudgetHucDataView.prototype.toggleCustomaryLegend.apply(this, arguments);
+	changeCountyUnits : function(ev) {
+		ev.preventDefault();
+		var newUnits = ev.target.value;
+		this.countyPlotModel.set('units', newUnits);
 	},
 
-	toggleTotalCountyWaterUse : function() {
-		$('#normalized-warning').hide();
-		$('.total-county-button').prop('disabled', true);
-		$('.normalized-county-button').prop('disabled', false);
+	updateCountyUnits : function() {
+		var newUnits = this.countyPlotModel.get('units');
+		this.setButtonActive($('#county-customary-button'), newUnits === 'usCustomary');
+		this.setButtonActive($('#county-metric-button'), newUnits === 'metric');
 
-		//total county selected
-		if ($('.metric-button').prop('disabled')) {
-			//metric was selected
-			if ($('.daily-button').prop('disabled')) {
-				//daily was selected
-				this.chartWaterUse(this.DAILY, this.METRIC, this.TOTAL_WATER);
-			}
-			else {
-				//monthly was selected
-				this.chartWaterUse(this.MONTHLY, this.METRIC, this.TOTAL_WATER);
-			}			
-		}
-		else {
-			//customary was selected
-			if ($('.daily-button').prop('disabled')) {
-				//daily was selected
-				this.chartWaterUse(this.DAILY, this.CUSTOMARY, this.TOTAL_WATER);
-			}
-			else {
-				//monthly was selected
-				this.chartWaterUse(this.MONTHLY, this.CUSTOMARY, this.TOTAL_WATER);
-			}						
-		}		
-		return;
+		this.chartWaterUse(newUnits, this.countyPlotModel.get('plotType'));
+
 	},
 
-	toggleNormalizedCountyWaterUse : function() {
-		$('#normalized-warning').show();
-		$('.total-county-button').prop('disabled', false);
-		$('.normalized-county-button').prop('disabled', true);
-
-		//normalized selected
-		if ($('.metric-button').prop('disabled')) {
-			//metric was selected
-			if ($('.daily-button').prop('disabled')) {
-				//daily was selected
-				this.chartWaterUse(this.DAILY, this.METRIC, this.NORMALIZED_WATER);
-			}
-			else {
-				//monthly was selected
-				this.chartWaterUse(this.MONTHLY, this.METRIC, this.NORMALIZED_WATER);
-			}			
-		}
-		else {
-			//customary was selected
-			if ($('.daily-button').prop('disabled')) {
-				//daily was selected
-				this.chartWaterUse(this.DAILY, this.CUSTOMARY, this.NORMALIZED_WATER);
-			}
-			else {
-				//monthly was selected
-				this.chartWaterUse(this.MONTHLY, this.CUSTOMARY, this.NORMALIZED_WATER);
-			}						
-		}		
+	changePlotType : function(ev) {
+		ev.preventDefault();
+		var newType = ev.target.value;
+		this.countyPlotModel.set('plotType', newType);
 	},
 
-	toggleMonthlyLegend : function() {
-		//monthly selected
-		if ($('.metric-button').prop('disabled')) {
-			//metric was selected
-			if ($('.total-county-button').prop('disabled')) {
-				//total was selected
-				this.chartWaterUse(this.MONTHLY, this.METRIC, this.TOTAL_WATER);
-			}
-			else {
-				//normalized was selected
-				this.chartWaterUse(this.MONTHLY, this.METRIC, this.NORMALIZED_WATER);
-			}			
-		}
-		else {
-			//customary was selected
-			if ($('.total-county-button').prop('disabled')) {
-				//total was selected
-				this.chartWaterUse(this.MONTHLY, this.CUSTOMARY, this.TOTAL_WATER);
-			}
-			else {
-				//normalized was selected
-				this.chartWaterUse(this.MONTHLY, this.CUSTOMARY, this.NORMALIZED_WATER);
-			}						
-		}		
-		NWC.view.WaterBudgetHucDataView.prototype.toggleMonthlyLegend.apply(this, arguments);
-	},
+	updatePlotType : function() {
+		var newType = this.countyPlotModel.get('plotType');
+		this.setButtonActive($('#total-county-button'), newType === 'totalWater');
+		this.setButtonActive($('#normalized-county-button'), newType === 'normalizedWater');
 
-	toggleDailyLegend : function() {
-		//daily selected
-		if ($('.metric-button').prop('disabled')) {
-			//metric was selected
-			if ($('.total-county-button').prop('disabled')) {
-				//total was selected
-				this.chartWaterUse(this.DAILY, this.METRIC, this.TOTAL_WATER);
-			}
-			else {
-				//normalized was selected
-				this.chartWaterUse(this.DAILY, this.METRIC, this.NORMALIZED_WATER);
-			}			
-		}
-		else {
-			//customary was selected
-			if ($('.total-county-button').prop('disabled')) {
-				//total was selected
-				this.chartWaterUse(this.DAILY, this.CUSTOMARY, this.TOTAL_WATER);
-			}
-			else {
-				//normalized was selected
-				this.chartWaterUse(this.DAILY, this.CUSTOMARY, this.NORMALIZED_WATER);
-			}						
-		}		
-		NWC.view.WaterBudgetHucDataView.prototype.toggleDailyLegend.apply(this, arguments);
+		this.setVisibility($('#normalized-warning'), newType === 'normalizedWater');
+
+
+		this.chartWaterUse(this.countyPlotModel.get('units'), newType);
 	},
 
 	downloadWaterUse : function() {
-		var blob = new Blob([this.getCombinedWaterUse(this.waterUseDataSeries).toCSV()], {type:'text/csv'}); 
+		var blob = new Blob([this.getCombinedWaterUse(this.waterUseDataSeries).toCSV()], {type:'text/csv'});
 		saveAs(blob, this.getCountyFilename('water use'));
 	},
 
@@ -364,12 +241,12 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
         result.data = NWC.util.WaterUsageChart.combineData(result.data);
         return result;
     },
-	
+
 	getCountyFilename : function (series) {
 		var filename = series + '_data.csv';
         if (this.countyName && this.fips) {
         	filename = this.buildName(this.countyName, this.fips, series);
         }
 		return filename;
-	},
+	}
 });

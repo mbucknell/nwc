@@ -20,11 +20,14 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-xs-12 map_container">
+			<div class="col-xs-12 spacer_down">
 				<h4 id="loading-indicator">Loading data <i class="fa fa-spinner fa-spin"></i></h4>
 				<h4>Select Streamflow Statistics Parameters</h4>
 				<p>
 					Select a subset of the time series for which you would like to calculate various statistics.
+				</p>
+				<p>
+					Note that streamflow estimate applies to the watershed selected and all watersheds upstream of it.
 				</p>
 				<h5>Hydrologic Unit Code</h6>
 				<div id="huc-id">{{ hucId }}</div>
@@ -32,7 +35,9 @@
 				<div id="huc-name"></div>
 				<h5>Drainage Area (km<sup>2</sup>)</h6>
 				<div id="huc-drainage-area"></div>
-				<div id="huc-inset" style="height:200px;width:200px;border-style:solid;border-width:1px;"></div>
+			</div>
+			<div class="col-xs-12 map_container">
+				<div id="huc-inset" class="inset-map"></div>
 			</div>
 		</div>
 		<div class="row col-xs-12 text-center spacer spacer_down">
