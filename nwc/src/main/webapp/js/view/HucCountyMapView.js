@@ -45,6 +45,11 @@ NWC.view.HucCountyMapView = NWC.view.BaseView.extend({
 				// Create table showing percent area coverages
 				var countyFeatures = this.countiesLayer.features;
 				var countiesHucInfo = NWC.util.hucCountiesIntersector.getCountiesIntersectionInfo(options.hucFeature, countyFeatures);
+				countiesHucInfo.map(function(d) {
+					d.hucInCounty = NWC.util.numberFormat.roundToInteger(d.hucInCounty);
+					d.countyInHuc = NWC.util.numberFormat.roundToInteger(d.countyInHuc);
+					return d;
+				});
 				$('#county-table-div').html(NWC.templates.getTemplate('countyHucTable')({countiesHucInfo : countiesHucInfo}));
 
 				// Zoom the map to the extent of the county

@@ -100,6 +100,7 @@
 		<script type="text/javascript" src="js/utils/streamStats.js"></script>
 		<script type="text/javascript" src="js/utils/RdbParser.js"></script>
 		<script type="text/javascript" src="js/utils/hucCountiesIntersector.js"></script>
+		<script type="text/javascript" src="js/utils/numberFormat.js"></script>
 
 		<script type="text/javascript" src="js/model/BaseSelectMapModel.js"></script>
 		

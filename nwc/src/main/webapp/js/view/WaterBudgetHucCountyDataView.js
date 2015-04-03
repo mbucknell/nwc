@@ -42,7 +42,7 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 		$('#counties-button').hide();
 
 		var hucMapPromise = this.buildHucMap(this.hucId);
-		var countyMapPromise = this.buildCountyMap(this.fips)
+		var countyMapPromise = this.buildCountyMap(this.fips);
 
 		this.hucMap.render(this.insetHucMapDiv);
 		this.countyMap.render(this.insetCountyMapDiv);
@@ -73,9 +73,9 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 				this.countyLayer.features[0]);
 
 			$('#percent-of-huc').html('Percentage of HUC in ' + this.countyName + ' County ' +
-					intersectorInfo.hucInCounty + '%');
+					NWC.util.numberFormat.roundToInteger(intersectorInfo.hucInCounty) + '%');
 			$('#percent-of-county').html('Percentage of ' + this.countyName + ' County in HUC ' +
-					intersectorInfo.countyInHuc + '%');
+					NWC.util.numberFormat.roundToInteger(intersectorInfo.countyInHuc) + '%');
 			$('#county-loading-indicator').hide();
 		}.bind(this));
 

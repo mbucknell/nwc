@@ -2,7 +2,7 @@ describe('Tests for WaterBudgetHucCountyDataView', function() {
 	var $testDiv;
 	var $customaryButton, $metricButton, $totalButton, $normalizedButton
 	var testView;
-	var templateSpy;
+	var getTemplateSpy, templateSpy;
 	var server;
 
 	beforeEach(function() {
@@ -73,6 +73,11 @@ describe('Tests for WaterBudgetHucCountyDataView', function() {
 
 	it('Expects the view\'s constructor to call BaseView initialize', function() {
 		expect(NWC.view.BaseView.prototype.initialize).toHaveBeenCalled();
+	});
+
+	it('Expects the waterbudgetCountyData template to be rendered', function() {
+		expect(getTemplateSpy).toHaveBeenCalledWith('waterbudgetCountyData');
+		expect(templateSpy).toHaveBeenCalled();
 	});
 
 	it('Expect that event handler calls exist and behave as expected', function() {
