@@ -4,7 +4,7 @@ NWC.util = NWC.util || {};
 
 NWC.util.WaterUsageChart = (function () {
 	var that = {};
-	
+
     var numberOfDatesPerRow = 1; //TODO[Sibley] Copy paste from SosResponseParser, figure out a better place for this
 
     that.splitRow = function(row) {
@@ -30,7 +30,7 @@ NWC.util.WaterUsageChart = (function () {
     	}, {});
 
     	row.forEach(function(el, index) {
-    		segregatedValueHolder[lookup[inLabels[index]]].push(el); 
+    		segregatedValueHolder[lookup[inLabels[index]]].push(el);
     	});
 
     	result = outLabels.map(function(outLabel) {
@@ -42,14 +42,14 @@ NWC.util.WaterUsageChart = (function () {
     				} else {
     					result = nextValue;
     				}
-    			}        
+    			}
     			return result;
     		}, null);
     	});
 
     	return result;
     };
-            
+
     that.combineData = function(rows) {
     	var result = [];
 
@@ -182,7 +182,7 @@ NWC.util.WaterUsageChart = (function () {
     					var finalDatumYear = parseInt(initialDatumYear) + numYearsPerDatum;
     					var dateDisplay = initialDatumYear + yearTooltipSeparator + finalDatumYear;
     					var waterUsageUnitName = (function grabUnitsFromLabel(label) {
-    						var result = null;
+    						var result = '';
     						var regex = /\((.*)\)/;
     						if (regex.test(label)) {
     							result = regex.exec(label)[1];

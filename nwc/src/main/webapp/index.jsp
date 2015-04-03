@@ -7,13 +7,14 @@
 		<script type="text/javascript">
 			(function(){
 				window.CONFIG = {};
+				CONFIG.contextPath = "${pageContext.request.contextPath}";
 				CONFIG.endpoint = {};
 				CONFIG.endpoint.direct = {};
 
 				//point to local proxies
-				CONFIG.endpoint.geoserver = 'proxygeoserver/';
-				CONFIG.endpoint.thredds = 'proxythredds/';
-				CONFIG.endpoint.wpsBase = 'proxywps/';
+				CONFIG.endpoint.geoserver = CONFIG.contextPath + '/proxygeoserver/';
+				CONFIG.endpoint.thredds = CONFIG.contextPath + '/proxythredds/';
+				CONFIG.endpoint.wpsBase = CONFIG.contextPath + '/proxywps/';
 				CONFIG.endpoint.wps = CONFIG.endpoint.wpsBase + 'WebProcessingService'; //TODO inconsistant use of of URL resources
 				CONFIG.endpoint.nwis = '${directNwisEndpoint}';
 				
@@ -99,6 +100,7 @@
 		<script type="text/javascript" src="js/utils/streamStats.js"></script>
 		<script type="text/javascript" src="js/utils/RdbParser.js"></script>
 		<script type="text/javascript" src="js/utils/hucCountiesIntersector.js"></script>
+		<script type="text/javascript" src="js/utils/numberFormat.js"></script>
 
 		<script type="text/javascript" src="js/model/BaseSelectMapModel.js"></script>
 		
@@ -106,6 +108,8 @@
 		<script type="text/javascript" src="js/model/StreamflowStatsSelectMapModel.js"></script>
 		<script type="text/javascript" src="js/model/AquaticBiologySelectMapModel.js"></script>
 		<script type="text/javascript" src="js/model/AquaticBiologyFeaturesModel.js"></script>
+		<script type="text/javascript" src="js/model/WaterBudgetHucPlotModel.js"></script>
+		<script type="text/javascript" src="js/model/WaterBudgetCountyPlotModel.js"></script>
 		
 		<script type="text/javascript" src="js/view/BaseView.js"></script>
 		<script type="text/javascript" src="js/view/BaseSelectMapView.js"></script>

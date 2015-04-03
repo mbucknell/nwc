@@ -103,7 +103,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 				var km2 = NWC.util.Convert.acresToSquareKilometers(
 							NWC.util.Convert.squareMilesToAcres(sortedFeature.data.mi2));
 				if (km2 > 2000) {
-					this.showWarningDialog("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km^2), please choose a smaller watershed.");
+					this.showWarningDialog("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km<sup>2</sup>). Try looking for a nearby observed flow gage.");
 				} else {
 					this.router.navigate('/streamflow-stats/huc/' + sortedFeature.attributes.huc12, {trigger : true});
 				}
@@ -176,29 +176,22 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 
 		setControlActive(this.legendControl, gageVisible);
 
-		this._setButtonActive($('#observed-button'), gageVisible);
-		this._setButtonActive($('#modeled-button'), hucVisible);
+		this.setButtonActive($('#observed-button'), gageVisible);
+		this.setButtonActive($('#modeled-button'), hucVisible);
 
+		this.setVisibility($modeledInfo, hucVisible);
 		if (hucVisible) {
-			$modeledInfo.show();
 			setControlActive(this.hucsControl, this.selectControl.active);
 			this.gageControl.deactivate();
 			this.selectControl = this.hucsControl;
 		}
-		else {
-			$modeledInfo.hide();
-		}
 
+		this.setVisibility($observedInfo, gageVisible);
+		this.setVisibility($gageFilteringDiv, gageVisible);
 		if (gageVisible) {
-			$observedInfo.show();
-			$gageFilteringDiv.show();
 			setControlActive(this.gageControl, this.selectControl.active);
 			this.hucsControl.deactivate();
 			this.selectControl = this.gageControl;
-		}
-		else {
-			$observedInfo.hide();
-			$gageFilteringDiv.hide();
 		}
 
 		// Because this shifts the map's location on the page, call updateSize

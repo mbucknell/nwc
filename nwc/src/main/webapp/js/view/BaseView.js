@@ -60,13 +60,31 @@ NWC.view.BaseView = Backbone.View.extend({
 	goToWaterbudget: function() {
 		this.router.navigate('waterbudget', {trigger: true});
 	},
-	
+
 	showWarningDialog : function(msg) {
 		var $warningModal = $('#warning-modal');
 		if (msg) {
 			$warningModal.find('.modal-body').html(msg);
 		}
 		$warningModal.modal('show');
+	},
+
+	setButtonActive : function(el, on) {
+		if (on) {
+			el.addClass('active');
+		}
+		else {
+			el.removeClass('active');
+		}
+	},
+
+	setVisibility : function(el, on) {
+		if (on) {
+			el.show();
+		}
+		else {
+			el.hide();
+		}
 	}
 
 });

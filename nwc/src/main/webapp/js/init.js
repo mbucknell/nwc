@@ -6,6 +6,7 @@ $(document).ready(function() {
 		'home',
 		'waterbudget',
 		'waterbudgetHucData',
+		'waterbudgetCountyData',
 		'streamflowStats',
 		'streamflowGageStats',
 		'streamflowHucStats',

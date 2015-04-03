@@ -54,5 +54,43 @@ describe('Tests for NWC.BaseView', function() {
 		expect($warningModal.modal).toHaveBeenCalledWith('show');
 	});
 
+	it('Expects setButtonActive to add or remove the active class', function() {
+		$('body').append('<button id="test-button"></button>');
+		var NewView = NWC.view.BaseView.extend({
+			context : {a : 'this'}
+		});
+		var view = new NewView({
+			template : templateSpy
+		});
+
+		var $button = $('#test-button');
+
+		view.setButtonActive($button, true);
+		expect($button.hasClass('active')).toBe(true);
+
+		view.setButtonActive($button, false);
+		expect($button.hasClass('active')).toBe(false);
+
+		$button.remove();
+	});
+
+	it('Expects setVisibility to set the visiblity of the element', function() {
+
+		var NewView = NWC.view.BaseView.extend({
+			context : {a : 'this'}
+		});
+		var view = new NewView({
+			template : templateSpy
+		});
+
+		var $testDiv = $('#test-div');
+
+		expect($testDiv.is(':visible')).toBe(true);
+		view.setVisibility($testDiv, false);
+		expect($testDiv.is(':visible')).toBe(false);
+		view.setVisibility($testDiv, true);
+		expect($testDiv.is(':visible')).toBe(true);
+	});
+
 
 });
