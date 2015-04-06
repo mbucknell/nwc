@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<%@include file="/WEB-INF/USGSHead.jsp" %>
+		<%@include file="/jsp/USGSHead.jsp" %>
 		
 		<script type="text/javascript">
 			(function(){
@@ -41,12 +41,12 @@
 		<div class="container site_body_content">
 			<div class="row">
 				<div id="site_header" class="col-xs-12">
-					<%@include file="/WEB-INF/USGSHeader.jsp" %>
+					<%@include file="/jsp/USGSHeader.jsp" %>
 				</div>
 			</div>
 			<div class="row">
 				<div id="site_nav" class="col-xs-12">
-					<%@include file="/WEB-INF/nav.jsp" %>
+					<%@include file="/jsp/nav.jsp" %>
 				</div>
 			</div>
 			<div class="row site_body_content">
@@ -55,7 +55,7 @@
 			</div>
 		</div>
 		<div id="site_footer">
-			<%@include file="/WEB-INF/USGSFooter.jsp" %>
+			<%@include file="/jsp/USGSFooter.jsp" %>
 		</div>
 		<!-- vendor libraries -->
 		<script type="text/javascript" src="webjars/select2/${select2Version}/select2${jsMin}.js"></script>
