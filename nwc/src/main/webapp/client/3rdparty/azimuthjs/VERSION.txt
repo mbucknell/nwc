@@ -1,4 +1,0 @@
-commit:
-77aa79b75318b7a5fa5fe26b26d9fb74c33b47dd
-repo:
-git@github.com:mpriour/azimuthjs.git
