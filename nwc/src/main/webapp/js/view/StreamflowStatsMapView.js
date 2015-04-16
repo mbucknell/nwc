@@ -152,7 +152,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 
 
 	updateSelectionLayer : function() {
-		var $modeledInfo = $('#modeled-streamflow-warning-div');
+		var $modeledInfo = $('#modeled-streamflow-info-div');
 		var $observedInfo = $('#observed-streamflow-info-div');
 		var $gageFilteringDiv = $('#stream-gage-filters-div');
 
