@@ -146,7 +146,7 @@ NWC.util.WaterUsageChart = (function () {
     				tickFormatter: function(val, axis) {
     					return Date.create(val).utc().format(dateFormat);
     				},
-    				tickSize: [5, "year"],
+    				tickSize: [2, "year"],
     				tickLength: 10,
     				color: "black",
     				axisLabel: "Date",
