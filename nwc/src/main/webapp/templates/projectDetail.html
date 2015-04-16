@@ -14,10 +14,8 @@
 				{{/each}}
 			<h6>Contacts</h6>			
 				{{#each projectDetail.contacts}}
-					{{#if @last }}
-						{{type}}: {{name}}
-					{{else}}
-						{{type}}: {{name}},
+					{{#if @first }}
+						{{type}}: {{name}} {{email}}
 					{{/if}}
 				{{/each}}
 			
