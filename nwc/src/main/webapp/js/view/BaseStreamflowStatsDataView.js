@@ -46,6 +46,8 @@ NWC.view.BaseStreamflowStatsDataView = NWC.view.BaseView.extend({
 
 		ev.preventDefault();
 
+		$('#calculate-stats-button').hide();
+
 		$statsResultsDiv.hide();
 		$loadingIndicator.show();
 		$('#available-statistics input:checked').each(function() {
