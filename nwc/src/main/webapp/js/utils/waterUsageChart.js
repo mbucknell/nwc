@@ -140,68 +140,68 @@ NWC.util.WaterUsageChart = (function () {
     		var yearInMilliseconds = 1000 * 60 * 60 * 24 * 365; // 31536000000
     		privateChart = $.plot(chartEltSelector, data, {
     			series: {
-    				stack: stack,
-    				bars: {
+					stack: stack,
+					bars: {
 						show: bars,
 						barWidth: yearInMilliseconds,
 						fill: 0.5 // This adjusts the opaqueness
 					}
-    			},
-    			xaxis: {
-    				mode: "time",
-    				tickFormatter: function(val, axis) {
-    					return Date.create(val).utc().format(dateFormat);
-    				},
-    				tickSize: [2, "year"],
-    				tickLength: 10,
-    				color: "black",
-    				axisLabel: "Date",
-    				axisLabelPadding: 10,
-    				font: {
-    					size: 12,
-    					family: "sans-serif",
-    					color: "#000000"
-    				}
-    			},
-    			yaxis: {
-    				color: "black",
-    				axisLabel: ylabel,
-    				axisLabelPadding: 3,
-    				font: {
-    					size: 12,
-    					family: "sans-serif",
-    					color: "#000000"
-    				}
-    			},
-    			grid: {
-    				hoverable: true,
-    				borderWidth: 2
-    			},
-    			tooltip: true,
-    			tooltipOpts: {
-    				content: function(label, xval, yval, flotItem) {
-    					var offsetIndex = flotItem.datapoint.length - 1;
-    					var offset = flotItem.datapoint[offsetIndex];
-    					var realValue = yval - offset;
-    					var roundedValue = realValue.round(precision);
-    					var initialDatumYear = Date.create(xval).utc().format(dateFormat);
-    					var finalDatumYear = parseInt(initialDatumYear) + numYearsPerDatum;
-    					var dateDisplay = initialDatumYear + yearTooltipSeparator + finalDatumYear;
-    					var waterUsageUnitName = (function grabUnitsFromLabel(label) {
-    						var result = '';
-    						var regex = /\((.*)\)/;
-    						if (regex.test(label)) {
-    							result = regex.exec(label)[1];
-    						}
-    						return result;
-    					})(label);
-    					var tooltipText = 'Date: ' + dateDisplay + "<br/>" + label + ": " + roundedValue + " " + waterUsageUnitName;
-    					return tooltipText;
-    				}
-    			},
-    			legend: {
-    				container: chartLegendDivSelector
-    			}
+				},
+				xaxis: {
+					mode: "time",
+					tickFormatter: function (val, axis) {
+						return Date.create(val).utc().format(dateFormat);
+					},
+					tickSize: [2, "year"],
+					tickLength: 10,
+					color: "black",
+					axisLabel: "Date",
+					axisLabelPadding: 10,
+					font: {
+						size: 12,
+						family: "sans-serif",
+						color: "#000000"
+					}
+				},
+				yaxis: {
+					color: "black",
+					axisLabel: ylabel,
+					axisLabelPadding: 3,
+					font: {
+						size: 12,
+						family: "sans-serif",
+						color: "#000000"
+					}
+				},
+				grid: {
+					hoverable: true,
+					borderWidth: 2
+				},
+				tooltip: true,
+				tooltipOpts: {
+					content: function (label, xval, yval, flotItem) {
+						var offsetIndex = flotItem.datapoint.length - 1;
+						var offset = flotItem.datapoint[offsetIndex];
+						var realValue = yval - offset;
+						var roundedValue = realValue.round(precision);
+						var initialDatumYear = Date.create(xval).utc().format(dateFormat);
+						var finalDatumYear = parseInt(initialDatumYear) + numYearsPerDatum;
+						var dateDisplay = initialDatumYear + yearTooltipSeparator + finalDatumYear;
+						var waterUsageUnitName = (function grabUnitsFromLabel(label) {
+							var result = '';
+							var regex = /\((.*)\)/;
+							if (regex.test(label)) {
+								result = regex.exec(label)[1];
+							}
+							return result;
+						})(label);
+						var tooltipText = 'Date: ' + dateDisplay + "<br/>" + label + ": " + roundedValue + " " + waterUsageUnitName;
+						return tooltipText;
+					}
+				},
+				legend: {
+					container: chartLegendDivSelector
+				}
     		});
     	})();
     };
