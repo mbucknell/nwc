@@ -103,8 +103,13 @@ NWC.util.WaterUsageChart = (function () {
     		throw new Exception(errMsg);
     	}
 
+		var props = NWC.util.CountyWaterUseProperties.observedPropertiesLookup();
+
     	labels.each(function(label, labelIndex) {
-    		var column = {label: label};
+    		var column = {
+				label: label,
+				color : props[label].color
+			};
     		//date column offsets index calculation by one
     		var valueIndex = labelIndex + 1;
     		column.data = combinedData.map(function(row) {
@@ -138,7 +143,8 @@ NWC.util.WaterUsageChart = (function () {
     				stack: stack,
     				bars: {
     					show: bars,
-    					barWidth: yearInMilliseconds
+    					barWidth: yearInMilliseconds,
+						fill : 0.5 // This adjusts the opaqueness
     				}
     			},
     			xaxis: {
