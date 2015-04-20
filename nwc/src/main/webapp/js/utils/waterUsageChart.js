@@ -142,10 +142,10 @@ NWC.util.WaterUsageChart = (function () {
     			series: {
     				stack: stack,
     				bars: {
-    					show: bars,
-    					barWidth: yearInMilliseconds,
-						fill : 0.5 // This adjusts the opaqueness
-    				}
+						show: bars,
+						barWidth: yearInMilliseconds,
+						fill: 0.5 // This adjusts the opaqueness
+					}
     			},
     			xaxis: {
     				mode: "time",
