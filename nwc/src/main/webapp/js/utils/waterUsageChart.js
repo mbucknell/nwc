@@ -152,11 +152,12 @@ NWC.util.WaterUsageChart = (function () {
 					tickFormatter: function (val, axis) {
 						return Date.create(val).utc().format(dateFormat);
 					},
-					tickSize: [2, "year"],
+					tickSize: [5, "year"],
 					tickLength: 10,
 					color: "black",
 					axisLabel: "Date",
 					axisLabelPadding: 10,
+                                        min: 473212800000, // This is the number of milliseconds since 1884-12-30 00:00:00
 					font: {
 						size: 12,
 						family: "sans-serif",
