@@ -30,14 +30,29 @@ NWC.view.BiodataGageMapView = NWC.view.BaseView.extend({
 			visibility : true,
 			opacity: 0.6
 		});
-		this.biodataFeatureLayer.addFeatures(options.biodataFeature);		
+		var biodataStyle = {
+				graphicName: 'square',
+				fillColor: '#FF0000',
+				strokeOpacity: 0,
+				fillOpacity: 0.6,
+				pointRadius: 3
+			};
+		var mapFeatures = options.biodataFeature.map(function(f){
+		    return new OpenLayers.Feature.Vector(
+					f.geometry,
+					f.attributes,
+					biodataStyle);
+		});
+
+		this.biodataFeatureLayer.addFeatures(mapFeatures);	
 		var selectControl = new OpenLayers.Control.SelectFeature(this.biodataFeatureLayer, {
-		    hover:false,
+		    hover:true,
 		    selectStyle: {
 			graphicName: 'square',
 			fillColor: '#FF0000',
-			strokeOpacity: 0,
-			fillOpacity: 0.6,
+			stokeColor: '#000000',
+			strokeOpacity: 1,
+			fillOpacity: 0.8,
 			pointRadius: 5,
 			cursor: "pointer"
 		    }

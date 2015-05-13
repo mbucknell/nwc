@@ -111,25 +111,11 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                 this.router.navigate('/streamflow-stats/gage/' + gageID, {trigger : true});
             },
 	    
-	    displayMap : function() {
-		var biodataStyle = {
-				graphicName: 'square',
-				fillColor: '#FF0000',
-				strokeOpacity: 0,
-				fillOpacity: 0.6,
-				pointRadius: 3
-			};
-			
-		var mapFeatures = this.context.biodataSites.map(function(f){
-		    return new OpenLayers.Feature.Vector(
-					f.geometry,
-					f.attributes,
-					biodataStyle);
-		});
-		
+	    displayMap : function() {	
 		this.biodataGageMapView = new NWC.view.BiodataGageMapView({
 			mapDiv : 'biodata-gage-selection-map',
-			biodataFeature : mapFeatures,
+			//biodataFeature : mapFeatures,
+			biodataFeature : this.context.biodataSites,
 			router : this.router,
 			el : $('#biodata-gage-selection-div')
 		});
