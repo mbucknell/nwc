@@ -22,7 +22,6 @@ NWC.view.BiodataGageMapView = NWC.view.BaseView.extend({
 		var mapBaseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
 		this.map = NWC.util.mapUtils.createMap([mapBaseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
 		
-
 		// Create vector layer representing the biodata sites.
 		this.biodataFeatureLayer = new OpenLayers.Layer.Vector('Biodata Sites Layer', {
 			displayInLayerSwitcher : false,
@@ -35,7 +34,7 @@ NWC.view.BiodataGageMapView = NWC.view.BaseView.extend({
 				fillColor: '#FF0000',
 				strokeOpacity: 0,
 				fillOpacity: 0.6,
-				pointRadius: 3
+				pointRadius: 4
 			};
 		var mapFeatures = options.biodataFeature.map(function(f){
 		    return new OpenLayers.Feature.Vector(
@@ -45,8 +44,11 @@ NWC.view.BiodataGageMapView = NWC.view.BaseView.extend({
 		});
 
 		this.biodataFeatureLayer.addFeatures(mapFeatures);	
-		var selectControl = new OpenLayers.Control.SelectFeature(this.biodataFeatureLayer, {
-		    hover:true,
+		this.selectControl = new OpenLayers.Control.SelectFeature(this.biodataFeatureLayer, {
+		    multiple: true,
+		    toggle: true,
+		    onSelect: this.checkSite,
+		    onUnselect: this.unCheckSite,
 		    selectStyle: {
 			graphicName: 'square',
 			fillColor: '#FF0000',
@@ -55,12 +57,13 @@ NWC.view.BiodataGageMapView = NWC.view.BaseView.extend({
 			fillOpacity: 0.8,
 			pointRadius: 5,
 			cursor: "pointer"
-		    }
-		    });
+		   }
+		   });
 		this.map.addLayer(this.biodataFeatureLayer);
-		this.map.addControl(selectControl);
+		this.map.addControl(this.selectControl);
 		
-		selectControl.activate();
+		this.selectControl.activate();
+		
 		
 		// Create vector layer representing the gages.
 		/*
@@ -87,5 +90,27 @@ NWC.view.BiodataGageMapView = NWC.view.BaseView.extend({
 		this.map.render(this.mapDiv);
 		this.map.zoomToExtent(this.biodataFeatureLayer.getDataExtent());
 		return this;
+	},
+	
+	highlightSite : function(selected_item) {
+	    this.selectControl.select(selected_item[0]);
+	},
+	
+	checkSite : function(feature) {
+	    var selectedName = feature.attributes.SiteNumber;
+	    $('.sites-table td input[id="' + selectedName + '"]').prop('checked',true);
+	},
+	
+	unHighlightSite : function(selected_item) {
+	    this.selectControl.unselect(selected_item[0]);
+	},
+	
+	unCheckSite : function(feature) {
+	    var selectedName = feature.attributes.SiteNumber;
+	    $('.sites-table td input[id="' + selectedName + '"]').prop('checked',false);
+	},
+	
+	getSelectedSiteFeature : function(name) {
+	    return this.biodataFeatureLayer.getFeaturesByAttribute('SiteNumber', name);
 	}
 });

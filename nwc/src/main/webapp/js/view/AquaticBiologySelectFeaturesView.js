@@ -35,13 +35,17 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                     this.model.set({ 
                     'selected' : this.model.get('selected').concat(name)
                     });
+		    var selectedSite = this.biodataGageMapView.getSelectedSiteFeature(name);
+		    this.biodataGageMapView.highlightSite(selectedSite);
                 } else {
                     var selected = this.model.get('selected');
                     var index = selected.indexOf(name);
                         if (index > -1) {
                             selected.splice(index, 1);
                             this.model.set({ 'selected' : selected});        
-                        }
+                        };
+			var selectedSite = this.biodataGageMapView.getSelectedSiteFeature(name);
+			this.biodataGageMapView.unHighlightSite(selectedSite);
                     }
             } 
         },
