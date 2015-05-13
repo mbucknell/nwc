@@ -21,6 +21,7 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
             this.context.gages = this.model.get('gages');
             this.context.hucs = this.model.get('hucs');
             NWC.view.BaseView.prototype.initialize.apply(this, arguments);
+            this.displayMap();
         },
        
         checkboxChanged: function (evt) {
@@ -108,6 +109,30 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                 $cb = $(e.currentTarget);
                 gageID = $cb.attr('id');
                 this.router.navigate('/streamflow-stats/gage/' + gageID, {trigger : true});
-            } 
+            },
+	    
+	    displayMap : function() {
+		var biodataStyle = {
+				graphicName: 'square',
+				fillColor: '#FF0000',
+				strokeOpacity: 0,
+				fillOpacity: 0.6,
+				pointRadius: 3
+			};
+			
+		var mapFeatures = this.context.biodataSites.map(function(f){
+		    return new OpenLayers.Feature.Vector(
+					f.geometry,
+					f.attributes,
+					biodataStyle);
+		});
+		
+		this.biodataGageMapView = new NWC.view.BiodataGageMapView({
+			mapDiv : 'biodata-gage-selection-map',
+			biodataFeature : mapFeatures,
+			router : this.router,
+			el : $('#biodata-gage-selection-div')
+		});
+            }
         
 });

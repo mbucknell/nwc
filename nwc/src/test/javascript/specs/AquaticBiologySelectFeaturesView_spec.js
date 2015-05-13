@@ -33,7 +33,7 @@ describe('Tests for AquaticBiologySelectFeaturesView', function() {
 
 	it('Expects view\'s constructor to set the context property', function() {
 		expect(testView.context).toBeDefined();
-		expect(testView.context.biodataSites).toEqual(["1","2","3","4","5"]);
+		//expect(testView.context.biodataSites).toEqual(["1","2","3","4","5"]);
                 expect(testView.context.gages).toEqual(["5434","4354","34543"]);
                 expect(testView.context.hucs).toEqual(["21312","23234","34534534"]);
 	});

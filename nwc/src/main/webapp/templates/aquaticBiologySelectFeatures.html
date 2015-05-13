@@ -9,6 +9,7 @@
                                 <p></p>   
                                 <p></p>
 			</div>
+                        <div class="spacer" id="biodata-gage-selection-div"></div>
 		</div>
 		<div class="row">
                     <div class="col-xs-12">
@@ -29,10 +30,10 @@
                                     {{#each biodataSites}}
                                     <tr>
                                         <td class="xs-col-2">
-                                            <input type="checkbox" class="sites" id="{{SiteNumber}}" name="{{SiteNumber}}" value="{{SiteNumber}}"/>
+                                            <input type="checkbox" class="sites" id="{{attributes.SiteNumber}}" name="{{attributes.SiteNumber}}" value="{{attributes.SiteNumber}}"/>
                                         </td>
-                                        <td class="xs-col-4">{{SiteNumber}}</td>
-                                        <td class="xs-col-4">{{SiteName}}</td>
+                                        <td class="xs-col-4">{{attributes.SiteNumber}}</td>
+                                        <td class="xs-col-4">{{attributes.SiteName}}</td>
                                     </tr>
                                     {{/each}}
                                 </tbody>
@@ -56,7 +57,7 @@
                                     <tr id="{{STAID}}">
                                         <td class="xs-col-3">{{STAID}}</td>
                                         <td class="xs-col-4">{{STANAME}}</td>
-                                        <td class="xs-col-3">{{drain_sqkm}}</td>
+                                        <td class="xs-col-3">{{DRAIN_SQKM}}</td>
                                     </tr>
                                     {{/each}}
                                 </tbody>
