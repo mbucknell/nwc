@@ -167,7 +167,6 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
                                     return n.attributes.drain_sqkm < 2000;
                                 });
 				this.aquaticBiologyFeaturesModel.set({
-					//sites : siteFeatures.map(function(f) { return f.attributes; }),
                                         sites : siteFeatures,
 					gages : gageFeatures.map(function(f) { return f.attributes; }),
 					hucs : filteredHucFeatures.map(function(f) { return f.attributes; })
