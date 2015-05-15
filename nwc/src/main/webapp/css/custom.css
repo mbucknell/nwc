@@ -165,3 +165,7 @@ select[readonly],
 textarea[readonly] {
     cursor: text !important;
 }
+
+#gageList tr.gage-selected {
+    background-color: #FFCC00;
+}

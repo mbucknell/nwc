@@ -126,11 +126,13 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
 	    highlightGageRow : function(feature) {
 		var selectedLayer = feature.layer.name;
 		alert('Selected ' + selectedLayer);
+		$('#' + feature.attributes.STAID).addClass('gage-selected');
 	    },
 	
 	    unHighlightGageRow : function(feature) {
 		var selectedLayer = feature.layer.name;
 		alert('Unselected ' + selectedLayer);
+		$('#' + feature.attributes.STAID).removeClass('gage-selected');
 	    }
         
 });
