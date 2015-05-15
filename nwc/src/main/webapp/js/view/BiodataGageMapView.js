@@ -38,10 +38,11 @@ NWC.view.BiodataGageMapView = Backbone.View.extend({
 			    strokeColor: '#000000',
 			    strokeOpacity: 1,
 			    fillOpacity: 0.8,
-			    pointRadius: 5,
+			    pointRadius: 6,
 			    cursor: 'pointer'
 			})
-		    })
+		    }),
+		    'attribution': "aquatic biology sites layer"
 		});
 		// Create vector layer representing the NWIS gages.
 		this.gageLayer = new OpenLayers.Layer.Vector('NWIS Gage Layer', {
@@ -143,19 +144,20 @@ NWC.view.BiodataGageMapView = Backbone.View.extend({
 	render : function() {
 		Backbone.View.prototype.render.apply(this, arguments);
 		this.map.render(this.mapDiv);
-		// default to biodataLayer extent
 		if (this.biodataLayer.features.length > 0) {
-		this.map.zoomToExtent(this.biodataLayer.getDataExtent());
-		} else {
-		    // If no biodata sites were selected on the previous page, try gageLayer extent
-		    if (this.gageLayer.features.length > 0) {
-			this.map.zoomToExtent(this.gageLayer.getDataExtent());
-			// If somehow users got here with no sites selected:
+		    if (this.gageLayer.features.length > 0){
+			var minBottom = Math.min(this.biodataLayer.getDataExtent().bottom,this.gageLayer.getDataExtent().bottom);
+			var minLeft = Math.min(this.biodataLayer.getDataExtent().left,this.gageLayer.getDataExtent().left);
+			var maxTop = Math.max(this.biodataLayer.getDataExtent().top,this.gageLayer.getDataExtent().top);
+			var maxRight = Math.max(this.biodataLayer.getDataExtent().right,this.gageLayer.getDataExtent().right);
+			var bounds = new OpenLayers.Bounds(minLeft, minBottom, maxRight, maxTop);
+			this.map.zoomToExtent(bounds);
 		    } else {
-			this.map.zoomToExtent();
-		    };
+			this.map.zoomToExtent(this.biodataLayer.getDataExtent());
+		    };  
+		} else {
+		    this.map.zoomToExtent(this.gageLayer.getDataExtent());
 		};
-		
 		return this;
 	},
 	

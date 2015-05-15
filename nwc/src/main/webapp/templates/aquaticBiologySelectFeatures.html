@@ -10,7 +10,7 @@
                                 <p></p>
 			</div>
                         <div class="spacer map_container" id="biodata-gage-selection-div">
-                            <div class="spacer">Biodata and NWIS gages</div>
+                            <div class="spacer">Aquatic biology sites and NWIS gages</div>
                                 <div id="biodata-gage-selection-map" class="aquatic-map">
                             </div>
                         </div>
@@ -34,7 +34,7 @@
                                     {{#each biodataSites}}
                                     <tr>
                                         <td class="xs-col-2">
-                                            <input type="checkbox" class="sites" id="{{attributes.SiteNumber}}" name="{{attributes.SiteNumber}}" value="{{attributes.SiteNumber}}"/>
+                                            <input type="checkbox" class="sites" id="ab-{{attributes.SiteNumber}}" name="{{attributes.SiteNumber}}" value="{{attributes.SiteNumber}}"/>
                                         </td>
                                         <td class="xs-col-4">{{attributes.SiteNumber}}</td>
                                         <td class="xs-col-4">{{attributes.SiteName}}</td>
@@ -58,7 +58,7 @@
                                 </thead>
                                 <tbody id="gageList">
                                     {{#each gages}}
-                                    <tr id="{{attributes.STAID}}">
+                                    <tr id="gage-{{attributes.STAID}}">
                                         <td class="xs-col-3">{{attributes.STAID}}</td>
                                         <td class="xs-col-4">{{attributes.STANAME}}</td>
                                         <td class="xs-col-3">{{attributes.DRAIN_SQKM}}</td>
