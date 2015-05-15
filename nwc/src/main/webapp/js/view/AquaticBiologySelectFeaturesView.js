@@ -21,11 +21,10 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
             this.context.gages = this.model.get('gages');
             this.context.hucs = this.model.get('hucs');
             NWC.view.BaseView.prototype.initialize.apply(this, arguments);
-            this.displayMap();
+            this._displayMap();
         },
        
         checkboxChanged: function (evt) {
-            
             var $cb      = $(evt.target),
             name     = $cb.attr('name');
             var disable = !($('#sites-table-div input').is(':checked'));
@@ -35,8 +34,7 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                     this.model.set({ 
                     'selected' : this.model.get('selected').concat(name)
                     });
-		    var selectedSite = this.biodataGageMapView.getSelectedSiteFeature(name);
-		    this.biodataGageMapView.highlightSite(selectedSite);
+		    this.biodataGageMapView.highlightSite(name);
                 } else {
                     var selected = this.model.get('selected');
                     var index = selected.indexOf(name);
@@ -44,8 +42,7 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                             selected.splice(index, 1);
                             this.model.set({ 'selected' : selected});        
                         };
-			var selectedSite = this.biodataGageMapView.getSelectedSiteFeature(name);
-			this.biodataGageMapView.unHighlightSite(selectedSite);
+			this.biodataGageMapView.unHighlightSite(name);
                     }
             } 
         },
@@ -115,14 +112,25 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                 this.router.navigate('/streamflow-stats/gage/' + gageID, {trigger : true});
             },
 	    
-	    displayMap : function() {	
+	    _displayMap : function() {	
 		this.biodataGageMapView = new NWC.view.BiodataGageMapView({
 			mapDiv : 'biodata-gage-selection-map',
-			//biodataFeature : mapFeatures,
 			biodataFeature : this.context.biodataSites,
+			gageFeature : this.context.gages,
 			router : this.router,
-			el : $('#biodata-gage-selection-div')
+			el : $('#biodata-gage-selection-div'),
+			highlightGageRow : this.highlightGageRow,
+			unHighlightGageRow : this.unHighlightGageRow
 		});
-            }
+            },
+	    highlightGageRow : function(feature) {
+		var selectedLayer = feature.layer.name;
+		alert('Selected ' + selectedLayer);
+	    },
+	
+	    unHighlightGageRow : function(feature) {
+		var selectedLayer = feature.layer.name;
+		alert('Unselected ' + selectedLayer);
+	    }
         
 });

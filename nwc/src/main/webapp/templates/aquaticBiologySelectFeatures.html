@@ -9,7 +9,11 @@
                                 <p></p>   
                                 <p></p>
 			</div>
-                        <div class="spacer" id="biodata-gage-selection-div"></div>
+                        <div class="spacer map_container" id="biodata-gage-selection-div">
+                            <div class="spacer">Biodata and NWIS gages</div>
+                                <div id="biodata-gage-selection-map" class="aquatic-map">
+                            </div>
+                        </div>
 		</div>
 		<div class="row">
                     <div class="col-xs-12">
@@ -54,10 +58,10 @@
                                 </thead>
                                 <tbody id="gageList">
                                     {{#each gages}}
-                                    <tr id="{{STAID}}">
-                                        <td class="xs-col-3">{{STAID}}</td>
-                                        <td class="xs-col-4">{{STANAME}}</td>
-                                        <td class="xs-col-3">{{DRAIN_SQKM}}</td>
+                                    <tr id="{{attributes.STAID}}">
+                                        <td class="xs-col-3">{{attributes.STAID}}</td>
+                                        <td class="xs-col-4">{{attributes.STANAME}}</td>
+                                        <td class="xs-col-3">{{attributes.DRAIN_SQKM}}</td>
                                     </tr>
                                     {{/each}}
                                 </tbody>

@@ -17,7 +17,6 @@ $(document).ready(function() {
 		'statsResults',
 		'countyHucTable',
 		'countyHucMap',
-                'biodataGageMap',
 		'projectList',
 		'projectDetail'
 	];

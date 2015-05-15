@@ -16,6 +16,7 @@ describe('Tests for AquaticBiologySelectFeaturesView', function() {
                 
                 spyOn(NWC.view.BaseView.prototype, 'initialize');
 		eventSpy = jasmine.createSpyObj('eventSpy', ['preventDefault']);
+		spyOn(NWC.view.BiodataGageMapView.prototype, 'initialize');
 		spyOn(NWC.view.BiodataGageMapView.prototype, 'getSelectedSiteFeature');
 		spyOn(NWC.view.BiodataGageMapView.prototype, 'highlightSite');
 		spyOn(NWC.view.BiodataGageMapView.prototype, 'unHighlightSite');

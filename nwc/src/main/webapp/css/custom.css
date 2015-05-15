@@ -104,7 +104,10 @@ h5, h6 {
 	border: 1px solid #a3a3a3;
 	height: 500px;
 }
-
+.aquatic-map {
+	border: 1px solid #a3a3a3;
+	height: 300px;
+}
 .inset-map {
 	height : 200px;
 	width: 200px;
