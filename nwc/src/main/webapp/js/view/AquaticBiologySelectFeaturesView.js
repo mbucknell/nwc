@@ -21,10 +21,10 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
             this.context.gages = this.model.get('gages');
             this.context.hucs = this.model.get('hucs');
             NWC.view.BaseView.prototype.initialize.apply(this, arguments);
+            this._displayMap();
         },
        
         checkboxChanged: function (evt) {
-            
             var $cb      = $(evt.target),
             name     = $cb.attr('name');
             var disable = !($('#sites-table-div input').is(':checked'));
@@ -34,13 +34,15 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                     this.model.set({ 
                     'selected' : this.model.get('selected').concat(name)
                     });
+		    this.biodataGageMapView.highlightSite(name);
                 } else {
                     var selected = this.model.get('selected');
                     var index = selected.indexOf(name);
                         if (index > -1) {
                             selected.splice(index, 1);
                             this.model.set({ 'selected' : selected});        
-                        }
+                        };
+			this.biodataGageMapView.unHighlightSite(name);
                     }
             } 
         },
@@ -108,6 +110,27 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
                 $cb = $(e.currentTarget);
                 gageID = $cb.attr('id');
                 this.router.navigate('/streamflow-stats/gage/' + gageID, {trigger : true});
-            } 
+            },
+	    
+	    _displayMap : function() {	
+		this.biodataGageMapView = new NWC.view.BiodataGageMapView({
+			mapDiv : 'biodata-gage-selection-map',
+			biodataFeature : this.context.biodataSites,
+			gageFeature : this.context.gages,
+			router : this.router,
+			el : $('#biodata-gage-selection-div'),
+			highlightGageRow : this.highlightGageRow,
+			unHighlightGageRow : this.unHighlightGageRow
+		});
+            },
+	    highlightGageRow : function(feature) {
+		var selectedLayer = feature.layer.name;
+		alert('Selected ' + selectedLayer);
+	    },
+	
+	    unHighlightGageRow : function(feature) {
+		var selectedLayer = feature.layer.name;
+		alert('Unselected ' + selectedLayer);
+	    }
         
 });

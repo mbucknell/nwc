@@ -68,13 +68,13 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 			featureType: 'SiteInfo',
 			featureNS: 'http://cida.usgs.gov/BioData',
 			srsName: 'EPSG:900913',
-			propertyNames: ['SiteNumber', 'SiteName']
+			propertyNames: ['SiteNumber', 'SiteName', 'the_geom']
 		});
 
 		var gageProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(this.gageFeatureLayer, {
 			url : CONFIG.endpoint.geoserver + "wfs",
 			srsName : "EPSG:3857",
-			propertyNames: ["STAID","STANAME","DRAIN_SQKM"]
+			propertyNames: ["STAID","STANAME","DRAIN_SQKM","the_geom"]
 		});
 
 		var hucProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(this.hucLayer, {
@@ -167,8 +167,8 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
                                     return n.attributes.drain_sqkm < 2000;
                                 });
 				this.aquaticBiologyFeaturesModel.set({
-					sites : siteFeatures.map(function(f) { return f.attributes; }),
-					gages : gageFeatures.map(function(f) { return f.attributes; }),
+					sites : siteFeatures,
+					gages : gageFeatures,
 					hucs : filteredHucFeatures.map(function(f) { return f.attributes; })
 				});
 				this.router.navigate('/aquatic-biology/select-features', {trigger : true});
