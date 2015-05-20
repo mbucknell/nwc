@@ -122,14 +122,6 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
 				model : this.model
 			});
         },
-	    
-		highlightGageRow : function(feature) {
-			$('#gage-' + feature.attributes.STAID).addClass('gage-selected');
-		},
-	
-		unHighlightGageRow : function(feature) {
-			$('#gage-' + feature.attributes.STAID).removeClass('gage-selected');
-	    },
     
 		removePair: function (evt) {
             var $cb = $(evt.target);
