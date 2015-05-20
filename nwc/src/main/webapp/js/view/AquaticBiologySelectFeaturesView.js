@@ -25,7 +25,7 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
 			this.context.hucs = this.model.get('hucs');
 			this.context.pairs = this.model.get('pairs');
 			this.listenTo(this.model, 'change:pairs', this.displayPairList);
-			this.listTemplate = Handlebars.compile('{{#each pairs}}<div>Site ID: {{site_id}}, Gage ID: {{gage_id}}<button title="Remove Pair" data-siteId="{{site_id}}" data-gageId="{{gage_id}}" class="dismiss-btn">x</button></div>{{/each}}');
+			this.listTemplate = Handlebars.compile('{{#each pairs}}<div>Site ID: {{site_id}}, Gage ID: {{gage_id}}<button title="Remove Pair" data-site-id="{{site_id}}" data-gage-id="{{gage_id}}" class="dismiss-btn">x</button></div>{{/each}}');
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 			this._displayMap();
         },
@@ -122,18 +122,10 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
 				model : this.model
 			});
         },
-	    
-		highlightGageRow : function(feature) {
-			$('#gage-' + feature.attributes.STAID).addClass('gage-selected');
-		},
-	
-		unHighlightGageRow : function(feature) {
-			$('#gage-' + feature.attributes.STAID).removeClass('gage-selected');
-	    },
     
 		removePair: function (evt) {
             var $cb = $(evt.target);
-            this.model.associatePairs($cb.data('siteId'),$cb.data('gageId') ,'remove');    
+            this.model.associatePairs($cb.data('site-id'),$cb.data('gage-id') ,'remove');    
         },
 		
 		displayPairList : function () {
