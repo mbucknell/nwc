@@ -5,21 +5,18 @@ describe('Tests for AquaticBiologySelectFeaturesView', function() {
 	beforeEach(function() {
             
                 $('body').append('<div id="test-div"></div>');
-		$testDiv = $('#test-div');
+                $testDiv = $('#test-div');
                 $testDiv.append ('<div id="sites-table-div"><input type="checkbox" id="as1" name="as1" value="as1"/><input type="checkbox" id="allSelected" name="allSelected"/>');
                 $testDiv.append('<button id="biodata-form-button" disabled="disabled" class="btn btn-success"></button>');
-		$testDiv.append('<table class="sites-table">');
+                $testDiv.append('<table class="sites-table">');
                 $testDiv.append('<tr><td><input type="checkbox" class="sites" id="as2" name="as2" value="as2"/></td></tr>');
                 $testDiv.append('<tr><td><input type="checkbox" class="sites" id="as3" name="as3" value="as3"/></td></tr>');
                 $testDiv.append('</table></div>');
 		
                 
                 spyOn(NWC.view.BaseView.prototype, 'initialize');
-		eventSpy = jasmine.createSpyObj('eventSpy', ['preventDefault']);
-		spyOn(NWC.view.BiodataGageMapView.prototype, 'initialize');
-		//spyOn(NWC.view.BiodataGageMapView.prototype, 'getSelectedSiteFeature');
-		//spyOn(NWC.view.BiodataGageMapView.prototype, 'highlightSite');
-		//spyOn(NWC.view.BiodataGageMapView.prototype, 'unHighlightSite');
+                eventSpy = jasmine.createSpyObj('eventSpy', ['preventDefault']);
+                spyOn(NWC.view.BiodataGageMapView.prototype, 'initialize');
 		
                 testView = new NWC.view.AquaticBiologySelectFeaturesView({
                     model : new NWC.model.AquaticBiologySelectMapModel({
@@ -53,13 +50,13 @@ describe('Tests for AquaticBiologySelectFeaturesView', function() {
 		testView.checkboxChanged({
                     evt : eventSpy,
                     target : document.getElementById('as1')});
-		expect($('#biodata-form-button').prop('disabled')).toBe(false);
+                    expect($('#biodata-form-button').prop('disabled')).toBe(false);
 
 		$('#as1').prop('checked', false);
 		testView.checkboxChanged({
                     evt : eventSpy,
                     target : document.getElementById('as1')});
-		expect($('#biodata-form-button').prop('disabled')).toBe(true);
+                    expect($('#biodata-form-button').prop('disabled')).toBe(true);
 	});
         
         it('Expects view.checkboxChanged to add or remove checkbox name to selected array', function() {
@@ -67,12 +64,12 @@ describe('Tests for AquaticBiologySelectFeaturesView', function() {
 		testView.checkboxChanged({
                     evt : eventSpy,
                     target : document.getElementById('as1')});
-		expect(testView.model.get('selected')).toEqual(['as1']);
+                    expect(testView.model.get('selected')).toEqual(['as1']);
                 
                 $('#as1').prop('checked', false);
 		testView.checkboxChanged({
                     evt : eventSpy,
                     target : document.getElementById('as1') });
-		expect(testView.model.get('selected')).toEqual([]);
+                    expect(testView.model.get('selected')).toEqual([]);
         });
 });
