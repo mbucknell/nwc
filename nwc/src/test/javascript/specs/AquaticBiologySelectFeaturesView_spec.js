@@ -17,16 +17,17 @@ describe('Tests for AquaticBiologySelectFeaturesView', function() {
                 spyOn(NWC.view.BaseView.prototype, 'initialize');
 		eventSpy = jasmine.createSpyObj('eventSpy', ['preventDefault']);
 		spyOn(NWC.view.BiodataGageMapView.prototype, 'initialize');
-		spyOn(NWC.view.BiodataGageMapView.prototype, 'getSelectedSiteFeature');
-		spyOn(NWC.view.BiodataGageMapView.prototype, 'highlightSite');
-		spyOn(NWC.view.BiodataGageMapView.prototype, 'unHighlightSite');
+		//spyOn(NWC.view.BiodataGageMapView.prototype, 'getSelectedSiteFeature');
+		//spyOn(NWC.view.BiodataGageMapView.prototype, 'highlightSite');
+		//spyOn(NWC.view.BiodataGageMapView.prototype, 'unHighlightSite');
 		
                 testView = new NWC.view.AquaticBiologySelectFeaturesView({
                     model : new NWC.model.AquaticBiologySelectMapModel({
                         sites : ["1","2","3","4","5"],
                         hucs : ["21312","23234","34534534"],
                         gages : ["5434","4354","34543"],
-                        selected : []
+                        selected : [],
+                        pairs : []
                     })                    
                 });
 	});
@@ -39,8 +40,8 @@ describe('Tests for AquaticBiologySelectFeaturesView', function() {
 	it('Expects view\'s constructor to set the context property', function() {
 		expect(testView.context).toBeDefined();
 		expect(testView.context.biodataSites).toEqual(["1","2","3","4","5"]);
-                expect(testView.context.gages).toEqual(["5434","4354","34543"]);
-                expect(testView.context.hucs).toEqual(["21312","23234","34534534"]);
+        expect(testView.context.gages).toEqual(["5434","4354","34543"]);
+        expect(testView.context.hucs).toEqual(["21312","23234","34534534"]);
 	});
 
 	it('Expects the view\'s constructor to call BaseView initialize', function() {

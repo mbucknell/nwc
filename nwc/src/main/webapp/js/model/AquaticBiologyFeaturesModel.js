@@ -8,7 +8,20 @@ NWC.model.AquaticBiologyFeaturesModel =  Backbone.Model.extend({
             sites : [],
             gages : [],
             hucs : [],
-            selected : []
-        }
+            selected : [],
+            pairs : []
+        },
+	associatePairs : function(s, g, action) {
+        this.updPairs = this.get('pairs').clone();
+	    if (action === 'add') {
+            this.updPairs.add({site_id: s, gage_id : g});
+	    };
+	    if (action === 'remove') {
+            this.updPairs.remove(function(n) {
+	        return n['site_id'] === s && n['gage_id'] === g;
+            });
+	    };
+        this.set({pairs : this.updPairs});
+	}
                         
 });
