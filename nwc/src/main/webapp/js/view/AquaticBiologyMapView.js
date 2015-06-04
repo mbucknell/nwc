@@ -49,7 +49,7 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 			"National WBD Snapshot",
 			CONFIG.endpoint.geoserver + 'gwc/service/wms',
 			{
-				layers: 'NWC:huc12_se_basins_v2',
+				layers: 'NWC:huc12_se_basins_v2_local',
 				transparent: true,
 				styles: ['seOutline']
 			},
@@ -68,13 +68,13 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 			featureType: 'SiteInfo',
 			featureNS: 'http://cida.usgs.gov/BioData',
 			srsName: 'EPSG:900913',
-			propertyNames: ['SiteNumber', 'SiteName']
+			propertyNames: ['SiteNumber', 'SiteName', 'the_geom']
 		});
 
 		var gageProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(this.gageFeatureLayer, {
 			url : CONFIG.endpoint.geoserver + "wfs",
 			srsName : "EPSG:3857",
-			propertyNames: ["STAID","STANAME","DRAIN_SQKM"]
+			propertyNames: ["STAID","STANAME","DRAIN_SQKM","the_geom"]
 		});
 
 		var hucProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(this.hucLayer, {
@@ -90,7 +90,7 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 			else if (featureType === 'gagesII') {
 				return this.gageFeatureLayer.getVisibility();
 			}
-			else if (featureType === 'huc12_se_basins_v2') {
+			else if (featureType === 'huc12_se_basins_v2_local') {
 				return this.hucLayer.getVisibility();
 			}
 		};
@@ -160,16 +160,18 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 					return f.fid.startsWith('gagesII');
 				});
 				var hucFeatures = features.findAll(function(f) {
-					return f.fid.startsWith('huc12_se_basins_v2');
+					return f.fid.startsWith('huc12_se_basins_v2_local');
 				});
                                 //Hydrologic model results are not valid for watersheds > 2000 km2, so only populate list with those < 2000 km2
                                 var filteredHucFeatures = hucFeatures.filter(function(n){
                                     return n.attributes.drain_sqkm < 2000;
                                 });
 				this.aquaticBiologyFeaturesModel.set({
-					sites : siteFeatures.map(function(f) { return f.attributes; }),
-					gages : gageFeatures.map(function(f) { return f.attributes; }),
-					hucs : filteredHucFeatures.map(function(f) { return f.attributes; })
+					sites : siteFeatures,
+					gages : gageFeatures,
+					hucs : filteredHucFeatures.map(function(f) { return f.attributes; }),
+					selected : [],
+					pairs : []
 				});
 				this.router.navigate('/aquatic-biology/select-features', {trigger : true});
 			};

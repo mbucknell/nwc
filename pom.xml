@@ -3,7 +3,7 @@
 
     <groupId>gov.usgs.cida.nwc</groupId>
     <artifactId>nwc-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>NWC</name>
@@ -77,6 +77,14 @@
             <id>dmsibley</id>
             <name>David M Sibley</name>
             <email>dmsibley@usgs.gov</email>
+            <organization>Center for Integrated Data Analytics</organization>
+            <organizationUrl>http://cida.usgs.gov</organizationUrl>
+            <timezone>-6</timezone>
+        </developer>
+        <developer>
+            <id>kmschoep</id>
+            <name>Kathryn Schoephoester</name>
+            <email>kmschoep@usgs.gov</email>
             <organization>Center for Integrated Data Analytics</organization>
             <organizationUrl>http://cida.usgs.gov</organizationUrl>
             <timezone>-6</timezone>

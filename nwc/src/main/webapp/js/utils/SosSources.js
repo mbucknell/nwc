@@ -35,7 +35,7 @@ NWC.util = NWC.util || {};
             units: NWC.util.Units.usCustomary.streamflow.daily,
             dataset: 'HUC12_data',
             fileName: 'HUC12_Q.nc',
-            downloadMetadata: 'Data provided by a USGS research study that is in review. This information is\npreliminary and is subject to revision. It is being provided to meet the need for\ntimely \"best science\" information. The assessment is provided on the condition that\nneither the U.S. Geological Survey nor the United States Government may be\nheld liable for any damages resulting from the authorized or unauthorized use of\nthe assessment. Documentation can be found here:\nhttp://cida.usgs.gov/nwc/ang/#/workflow/streamflow-statistics/model-info'
+            downloadMetadata: 'Streamflow data documentation can be found here:\nhttp://pubs.er.usgs.gov/publication/sir20145231'
         }
     };
 
