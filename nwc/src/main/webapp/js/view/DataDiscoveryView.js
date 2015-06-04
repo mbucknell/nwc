@@ -46,15 +46,16 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 	 */
 	showDetail: function(ev) {
 		var id = $(ev.currentTarget).data('id');
-		if ($('#' + id).is(':hidden')) {
+		var selector = '#' + id;
+		if ($(selector).is(':hidden')) {
 			$(ev.currentTarget).html('-');
 			$(ev.currentTarget).prop('title', 'Hide details');
 			$.ajax({
 				url : CONFIG.endpoint.direct.sciencebase + '/catalog/item/' + id + '?format=json',
 				dataType : "json",
 				success: function(data) {
-					$('#' + id).html(NWC.templates.getTemplate('dataDiscoveryDetail')({detail : data}));
-					$('#' + id).show();
+					$(selector).html(NWC.templates.getTemplate('dataDiscoveryDetail')({detail : data}));
+					$(selector).show();
 				},
 				error : function() {
 					//@todo - setup app level error handling
@@ -66,7 +67,7 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 		else {
 			$(ev.currentTarget).html('+');
 			$(ev.currentTarget).prop('title', 'Show details');
-			$('#' + id).hide();
+			$(selector).hide();
 		}
 	},
 
