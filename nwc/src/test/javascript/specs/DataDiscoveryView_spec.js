@@ -7,8 +7,8 @@ describe('Tests for DataDiscoveryView (sinon version)', function() {
 
 		$('body').append('<div id="test-div"></div>');
 		$testDiv = $('#test-div');
-		$testDiv.append('<div id="project-list-div">');
-		$testDiv.append('<button id="show-project-detail-button" data-id="12345" class="btn btn-primary btn-xs" title="Show details" >+</button>');
+		$testDiv.append('<div id="list-div">');
+		$testDiv.append('<button id="show-detail-button" data-id="12345" class="btn btn-primary btn-xs" title="Show details" >+</button>');
 		$testDiv.append('<div id="12345" class="page_body_content" hidden></div>');
 		$testDiv.append('</div>');
 
@@ -34,12 +34,12 @@ describe('Tests for DataDiscoveryView (sinon version)', function() {
 		expect(NWC.view.BaseView.prototype.initialize).toHaveBeenCalled();
 	});
 
-	it('Expects getProjectData to use the correct url for ajax call', function() {
+	it('Expects getList to use the correct url for ajax call', function() {
 		testView = new NWC.view.DataDiscoveryView();
 		expect(server.requests.last().url).toMatch('http://test');
 	});
 
-	it('Expects getProjectData to make an ajax call', function() {
+	it('Expects getList to make an ajax call', function() {
 		var requestCount = server.requests.length;
 		var getTemplateSpy = jasmine.createSpy('getTemplateSpy')
 		var templateSpy = jasmine.createSpy('templateSpy');
@@ -50,7 +50,7 @@ describe('Tests for DataDiscoveryView (sinon version)', function() {
 		expect(server.requests.length).toBe(requestCount + 1);
 	});
 
-	it('Expects getProjectData to receive a error for no ajax response', function() {
+	it('Expects getList to receive a error for no ajax response', function() {
 		spyOn(window, 'alert');
 		testView = new NWC.view.DataDiscoveryView();		
 		server.requests[0].respond(
@@ -63,34 +63,34 @@ describe('Tests for DataDiscoveryView (sinon version)', function() {
 
 	it('Expect that event handler calls exist', function() {
 		//the view has an event to wire up the clickable project details
-		expect(testView.events['click #show-project-detail-button']).toBeDefined();
+		expect(testView.events['click #show-detail-button']).toBeDefined();
 	});
 
-	it('Expects showProjectDetail to use the correct url for ajax call', function() {
+	it('Expects showDetail to use the correct url for ajax call', function() {
 		testView = new NWC.view.DataDiscoveryView();
-		var event = {currentTarget : '#show-project-detail-button'}
-		testView.showProjectDetail(event);
+		var event = {currentTarget : '#show-detail-button'}
+		testView.showDetail(event);
 		expect(server.requests.last().url).toMatch('http://test');
 	});
 
-	it('Expects showProjectDetail to make ajax call', function() {
+	it('Expects showDetail to make ajax call', function() {
 		var getTemplateSpy = jasmine.createSpy('getTemplateSpy')
 		var templateSpy = jasmine.createSpy('templateSpy');
 		NWC.templates = {
 			getTemplate : getTemplateSpy.andReturn(templateSpy)
 		};
 		testView = new NWC.view.DataDiscoveryView();
-		var event = {currentTarget : '#show-project-detail-button'}
+		var event = {currentTarget : '#show-detail-button'}
 		var requestCount = server.requests.length;
-		testView.showProjectDetail(event);
+		testView.showDetail(event);
 		expect(server.requests.length).toBe(requestCount + 1);
 	});
 
-	it('Expects showProjectDetail to receive a error for no ajax response', function() {
+	it('Expects showDetail to receive a error for no ajax response', function() {
 		spyOn(window, 'alert');
 		testView = new NWC.view.DataDiscoveryView();
-		var event = {currentTarget : '#show-project-detail-button'};
-		testView.showProjectDetail(event);
+		var event = {currentTarget : '#show-detail-button'};
+		testView.showDetail(event);
 		server.requests[0].respond(
 				400,
 				{ "Content-Type": "application/json" },
