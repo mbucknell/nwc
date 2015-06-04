@@ -17,8 +17,8 @@ $(document).ready(function() {
 		'statsResults',
 		'countyHucTable',
 		'countyHucMap',
-		'projectList',
-		'projectDetail'
+		'dataDiscoveryList',
+		'dataDiscoveryDetail'
 	];
 
 	var PARTIALS = [
