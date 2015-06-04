@@ -5,6 +5,9 @@ NWC.view = NWC.view || {};
 NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 	templateName : 'dataDiscovery',
 
+	project : 'Project',
+	data : 'Data',
+	
 	events: {
 		'click #show-detail-button': "showDetail",
 		'click #show-projects-button': "showProjects",
@@ -17,15 +20,15 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 		// (includes render)
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);			
 		$("#show-projects-button").prop('disabled', true);
-		this.getProjects();
+		this.getList(this.project);
 	},
 
 	/**
-	 * This makes a Web service call to get project list data for display
+	 * This makes a Web service call to get list data for display
 	 */
-	getProjects: function() {
+	getList: function(type) {
 		$.ajax({
-			url : CONFIG.endpoint.direct.sciencebase + '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DProject&max=100&format=json',
+			url : CONFIG.endpoint.direct.sciencebase + '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3D' + type + '&max=100&format=json',
 			dataType : "json",
 			success: function(data) {
 				$('#list-div').html(NWC.templates.getTemplate('dataDiscoveryList')({list : data.items}));
@@ -33,24 +36,6 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 			error : function() {
 				//@todo - setup app level error handling
 				var errorMessage = 'error retrieving project list data';
-				alert(errorMessage);
-			}
-		});
-	},
-
-	/**
-	 * This makes a Web service call to get data for display
-	 */
-	getData: function() {
-		$.ajax({
-			url : CONFIG.endpoint.direct.sciencebase + '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DData&max=100&format=json',
-			dataType : "json",
-			success: function(data) {
-				$('#list-div').html(NWC.templates.getTemplate('dataDiscoveryList')({list : data.items}));
-			},
-			error : function() {
-				//@todo - setup app level error handling
-				var errorMessage = 'error retrieving data list';
 				alert(errorMessage);
 			}
 		});
@@ -91,7 +76,7 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 	showProjects: function() {
 		$('#show-data-button').prop('disabled', false);
 		$("#show-projects-button").prop('disabled', true);
-		this.getProjects();
+		this.getList(this.project);
 	},
 
 	/**
@@ -100,7 +85,7 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 	showData: function() {
 		$('#show-data-button').prop('disabled', true);
 		$("#show-projects-button").prop('disabled', false);
-		this.getData();
+		this.getList(this.data);
 	}
 
 });
