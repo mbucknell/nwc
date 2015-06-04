@@ -1,7 +1,6 @@
-	<h3>All Projects</h3>
-	{{#each projectList}}
+	{{#each list}}
 		<h5>{{title}}  
-		<button id="show-project-detail-button" data-id="{{id}}" class="btn btn-primary btn-xs" title="Show details" >+</button>
+		<button id="show-detail-button" data-id="{{id}}" class="btn btn-primary btn-xs" title="Show details" >+</button>
 		</h5>
 		{{#if summary }}
 			<p>{{summary}}</p>

@@ -1,0 +1,51 @@
+			<h6>Purpose</h6>
+			{{#if detail.purpose}}
+				{{detail.purpose}}
+			{{else}}
+				no data available
+			{{/if}}
+			<h6>Keywords</h6>
+			{{#if detail.tags}}
+				{{#each detail.tags}}
+					{{#if @last }}
+						{{name}}
+					{{else}}
+						{{name}},
+					{{/if}}
+				{{/each}}
+			{{else}}
+				no data available
+			{{/if}}
+			<h6>Status</h6>
+			{{#if detail.facets}}
+				{{#each detail.facets}}
+					{{status}}
+				{{/each}}
+			{{else}}
+				no data available
+			{{/if}}				
+			<h6>Contacts</h6>			
+			{{#if detail.contacts}}
+				{{#each detail.contacts}}
+					{{#if @last }}
+						{{type}}: {{name}}
+					{{else}}
+						{{type}}: {{name}},
+					{{/if}}
+				{{/each}}
+			{{else}}
+				no data available
+			{{/if}}				
+			<h6>Dates</h6>
+			{{#if detail.dates}}
+				{{#each detail.dates}}
+					{{#if @last }}
+						{{label}}: {{dateString}}
+					{{else}}
+						{{label}}: {{dateString}},					
+					{{/if}}
+				{{/each}}
+			{{else}}
+				no data available
+			{{/if}}				
+			
