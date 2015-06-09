@@ -1,11 +1,19 @@
-			<h6>Purpose</h6>
-			{{#if detail.purpose}}
-				{{detail.purpose}}
-			{{else}}
-				no data available
+			{{#if detail.body}}
+				<h6>Summary</h6>
+				{{{detail.body}}}
 			{{/if}}
-			<h6>Keywords</h6>
+			{{#if detail.purpose}}
+				<h6>Purpose</h6>
+				{{detail.purpose}}
+			{{/if}}
+			{{#if detail.webLinks}}
+				<h6>Links</h6>
+				{{#each detail.webLinks}}
+					{{title}}: <a href="{{uri}}">{{uri}}</a><br/>					
+				{{/each}}
+			{{/if}}
 			{{#if detail.tags}}
+				<h6>Keywords</h6>
 				{{#each detail.tags}}
 					{{#if @last }}
 						{{name}}
@@ -13,19 +21,17 @@
 						{{name}},
 					{{/if}}
 				{{/each}}
-			{{else}}
-				no data available
 			{{/if}}
-			<h6>Status</h6>
 			{{#if detail.facets}}
 				{{#each detail.facets}}
-					{{status}}
+				{{#if projectStatus}}
+					<h6>Status</h6>
+					{{projectStatus}}
+				{{/if}}
 				{{/each}}
-			{{else}}
-				no data available
 			{{/if}}				
-			<h6>Contacts</h6>			
 			{{#if detail.contacts}}
+				<h6>Contacts</h6>			
 				{{#each detail.contacts}}
 					{{#if @last }}
 						{{type}}: {{name}}
@@ -33,11 +39,9 @@
 						{{type}}: {{name}},
 					{{/if}}
 				{{/each}}
-			{{else}}
-				no data available
 			{{/if}}				
-			<h6>Dates</h6>
 			{{#if detail.dates}}
+			<h6>Dates</h6>
 				{{#each detail.dates}}
 					{{#if @last }}
 						{{label}}: {{dateString}}
@@ -45,7 +49,5 @@
 						{{label}}: {{dateString}},					
 					{{/if}}
 				{{/each}}
-			{{else}}
-				no data available
 			{{/if}}				
 			
