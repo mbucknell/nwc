@@ -194,19 +194,22 @@ NWC.view.BiodataGageMapView = Backbone.View.extend({
 	showPopup : function(evt){
 		var feature = evt.feature;
 		var layerName = feature.layer.name;
+		var drainArea;
+		var siteName;
 		var layerLabel;
-		var featureAttr;
 		if (layerName === 'Biodata Sites Layer') {
-			layerLabel = 'Site ID';
-			featureAttr = feature.attributes.SiteNumber;
+			drainArea = feature.attributes.DrainageAr;
+			siteName = feature.attributes.SiteName;
+			layerLabel = siteName + ', ' + drainArea + ' mi<sup>2</sup>';
 		} else {
-			layerLabel = 'Gage ID';
-			featureAttr = feature.attributes.STAID;
+			drainArea = feature.attributes.DRAIN_SQKM;
+			siteName = feature.attributes.STANAME;
+			layerLabel = siteName + ', ' + drainArea + ' km<sup>2</sup>';
 		}
 		var popup = new OpenLayers.Popup.AnchoredBubble("popup",
 			OpenLayers.LonLat.fromString(feature.geometry.toShortString()),
 			null,
-			layerLabel + ': ' + featureAttr,
+			layerLabel,
 			null,
 			true,
 			null
