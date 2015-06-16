@@ -48,6 +48,7 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 		var id = $(ev.currentTarget).data('id');
 		var selector = '#' + id;
 		if ($(selector).is(':hidden')) {
+			$(selector + "-summary").hide();
 			$(ev.currentTarget).html('-');
 			$(ev.currentTarget).prop('title', 'Hide details');
 			$.ajax({
@@ -68,6 +69,7 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 			$(ev.currentTarget).html('+');
 			$(ev.currentTarget).prop('title', 'Show details');
 			$(selector).hide();
+			$(selector + "-summary").show();
 		}
 	},
 
