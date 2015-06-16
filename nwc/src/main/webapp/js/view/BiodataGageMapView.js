@@ -33,18 +33,18 @@ NWC.view.BiodataGageMapView = Backbone.View.extend({
 					pointRadius: 4
 				}, OpenLayers.Feature.Vector.style['default'])),
 				'select': new OpenLayers.Style({
-					strokeColor: '#000000',
+					strokeColor: '#FF0000',
 					strokeOpacity: 1,
-					fillOpacity: 0.8,
+					fillOpacity: 0.4,
 					pointRadius: 6,
 					cursor: 'pointer'
 				}),
 				'temporary': new OpenLayers.Style({
-					strokeColor: '#000000',
+					strokeColor: '#FF0000',
 					strokeOpacity: 1,
-					fillOpacity: 0.8,
+					fillOpacity: 0.4,
 					pointRadius: 6,
-					cursor: "pointer"
+					cursor: 'pointer'
 				})
 			})
 		});
@@ -181,6 +181,9 @@ NWC.view.BiodataGageMapView = Backbone.View.extend({
 		this.selectedSite = feature.attributes;
 		this.biodataSelectControl.deactivate();
 		this.gageSelectControl.activate();
+		if (this.selectedGage){
+			this.deselectGage(this.selectedGage);
+		};
 	},
 	
 	addGage : function(feature) {
@@ -226,6 +229,11 @@ NWC.view.BiodataGageMapView = Backbone.View.extend({
 		this.map.removePopup(feature.popup);
 		feature.popup.destroy();
 		feature.popup = null;
-	}
+	},
+	
+	deselectGage: function(selGage){
+		var gageFeature = this.gageLayer.getFeaturesByAttribute('STAID', selGage.STAID);
+		this.gageSelectControl.unselect(gageFeature[0]);
+ 	}
 	
 });
