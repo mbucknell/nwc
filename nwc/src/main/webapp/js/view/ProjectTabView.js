@@ -1,4 +1,5 @@
 /*jslint  browser: true */
+/*global CONFIG */
 
 var NWC = NWC || {};
 
@@ -9,43 +10,12 @@ NWC.view = NWC.view || {};
 
 	NWC.view.ProjectTabView = NWC.view.BaseDiscoveryTabView.extend({
 
-		initialize : function(options) {
-			this.template = NWC.templates.getTemplate('dataDiscoveryList');
-			NWC.view.BaseDiscoveryTabView.prototype.initialize.apply(this, arguments);
-		},
+		listTemplateName : 'dataDiscoveryList',
+		detailsTemplateName : 'dataDiscoveryDetail',
 
-		getList: function() {
-			var deferred = $.Deferred();
-			$.ajax({
-				url : CONFIG.endpoint.direct.sciencebase + '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DProject&max=100&format=json',
-				dataType : "json",
-				success: function(data) {
-					deferred.resolve(data);
-				},
-				error : function() {
-					//@todo - setup app level error handling
-					var errorMessage = 'error retrieving project list data';
-					alert(errorMessage);
-					deferred.reject(errorMessage);
-				}
-			});
-
-			return deferred.promise();
-		},
-
-		getDetails : function(id, $detailsDiv) {
-			$.ajax({
-				url : CONFIG.endpoint.direct.sciencebase + '/catalog/item/' + id + '?format=json',
-				dataType : "json",
-				success: function(data) {
-					$detailsDiv.html(NWC.templates.getTemplate('dataDiscoveryDetail')({detail : data}));
-				},
-				error : function() {
-					//@todo - setup app level error handling
-					var errorMessage = 'error retrieving project detail data';
-					alert(errorMessage);
-				}
-			});
+		listUrl : CONFIG.endpoint.direct.sciencebase + '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DProject&format=json',
+		detailsUrl : function(id) {
+			return CONFIG.endpoint.direct.sciencebase + '/catalog/item/' + id + '?format=json';
 		}
 	});
 }());

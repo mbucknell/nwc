@@ -1,4 +1,5 @@
 /*jslint browser: true*/
+/*global Backbone */
 
 
 var NWC = NWC || {};
@@ -14,7 +15,13 @@ NWC.view = NWC.view || {};
 		SHOW_ICON : 'Details&nbsp;<i class="fa fa-caret-right"></i>',
 		HIDE_ICON : 'Details&nbsp;<i class="fa fa-caret-down"></i>',
 
-		templateName : 'dataDiscoveryList',
+		listTemplateName : '',
+		detailsTemplatename : '',
+
+		listUrl : '',
+		detailsUrl : function(id) {
+			return '';
+		},
 
 		events : {
 			'click .toggle-details-btn' : 'toggleDetails'
@@ -26,7 +33,7 @@ NWC.view = NWC.view || {};
 
 		initialize : function(options){
 			var self = this;
-			this.template = NWC.templates.getTemplate(this.templateName);
+			this.template = NWC.templates.getTemplate(this.listTemplateName);
 			Backbone.View.prototype.initialize.apply(this, arguments);
 			this.context = {
 				showSummary : options.showSummary ? options.showSummary : false,
@@ -42,19 +49,48 @@ NWC.view = NWC.view || {};
 
 		getList : function() {
 			var deferred = $.Deferred();
+
+			$.ajax({
+				url : this.listUrl,
+				dataType : "json",
+				success: function(data) {
+					deferred.resolve(data);
+				},
+				error : function() {
+					//@todo - setup app level error handling
+					var errorMessage = 'Error retrieving project list data';
+					alert(errorMessage);
+					deferred.reject(errorMessage);
+				}
+			});
 			return deferred.promise();
 		},
 
-		getDetails : function(id, $detailsDiv) {
+		getDetails : function(id) {
 			var deferred = $.Deferred();
+
+			$.ajax({
+				url : this.detailsUrl(id),
+				dataType : "json",
+				success: function(data) {
+					deferred.resolve(data);
+				},
+				error : function() {
+					//@todo - setup app level error handling
+					var errorMessage = 'error retrieving project detail data';
+					alert(errorMessage);
+				}
+			});
+
 			return deferred.promise();
 		},
 
 		toggleDetails : function(ev) {
+			var self = this;
 			var $btn = $(ev.currentTarget);
-			var $parentEl = $btn.parents('.summary-container-div');
 			var id = $btn.data('id');
 			var $detailsDiv = this.$el.find('#' + id);
+			var $parentEl = $btn.parents('.summary-container-div');
 			var $summaryDiv = $parentEl.find('.summary-content-div');
 
 			ev.preventDefault();
@@ -65,7 +101,9 @@ NWC.view = NWC.view || {};
 
 				$detailsDiv.show();
 				$summaryDiv.hide();
-				this.getDetails($btn.data('id'), $detailsDiv);
+				this.getDetails($btn.data('id')).done(function(data) {
+					$detailsDiv.html(NWC.templates.getTemplate(self.detailsTemplateName)(data));
+				});
 			}
 			else {
 				$btn.html(this.SHOW_ICON);

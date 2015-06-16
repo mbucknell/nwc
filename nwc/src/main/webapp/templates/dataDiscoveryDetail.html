@@ -1,20 +1,20 @@
-			{{#if detail.body}}
+			{{#if body}}
 				<h6>Summary</h6>
-				{{{detail.body}}}
+				{{{body}}}
 			{{/if}}
-			{{#if detail.purpose}}
+			{{#if purpose}}
 				<h6>Purpose</h6>
-				{{detail.purpose}}
+				{{purpose}}
 			{{/if}}
-			{{#if detail.webLinks}}
+			{{#if webLinks}}
 				<h6>Links</h6>
-				{{#each detail.webLinks}}
+				{{#each webLinks}}
 					{{title}}: <a href="{{uri}}">{{uri}}</a><br/>					
 				{{/each}}
 			{{/if}}
-			{{#if detail.tags}}
+			{{#if tags}}
 				<h6>Keywords</h6>
-				{{#each detail.tags}}
+				{{#each tags}}
 					{{#if @last }}
 						{{name}}
 					{{else}}
@@ -22,17 +22,17 @@
 					{{/if}}
 				{{/each}}
 			{{/if}}
-			{{#if detail.facets}}
-				{{#each detail.facets}}
+			{{#if facets}}
+				{{#each facets}}
 				{{#if projectStatus}}
 					<h6>Status</h6>
 					{{projectStatus}}
 				{{/if}}
 				{{/each}}
 			{{/if}}				
-			{{#if detail.contacts}}
+			{{#if contacts}}
 				<h6>Contacts</h6>			
-				{{#each detail.contacts}}
+				{{#each contacts}}
 					{{#if @last }}
 						{{type}}: {{name}}
 					{{else}}
@@ -40,9 +40,9 @@
 					{{/if}}
 				{{/each}}
 			{{/if}}				
-			{{#if detail.dates}}
+			{{#if dates}}
 			<h6>Dates</h6>
-				{{#each detail.dates}}
+				{{#each dates}}
 					{{#if @last }}
 						{{label}}: {{dateString}}
 					{{else}}

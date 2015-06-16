@@ -1,8 +1,13 @@
+/*jslint browser:true */
+/*global Handlebars*/
+/*global $*/
+
 var NWC = NWC || {};
 
 NWC.util = NWC.util || {};
 
 NWC.util.templateLoader = function() {
+	"use strict";
 
 	var self = {};
 
@@ -53,6 +58,45 @@ NWC.util.templateLoader = function() {
 			}));
 		}
 		return $.when.apply(null, loadingDeferreds);
+	};
+
+	self.registerHelpers = function() {
+		Handlebars.registerHelper({
+			'ifTypeIsWebLink' : function(type, options) {
+				if (type === 'webLink') {
+					return options.fn(this);
+				}
+				else {
+					return options.inverse(this);
+				}
+			},
+
+			'ifTypeIsBrowseImage' : function(type, options) {
+				if (type === 'browseImage') {
+					return options.fn(this);
+				}
+				else {
+					return options.inverse(this);
+				}
+			},
+
+			'ifTypeIsPublication' : function(type, options) {
+				if (type === 'Publication') {
+					return options.fn(this);
+				}
+				else {
+					return options.inverse(this);
+				}
+			},
+			'ifFacetIsCitation' : function(facet, options) {
+				if (facet === 'gov.sciencebase.catalog.item.facet.CitationFacet') {
+					return options.fn(this);
+				}
+				else {
+					return options.inverse(this);
+				}
+			}
+		});
 	};
 
 	return self;
