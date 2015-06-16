@@ -22,6 +22,7 @@ $(document).ready(function() {
 	];
 
 	var PARTIALS = [
+		'detailToggle',
 		'mapControls',
 		'warningModal',
 		'streamflowCalcStats'

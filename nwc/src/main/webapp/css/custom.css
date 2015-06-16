@@ -190,3 +190,6 @@ textarea[readonly] {
     padding-bottom: 1px;
     margin-left: 5px;
 }
+.summary-container-div {
+    margin-bottom : 10px;
+}

@@ -5,13 +5,17 @@
 				<h3>Data Discovery</h3>
 			</div>
 		</div>
-		<button id="show-projects-button" class="btn btn-primary" title="Show Projects" >Projects</button>
-		<button id="show-data-button" class="btn btn-primary" title="Show Data" >Data</button>
-		<div class="row">
-			<div class="col-xs-12">
-			<div id="list-div"></div>
+		<div id="data-discovery-tabs" role="tabpanel">
+			<ul class="nav nav-tabs" role="tablist">
+				<li id="show-projects-button" role="presentation" class="active"><a href="#" data-target="show-project" title="Show projects">Projects</a></li>
+				<li id="show-data-button" role="presentation"><a href="#" data-target="show-data" title="Show data">Data</a></li>
+				<li id="show-publications-button" role="presentation"><a href="#" data-target="show-publications" title="Show data">Publications</a></li>
+			</ul>
+			<div class="tab-content">
+				<div role="tabpanel" class="tab-pane active" id="show-project"><i class="fa fa-spinner fa-spin fa-3x"></i></div>
+				<div role="tabpanel" class="tab-pane" id="show-data"><i class="fa fa-spinner fa-spin fa-3x"></i></div>
+				<div role="tabpanel" class="tab-pane" id="show-publications"><i class="fa fa-spinner fa-spinfa-3x"></i></div>
 			</div>
-			<div class="col-xs-12 map_container"></div>
 		</div>
 	</div>
 </div>
