@@ -107,8 +107,9 @@ h5, h6 {
 #biodata-gage-selection-map {
 	border: 1px solid #a3a3a3;
 	height: 300px;
-        width: 600px;
+        width: 500px;
         float: left;
+        padding-left:20px;
 }
 .inset-map {
 	height : 200px;
@@ -186,8 +187,19 @@ textarea[readonly] {
 
 #pair-desc {
     border-bottom: 1px dotted darkgrey;
+    display: inline-block;
+    width:100%
 }
 
 .dismiss-btn {
     padding-right: 3px;
+}
+
+.pair-comment {
+    float:right;
+}
+
+.pair-label {
+    width:80%;
+    float:left;
 }

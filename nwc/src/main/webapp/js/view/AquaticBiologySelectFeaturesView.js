@@ -25,7 +25,7 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
 			this.context.hucs = this.model.get('hucs');
 			this.context.pairs = this.model.get('pairs');
 			this.listenTo(this.model, 'change:pairs', this.displayPairList);
-			var listContent = '{{#each tPairs}}<div id="pair-desc">' +
+			var listContent = '{{#each tPairs}}<div id="pair-desc"><div class="pair-label">' +
 					'<i title="Remove Pair" class="fa fa-times dismiss-btn" data-site-id="{{site.SiteNumber}}" data-gage-id="{{gage.STAID}}"></i>' +
 					'Site: {{site.SiteName}}' +
 					'{{#if site.DrainageAr}}' +
@@ -38,8 +38,11 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
 					', {{gage.DRAIN_SQKM}} km<sup>2</sup>' +
 					'{{else}}' +
 					', km</sup>2</sup> not available' +
-					'{{/if}}' +
-					'</div>{{/each}}';
+					'{{/if}}</div>' +
+					'<input type="search" class="pair-comment col-xs-2" name="' +
+					'{{site.SiteNumber}}-{{gage.STAID}}">' +
+					'</div>' +
+					'{{/each}}';
 			this.listTemplate = Handlebars.compile(listContent);
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 			this._displayMap();
