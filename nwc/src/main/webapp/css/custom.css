@@ -211,6 +211,10 @@ textarea[readonly] {
 	background-color : #eee;
 }
 
+.toggle-details-btn {
+	margin-top: 5px;
+}
+
 .pubs-summary-container img {
 	float : left;
 	margin-right : 15px;

@@ -11,7 +11,7 @@ NWC.view = NWC.view || {};
 	NWC.view.ProjectTabView = NWC.view.BaseDiscoveryTabView.extend({
 
 		listTemplateName : 'dataDiscoveryList',
-		detailsTemplateName : 'dataDiscoveryDetail',
+		detailsTemplateName : 'projectDetail',
 
 		listUrl : CONFIG.endpoint.direct.sciencebase + '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DProject&format=json',
 		detailsUrl : function(id) {

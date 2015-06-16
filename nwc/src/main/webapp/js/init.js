@@ -22,7 +22,8 @@ $(document).ready(function() {
 		'countyHucTable',
 		'countyHucMap',
 		'dataDiscoveryList',
-		'dataDiscoveryDetail',
+		'dataDetail',
+		'projectDetail',
 		'publicationsDetail'
 	];
 
