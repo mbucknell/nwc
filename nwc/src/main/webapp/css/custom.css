@@ -184,9 +184,10 @@ textarea[readonly] {
     border:2px solid #000099;
 }
 
+#pair-desc {
+    border-bottom: 1px dotted darkgrey;
+}
+
 .dismiss-btn {
-    border: 1px dotted darkgrey;
-    padding-top: 1px;
-    padding-bottom: 1px;
-    margin-left: 5px;
+    padding-right: 3px;
 }
