@@ -7,88 +7,51 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 
 	project : 'Project',
 	data : 'Data',
-	
+
 	events: {
-		'click #show-detail-button': "showDetail",
-		'click #show-projects-button': "showProjects",
-		'click #show-data-button': "showData",
+		'click #data-discovery-tabs .nav a': "showTab",
 	},
 
-	initialize : function() {
+	projectTabView : null,
+	dataTabView : null,
+	publicationTabView : null,
 
+	/*
+	 * @constructor
+	 * @param {Object} options
+	 *     @prop {Jquery element} el - the html element where view is rendered
+	 */
+	initialize : function(options) {
 		// call superclass initialize to do default initialize
 		// (includes render)
-		NWC.view.BaseView.prototype.initialize.apply(this, arguments);			
-		$("#show-projects-button").prop('disabled', true);
-		this.getList(this.project);
-	},
-
-	/**
-	 * This makes a Web service call to get list data for display
-	 */
-	getList: function(type) {
-		$.ajax({
-			url : CONFIG.endpoint.direct.sciencebase + '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3D' + type + '&max=100&format=json',
-			dataType : "json",
-			success: function(data) {
-				$('#list-div').html(NWC.templates.getTemplate('dataDiscoveryList')({list : data.items}));
-			},
-			error : function() {
-				//@todo - setup app level error handling
-				var errorMessage = 'error retrieving project list data';
-				alert(errorMessage);
-			}
+		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
+		this.projectTabView = new NWC.view.ProjectTabView({
+			el : $('#show-project'),
+			showSummary : true
+		});
+		this.dataTabView = new NWC.view.DataTabView({
+			el : $('#show-data'),
+			showSummary : true
+		});
+		this.publicationsTabView = new NWC.view.PublicationsTabView({
+			el : $('#show-publications'),
+			showSummary : false
 		});
 	},
 
-	/**
-	 * This makes a Web service call to get project detail data for display
+	/*
+	 * Handles the clicks to change tab visibility
+	 * @param {Jquery event} ev
 	 */
-	showDetail: function(ev) {
-		var id = $(ev.currentTarget).data('id');
-		var selector = '#' + id;
-		if ($(selector).is(':hidden')) {
-			$(selector + "-summary").hide();
-			$(ev.currentTarget).html('-');
-			$(ev.currentTarget).prop('title', 'Hide details');
-			$.ajax({
-				url : CONFIG.endpoint.direct.sciencebase + '/catalog/item/' + id + '?format=json',
-				dataType : "json",
-				success: function(data) {
-					$(selector).html(NWC.templates.getTemplate('dataDiscoveryDetail')({detail : data}));
-					$(selector).show();
-				},
-				error : function() {
-					//@todo - setup app level error handling
-					var errorMessage = 'error retrieving project detail data';
-					alert(errorMessage);
-				}
-			});
-		}
-		else {
-			$(ev.currentTarget).html('+');
-			$(ev.currentTarget).prop('title', 'Show details');
-			$(selector).hide();
-			$(selector + "-summary").show();
-		}
-	},
+	showTab : function(ev) {
+		var $el = $(ev.currentTarget);
+		var $dataDiscoveryTabs = this.$el.find('#data-discovery-tabs');
 
-	/**
-	 * This toggles the view to display projects
-	 */
-	showProjects: function() {
-		$('#show-data-button').prop('disabled', false);
-		$("#show-projects-button").prop('disabled', true);
-		this.getList(this.project);
-	},
+		ev.preventDefault();
+		$dataDiscoveryTabs.find('li.active').removeClass('active');
+		$dataDiscoveryTabs.find('.tab-content div.active').removeClass('active');
 
-	/**
-	 * This toggles the view to display data
-	 */
-	showData: function() {
-		$('#show-data-button').prop('disabled', true);
-		$("#show-projects-button").prop('disabled', false);
-		this.getList(this.data);
+		$el.parent().addClass('active');
+		$('#' + $el.data('target')).addClass('active');
 	}
-
 });

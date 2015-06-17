@@ -1,11 +1,14 @@
 	{{#each list}}
-		<h5>{{title}}  
-		<button id="show-detail-button" data-id="{{id}}" class="btn btn-primary btn-xs" title="Show details" >+</button>
-		</h5>
-		{{#if summary }}
-			<div id="{{id}}-summary">{{summary}}</div>
-		{{else}}
-			<div id="{{id}}-summary"><em>summary unavailable</em></div>
-		{{/if}}
-		<div id="{{id}}" class="page_body_content" hidden></div>
+		<div class="summary-container-div">
+			<h5>{{title}}</h5>
+			{{#if ../showSummary}}
+				<div class="summary-content-div">
+					{{#if summary }}
+						{{summary}}
+					{{else}}None available{{/if}}
+				</div>
+			{{/if}}
+			{{> detailToggle toggleTitle=../toggleTitle toggleIcon=../toggleIcon}}
+			<div id="{{id}}" class="details-content" hidden></div>
+		</div>
 	{{/each}}
