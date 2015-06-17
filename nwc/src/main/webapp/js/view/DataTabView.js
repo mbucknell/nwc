@@ -12,7 +12,9 @@ NWC.view = NWC.view || {};
 		listTemplateName : 'dataDiscoveryList',
 		detailsTemplateName : 'dataDetail',
 
-		listUrl : CONFIG.endpoint.direct.sciencebase + '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DData&format=json',
+		listUrl : function() {
+			return CONFIG.endpoint.direct.sciencebase + '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DData&format=json';
+		},
 		detailsUrl : function(id) {
 			return CONFIG.endpoint.direct.sciencebase + '/catalog/item/' + id + '?format=json';
 		}

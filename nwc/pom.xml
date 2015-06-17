@@ -121,7 +121,11 @@
 						<include>utils/*.js</include>
 						<include>view/BaseView.js</include>
 						<include>view/BaseSelectMapView.js</include>
+						<include>view/BaseDiscoveryTabView.js</include>
 						<include>view/WaterBudgetHucDataView.js</include>
+						<include>view/ProjectTabView.js</include>
+						<include>view/DataTabView.js</include>
+						<include>view/PublicationsTabView.js</include>
 						<include>**/*.js</include>
 					</sourceIncludes>
 					<sourceExcludes>

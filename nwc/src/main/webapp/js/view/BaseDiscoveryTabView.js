@@ -8,6 +8,11 @@ NWC.view = NWC.view || {};
 
 (function() {
 	"use strict";
+	/*
+	 * This view should be extended and the listTemplateName, detailsTemplateName, listUrl, detailsUrl properties
+	 * defined. In addition, the getList and getDetails can be overridden if the default implementation needs
+	 * to be changed.
+	 */
 	NWC.view.BaseDiscoveryTabView = Backbone.View.extend({
 
 		SHOW_TITLE : 'Show details',
@@ -15,10 +20,20 @@ NWC.view = NWC.view || {};
 		SHOW_ICON : 'Details&nbsp;<i class="fa fa-caret-right"></i>',
 		HIDE_ICON : 'Details&nbsp;<i class="fa fa-caret-down"></i>',
 
-		listTemplateName : '',
-		detailsTemplatename : '',
+		listTemplateName : '', // Name of the template which will render the list of items
+		detailsTemplateName : '', // Name of the template which will render an item's details.
 
-		listUrl : '',
+		/*
+		 * @returns String - the url to be used to retrieve the list information to be rendered
+		 */
+		listUrl : function() {
+			return '';
+		},
+
+		/*
+		 * @param {String} id - id of the item whose details will be rendered.
+		 * @returns String - the url to be used to retrieve detail information about the object with id.
+		 */
 		detailsUrl : function(id) {
 			return '';
 		},
@@ -27,10 +42,12 @@ NWC.view = NWC.view || {};
 			'click .toggle-details-btn' : 'toggleDetails'
 		},
 
-		render : function() {
-			this.$el.html(this.template(this.context));
-		},
-
+		/*
+		 * @constructs
+		 * @param {Object} options
+		 *     @prop {Jquery element} el - this is where the list will be rendered
+		 *     @prop {Boolean} showSummary (optional) - Whether the summary in the list is rendered.
+		 */
 		initialize : function(options){
 			var self = this;
 			this.template = NWC.templates.getTemplate(this.listTemplateName);
@@ -43,22 +60,28 @@ NWC.view = NWC.view || {};
 
 			this.getList().done(function(data) {
 				self.context.list = data.items;
-				self.render();
+				self.$el.html(self.template(self.context));
 			});
 		},
 
+		/*
+		 * Uses the listUrl function result to retrieve the list of information asynchronously.
+		 * @returns Jquery.promise - If the call succeeds, the promise is resolved with the data retrieved.
+		 * If the call fails, the promise is rejected with an error message.
+		 */
 		getList : function() {
 			var deferred = $.Deferred();
+			var listUrl = this.listUrl();
 
 			$.ajax({
-				url : this.listUrl,
+				url : listUrl,
 				dataType : "json",
 				success: function(data) {
 					deferred.resolve(data);
 				},
 				error : function() {
 					//@todo - setup app level error handling
-					var errorMessage = 'Error retrieving project list data';
+					var errorMessage = 'Error retrieving data from ' + listUrl;
 					alert(errorMessage);
 					deferred.reject(errorMessage);
 				}
@@ -66,18 +89,25 @@ NWC.view = NWC.view || {};
 			return deferred.promise();
 		},
 
+		/*
+		 * Uses the detetailsUrl function result to retrieve information about a specific item, identified by id
+		 * @param {String} id
+		 * @returns Jquery.promise - If the call succeeds, the promise is reolved with the data retrieved.
+		 * If the call fails, the promise is rejected with an error message.
+		 */
 		getDetails : function(id) {
 			var deferred = $.Deferred();
+			var detailsUrl = this.detailsUrl(id);
 
 			$.ajax({
-				url : this.detailsUrl(id),
+				url : detailsUrl,
 				dataType : "json",
 				success: function(data) {
 					deferred.resolve(data);
 				},
 				error : function() {
 					//@todo - setup app level error handling
-					var errorMessage = 'error retrieving project detail data';
+					var errorMessage = 'Rrror retrieving detail data from ' + detailsUrl;
 					alert(errorMessage);
 				}
 			});
@@ -85,6 +115,12 @@ NWC.view = NWC.view || {};
 			return deferred.promise();
 		},
 
+		/*
+		 * Handles the click event on a details toggle button. This includes updating the toggle button itself,
+		 * showing/hiding the details content div and retrieving the details using getDetails if they have not
+		 * yet been retrieved successfully.
+		 * @param {Jquery event object} ev
+		 */
 		toggleDetails : function(ev) {
 			var self = this;
 			var $btn = $(ev.currentTarget);
@@ -101,9 +137,11 @@ NWC.view = NWC.view || {};
 
 				$detailsDiv.show();
 				$summaryDiv.hide();
-				this.getDetails($btn.data('id')).done(function(data) {
-					$detailsDiv.html(NWC.templates.getTemplate(self.detailsTemplateName)(data));
-				});
+				if (($detailsDiv).html() === '') {
+					this.getDetails($btn.data('id')).done(function(data) {
+						$detailsDiv.html(NWC.templates.getTemplate(self.detailsTemplateName)(data));
+					});
+				}
 			}
 			else {
 				$btn.html(this.SHOW_ICON);
