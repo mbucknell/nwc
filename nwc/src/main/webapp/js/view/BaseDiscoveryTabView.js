@@ -15,22 +15,26 @@ NWC.view = NWC.view || {};
 	 */
 	NWC.view.BaseDiscoveryTabView = Backbone.View.extend({
 
+		/* The following properties define the title attr and icon for the button which toggles the details visibility. */
 		SHOW_TITLE : 'Show details',
 		HIDE_TITLE : 'Hide details',
 		SHOW_ICON : 'Details&nbsp;<i class="fa fa-caret-right"></i>',
 		HIDE_ICON : 'Details&nbsp;<i class="fa fa-caret-down"></i>',
 
-		listTemplateName : '', // Name of the template which will render the list of items
-		detailsTemplateName : '', // Name of the template which will render an item's details.
+		/* The following properties should be overridden with the names of the list and details templates, respectively */
+		listTemplateName : '',
+		detailsTemplateName : '',
 
 		/*
-		 * @returns String - the url to be used to retrieve the list information to be rendered
+		 * Should be overridden
+		 * @returns String - the url to be used to retrieve the list information to be rendered.
 		 */
 		listUrl : function() {
 			return '';
 		},
 
 		/*
+		 * Should be overridden
 		 * @param {String} id - id of the item whose details will be rendered.
 		 * @returns String - the url to be used to retrieve detail information about the object with id.
 		 */

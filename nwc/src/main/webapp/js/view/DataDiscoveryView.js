@@ -16,7 +16,12 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 	dataTabView : null,
 	publicationTabView : null,
 
-	initialize : function() {
+	/*
+	 * @constructor
+	 * @param {Object} options
+	 *     @prop {Jquery element} el - the html element where view is rendered
+	 */
+	initialize : function(options) {
 		// call superclass initialize to do default initialize
 		// (includes render)
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
@@ -34,6 +39,10 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 		});
 	},
 
+	/*
+	 * Handles the clicks to change tab visibility
+	 * @param {Jquery event} ev
+	 */
 	showTab : function(ev) {
 		var $el = $(ev.currentTarget);
 		var $dataDiscoveryTabs = this.$el.find('#data-discovery-tabs');
@@ -44,7 +53,5 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 
 		$el.parent().addClass('active');
 		$('#' + $el.data('target')).addClass('active');
-
-
 	}
 });
