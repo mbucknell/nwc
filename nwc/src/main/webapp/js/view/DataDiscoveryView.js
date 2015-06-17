@@ -53,5 +53,12 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 
 		$el.parent().addClass('active');
 		$('#' + $el.data('target')).addClass('active');
+	},
+
+	remove : function() {
+		this.projectTabView.remove();
+		this.dataTabView.remove();
+		this.publicationsTabView.remove();
+		NWC.view.BaseView.prototype.remove.apply(this, arguments);
 	}
 });
