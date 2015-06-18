@@ -185,7 +185,7 @@ textarea[readonly] {
     border:2px solid #000099;
 }
 
-#pair-desc {
+.pair-desc {
     border-bottom: 1px dotted darkgrey;
     display: inline-block;
     width:100%

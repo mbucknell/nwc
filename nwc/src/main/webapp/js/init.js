@@ -18,7 +18,8 @@ $(document).ready(function() {
 		'countyHucTable',
 		'countyHucMap',
 		'dataDiscoveryList',
-		'dataDiscoveryDetail'
+		'dataDiscoveryDetail',
+		'aquaticBiologyPairList'
 	];
 
 	var PARTIALS = [
