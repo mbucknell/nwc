@@ -1,0 +1,22 @@
+<h6>Summary</h6>
+{{#if body}}
+	<div>{{{body}}}</div>
+{{else}}None available{{/if}}
+<h6>Purpose</h6>
+{{#if purpose}}
+	<div>{{purpose}}</div>
+{{else}}None available{{/if}}
+<h6>Links</h6>
+{{#if webLinks}}
+	<ul class="no-style-list"
+		{{#each webLinks}}
+		<li>{{title}}: <a href="{{uri}}" target="blank">{{uri}}</a></li>					
+		{{/each}}
+	</ul>
+{{else}}None available{{/if}}
+<h6>Dates</h6>
+{{#if dates}}
+	<ul class="no-style-list">
+		{{#each dates}}<li>{{label}}: {{dateString}}</li>{{/each}}
+	</ul>
+{{else}}None available{{/if}}				

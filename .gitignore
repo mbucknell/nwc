@@ -10,3 +10,4 @@ nbactions.xml
 **/context.xml
 .DS_Store
 /nwc/phantomjsdriver.log
+phantomjsdriver.log

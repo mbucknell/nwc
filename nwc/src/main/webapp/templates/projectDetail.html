@@ -1,0 +1,32 @@
+<h6>Summary</h6>
+{{#if body}}
+	<div>{{{body}}}</div>
+{{else}}None available{{/if}}
+<h6>Purpose</h6>
+{{#if purpose}}
+	<div>{{purpose}}</div>
+{{else}}None available{{/if}}
+<h6>Keywords</h6>
+{{#if tags}}
+	{{#each tags}}
+	{{#if @last }}
+		{{name}}
+	{{else}}
+		{{name}},
+	{{/if}}
+	{{/each}}
+{{else}}None available{{/if}}
+<h6>Status</h6>
+{{#if facets}}
+	{{#each facets}}
+		{{#if @last }}{{projectStatus}}
+		{{else}}{{projectStatus}},
+		{{/if}}
+	{{/each}}
+{{else}}None available{{/if}}	
+<h6>Contacts</h6>		
+{{#if contacts}}
+	<ul class="no-style-list">
+		{{#each contacts}}<li>{{type}}: {{name}}{{/each}}</li>
+	</ul>
+{{else}}None available{{/if}}

@@ -114,13 +114,18 @@
 		<script type="text/javascript" src="js/view/BaseView.js"></script>
 		<script type="text/javascript" src="js/view/BaseSelectMapView.js"></script>
 		<script type="text/javascript" src="js/view/BaseStreamflowStatsDataView.js"></script>
+		<script type="text/javascript" src="js/view/BaseDiscoveryTabView.js"></script>
 		
 		<script type="text/javascript" src="js/view/HomeView.js"></script>
                 
 		<script type="text/javascript" src="js/view/AquaticBiologyMapView.js"></script>
 		<script type="text/javascript" src="js/view/AquaticBiologySelectFeaturesView.js"></script>
-                <script type="text/javascript" src="js/view/BiodataGageMapView.js"></script>
+		<script type="text/javascript" src="js/view/BiodataGageMapView.js"></script>
 		<script type="text/javascript" src="js/view/DataDiscoveryView.js"></script>
+		<script type="text/javascript" src="js/view/ProjectTabView.js"></script>
+		<script type="text/javascript" src="js/view/DataTabView.js"></script>
+		<script type="text/javascript" src="js/view/PublicationsTabView.js"></script>
+		
 		<script type="text/javascript" src="js/view/StreamflowStatsMapView.js"></script>
 		<script type="text/javascript" src="js/view/StreamflowStatsGageDataView.js"></script>
 		<script type="text/javascript" src="js/view/StreamflowStatsHucDataView.js"></script>

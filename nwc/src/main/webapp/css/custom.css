@@ -192,6 +192,48 @@ textarea[readonly] {
 }
 
 .dismiss-btn {
+    border: 1px dotted darkgrey;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    margin-left: 5px;
+}
+.summary-container-div {
+    margin-bottom : 10px;
+}
+
+#data-discovery-tabs h5 {
+	font-weight : normal;
+	font-size : 16px;
+}
+#data-discovery-tabs h6 {
+	clear: both;
+}
+#data-discovery-tabs .details-content {
+	margin-top : 5px;
+	padding-top : 5px;
+	padding-left: 15px;
+	padding-right : 15px;
+	padding-bottom : 5px;
+	margin-bottom : 15px;
+	background-color : #eee;
+}
+
+.toggle-details-btn {
+	margin-top: 5px;
+}
+
+.pubs-summary-container img {
+	float : left;
+	margin-right : 15px;
+	margin-bottom: 5px;
+	height: 240px;
+	width : 190px;
+}
+
+.no-style-list {
+	list-style-type : none;
+}
+
     padding-right: 3px;
 }
 

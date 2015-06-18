@@ -1,0 +1,43 @@
+<h6>Summary</h6>
+<div class="pubs-summary-container">
+	{{#each webLinks}}
+		{{#ifTypeIsBrowseImage type}}
+			<img src="{{uri}}" alt="{{title}}" style="float: left;"/>
+		{{/ifTypeIsBrowseImage}}
+	{{/each}}
+	<div class="pubs-summary-body">
+		{{#if body}}{{{body}}}{{else}}None available{{/if}}
+	</div>
+</div>
+<h6>Contacts</h6>
+{{#if contacts}}
+	<ul class="no-style-list">
+		{{#each contacts}}
+		<li>{{type}}: {{name}}</li>
+		{{/each}}
+	</ul>
+{{else}}None available{{/if}}
+<h6>Links</h6>
+{{#if webLinks}}
+	<ul class="no-style-list">
+		{{#each webLinks}}
+			{{#ifTypeIsWebLink type}}
+			<li>{{title}}: <a href="{{uri}}" target="blank">{{uri}}</a></li>
+			{{/ifTypeIsWebLink}}
+		{{/each}}
+	</ul>
+{{else}}None available{{/if}}
+<h6>Dates</h6>
+{{#if dates}}
+	<ul class="no-style-list">
+		{{#each dates}}<li>{{label}}: {{dateString}}</li>{{/each}}
+	</ul>
+{{else}}None available{{/if}}
+<h6>Journals</h6>
+{{#if facets}}
+	<ul class="no-style-list">
+	{{#each facets}}
+		{{#ifFacetIsCitation className}}<li>{{journal}}: {{note}}</li>{{/ifFacetIsCitation}}
+	{{/each}}
+	</ul>
+{{else}}None available{{/if}}
