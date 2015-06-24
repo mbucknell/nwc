@@ -1,6 +1,8 @@
 describe('Tests for AquaticBiologySelectFeaturesView', function() {
 	var $testDiv;
 	var testView;
+	var templateSpy;
+	var renderSpy;
 	var mock_sites = [{attributes: {
 			SiteNumber:'1234',
 			SiteName:'LONESOME CREEK',
@@ -59,7 +61,7 @@ describe('Tests for AquaticBiologySelectFeaturesView', function() {
 			STANAME:'SEA OF TRANQILITY',
 			DRAIN_SQKM:"99"
 		};
-	beforeEach(function() {
+	beforeEach(function() {		
 		$('body').append('<div id="test-div"></div>');
 		$testDiv = $('#test-div');
 		$testDiv.append('<div id="site-selection-text"><div id="pair-list"><div></div></div></div>')
@@ -70,21 +72,34 @@ describe('Tests for AquaticBiologySelectFeaturesView', function() {
 		$testDiv.append('<tr><td><input type="checkbox" class="sites" id="as3" name="as3" value="as3"/></td></tr>');
 		$testDiv.append('</table></div>');
 		
+		templateSpy = jasmine.createSpy('templateSpy');
+		NWC.templates = {
+			getTemplate : jasmine.createSpy('getTemplateSpy').andReturn(templateSpy)
+		};
+		
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
 		eventSpy = jasmine.createSpyObj('eventSpy', ['preventDefault']);
 		spyOn(NWC.view.BiodataGageMapView.prototype, 'initialize');
+		spyOn(NWC.view.AquaticBiologyPairView.prototype, 'initialize').andCallFake(function() {
+			this.listTemplate = templateSpy;
+			this.context = {site: mock_sitePair, gage: mock_gagePair, comment: null};
+		});
 		
-							
 		
 		testView = new NWC.view.AquaticBiologySelectFeaturesView({
 			model : new NWC.model.AquaticBiologyFeaturesModel({
 				sites : mock_sites,
 				hucs : ["21312","23234","34534534"],
 				gages : mock_gages,
-				selected : [],
-				pairs : []
-			})
+				selected : []
+			}),
+			el : '<div>',
+			collection : new NWC.model.PairCollection()
 		});
+		
+		spyOn(testView, 'displayPairList');
+		// todo:  don't test the listenTo functionality, just test that diplayPairList does create a new PairView.
+		
 	});
 
 	afterEach(function() {
@@ -129,39 +144,40 @@ describe('Tests for AquaticBiologySelectFeaturesView', function() {
 			target : document.getElementById('as1') });
 		expect(testView.model.get('selected')).toEqual([]);
 	});
-    
-	it('Expects model.associatePairs to add or remove site and gage pairs to pairs array', function(){
-		
-		testView.model.associatePairs(mock_sitePair, mock_gagePair, 'add');
-		expect(testView.model.get('pairs')).toEqual([{site : mock_sitePair, gage: mock_gagePair}]);
-		
-		testView.model.associatePairs(mock_sitePair, mock_gagePair, 'add');
-		testView.model.associatePairs('1234', '8765', 'remove');
-		expect(testView.model.get('pairs')).toEqual([]);
-		
-		testView.model.associatePairs(1234, 8765, 'remove');
-		expect(testView.model.get('pairs')).toEqual([]);
+	it('Expects AquaticBiologySelectFeaturesView.displayPairList to create a AquaticBiologyPairView', function(){	
+		var elSpy = jasmine.createSpy('elSpy');
+		renderSpy = jasmine.createSpy('renderSpy').andReturn(elSpy);		
+		spyOn(NWC.view,'AquaticBiologyPairView').andReturn({
+			render: renderSpy
+		});
 
-		testView.model.associatePairs(mock_sitePair, mock_gagePair, 'add');
-		testView.model.associatePairs(mock_sitePair1, mock_gagePair1, 'add');
-		testView.model.associatePairs(mock_sitePair2, mock_gagePair2, 'add');
-		testView.model.associatePairs('1234', '8765', 'remove');
-		var goodPair = {site: mock_sitePair1, gage: mock_gagePair1};
-		expect(testView.model.get('pairs')).toContain(goodPair);
-		goodPair = {site: mock_sitePair2, gage: mock_gagePair2};
-		expect(testView.model.get('pairs')).toContain(goodPair);
-		var badPair = {site: mock_sitePair, gage: mock_gagePair};
-		expect(testView.model.get('pairs')).not.toContain(badPair);
+		var testPairModel = new NWC.model.PairModel({site: mock_sitePair,
+		gage: mock_gagePair,
+		comment: null});
+		testView.displayPairList(testPairModel);		
+		expect(NWC.view.AquaticBiologyPairView.prototype.initialize).toHaveBeenCalled();
+
+		//testView.model.associatePairs(mock_sitePair, mock_gagePair, 'add');
+		//testView.model.associatePairs(mock_sitePair1, mock_gagePair1, 'add');
+		//testView.model.associatePairs(mock_sitePair2, mock_gagePair2, 'add');
+		//testView.model.associatePairs('1234', '8765', 'remove');
+		//var goodPair = {site: mock_sitePair1, gage: mock_gagePair1};
+		//expect(testView.model.get('pairs')).toContain(goodPair);
+		//goodPair = {site: mock_sitePair2, gage: mock_gagePair2};
+		//expect(testView.model.get('pairs')).toContain(goodPair);
+		//var badPair = {site: mock_sitePair, gage: mock_gagePair};
+		//expect(testView.model.get('pairs')).not.toContain(badPair);
 	});
 	
 	it('Expects a displayPairList to display the correct pairs', function(){
-		testView.model.associatePairs(mock_sitePair1, mock_gagePair1, 'add');
+		testView.collection.addPair(mock_sitePair1, mock_gagePair1);
 		testView.displayPairList();
 		expect($('#pair-list div').html()).toMatch(/Site: FROG POND/);
 		expect($('#pair-list div').html()).toMatch(/Gage: RAGING RIVER/);
-		testView.model.associatePairs('05234', '80432765', 'remove');
-		testView.displayPairList();
-		expect($('#pair-list div').html()).not.toMatch(/Site: FROG POND/);
-		expect($('#pair-list div').html()).not.toMatch(/Gage: RAGING RIVER/);
+		//testView.model.associatePairs('05234', '80432765', 'remove');
+		//testView.displayPairList();
+		//expect($('#pair-list div').html()).not.toMatch(/Site: FROG POND/);
+		//expect($('#pair-list div').html()).not.toMatch(/Gage: RAGING RIVER/);
 	});
+
 });

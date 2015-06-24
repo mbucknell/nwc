@@ -15,36 +15,40 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
 			'click #allSelected' : 'selectAll',
 			'click #biodata-form-button' : 'sitesDoc',
 			'click #hucs-table-div tr' : 'onHucSelect',
-			'click #gages-table-div tr' : 'onGageSelect',
-			'click .dismiss-btn' : 'removePair'
+			'click #gages-table-div tr' : 'onGageSelect'
 		},
 
         initialize : function() {
 			this.context.biodataSites = this.model.get('sites');
 			this.context.gages = this.model.get('gages');
 			this.context.hucs = this.model.get('hucs');
-			this.context.pairs = this.model.get('pairs');
-			this.listenTo(this.model, 'change:pairs', this.displayPairList);
-			var listContent = '{{#each tPairs}}<div id="pair-desc"><div class="pair-label">' +
-					'<i title="Remove Pair" class="fa fa-times dismiss-btn" data-site-id="{{site.SiteNumber}}" data-gage-id="{{gage.STAID}}"></i>' +
-					'Site: {{site.SiteName}}' +
-					'{{#if site.DrainageAr}}' +
-					', {{site.DrainageAr}} mi<sup>2</sup>' +
-					'{{else}}' +
-					', mi</sup>2</sup> not available' +
-					'{{/if}}' +
-					'<br>Gage: {{gage.STANAME}}' +
-					'{{#if gage.DRAIN_SQKM}}' +
-					', {{gage.DRAIN_SQKM}} km<sup>2</sup>' +
-					'{{else}}' +
-					', km</sup>2</sup> not available' +
-					'{{/if}}</div>' +
-					'<input type="search" class="pair-comment col-xs-2" name="' +
-					'{{site.SiteNumber}}-{{gage.STAID}}">' +
-					'</div>' +
-					'{{/each}}';
-			this.listTemplate = Handlebars.compile(listContent);
+			this.collection = new NWC.model.PairCollection();
+			this.metadata = {
+					seriesLabels: [{
+						seriesName: 'SiteNumber'
+						},
+						{
+						seriesName: 'SiteName'
+						},
+						{
+						seriesName: 'SiteDrainageAreaSqMi'
+						},
+						{
+						seriesName: 'GageID'
+						},
+						{
+						seriesName: 'GageName'
+						},
+						{
+						seriesName: 'GageDrainageAreaSqKM'
+						},
+						{
+						seriesName: 'Comment'
+						}],
+					downloadHeader: "Aquatic Biology Site-Gage pair selections"
+				},
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
+			this.listenTo(this.collection, 'add', this.displayPairList);
 			this._displayMap();
         },
        
@@ -130,29 +134,55 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
 			this.router.navigate('/streamflow-stats/gage/' + gageID, {trigger : true});
         },
 	    
-	    _displayMap : function() {
+
+		displayPairList : function (pair) {
+			this.pairView = new NWC.view.AquaticBiologyPairView({
+				model: pair
+			});
+			var renderthing = this.pairView.render();
+			this.$("#pair-list").append(this.pairView.render().el);
+		},
+	
+		_displayMap : function() {
 			this.biodataGageMapView = new NWC.view.BiodataGageMapView({
 				mapDiv : 'biodata-gage-selection-map',
 				biodataFeature : this.context.biodataSites,
 				gageFeature : this.context.gages,
 				router : this.router,
 				el : $('#biodata-gage-selection-div'),
-				model : this.model
+				collection : this.collection
 			});
         },
-    
-		removePair: function (evt) {
-            var $cb = $(evt.target);
-            this.model.associatePairs($cb.data('site-id'),$cb.data('gage-id') ,'remove');    
-        },
-			
-		displayPairList : function () {
-			var pairDesc;
-			var newPairs = this.model.get('pairs');
-			var $pairEl = $('#pair-list');
-			$pairEl.find('div').remove();
-			$pairEl.append(this.listTemplate({tPairs : newPairs}));
-			return this;
-		}
-        
+		
+		pairData : function() {
+			this.data;
+			this.collection.each(function(model){
+				var row;
+				row	= [model.get("site").SiteNumber,
+				model.get("site").SiteName,
+				model.get("drainArea"),
+				model.get("STAID"),
+				model.get("STANAME"),
+				model.get("DRAIN_SQKM"),
+				model.get("comment")];
+			this.data.push(row);
+			});
+			return this.data;
+		},
+		toCSV: function() {
+			var csvHeader = "";
+			if (this.metadata.downloadHeader && this.metadata.downloadHeader.length !== 0) {
+				this.metadata.downloadHeader.lines(function(line) {
+					csvHeader += "\"# " + line + "\"\r\n";
+				});
+			}
+			csvHeader += this.metadata.seriesLabels.map(function(label) {
+				return createSeriesLabel(label);
+			}).join(",") + "\r\n";
+			var csvValues = "";
+			this.data.each(function(row) {
+				csvValues += row.join(",") + "\r\n";
+			});
+			return csvHeader + csvValues;
+		},
 });

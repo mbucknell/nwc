@@ -192,10 +192,7 @@ textarea[readonly] {
 }
 
 .dismiss-btn {
-    border: 1px dotted darkgrey;
-    padding-top: 1px;
-    padding-bottom: 1px;
-    margin-left: 5px;
+    padding-right: 3px;
 }
 .summary-container-div {
     margin-bottom : 10px;
@@ -232,9 +229,6 @@ textarea[readonly] {
 
 .no-style-list {
 	list-style-type : none;
-}
-
-    padding-right: 3px;
 }
 
 .pair-comment {

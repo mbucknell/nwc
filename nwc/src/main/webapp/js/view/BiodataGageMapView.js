@@ -153,7 +153,7 @@ NWC.view.BiodataGageMapView = Backbone.View.extend({
 		this.biodataSelectControl.activate();	    
 		this.gageHoverControl.activate();
 		this.gageSelectControl.deactivate();
-		this.model = options.model;
+		this.collection = options.collection;
 		Backbone.View.prototype.initialize.apply(this, arguments);
 		this.render(options);
 	},
@@ -188,7 +188,7 @@ NWC.view.BiodataGageMapView = Backbone.View.extend({
 	
 	addGage : function(feature) {
 		this.selectedGage = feature.attributes;
-		this.model.associatePairs(this.selectedSite, this.selectedGage, 'add');
+		this.collection.addPair(this.selectedSite, this.selectedGage);
 		this.gageSelectControl.deactivate();
 		this.biodataSelectControl.activate();
 	},	
