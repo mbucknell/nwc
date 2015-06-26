@@ -16,17 +16,30 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
 			'click #biodata-form-button' : 'sitesDoc',
 			'click #hucs-table-div tr' : 'onHucSelect',
 			'click #gages-table-div tr' : 'onGageSelect',
-			'click .dismiss-btn' : 'removePair'
+			'click #download-pairs-button' : 'downloadPairs'
 		},
 
         initialize : function() {
 			this.context.biodataSites = this.model.get('sites');
 			this.context.gages = this.model.get('gages');
 			this.context.hucs = this.model.get('hucs');
-			this.context.pairs = this.model.get('pairs');
-			this.listenTo(this.model, 'change:pairs', this.displayPairList);
-			this.listTemplate = Handlebars.compile('{{#each pairs}}<div>Site ID: {{site_id}}, Gage ID: {{gage_id}}<button title="Remove Pair" data-site-id="{{site_id}}" data-gage-id="{{gage_id}}" class="dismiss-btn">x</button></div>{{/each}}');
+			this.collection = new NWC.model.PairCollection();
+			// Header information for the pair list download file
+			this.metadata = {
+					seriesLabels: [
+						{seriesName: 'SiteNumber'},
+						{seriesName: 'SiteName'},
+						{seriesName: 'SiteDrainageAreaSqMi'},
+						{seriesName: 'GageID'},
+						{seriesName: 'GageName'},
+						{seriesName: 'GageDrainageAreaSqKM'},
+						{seriesName: 'Comment'}
+					],
+					downloadHeader: "Aquatic Biology Site-Gage pair selections"
+				},
+			this.pairViews = [];
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
+			this.listenTo(this.collection, 'add', this.displayPairList);
 			this._displayMap();
         },
        
@@ -112,28 +125,75 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
 			this.router.navigate('/streamflow-stats/gage/' + gageID, {trigger : true});
         },
 	    
-	    _displayMap : function() {
+		displayPairList : function (pair) {
+			var pairView = new NWC.view.AquaticBiologyPairView({
+				model: pair
+			});
+			this.$("#pair-list").append(pairView.render().el);
+			// push created views to an array so that they can be removed later
+			this.pairViews.push(pairView);
+		},
+	
+		_displayMap : function() {
 			this.biodataGageMapView = new NWC.view.BiodataGageMapView({
 				mapDiv : 'biodata-gage-selection-map',
 				biodataFeature : this.context.biodataSites,
 				gageFeature : this.context.gages,
 				router : this.router,
 				el : $('#biodata-gage-selection-div'),
-				model : this.model
+				collection : this.collection
 			});
         },
-    
-		removePair: function (evt) {
-            var $cb = $(evt.target);
-            this.model.associatePairs($cb.data('site-id'),$cb.data('gage-id') ,'remove');    
-        },
+		// loop through the collection of pairs and returns array of rows of pairs
+		getPairData : function() {
+			var pairData = [];
+			pairData = this.collection.map(function(model){
+				var rows;
+				rows	= [model.get("site").SiteNumber,
+				model.get("site").SiteName,
+				model.get("site").DrainageAr,
+				model.get("gage").STAID,
+				model.get("gage").STANAME,
+				model.get("gage").DRAIN_SQKM,
+				model.get("comment")];
+			return rows;
+			});
+			return pairData;
+		},
 		
-		displayPairList : function () {
-			var newPairs = this.model.get('pairs');
-			var $pairEl = $('#pair-list');
-			$pairEl.find('div').remove();
-			$pairEl.append(this.listTemplate({pairs : newPairs}));
-			return this;
+		toCSV: function() {
+			var data = this.getPairData();
+			var createSeriesLabel = function (metadata) {
+				var label = metadata.seriesName;
+				return label;
+			};
+			var csvHeader = "";
+			if (this.metadata.downloadHeader && this.metadata.downloadHeader.length !== 0) {
+				this.metadata.downloadHeader.lines(function(line) {
+					csvHeader += "\"# " + line + "\"\r\n";
+				});
+			}
+			csvHeader += this.metadata.seriesLabels.map(function(label) {
+				return createSeriesLabel(label);
+			}).join(",") + "\r\n";
+			var csvValues = "";
+			data.each(function(row) {
+				// Add enclosing quotes to account for commas in the site and/or gage names
+				csvValues += "\"" + row.join("\",\"") + "\"\r\n";
+			});
+			return csvHeader + csvValues;
+		},
+		
+		downloadPairs : function() {
+			var blob = new Blob([this.toCSV()], {type:'text/csv'});
+			saveAs(blob, 'AquaticBiologyNWISGagePairs.csv');
+		},
+		
+		remove : function() {
+			this.pairViews.each(function(pv){
+				pv.remove();
+			});
+			NWC.view.BaseView.prototype.remove.apply(this, arguments);
 		}
-        
+		
 });
