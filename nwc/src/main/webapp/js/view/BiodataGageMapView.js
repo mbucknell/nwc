@@ -13,8 +13,7 @@ NWC.view.BiodataGageMapView = Backbone.View.extend({
 	 *	@prop {String} mapDiv - the id of the div to place the biodata site/gage map.
 	 *	@prop {OpenLayers.Feature.Vector} biodataFeature - the feature object for the biodata sites to be drawn on the map
 	 *	@prop {OpenLayers.Feature.Vector} gageFeature - the feature object for the gages to be drawn on the map
-	 *	@prop {Backbone.Router} router
-	 *	@prop {Jquery el} el
+	 *	@prop {Backbone.Collection} collection of pair models
 	 */
 	initialize : function(options) {
 		this.mapDiv = options.mapDiv;

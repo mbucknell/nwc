@@ -25,18 +25,6 @@ NWC.model.PairCollection = Backbone.Collection.extend({
 	addPair : function(s,g) {
 		var newPair = new this.Model({site: s, gage: g, comment: null});
 		this.add(newPair);
-		var newId = this._byId;
-		
-		//var updPairs = this.get('pairs').clone();
-		//if (action === 'add') {
-		//	updPairs.add({site: s, gage : g, comment: null});
-		//};
-		//if (action === 'remove') {
-		//	updPairs.remove(function(n) {
-		//		return n['site'].SiteNumber === String(s) && n['gage'].STAID === String(g);
-		//	});
-		//};
-		//this.set({pairs : updPairs});
 	} 
 });
 
