@@ -2,110 +2,118 @@
     <input type="hidden" name="currentQuery"/>
 </form>
 <div class="row" style="margin: 0px;">
-	<div class="col-xs-12 nwc-container">
+    <div class="col-xs-12 nwc-container">
+	<div class="row">
+	    <div class="col-xs-12">
+		<h3>Aquatic Biology Data and Related Streamflow Statistics</h3>
+		    <p></p>   
+		    <p></p>
+	    </div>
+	    <div class="spacer map_container" id="biodata-gage-selection-div">
+		<div class="spacer"></div>
 		<div class="row">
-			<div class="col-xs-12">
-				<h3>Aquatic Biology Data and Related Streamflow Statistics</h3>
-                                <p></p>   
-                                <p></p>
-			</div>
-                        <div class="spacer map_container" id="biodata-gage-selection-div">
-                            <div class="spacer"></div>
-                            <div class="row">
-                                <div id="biodata-gage-selection-map" class="col-xs-5">
-                                </div>
-                            <div id="site-selection-text" class="col-xs-6">
-                                <h4>Establish Site Pairs</h4>
-                                First select an aquatic biology site on the map, then click a gage point on the map. 
-                                The list of associated sites/gages will appear below. Copy and paste the result for later reference. 
-                                Note, this interface is a work in progress. Its purpose is to help find related aquatic biology and streamflow 
-                                sites.<br>
-				<button id="download-pairs-button" class="btn btn-success">Download Pairs</button>
-                                <hr/>
-                            <div id="pair-list"></div><div></div>
-			    </div>
-                            
+		    <div id="site-selection-text" >
+			<h4>Establish Site Pairs</h4>
+                        <p>First select an aquatic biology site on the map, then click a gage point on the map. The list of associated sites/gages will appear below. You can add a comment for the 				pair in the box provided. The pairs and comments can be downloaded for later reference. Note, this interface is a work in progress. Its purpose is to help find related aquatic biology and streamflow sites.</p>
+			<hr/>
+			<div id="aquatic-biology-map" class="select-map">
                         </div>
-                        </div>
+			<table class="table table-striped sites-table">
+			    <thead>
+				<tr>
+				    <th>Remove Pair</th>
+				    <th>Site Name</th>
+				    <th>Site Drainage Area (mi<sup>2</sup>)</th>
+				    <th>Gage Name</th>
+				    <th>Gage Drainage Area (km<sup>2</sup>)</th>
+				    <th>Pair Comment</th>
+				</tr>
+			    </thead>   
+			    <tbody id="pair-list">
+			    </tbody>
+			</table>
+			<button id="download-pairs-button" class="btn btn-success">Download Pairs</button>
+		    </div>
 		</div>
-		<div class="row">
-                    <div class="col-xs-12">
-                        {{#if biodataSites}}
-                        <h4>Aquatic Biology Data Sites</h4>
-                        <div id="sites-table-div">
-                            <button id="biodata-form-button" disabled="disabled" class="btn btn-success">Explore Selected Sites In Biodata <span class="glyphicon glyphicon-arrow-right"></span></button>
-                            <table class="table table-striped sites-table">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox" id="allSelected" name="allSelected"/>
-                                            &nbsp;Select</th>
-                                        <th>Site Number</th>
-                                        <th>Site Name</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="siteList">
-                                    {{#each biodataSites}}
-                                    <tr>
-                                        <td class="xs-col-2">
-                                            <input type="checkbox" class="sites" id="ab-{{attributes.SiteNumber}}" name="{{attributes.SiteNumber}}" value="{{attributes.SiteNumber}}"/>
-                                        </td>
-                                        <td class="xs-col-4">{{attributes.SiteNumber}}</td>
-                                        <td class="xs-col-4">{{attributes.SiteName}}</td>
-                                    </tr>
-                                    {{/each}}
-                                </tbody>
-                            </table>
-                        </div>
-                        {{/if}}
-                        {{#if gages}}
-                        <h4>Stream Gages</h4>
-                        <div id="gages-table-div">
-                            <p>Select a gage to calculate streamflow statistics.</p>
-                            <table class="table table-striped selectable-table">
-                                <thead>
-                                <tr>
-                                    <th>Gage ID</th>
-                                    <th>Gage Name</th>
-                                    <th>Drainage Area (km<sup>2</sup>)</th>
-                                </tr>
-                                </thead>
-                                <tbody id="gageList">
-                                    {{#each gages}}
-                                    <tr id="gage-{{attributes.STAID}}">
-                                        <td class="xs-col-3">{{attributes.STAID}}</td>
-                                        <td class="xs-col-4">{{attributes.STANAME}}</td>
-                                        <td class="xs-col-3">{{attributes.DRAIN_SQKM}}</td>
-                                    </tr>
-                                    {{/each}}
-                                </tbody>
-                            </table>
-                        </div>
-                        {{/if}}
-                        {{#if hucs}}
-                        <h4>Watersheds</h4>
-                        <div id="hucs-table-div">
-                            <p>Select a HUC to calculate modeled streamflow statistics.</p>
-                            <table class="table table-striped selectable-table">
-                                <thead>
-                                    <tr>
-                                        <th>Hydrologic Unit Code</th>
-                                        <th>HUC Name</th>
-                                        <th>Drainage Area (km<sup>2</sup>)</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="hucList">
-                                    {{#each hucs}}
-                                    <tr id="{{huc12}}">
-                                        <td class="xs-col-2">{{huc12}}</td>
-                                        <td class="xs-col-4">{{hu_12_name}}</td>
-                                        <td class="xs-col-4">{{drain_sqkm}}</td>
-                                    </tr>
-                                    {{/each}}
-                                </tbody>
-                            </table>
-                        </div>
-                        {{/if}}
-                    </div>
-		</div>
+	    </div>
 	</div>
+	<div class="row">
+	    <div class="col-xs-12">
+		{{#if biodataSites}}
+		<h4>Aquatic Biology Data Sites</h4>
+		<div id="sites-table-div">
+		    <button id="biodata-form-button" disabled="disabled" class="btn btn-success">Explore Selected Sites In Biodata <span class="glyphicon glyphicon-arrow-right"></span></button>
+		    <table class="table table-striped sites-table">
+			<thead>
+			    <tr>
+				<th><input type="checkbox" id="allSelected" name="allSelected"/>&nbsp;Select</th>
+				<th>Site Number</th>
+				<th>Site Name</th>
+			    </tr>
+			</thead>
+			<tbody id="siteList">
+			    {{#each biodataSites}}
+			    <tr>
+				<td class="xs-col-2">
+				    <input type="checkbox" class="sites" id="ab-{{attributes.SiteNumber}}" name="{{attributes.SiteNumber}}" value="{{attributes.SiteNumber}}"/>
+				</td>
+				<td class="xs-col-4">{{attributes.SiteNumber}}</td>
+				<td class="xs-col-4">{{attributes.SiteName}}</td>
+			    </tr>
+			    {{/each}}
+			</tbody>
+		    </table>
+		</div>
+		{{/if}}
+		{{#if gages}}
+		<h4>Stream Gages</h4>
+		<div id="gages-table-div">
+		    <p>Select a gage to calculate streamflow statistics.</p>
+		    <table class="table table-striped selectable-table">
+			<thead>
+			    <tr>
+				<th>Gage ID</th>
+				<th>Gage Name</th>
+				<th>Drainage Area (km<sup>2</sup>)</th>
+			    </tr>
+			</thead>
+			<tbody id="gageList">
+			    {{#each gages}}
+			    <tr id="gage-{{attributes.STAID}}">
+				<td class="xs-col-3">{{attributes.STAID}}</td>
+				<td class="xs-col-4">{{attributes.STANAME}}</td>
+				<td class="xs-col-3">{{attributes.DRAIN_SQKM}}</td>
+			    </tr>
+			    {{/each}}
+			</tbody>
+		    </table>
+		</div>
+		{{/if}}
+		{{#if hucs}}
+		<h4>Watersheds</h4>
+		<div id="hucs-table-div">
+		    <p>Select a HUC to calculate modeled streamflow statistics.</p>
+		    <table class="table table-striped selectable-table">
+			<thead>
+			    <tr>
+				<th>Hydrologic Unit Code</th>
+				<th>HUC Name</th>
+				<th>Drainage Area (km<sup>2</sup>)</th>
+			    </tr>
+			</thead>
+			<tbody id="hucList">
+			    {{#each hucs}}
+			    <tr id="{{huc12}}">
+				<td class="xs-col-2">{{huc12}}</td>
+				<td class="xs-col-4">{{hu_12_name}}</td>
+				<td class="xs-col-4">{{drain_sqkm}}</td>
+			    </tr>
+			    {{/each}}
+			</tbody>
+		    </table>
+		</div>
+		{{/if}}
+	    </div>
+	</div>
+    </div>
 </div>

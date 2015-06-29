@@ -114,7 +114,8 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
 	   
 	displayPairList : function (pair) {
 		var pairView = new NWC.view.AquaticBiologyPairView({
-			model: pair
+			model: pair,
+			el : '<tr>'
 		});
 		this.$("#pair-list").append(pairView.render().el);
 		// push created views to an array so that they can be removed later
@@ -123,7 +124,7 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
 	
 	_displayMap : function() {
 		this.biodataGageMapView = new NWC.view.BiodataGageMapView({
-			mapDiv : 'biodata-gage-selection-map',
+			mapDiv : 'aquatic-biology-map',
 			biodataFeature : this.context.biodataSites,
 			gageFeature : this.context.gages,
 			router : this.router,
