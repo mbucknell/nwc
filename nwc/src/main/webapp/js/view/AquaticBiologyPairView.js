@@ -17,7 +17,8 @@ NWC.view.AquaticBiologyPairView = NWC.view.BaseView.extend({
 	 * @constructor
 	 * @param {Object} options
 	 *
-	 *	@prop {Object} model.attributes - the model attributes to be inserted into the list template
+	 *	@prop {Object} model.attributes - NWC.view.PairModel
+	 *	@prop {String} el - div element where pair info will be rendered
 	 */
 	initialize : function(options) {
 		this.listTemplate = NWC.templates.getTemplate(this.templateName);

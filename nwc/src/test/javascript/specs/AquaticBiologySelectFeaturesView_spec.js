@@ -115,8 +115,8 @@ describe('Tests for AquaticBiologySelectFeaturesView', function() {
 	it('Expects view\'s constructor to set the context property', function() {
 		expect(testView.context).toBeDefined();
 		expect(testView.context.biodataSites).toEqual(mock_sites);
-        expect(testView.context.gages).toEqual(mock_gages);
-        expect(testView.context.hucs).toEqual(["21312","23234","34534534"]);
+		expect(testView.context.gages).toEqual(mock_gages);
+		expect(testView.context.hucs).toEqual(["21312","23234","34534534"]);
 	});
 
 	it('Expects the view\'s constructor to call BaseView initialize', function() {

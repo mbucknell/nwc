@@ -106,9 +106,8 @@ h5, h6 {
 }
 #biodata-gage-selection-map {
 	border: 1px solid #a3a3a3;
-	height: 300px;
-        width: 500px;
-        float: left;
+	height: 500px;
+        width: 700px;
         padding-left:20px;
 }
 .inset-map {
@@ -175,6 +174,7 @@ textarea[readonly] {
 
 #site-selection-text {
     padding-left: 15px;
+    padding-right: 15px;
 }
 
 #site-selection-text hr {
@@ -183,12 +183,6 @@ textarea[readonly] {
 
 .sel-gages-button:focus {
     border:2px solid #000099;
-}
-
-.pair-desc {
-    border-bottom: 1px dotted darkgrey;
-    display: inline-block;
-    width:100%
 }
 
 .dismiss-btn {
@@ -229,13 +223,4 @@ textarea[readonly] {
 
 .no-style-list {
 	list-style-type : none;
-}
-
-.pair-comment {
-    float:right;
-}
-
-.pair-label {
-    width:80%;
-    float:left;
 }
