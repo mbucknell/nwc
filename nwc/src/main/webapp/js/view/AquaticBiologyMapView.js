@@ -42,7 +42,7 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 			{
 				isBaseLayer: false,
 				displayInLayerSwitcher: false,
-				visibility : false
+				visibility : true
 			}
 		);
 		this.hucLayer = new OpenLayers.Layer.WMS(

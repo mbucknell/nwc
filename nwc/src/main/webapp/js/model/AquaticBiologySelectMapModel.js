@@ -5,7 +5,7 @@ NWC.model = NWC.model || {};
 NWC.model.AquaticBiologySelectMapModel = NWC.model.BaseSelectMapModel.extend({
 	defaults : function() {
 		return $.extend({
-			gageLayerOn : false,
+			gageLayerOn : true,
 			hucLayerOn : false
 		}, NWC.model.BaseSelectMapModel.prototype.defaults);
 	}
