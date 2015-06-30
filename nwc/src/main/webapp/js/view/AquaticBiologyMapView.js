@@ -42,7 +42,7 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 			{
 				isBaseLayer: false,
 				displayInLayerSwitcher: false,
-				visibility : false
+				visibility : true
 			}
 		);
 		this.hucLayer = new OpenLayers.Layer.WMS(
@@ -68,7 +68,7 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 			featureType: 'SiteInfo',
 			featureNS: 'http://cida.usgs.gov/BioData',
 			srsName: 'EPSG:900913',
-			propertyNames: ['SiteNumber', 'SiteName', 'the_geom']
+			propertyNames: ['SiteNumber', 'SiteName', 'the_geom', 'DrainageAr']
 		});
 
 		var gageProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(this.gageFeatureLayer, {

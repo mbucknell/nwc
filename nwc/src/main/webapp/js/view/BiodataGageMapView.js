@@ -3,8 +3,6 @@ var NWC = NWC || {};
 NWC.view = NWC.view || {};
 
 NWC.view.BiodataGageMapView = Backbone.View.extend({
-	
-	//templateName : 'biodataGageMap',
 
 
 	/**
@@ -15,8 +13,7 @@ NWC.view.BiodataGageMapView = Backbone.View.extend({
 	 *	@prop {String} mapDiv - the id of the div to place the biodata site/gage map.
 	 *	@prop {OpenLayers.Feature.Vector} biodataFeature - the feature object for the biodata sites to be drawn on the map
 	 *	@prop {OpenLayers.Feature.Vector} gageFeature - the feature object for the gages to be drawn on the map
-	 *	@prop {Backbone.Router} router
-	 *	@prop {Jquery el} el
+	 *	@prop {Backbone.Collection} collection of pair models
 	 */
 	initialize : function(options) {
 		this.mapDiv = options.mapDiv;
@@ -35,18 +32,18 @@ NWC.view.BiodataGageMapView = Backbone.View.extend({
 					pointRadius: 4
 				}, OpenLayers.Feature.Vector.style['default'])),
 				'select': new OpenLayers.Style({
-					strokeColor: '#000000',
+					strokeColor: '#FF0000',
 					strokeOpacity: 1,
-					fillOpacity: 0.8,
+					fillOpacity: 0.4,
 					pointRadius: 6,
 					cursor: 'pointer'
 				}),
 				'temporary': new OpenLayers.Style({
-					strokeColor: '#000000',
+					strokeColor: '#FF0000',
 					strokeOpacity: 1,
-					fillOpacity: 0.8,
+					fillOpacity: 0.4,
 					pointRadius: 6,
-					cursor: "pointer"
+					cursor: 'pointer'
 				})
 			})
 		});
@@ -155,7 +152,7 @@ NWC.view.BiodataGageMapView = Backbone.View.extend({
 		this.biodataSelectControl.activate();	    
 		this.gageHoverControl.activate();
 		this.gageSelectControl.deactivate();
-		this.model = options.model;
+		//this.collection = options.collection;
 		Backbone.View.prototype.initialize.apply(this, arguments);
 		this.render(options);
 	},
@@ -180,14 +177,17 @@ NWC.view.BiodataGageMapView = Backbone.View.extend({
 	},
 	
 	addSite : function (feature) {
-		this.selectedSite = feature.attributes.SiteNumber;
+		this.selectedSite = feature.attributes;
 		this.biodataSelectControl.deactivate();
 		this.gageSelectControl.activate();
+		if (this.selectedGage){
+			this.deselectGage(this.selectedGage);
+		};
 	},
 	
 	addGage : function(feature) {
-		this.selectedGage = feature.attributes.STAID;
-		this.model.associatePairs(this.selectedSite, this.selectedGage, 'add');
+		this.selectedGage = feature.attributes;
+		this.collection.addPair(this.selectedSite, this.selectedGage);
 		this.gageSelectControl.deactivate();
 		this.biodataSelectControl.activate();
 	},	
@@ -195,19 +195,22 @@ NWC.view.BiodataGageMapView = Backbone.View.extend({
 	showPopup : function(evt){
 		var feature = evt.feature;
 		var layerName = feature.layer.name;
+		var drainArea;
+		var siteName;
 		var layerLabel;
-		var featureAttr;
 		if (layerName === 'Biodata Sites Layer') {
-			layerLabel = 'Site ID';
-			featureAttr = feature.attributes.SiteNumber;
+			drainArea = feature.attributes.DrainageAr;
+			siteName = feature.attributes.SiteName;
+			layerLabel = siteName + ', ' + drainArea + ' mi<sup>2</sup>';
 		} else {
-			layerLabel = 'Gage ID';
-			featureAttr = feature.attributes.STAID;
+			drainArea = feature.attributes.DRAIN_SQKM;
+			siteName = feature.attributes.STANAME;
+			layerLabel = siteName + ', ' + drainArea + ' km<sup>2</sup>';
 		}
 		var popup = new OpenLayers.Popup.AnchoredBubble("popup",
 			OpenLayers.LonLat.fromString(feature.geometry.toShortString()),
 			null,
-			layerLabel + ': ' + featureAttr,
+			layerLabel,
 			null,
 			true,
 			null
@@ -225,5 +228,11 @@ NWC.view.BiodataGageMapView = Backbone.View.extend({
 		this.map.removePopup(feature.popup);
 		feature.popup.destroy();
 		feature.popup = null;
-	}
+	},
+	
+	deselectGage: function(selGage){
+		var gageFeature = this.gageLayer.getFeaturesByAttribute('STAID', selGage.STAID);
+		this.gageSelectControl.unselect(gageFeature[0]);
+ 	}
+	
 });

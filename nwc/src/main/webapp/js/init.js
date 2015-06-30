@@ -17,6 +17,7 @@ $(document).ready(function() {
 		'modeledInfoPage',
 		'aquaticBiology',
 		'aquaticBiologySelectFeatures',
+		'aquaticBiologyPair',
 		'dataDiscovery',
 		'statsResults',
 		'countyHucTable',
