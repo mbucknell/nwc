@@ -24,7 +24,8 @@ $(document).ready(function() {
 		'dataDiscoveryList',
 		'dataDetail',
 		'projectDetail',
-		'publicationsDetail'
+		'publicationsDetail',
+		'project'
 	];
 
 	var PARTIALS = [
