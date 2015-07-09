@@ -1,3 +1,7 @@
+<h6>Title</h6>
+{{#if title}}
+	<div>{{{title}}}</div>
+{{else}}None available{{/if}}
 <h6>Summary</h6>
 {{#if body}}
 	<div>{{{body}}}</div>
@@ -8,7 +12,7 @@
 {{else}}None available{{/if}}
 <h6>Links</h6>
 {{#if webLinks}}
-	<ul class="no-style-list"
+	<ul class="no-style-list">
 		{{#each webLinks}}
 		<li>{{title}}: <a href="{{uri}}" target="blank">{{uri}}</a></li>					
 		{{/each}}
@@ -19,4 +23,5 @@
 	<ul class="no-style-list">
 		{{#each dates}}<li>{{label}}: {{dateString}}</li>{{/each}}
 	</ul>
-{{else}}None available{{/if}}				
+{{else}}None available{{/if}}
+<div class="big_spacer">&nbsp;</div>				

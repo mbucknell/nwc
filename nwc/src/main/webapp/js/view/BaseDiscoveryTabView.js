@@ -18,8 +18,8 @@ NWC.view = NWC.view || {};
 		/* The following properties define the title attr and icon for the button which toggles the details visibility. */
 		SHOW_TITLE : 'Show details',
 		HIDE_TITLE : 'Hide details',
-		SHOW_ICON : 'Details&nbsp;<i class="fa fa-caret-right"></i>',
-		HIDE_ICON : 'Details&nbsp;<i class="fa fa-caret-down"></i>',
+		SHOW_ICON : 'More&nbsp;<i class="fa fa-caret-right"></i>',
+		HIDE_ICON : 'Less&nbsp;<i class="fa fa-caret-down"></i>',
 
 		/* The following properties should be overridden with the names of the list and details templates, respectively */
 		listTemplateName : '',
@@ -43,14 +43,17 @@ NWC.view = NWC.view || {};
 		},
 
 		events : {
-			'click .toggle-details-btn' : 'toggleDetails'
+			'click .toggle-details-btn' : 'toggleDetails',
+			'click a' : 'goToPage'
 		},
 
 		/*
 		 * @constructs
 		 * @param {Object} options
 		 *     @prop {Jquery element} el - this is where the list will be rendered
+		 *     @prop {Backbone.Router instance} router - defaults to null
 		 *     @prop {Boolean} showSummary (optional) - Whether the summary in the list is rendered.
+		 *     @prop {Boolean} showLink (optional) - Whether the link in the list is rendered.
 		 */
 		initialize : function(options){
 			var self = this;
@@ -58,9 +61,11 @@ NWC.view = NWC.view || {};
 			Backbone.View.prototype.initialize.apply(this, arguments);
 			this.context = {
 				showSummary : options.showSummary ? options.showSummary : false,
+				showLink : options.showLink ? options.showLink : false,
 				toggleTitle : this.SHOW_TITLE,
 				toggleIcon : this.SHOW_ICON
 			};
+			this.router = options.router || null;
 
 			this.getList().done(function(data) {
 				self.context.list = data.items;
@@ -111,7 +116,7 @@ NWC.view = NWC.view || {};
 				},
 				error : function() {
 					//@todo - setup app level error handling
-					var errorMessage = 'Rrror retrieving detail data from ' + detailsUrl;
+					var errorMessage = 'Error retrieving detail data from ' + detailsUrl;
 					alert(errorMessage);
 				}
 			});
@@ -153,6 +158,10 @@ NWC.view = NWC.view || {};
 				$detailsDiv.hide();
 				$summaryDiv.show();
 			}
+		},
+
+		goToPage: function(ev) {
+			this.router.navigate(event.target.hash, {trigger: true});
 		}
 	});
 }());
