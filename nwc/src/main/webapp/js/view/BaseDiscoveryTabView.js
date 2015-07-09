@@ -44,13 +44,14 @@ NWC.view = NWC.view || {};
 
 		events : {
 			'click .toggle-details-btn' : 'toggleDetails',
-			'click a' : 'goToProject'
+			'click a' : 'goToPage'
 		},
 
 		/*
 		 * @constructs
 		 * @param {Object} options
 		 *     @prop {Jquery element} el - this is where the list will be rendered
+		 *     @prop {Backbone.Router instance} router - defaults to null
 		 *     @prop {Boolean} showSummary (optional) - Whether the summary in the list is rendered.
 		 *     @prop {Boolean} showLink (optional) - Whether the link in the list is rendered.
 		 */
@@ -159,7 +160,7 @@ NWC.view = NWC.view || {};
 			}
 		},
 
-		goToProject: function(ev) {
+		goToPage: function(ev) {
 			this.router.navigate(event.target.hash, {trigger: true});
 		}
 	});

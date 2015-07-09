@@ -9,6 +9,14 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 		'click #back-button': "back",	
 	},
 
+	detailsUrl : function(id) {
+		return CONFIG.endpoint.direct.sciencebase + '/catalog/item/' + id + '?format=json';
+	},
+
+	listUrl : function(id) {
+		return CONFIG.endpoint.direct.sciencebase + '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DData&parentId=' + id + '&format=json';
+	},
+
 	/*
 	 * @constructor
 	 * @param {Object} options
@@ -18,19 +26,12 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 		// call superclass initialize to do default initialize
 		// (includes render)
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
-		this.projectDetailView = new NWC.view.ProjectTabView({
-		});		
 		
-		this.projectDetailView.getDetails(options.projectId).done(function(data) {
-			$('#project-details').append('<h6>Title</h6>');
-			$('#project-details').append(data.title);
+		this.getDetails(options.projectId).done(function(data) {
 			$('#project-details').append(NWC.templates.getTemplate('projectDetail')(data));
 		});
-
-		this.dataDetailView = new NWC.view.DataTabView({
-		});
 		
-		var _this = this;
+		var self = this;
 		this.getDataList(options.projectId).done(function(dataList) {
 			if (dataList.items.length == 0) {
 				$('#data-details').append('<div class="row" style="margin: 0px;">None available</div>');				
@@ -38,10 +39,7 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 			else{
 				var i;
 				for (i=0; i < dataList.items.length; i++) {
-					_this.dataDetailView.getDetails(dataList.items[i].id).done(function(data) {
-						$('#data-details').append('<div class="row" style="margin: 0px;"></div>');
-						$('#data-details').append('<h6>Title</h6>');
-						$('#data-details').append(data.title);
+					self.getDetails(dataList.items[i].id).done(function(data) {
 						$('#data-details').append(NWC.templates.getTemplate('dataDetail')(data));
 						$('#data-details').append('<div class="row" style="margin: 0px;border-bottom: 1px solid black;"></div>');						
 					});
@@ -51,8 +49,30 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 		
 	},
 
-	listUrl : function(id) {
-		return CONFIG.endpoint.direct.sciencebase + '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DData&parentId=' + id + '&format=json';
+	/*
+	 * Uses the detetailsUrl function result to retrieve information about a specific item, identified by id
+	 * @param {String} id
+	 * @returns Jquery.promise - If the call succeeds, the promise is reolved with the data retrieved.
+	 * If the call fails, the promise is rejected with an error message.
+	 */
+	getDetails : function(id) {
+		var deferred = $.Deferred();
+		var detailsUrl = this.detailsUrl(id);
+
+		$.ajax({
+			url : detailsUrl,
+			dataType : "json",
+			success: function(data) {
+				deferred.resolve(data);
+			},
+			error : function() {
+				//@todo - setup app level error handling
+				var errorMessage = 'Error retrieving detail data from ' + detailsUrl;
+				alert(errorMessage);
+			}
+		});
+
+		return deferred.promise();
 	},
 
 	/*
