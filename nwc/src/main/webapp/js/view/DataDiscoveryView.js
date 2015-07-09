@@ -28,18 +28,15 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 		this.projectTabView = new NWC.view.ProjectTabView({
 			el : $('#show-project'),
 			showSummary : true,
-//			showLink : true,
 			router : options.router
 		});
 		this.dataTabView = new NWC.view.DataTabView({
 			el : $('#show-data'),
 			showSummary : true
-//			showLink : false
 		});
 		this.publicationsTabView = new NWC.view.PublicationsTabView({
 			el : $('#show-publications'),
 			showSummary : false
-//			showLink : false
 		});
 	},
 
