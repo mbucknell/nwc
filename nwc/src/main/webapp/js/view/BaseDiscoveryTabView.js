@@ -53,7 +53,6 @@ NWC.view = NWC.view || {};
 		 *     @prop {Jquery element} el - this is where the list will be rendered
 		 *     @prop {Backbone.Router instance} router - defaults to null
 		 *     @prop {Boolean} showSummary (optional) - Whether the summary in the list is rendered.
-		 *     @prop {Boolean} showLink (optional) - Whether the link in the list is rendered.
 		 */
 		initialize : function(options){
 			var self = this;
@@ -61,7 +60,6 @@ NWC.view = NWC.view || {};
 			Backbone.View.prototype.initialize.apply(this, arguments);
 			this.context = {
 				showSummary : options.showSummary ? options.showSummary : false,
-				showLink : options.showLink ? options.showLink : false,
 				toggleTitle : this.SHOW_TITLE,
 				toggleIcon : this.SHOW_ICON
 			};

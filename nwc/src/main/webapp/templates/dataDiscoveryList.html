@@ -1,6 +1,6 @@
 	{{#each list}}
 		<div class="summary-container-div">
-			<h5>{{title}}</h5>
+			<h5>{{title}}   {{> detailToggle toggleTitle=../toggleTitle toggleIcon=../toggleIcon}}</h5> 
 			{{#if ../showSummary}}
 				<div class="summary-content-div">
 					{{#if summary }}
@@ -8,10 +8,6 @@
 					{{else}}None available{{/if}}
 				</div>
 			{{/if}}
-			{{#if ../showLink}}
-				<div><a href="#data-discovery/project/{{id}}">Project Detail Page</a></div>
-			{{/if}}
-			{{> detailToggle toggleTitle=../toggleTitle toggleIcon=../toggleIcon}}
 			<div id="{{id}}" class="details-content" hidden></div>
 		</div>
 	{{/each}}
