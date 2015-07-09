@@ -61,7 +61,7 @@ NWC.view = NWC.view || {};
 			Backbone.View.prototype.initialize.apply(this, arguments);
 			this.context = {
 				showSummary : options.showSummary ? options.showSummary : false,
-				showLink : options.showLink ? options.showLink : false,
+//				showLink : options.showLink ? options.showLink : false,
 				toggleTitle : this.SHOW_TITLE,
 				toggleIcon : this.SHOW_ICON
 			};
