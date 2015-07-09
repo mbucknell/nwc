@@ -41,7 +41,6 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 				for (i=0; i < dataList.items.length; i++) {
 					self.getDetails(dataList.items[i].id).done(function(data) {
 						$('#data-details').append(NWC.templates.getTemplate('dataDetail')(data));
-						$('#data-details').append('<div class="row" style="margin: 0px;border-bottom: 1px solid black;"></div>');						
 					});
 				};				
 			}
