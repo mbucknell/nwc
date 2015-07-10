@@ -210,7 +210,8 @@ textarea[readonly] {
 }
 
 .toggle-details-btn {
-	margin: auto;
+	margin-bottom: 10px;
+	padding: 1px;
 }
 
 .pubs-summary-container img {
