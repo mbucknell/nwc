@@ -17,6 +17,10 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 		return CONFIG.endpoint.direct.sciencebase + '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DData&parentId=' + id + '&format=json';
 	},
 
+	pubListUrl : function(id) {
+		return CONFIG.endpoint.direct.sciencebase + '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DPublication&parentId=' + id + '&format=json';
+	},
+
 	/*
 	 * @constructor
 	 * @param {Object} options
@@ -29,10 +33,11 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 		
 		this.getDetails(options.projectId).done(function(data) {
 			$('#project-details').append(NWC.templates.getTemplate('projectDetail')(data));
+			$('#projectTabLink').hide();
 		});
 		
 		var self = this;
-		this.getDataList(options.projectId).done(function(dataList) {
+		this.getDatasetList(options.projectId).done(function(dataList) {
 			if (dataList.items.length == 0) {
 				$('#data-details').append('<div class="row" style="margin: 0px;">None available</div>');				
 			}
@@ -41,6 +46,21 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 				for (i=0; i < dataList.items.length; i++) {
 					self.getDetails(dataList.items[i].id).done(function(data) {
 						$('#data-details').append(NWC.templates.getTemplate('dataDetail')(data));
+					});
+				};				
+			}
+		});
+
+		this.getPublicationList(options.projectId).done(function(dataList) {
+			if (dataList.items.length == 0) {
+				$('#publication-details').append('<div class="row" style="margin: 0px;">None available</div>');				
+				$('#dataTabLink').hide();
+			}
+			else{
+				var i;
+				for (i=0; i < dataList.items.length; i++) {
+					self.getDetails(dataList.items[i].id).done(function(data) {
+						$('#publication-details').append(NWC.templates.getTemplate('publicationsDetail')(data));
 					});
 				};				
 			}
@@ -80,12 +100,38 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 	 * @returns Jquery.promise - If the call succeeds, the promise is resolved with the data retrieved.
 	 * If the call fails, the promise is rejected with an error message.
 	 */
-	getDataList : function(id) {
+	getDatasetList : function(id) {
 		var deferred = $.Deferred();
 		var listUrl = this.listUrl(id);
 
 		$.ajax({
 			url : listUrl,
+			dataType : "json",
+			success: function(data) {
+				deferred.resolve(data);
+			},
+			error : function() {
+				//@todo - setup app level error handling
+				var errorMessage = 'Error retrieving detail data from ' + listUrl;
+				alert(errorMessage);
+			}
+		});
+
+		return deferred.promise();
+	},
+
+	/*
+	 * Uses the pubListUrl function result to retrieve information about all publications for a specific project, identified by id
+	 * @param {String} id
+	 * @returns Jquery.promise - If the call succeeds, the promise is resolved with the data retrieved.
+	 * If the call fails, the promise is rejected with an error message.
+	 */
+	getPublicationList : function(id) {
+		var deferred = $.Deferred();
+		var pubListUrl = this.pubListUrl(id);
+
+		$.ajax({
+			url : pubListUrl,
 			dataType : "json",
 			success: function(data) {
 				deferred.resolve(data);
