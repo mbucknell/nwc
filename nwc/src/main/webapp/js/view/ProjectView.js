@@ -39,13 +39,14 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 		var self = this;
 		this.getDatasetList(options.projectId).done(function(dataList) {
 			if (dataList.items.length == 0) {
-				$('#data-details').append('<div class="row" style="margin: 0px;">None available</div>');				
+				$('#data-details').append('<div>None available</div>');				
 			}
 			else{
 				var i;
 				for (i=0; i < dataList.items.length; i++) {
 					self.getDetails(dataList.items[i].id).done(function(data) {
 						$('#data-details').append(NWC.templates.getTemplate('dataDetail')(data));
+						$('.dataTabLink').hide();
 					});
 				};				
 			}
@@ -53,8 +54,7 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 
 		this.getPublicationList(options.projectId).done(function(dataList) {
 			if (dataList.items.length == 0) {
-				$('#publication-details').append('<div class="row" style="margin: 0px;">None available</div>');				
-				$('#dataTabLink').hide();
+				$('#publication-details').append('<div>None available</div>');				
 			}
 			else{
 				var i;

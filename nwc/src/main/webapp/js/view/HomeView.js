@@ -21,7 +21,7 @@ NWC.workflows = {
 		img: 'img/workflow/originals/shield-01.svg'
 	},
 	dataDiscovery: {
-		uri: 'data-discovery',
+		uri: 'data-discovery/show-projects',
 		name: 'Data Discovery',
 		description: 'Search and browse datasets, publications, and project descriptions.',
 		img: 'img/workflow/originals/folder-01.svg'

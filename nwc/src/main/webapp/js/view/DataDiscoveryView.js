@@ -22,22 +22,32 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 	 *     @prop {Jquery element} el - the html element where view is rendered
 	 */
 	initialize : function(options) {
+
+		this.router = options.router || null;
+		this.tab = options.tab || null;
+
 		// call superclass initialize to do default initialize
 		// (includes render)
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
+
 		this.projectTabView = new NWC.view.ProjectTabView({
-			el : $('#show-project'),
+			el : $('#show-projects'),
 			showSummary : true,
 			router : options.router
 		});
 		this.dataTabView = new NWC.view.DataTabView({
 			el : $('#show-data'),
-			showSummary : true
+			showSummary : true,
+			router : options.router
 		});
 		this.publicationsTabView = new NWC.view.PublicationsTabView({
 			el : $('#show-publications'),
 			showSummary : false
 		});
+
+		$('#' + this.tab + '-button').addClass('active');
+		$('#' + this.tab).addClass('active');			
+		
 	},
 
 	/*
@@ -46,6 +56,7 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 	 */
 	showTab : function(ev) {
 		var $el = $(ev.currentTarget);
+		this.router.navigate('#data-discovery/' + $el.data('target'));
 		var $dataDiscoveryTabs = this.$el.find('#data-discovery-tabs');
 
 		ev.preventDefault();
