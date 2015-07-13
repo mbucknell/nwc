@@ -5,10 +5,6 @@ NWC.view = NWC.view || {};
 NWC.view.ProjectView = NWC.view.BaseView.extend({
 	templateName : 'project',
 
-	events: {
-		'click #back-button': "back",	
-	},
-
 	detailsUrl : function(id) {
 		return CONFIG.endpoint.direct.sciencebase + '/catalog/item/' + id + '?format=json';
 	},
@@ -144,16 +140,5 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 		});
 
 		return deferred.promise();
-	},
-
-	back: function() {
-		if(window.history.length > 2) {
-			//more than one route hit -> user did not land to current page directly\
-			window.history.back();
-		} 
-		else {
-			//otherwise go to the home page.
-			window.location.assign('');
-		}
 	}
 });
