@@ -26,7 +26,8 @@ $(document).ready(function() {
 		'dataDetail',
 		'projectDetail',
 		'publicationsDetail',
-		'project'
+		'project',
+		'data'
 	];
 
 	var PARTIALS = [

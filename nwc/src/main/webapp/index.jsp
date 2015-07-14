@@ -126,6 +126,7 @@
 		<script type="text/javascript" src="js/view/ProjectTabView.js"></script>
 		<script type="text/javascript" src="js/view/ProjectView.js"></script>
 		<script type="text/javascript" src="js/view/DataTabView.js"></script>
+		<script type="text/javascript" src="js/view/DataView.js"></script>
 		<script type="text/javascript" src="js/view/PublicationsTabView.js"></script>
 		
 		<script type="text/javascript" src="js/view/StreamflowStatsMapView.js"></script>
