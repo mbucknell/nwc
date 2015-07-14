@@ -27,7 +27,8 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 		'aquatic-biology' : 'aquaticBiology',
 		'aquatic-biology/select-features' : 'aquaticBiologySelectFeatures',
 		'data-discovery/:tab' : 'dataDiscovery',
-		'data-discovery/projectDetail/:projectId' : 'dataDiscoveryProjectDetail'
+		'data-discovery/projectDetail/:projectId' : 'dataDiscoveryProjectDetail',
+		'data-discovery/dataDetail/:datasetId' : 'dataDiscoveryDataDetail'
 	},
 
 	home : function() {
@@ -101,6 +102,10 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 
 	dataDiscoveryProjectDetail : function(projectId) {
 		this.showView(NWC.view.ProjectView, {projectId : projectId});
+	},
+
+	dataDiscoveryDataDetail : function(datasetId) {
+		this.showView(NWC.view.DataView, {datasetId : datasetId});
 	},
 
 	showView : function(view, opts) {
