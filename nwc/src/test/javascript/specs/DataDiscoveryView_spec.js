@@ -33,6 +33,7 @@ describe('Tests for DataDiscoveryView', function() {
 		spyOn(NWC.view.PublicationsTabView.prototype, 'initialize');
 
 		testView = new NWC.view.DataDiscoveryView({
+			router: new NWC.controller.NWCRouter(),
 			el : $testDiv
 		});
 
@@ -62,12 +63,12 @@ describe('Tests for DataDiscoveryView', function() {
 			preventDefault : jasmine.createSpy('preventDefaultSpy')
 		};
 
-//		testView.showTab(ev);
-//		expect($('#show-a-button').hasClass('active')).toBe(false);
-//		expect($('#show-a').hasClass('active')).toBe(false);
-//
-//		expect($('#show-b-button').hasClass('active')).toBe(true);
-//		expect($('#show-b').hasClass('active')).toBe(true);
+		testView.showTab(ev);
+		expect($('#show-a-button').hasClass('active')).toBe(false);
+		expect($('#show-a').hasClass('active')).toBe(false);
+
+		expect($('#show-b-button').hasClass('active')).toBe(true);
+		expect($('#show-b').hasClass('active')).toBe(true);
 	});
 
 });
