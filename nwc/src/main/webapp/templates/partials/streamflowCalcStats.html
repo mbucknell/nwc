@@ -1,7 +1,7 @@
-<div id="statistics-calculation-div" class="row col-xs-12 text-center spacer_down">
-	<button id="calculate-stats-button" disabled="disabled" class="btn btn-success">Calculate Statistics</button>
+<div id="statistics-calculation-div-{{pane}}" class="row col-xs-12 text-center spacer_down">
+	<button id="calculate-stats-button-{{pane}}" data-pane="{{pane}}" disabled="disabled" class="btn btn-success">Calculate Statistics</button>
 </div>
-<h4 id="loading-stats-indicator" style="display:none;">Calculating statistics <i class="fa fa-spinner fa-spin"></i></h4>
+<h4 id="loading-stats-indicator-{{pane}}" style="display:none;">Calculating statistics <i class="fa fa-spinner fa-spin"></i></h4>
 <form class="spacer spacer_down" name="statsParams" novalidate>
 	<div class="col-xs-12 spacer">
 		<h4 class="text-center">Date Range (Water Years)</h4>
@@ -9,18 +9,12 @@
 		<div class="col-md-2"></div>
 		<div class="col-md-4">
 			<label>From:</label>
-			<select id="start-year" class="form-control">
-				{{#each years}}
-					<option value="{{this}}">{{this}}</option>
-				{{/each}}
+			<select id="start-year-{{pane}}" class="form-control">
 			</select>
 		</div>
 		<div class="col-md-4">
 			<label>To:</label>
-			<select id="end-year" class="form-control">
-				{{#each years}}
-					<option value="{{this}}">{{this}}</option>
-				{{/each}}
+			<select id="end-year-{{pane}}" class="form-control">
 			</select>
 		</div>
 		<div class="col-md-2"></div>
@@ -34,7 +28,7 @@
 					<th>Statistic Group Name</th>
 				</tr>
 			</thead>
-			<tbody id="available-statistics">
+			<tbody id="available-statistics-{{pane}}">
 				{{#each streamStatsOptions}}
 				<tr>
 					<td class="xs-col-2">
@@ -48,9 +42,9 @@
 	</div>
 
 </form>
-<div id="stats-results-div" style="display:none;" class="col-xs-12 table-responsive">
-	<div class="col-sm-4 col-sm-offset-8">
-		<button id="download-stats-button" class="btn btn-success">Download These Statistics</button>
+<div id="stats-results-div-{{pane}}" style="display:none;" class="col-xs-12 table-responsive">
+	<div class="col-sm-4 col-sm-offset-6">
+		<button id="download-stats-button-{{pane}}" data-pane="{{pane}}" class="btn btn-success">Download These Statistics</button>
 	</div>
-	<div id="stats-results-table-div"></div>
+	<div id="stats-results-table-div-{{pane}}"></div>
 </div>	

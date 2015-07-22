@@ -137,8 +137,11 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 			$('#start-period-of-record').html(dates.startDate.format('{yyyy}-{MM}-{dd}'));
 			$('#end-period-of-record').html(dates.endDate.format('{yyyy}-{MM}-{dd}'));
 
-			var $startYear = $('#start-year');
-			var $endYear = $('#end-year');
+			var $startYearLeft = $('#start-year-left');
+			var $endYearLeft = $('#end-year-left');
+
+			var $startYearRight = $('#start-year-right');
+			var $endYearRight = $('#end-year-right');
 
 			var years = NWC.util.WaterYearUtil.yearsAsArray(NWC.util.WaterYearUtil.waterYearRange(Date.range(dates.startDate, dates.endDate)));
 			var i;
@@ -147,10 +150,15 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 			for (i = 0; i < years.length; i++) {
 				options += '<option value="' + years[i] + '">' + years[i] + '</option>';
 			}
-			$startYear.append(options);
-			$endYear.append(options);
-			$startYear.find('option:first-child').prop('selected', true);
-			$endYear.find('option:last-child').prop('selected', true);
+			$startYearLeft.append(options);
+			$endYearLeft.append(options);
+			$startYearLeft.find('option:first-child').prop('selected', true);
+			$endYearLeft.find('option:last-child').prop('selected', true);
+
+			$startYearRight.append(options);
+			$endYearRight.append(options);
+			$startYearRight.find('option:first-child').prop('selected', true);
+			$endYearRight.find('option:last-child').prop('selected', true);
 		});
 		$.when(nwisDataRetrieved, featureLoaded).done(function () {
 			$('#loading-indicator').hide();

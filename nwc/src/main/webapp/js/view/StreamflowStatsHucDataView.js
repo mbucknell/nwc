@@ -58,10 +58,14 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.exten
 		this.map.zoomToExtent(this.map.getMaxExtent());
 
 		// Initialize DOM on page
-		var $start = $('#start-year option[value="' + this.context.years.first() + '"]');
-		var $end = $('#end-year option[value="' + this.context.years.last() + '"]');
-		$start.prop('selected', true);
-		$end.prop('selected', true);
+		var $startLeft = $('#start-year-left option[value="' + this.context.years.first() + '"]');
+		var $endLeft = $('#end-year-left option[value="' + this.context.years.last() + '"]');
+		$startLeft.prop('selected', true);
+		$endLeft.prop('selected', true);
+		var $startRight = $('#start-year-right option[value="' + this.context.years.first() + '"]');
+		var $endRight = $('#end-year-right option[value="' + this.context.years.last() + '"]');
+		$startRight.prop('selected', true);
+		$endRight.prop('selected', true);
 	},
 
 	getStats : function(statTypes, startDate, endDate) {

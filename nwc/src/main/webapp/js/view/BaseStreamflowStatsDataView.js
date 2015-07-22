@@ -5,9 +5,12 @@ NWC.view = NWC.view || {};
 NWC.view.BaseStreamflowStatsDataView = NWC.view.BaseView.extend({
 
 	events : {
-		'click #calculate-stats-button' : 'calculateStats',
-		'click #available-statistics input' : 'calculateStatsEnable',
-		'click #download-stats-button' : 'downloadStats'
+		'click #calculate-stats-button-left' : 'calculateStats',
+		'click #calculate-stats-button-right' : 'calculateStats',
+		'click #available-statistics-left input' : 'calculateStatsEnableLeft',
+		'click #available-statistics-right input' : 'calculateStatsEnableRight',
+		'click #download-stats-button-left' : 'downloadStats',
+		'click #download-stats-button-right' : 'downloadStats'
 	},
 	initialize : function(options) {
 		if (!Object.has(this, 'context')) {
@@ -18,10 +21,19 @@ NWC.view.BaseStreamflowStatsDataView = NWC.view.BaseView.extend({
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 	},
 
+	/*
+	 * Functions which enable the statistics button
+	 * must be a better way to do this
+	 */
+	
+	calculateStatsEnableLeft : function() {
+		var disable = !($('#available-statistics-left input').is(':checked'));
+		$('#calculate-stats-button-left').prop('disabled', disable);
+	},
 
-	calculateStatsEnable : function() {
-		var disable = !($('#available-statistics input').is(':checked'));
-		$('#calculate-stats-button').prop('disabled', disable);
+	calculateStatsEnableRight : function() {
+		var disable = !($('#available-statistics-right input').is(':checked'));
+		$('#calculate-stats-button-right').prop('disabled', disable);
 	},
 
 	/*
@@ -36,28 +48,36 @@ NWC.view.BaseStreamflowStatsDataView = NWC.view.BaseView.extend({
 	},
 
 	calculateStats : function(ev) {
-		var startDate = NWC.util.WaterYearUtil.waterYearStart($('#start-year option:selected').val());
-		var endDate = NWC.util.WaterYearUtil.waterYearEnd($('#end-year option:selected').val());
+		var $el = $(ev.currentTarget);
+		var pane =  $el.data('pane');
+		var startDate = NWC.util.WaterYearUtil.waterYearStart($('#start-year-' + pane + ' option:selected').val());
+		var endDate = NWC.util.WaterYearUtil.waterYearEnd($('#end-year' + pane + ' option:selected').val());
 
-		var $loadingIndicator = $('#loading-stats-indicator');
-		var $statsResultsDiv = $('#stats-results-div');
+		var $loadingIndicator = $('#loading-stats-indicator-' + pane);
+		var $statsResultsDiv = $('#stats-results-div-' + pane);
 
 		var statTypes = [];
 
 		ev.preventDefault();
 
-		$('#calculate-stats-button').hide();
+		$('#calculate-stats-button-' + pane).hide();
 
 		$statsResultsDiv.hide();
 		$loadingIndicator.show();
-		$('#available-statistics input:checked').each(function() {
+		$('#available-statistics-' + pane + ' input:checked').each(function() {
 			statTypes.push($(this).val());
 		});
 
 		this.getStats(statTypes, startDate, endDate).done(function(statistics) {
-			this.streamflowStatistics = statistics;
+			//must be a better way here and corresponding getStatsTsv...Mary?
+			if (pane == 'left') {
+				this.streamflowStatisticsLeft = statistics;				
+			}
+			else {
+				this.streamflowStatisticsRight = statistics;								
+			}
 
-			$('#stats-results-table-div').html(NWC.templates.getTemplate('statsResults')({streamflowStatistics : statistics}));
+			$('#stats-results-table-div-' + pane).html(NWC.templates.getTemplate('statsResults')({streamflowStatistics : statistics}));
 			$statsResultsDiv.show();
 			$loadingIndicator.hide();
 
@@ -73,8 +93,14 @@ NWC.view.BaseStreamflowStatsDataView = NWC.view.BaseView.extend({
 		return '';
 	},
 
-	getStatsTsv : function(tsvHeader) {
-		var statistics = this.streamflowStatistics;
+	getStatsTsv : function(tsvHeader, pane) {
+		var statistics;
+		if (pane == 'left') {
+			statistics = this.streamflowStatisticsLeft;			
+		}
+		else {
+			statistics = this.streamflowStatisticsRight;
+		}
 		var tsvValues = "Name\tValue\tDescription\n";
 		var i;
 
@@ -111,8 +137,10 @@ NWC.view.BaseStreamflowStatsDataView = NWC.view.BaseView.extend({
 	},
 
 	downloadStats : function(ev) {
+		var $el = $(ev.currentTarget);
+		var pane =  $el.data('pane');
 		ev.preventDefault();
-		var blob = new Blob([this.getStatsTsv(this.getStatsTsvHeader())], {type:'text/tsv'});
+		var blob = new Blob([this.getStatsTsv(this.getStatsTsvHeader(), pane)], {type:'text/tsv'});
 		saveAs(blob, this.getStatsFilename());
 	}
 });

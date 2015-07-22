@@ -38,6 +38,13 @@
 				<div id="gage-inset" class="inset-map"></div>
 			</div>
 		</div>
-		{{> streamflowCalcStats }}
+		<div class="row spacer">
+			<div id="left" class="col-xs-6">
+		{{> streamflowCalcStats pane="left"}}
+			</div>
+			<div id="right" class="col-xs-6">
+		{{> streamflowCalcStats pane="right"}}
+			</div>
+		</div>
 	</div>
 </div>
