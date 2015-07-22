@@ -69,7 +69,7 @@ NWC.view.BaseStreamflowStatsDataView = NWC.view.BaseView.extend({
 		});
 
 		this.getStats(statTypes, startDate, endDate).done(function(statistics) {
-			//must be a better way here and corresponding getStatsTsv...Mary?
+			//must be a better way here and corresponding getStatsTsv
 			if (pane == 'left') {
 				this.streamflowStatisticsLeft = statistics;				
 			}

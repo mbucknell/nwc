@@ -10,11 +10,17 @@
 		<div class="col-md-4">
 			<label>From:</label>
 			<select id="start-year-{{pane}}" class="form-control">
+				{{#each years}}
+					<option value="{{this}}">{{this}}</option>
+				{{/each}}
 			</select>
 		</div>
 		<div class="col-md-4">
 			<label>To:</label>
 			<select id="end-year-{{pane}}" class="form-control">
+				{{#each years}}
+					<option value="{{this}}">{{this}}</option>
+				{{/each}}
 			</select>
 		</div>
 		<div class="col-md-2"></div>
