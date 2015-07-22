@@ -14,6 +14,7 @@ $(document).ready(function() {
 		'streamflowStats',
 		'streamflowGageStats',
 		'streamflowHucStats',
+		'streamflowCalcStats',
 		'modeledInfoPage',
 		'aquaticBiology',
 		'aquaticBiologySelectFeatures',

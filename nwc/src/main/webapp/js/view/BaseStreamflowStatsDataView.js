@@ -5,35 +5,30 @@ NWC.view = NWC.view || {};
 NWC.view.BaseStreamflowStatsDataView = NWC.view.BaseView.extend({
 
 	events : {
-		'click #calculate-stats-button-left' : 'calculateStats',
-		'click #calculate-stats-button-right' : 'calculateStats',
-		'click #available-statistics-left input' : 'calculateStatsEnableLeft',
-		'click #available-statistics-right input' : 'calculateStatsEnableRight',
-		'click #download-stats-button-left' : 'downloadStats',
-		'click #download-stats-button-right' : 'downloadStats'
+		'click #calculate-stats-button' : 'calculateStats',
+		'click #available-statistics input' : 'calculateStatsEnable',
+		'click #download-stats-button' : 'downloadStats'
 	},
 	initialize : function(options) {
-		if (!Object.has(this, 'context')) {
-			this.context = {};
-		}
-		this.context.streamStatsOptions = NWC.dictionary.statGroups;
 
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
+
+		this.CalculateStatsView = new NWC.view.StreamflowStatsCalculateStatsView({
+			el : $('.calculate-stats'),
+			years : this.context.years || null
+		});
 	},
 
 	/*
-	 * Functions which enable the statistics button
-	 * must be a better way to do this
+	 * Function which enables the statistics button
 	 */
 	
-	calculateStatsEnableLeft : function() {
-		var disable = !($('#available-statistics-left input').is(':checked'));
-		$('#calculate-stats-button-left').prop('disabled', disable);
-	},
-
-	calculateStatsEnableRight : function() {
-		var disable = !($('#available-statistics-right input').is(':checked'));
-		$('#calculate-stats-button-right').prop('disabled', disable);
+	calculateStatsEnable : function(ev) {
+		var $el = $(ev.currentTarget);
+		var disable = !($($el).is(':checked'));
+		var $paneDiv = $el.parents('.calculate-stats');
+		var $calculateButton = $paneDiv.find('#calculate-stats-button');
+		$calculateButton.prop('disabled', disable);
 	},
 
 	/*
@@ -49,27 +44,31 @@ NWC.view.BaseStreamflowStatsDataView = NWC.view.BaseView.extend({
 
 	calculateStats : function(ev) {
 		var $el = $(ev.currentTarget);
-		var pane =  $el.data('pane');
-		var startDate = NWC.util.WaterYearUtil.waterYearStart($('#start-year-' + pane + ' option:selected').val());
-		var endDate = NWC.util.WaterYearUtil.waterYearEnd($('#end-year' + pane + ' option:selected').val());
+		var $paneDiv = $el.parents('.calculate-stats');
+		var pane = $paneDiv.get(0).id;
+		var $startSelect = $paneDiv.find('.start-year option:selected'); 
+		var $endSelect = $paneDiv.find('.end-year option:selected'); 
+		var startDate = NWC.util.WaterYearUtil.waterYearStart($($startSelect).val());
+		var endDate = NWC.util.WaterYearUtil.waterYearEnd($($endSelect).val());
 
-		var $loadingIndicator = $('#loading-stats-indicator-' + pane);
-		var $statsResultsDiv = $('#stats-results-div-' + pane);
+		var $loadingIndicator = $($paneDiv.find('#loading-stats-indicator'));
+		var $statsResultsDiv = $($paneDiv.find('#stats-results-div'));
 
 		var statTypes = [];
 
 		ev.preventDefault();
 
-		$('#calculate-stats-button-' + pane).hide();
+		var $calculateButton = $paneDiv.find('#calculate-stats-button');
+		$calculateButton.hide();
 
 		$statsResultsDiv.hide();
 		$loadingIndicator.show();
-		$('#available-statistics-' + pane + ' input:checked').each(function() {
+		var $statsSelected = $paneDiv.find('#available-statistics input:checked');
+		$($statsSelected).each(function() {
 			statTypes.push($(this).val());
 		});
 
 		this.getStats(statTypes, startDate, endDate).done(function(statistics) {
-			//must be a better way here and corresponding getStatsTsv
 			if (pane == 'left') {
 				this.streamflowStatisticsLeft = statistics;				
 			}
@@ -77,7 +76,8 @@ NWC.view.BaseStreamflowStatsDataView = NWC.view.BaseView.extend({
 				this.streamflowStatisticsRight = statistics;								
 			}
 
-			$('#stats-results-table-div-' + pane).html(NWC.templates.getTemplate('statsResults')({streamflowStatistics : statistics}));
+			var $statsResultsTableDiv = $($paneDiv.find('#stats-results-table-div'));
+			$statsResultsTableDiv.html(NWC.templates.getTemplate('statsResults')({streamflowStatistics : statistics}));
 			$statsResultsDiv.show();
 			$loadingIndicator.hide();
 
@@ -138,7 +138,8 @@ NWC.view.BaseStreamflowStatsDataView = NWC.view.BaseView.extend({
 
 	downloadStats : function(ev) {
 		var $el = $(ev.currentTarget);
-		var pane =  $el.data('pane');
+		var $paneDiv = $el.parents('.calculate-stats');
+		var pane = $paneDiv.get(0).id;
 		ev.preventDefault();
 		var blob = new Blob([this.getStatsTsv(this.getStatsTsvHeader(), pane)], {type:'text/tsv'});
 		saveAs(blob, this.getStatsFilename());
