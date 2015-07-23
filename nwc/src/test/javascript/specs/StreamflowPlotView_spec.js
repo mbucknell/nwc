@@ -17,7 +17,7 @@ describe('NWC.view.StreamflowPlotView', function() {
 		$('body').append('<div id="test-div"></div>');
 		$testDiv = $('#test-div');
 		var html = '<div style="display:none" class="plot-loading-indicator"></div>' +
-			'<div style="display:none" class="plot-legend-div"><div class="plot-div"></div></div class="legend-div"></div>'
+			'<div style="display:none" class="plot-legend-div"><div class="plot-div"></div></div class="legend-div"></div>';
 		$testDiv.append(html);
 		testView = new NWC.view.StreamflowPlotView({
 			el : $testDiv,

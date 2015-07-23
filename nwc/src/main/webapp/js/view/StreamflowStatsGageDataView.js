@@ -1,13 +1,17 @@
+/*jslint browser: true */
+/*global OpenLayers*/
+/*global $*/
+
 var NWC = NWC || {};
 
-NWC.view = NWC.view || {}
+NWC.view = NWC.view || {};
 
 NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.extend({
 
 	templateName : 'streamflowGageStats',
 
 	events : {
-		'click .show-plot-btn' : 'plotStreamFlowData',
+		'click .show-plot-btn' : 'plotStreamFlowData'
 	},
 
 	/*
@@ -74,8 +78,8 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 			return {
 				startDate : NWC.util.WaterYearUtil.waterYearStart(1981),
 				endDate : NWC.util.WaterYearUtil.waterYearEnd(2010)
-			}
-		}
+			};
+		};
 
 		var deferred = $.Deferred();
 		$.ajax({
@@ -105,6 +109,14 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 		return this;
 	},
 
+	/*
+	 * @construct
+	 * @param {Object} options
+	 *
+	 *     @prop {String} gageId - Gage shown in this view
+	 *     @prop {String} insetMapDiv - id of the inset map div
+	 *     @prop {Jquery element} el - jquery element where this view will be rendered.
+	 */
 	initialize : function(options) {
 		var self = this;
 
@@ -198,6 +210,11 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 		return 'eflowstats_NWIS_' + this.context.gageId + '.tsv';
 	},
 
+
+	/*
+	 * @returns Jquery promise which is resolved with the data series if it is successfully retrieved. If
+	 * unsuccessful is is rejected and forwards on the text response of the bad request
+	 */
 	getDataSeriesPromise : function() {
 		var deferred = $.Deferred();
 
@@ -266,7 +283,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 
 	_buildStreamFlowUrl : function(startDate, endDate, siteId) {
 		//TODO make this a config parameter
-		return 'http://waterservices.usgs.gov/nwis/dv/?format=waterml,1.1&sites=' + siteId +
+		return CONFIG.endpoint.nwisStreamflow + '?format=waterml,1.1&sites=' + siteId +
 			'&startDT=' + startDate.format('{yyyy}-{MM}-{dd}') + '&endDT=' + endDate.format('{yyyy}-{MM}-{dd}') +
 			'&statCD=00003&parameterCd=00060';
 	}

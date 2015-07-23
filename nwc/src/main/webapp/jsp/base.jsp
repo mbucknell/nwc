@@ -48,6 +48,7 @@
     request.setAttribute("directThreddsEndpoint", props.get("nwc.endpoint.thredds"));
     request.setAttribute("directWpsEndpoint", props.get("nwc.endpoint.wps"));
     request.setAttribute("directNwisEndpoint", props.get("nwc.endpoint.nwis"));
+	request.setAttribute("directNwisStreamflowEndpoint", props.get("nwc.endpoint.nwis.streamflow"));
 	request.setAttribute("searchServiceEndpoint", props.get("nwc.endpoint.searchService"));
 	request.setAttribute("directSciencebaseEndpoint", props.get("nwc.endpoint.sciencebase"));
 %>

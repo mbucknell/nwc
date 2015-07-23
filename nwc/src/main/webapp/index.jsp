@@ -17,6 +17,7 @@
 				CONFIG.endpoint.wpsBase = CONFIG.contextPath + '/proxywps/';
 				CONFIG.endpoint.wps = CONFIG.endpoint.wpsBase + 'WebProcessingService'; //TODO inconsistant use of of URL resources
 				CONFIG.endpoint.nwis = '${directNwisEndpoint}';
+				CONFIG.endpoint.nwisStreamflow = '${directNwisStreamflowEndpoint}';
 				
 				CONFIG.endpoint.searchService = '${searchServiceEndpoint}';
 				
