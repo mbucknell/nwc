@@ -167,5 +167,10 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.exten
 		else {
 			alert('No data available to download');
 		}
+	},
+
+	remove : function() {
+		this.streamflowPlotView.remove();
+		NWC.BaseViewStreamflowStatsData.prototype.remove.apply(this, arguments);
 	}
 });

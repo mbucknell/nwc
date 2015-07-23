@@ -15,12 +15,21 @@ NWC.view = NWC.view || {};
 		/*
 		 * @constructs
 		 * @param {Object} options
+		 *      @prop {Jquery promise}getDataSeriesPromise - promise which when resolved provides the data series to be plotted.
+		 *      @prop {Jquery element} el - The element where this view will be rendered.
 		 */
 		initialize : function(options) {
 			this.getDataSeriesPromise = options.getDataSeriesPromise;
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 		},
 
+		/*
+		 * Uses getDataSeriesPromise to retrieve the data series and updates the plot
+		 * @param {String} plotTitle - The plot will use this as its title
+		 * @returns {Jquery Promise} - If getDataSeriesPromise resolves, the plot is drawn and and the returned promise
+		 *     will resolve with the dataSeries as its argument. If the getDataSeriesPromise is rejected, no plot is drawn, the
+		 *     returned promise is rejected using the arguments from the rejected promise.
+		 */
 		plotStreamflowData : function(plotTitle) {
 			var self = this;
 			var deferred = $.Deferred();

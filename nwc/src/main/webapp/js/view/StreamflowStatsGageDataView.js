@@ -259,6 +259,11 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 		});
 	},
 
+	remove : function() {
+		this.streamflowPlotView.remove();
+		NWC.BaseViewStreamflowStatsData.prototype.remove.apply(this, arguments);
+	},
+
 	_buildStreamFlowUrl : function(startDate, endDate, siteId) {
 		//TODO make this a config parameter
 		return 'http://waterservices.usgs.gov/nwis/dv/?format=waterml,1.1&sites=' + siteId +
