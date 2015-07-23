@@ -6,6 +6,10 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 
 	templateName : 'streamflowGageStats',
 
+	events : {
+		'click .show-plot-btn' : 'plotStreamFlowData',
+	},
+
 	/*
 	 * Query NWIS for information about this.context.gageId. If the call fails
 	 * the deferred will be rejected with a default start and end date. Otherwise the start and
@@ -45,7 +49,9 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 			startColumn.sort(function(a, b) {
 				return a - b;
 			});
-			this.startDate = startColumn[0];
+			if (startColumn.length === 0) {
+				startColumn.push(NWC.util.WaterYearUtil.waterYearStart(1981));
+			}
 
 			var endColumn = table.getColumnByName(END_DATE_COL_NAME);
 			endColumn = endColumn.map(reformatDateStr);
@@ -53,7 +59,10 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 			endColumn.sort(function(a, b) {
 				return b - a;
 			});
-			this.endDate = endColumn[0];
+			if (endColumn.length === 0) {
+				endColumn.push(NWC.util.WaterYearUtil.waterYearEnd(2010));
+			}
+
 			return {
 				startDate : startColumn[0],
 				endDate : endColumn[0]
@@ -89,11 +98,16 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 	render : function() {
 		NWC.view.BaseStreamflowStatsDataView.prototype.render.apply(this, arguments);
 		this.map.render(this.insetMapDiv);
-
+		this.streamflowPlotView = new NWC.view.StreamflowPlotView({
+			el : this.$el.find('.streamflow-plot-container'),
+			getDataSeriesPromise : this.getDataSeriesPromise.bind(this)
+		});
 		return this;
 	},
 
 	initialize : function(options) {
+		var self = this;
+
 		if (!Object.has(this, 'context')) {
 			this.context = {};
 		}
@@ -134,6 +148,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 		this.map.zoomToExtent(this.map.getMaxExtent());
 
 		nwisDataRetrieved.always(function(dates) {
+			self.dates = dates;
 			$('#start-period-of-record').html(dates.startDate.format('{yyyy}-{MM}-{dd}'));
 			$('#end-period-of-record').html(dates.endDate.format('{yyyy}-{MM}-{dd}'));
 
@@ -181,6 +196,74 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 
 	getStatsFilename : function() {
 		return 'eflowstats_NWIS_' + this.context.gageId + '.tsv';
+	},
+
+	getDataSeriesPromise : function() {
+		var deferred = $.Deferred();
+
+		var startDate = this.dates.startDate;
+		var endDate = this.dates.endDate;
+		var streamflowUrl = this._buildStreamFlowUrl(startDate, endDate, this.context.gageId);
+		var strToDate = function(dateStr){
+		  return Date.create(dateStr).utc();
+		};
+
+		$.ajax({
+			url : streamflowUrl,
+			method : 'GET',
+			success : function(response) {
+				var dataSeries = NWC.util.DataSeries.newSeries();
+				var dataTable = [];
+
+				NWC.util.findXMLNamespaceTags($(response), 'ns1:value').each(function() {
+					var row = [];
+					var value = parseFloat($(this).text());
+					row.push(strToDate($(this).attr('dateTime')));
+					row.push(value);
+					dataTable.push(row);
+				});
+
+				if (dataTable.length === 0) {
+					deferred.reject('No data available to plot');
+				}
+				else {
+					dataSeries.data = dataTable;
+					dataSeries.metadata.seriesLabels.push({
+						seriesName : 'Observed Streamflow',
+						seriesUnits : NWC.util.Units.usCustomary.streamflow.daily
+					});
+
+					deferred.resolve(dataSeries);
+				}
+			},
+			error : function(jqXHR, textStatus) {
+				deferred.reject(textStatus);
+			}
+		});
+
+		return deferred.promise();
+	},
+
+	plotStreamFlowData : function(ev) {
+		var self = this;
+
+		var plotTitle = 'Observed Streamflow';
+
+		ev.preventDefault();
+
+		this.streamflowPlotView.plotStreamflowData(plotTitle).done(function(dataSeries) {
+			self.dataSeries = dataSeries;
+			self.$el.find('.show-plot-btn').hide();
+		}).fail(function(args) {
+			alert('Retrieving data for this plot failed with error: ' + args[0]);
+		});
+	},
+
+	_buildStreamFlowUrl : function(startDate, endDate, siteId) {
+		//TODO make this a config parameter
+		return 'http://waterservices.usgs.gov/nwis/dv/?format=waterml,1.1&sites=' + siteId +
+			'&startDT=' + startDate.format('{yyyy}-{MM}-{dd}') + '&endDT=' + endDate.format('{yyyy}-{MM}-{dd}') +
+			'&statCD=00003&parameterCd=00060';
 	}
 });
 

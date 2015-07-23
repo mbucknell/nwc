@@ -12,6 +12,7 @@ $(document).ready(function() {
 		'waterbudgetHucData',
 		'waterbudgetCountyData',
 		'streamflowStats',
+		'streamflowPlot',
 		'streamflowGageStats',
 		'streamflowHucStats',
 		'modeledInfoPage',

@@ -27,7 +27,7 @@
     request.setAttribute("jsMin", (development) ? "" : ".min");
     request.setAttribute("sugarMin", (development) ? ".development" : ".min");
     request.setAttribute("openlayersMin", (development) ? ".debug" : "");
-    request.setAttribute("dygraphsMin", (development) ? "-dev" : "-combined");
+    request.setAttribute("dygraphsMin", (development) ? "-dev" : "");
     
 
     request.setAttribute("applicationVersion", props.get("version"));

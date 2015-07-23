@@ -150,8 +150,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
      * {String} time, the time scale of data to plot (daily or monthly)
      */
 	plotPTandETaData : function(time, measurement) {
-        var plotDivSelector = '#waterBudgetPlot';
-        var legendDivSelector = '#waterBudgetLegend';
+
         var normalization = 'normalizedWater';
         var plotTimeDensity  = time;
         var measurementSystem =  measurement;
@@ -159,7 +158,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
         var labels = this.dataSeriesStore[plotTimeDensity].getSeriesLabelsAs(
                 measurementSystem, normalization, plotTimeDensity);
         var ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
-        NWC.util.Plotter.getPlot(plotDivSelector, legendDivSelector, values, labels, ylabel);
+        NWC.util.Plotter.getPlot($('#waterBudgetPlot'), $('#waterBudgetLegend'), values, labels, ylabel);
         return;
 	},
 
