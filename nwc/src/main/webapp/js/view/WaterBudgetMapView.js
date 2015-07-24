@@ -1,3 +1,7 @@
+/*jslint browser: true */
+/*global _*/
+/*global OpenLayers */
+
 var NWC = NWC || {};
 
 NWC.view = NWC.view || {};
@@ -25,8 +29,13 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	 * @param {Object} options
 	 *	@prop {String} mapDiv
 	 *	@prop {NWC.model.WaterBudgetSelectMapModel} model
+	 *	@prop {String} hucId - Previously selected watershed
 	 */
 	initialize : function(options) {
+		if (_.has(options, 'hucId')) {
+			this.context.hucId = options.hucId;
+		}
+
 		this.hucLayer = NWC.util.mapUtils.createHucLayer({
 			visibility : false
 		});
@@ -64,6 +73,15 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
 
 		this.map.addLayer(this.hucLayer);
+		if (_.has(options, 'hucId')) {
+			var highlightStyle = new OpenLayers.StyleMap({
+				strokeWidth: 2,
+				strokeColor: "black",
+				fillColor: '#FF9900',
+				fillOpacity: 0.4
+			});
+			this.map.addLayer(NWC.util.mapUtils.createHucFeatureLayer(options.hucId, highlightStyle));
+		}
 		this.addFlowLines();
 
 		this.listenTo(this.model, 'change:watershedLayerOn', this.updateLayerVisibility);

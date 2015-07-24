@@ -16,6 +16,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	events: {
 		'click #counties-button' : 'displayCountyMap',
+		'click #compare-hucs-button' : 'goToAddHucMapPage',
 		'click #units-btn-group button' : 'changeUnits',
 		'click #time-scale-btn-group button' : 'changeTimeScale',
 		'click .evapotranspiration-download-button' : 'downloadEvapotranspiration',
@@ -172,6 +173,10 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			router : this.router,
 			el : $('#county-selection-div')
 		});
+	},
+
+	goToAddHucMapPage : function() {
+		this.router.navigate('waterbudget/map/huc/' + this.hucId, {trigger: true});
 	},
 
 	changeUnits : function(ev) {
