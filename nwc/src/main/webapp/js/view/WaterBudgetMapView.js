@@ -11,8 +11,6 @@ NWC.view = NWC.view || {};
 NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	templateName : 'waterbudget',
 
-	Model : NWC.model.WaterBudgetSelectMapModel,
-
 	events: {
 		'click #toggle-huc-layer' : 'toggleHucVisibility'
 	},
@@ -26,10 +24,9 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	 * @constructs
 	 * @param {Object} options
 	 *	@prop {String} mapDiv
+	 *	@prop {NWC.model.WaterBudgetSelectMapModel} model
 	 */
 	initialize : function(options) {
-		this.model = new this.Model();
-
 		this.hucLayer = NWC.util.mapUtils.createHucLayer({
 			visibility : false
 		});

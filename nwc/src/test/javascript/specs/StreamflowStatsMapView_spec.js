@@ -24,10 +24,10 @@ describe('Test for NWC.view.StreamflowStatsMapView', function() {
 				addControl : addControlSpy,
 				updateSize : jasmine.createSpy('updateSizeSpy')
 			};
-			this.model = new this.Model();
 		});
 		view = new NWC.view.StreamflowStatsMapView({
-			template : thisTemplate
+			template : thisTemplate,
+			model : new NWC.model.StreamflowStatsSelectMapModel()
 		});
 	});
 

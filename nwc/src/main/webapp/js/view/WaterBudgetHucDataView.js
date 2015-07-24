@@ -80,6 +80,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			loadend: function(event) {
 				$('#huc-loading-indicator').hide();
 				$('#counties-button').prop('disabled', false);
+				$('#compare-hucs-button').prop('disabled', false);
 			},
 			scope : this
 		});

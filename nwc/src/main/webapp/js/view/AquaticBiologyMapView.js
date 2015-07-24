@@ -6,8 +6,6 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 
 	templateName : 'aquaticBiology',
 
-	Model : NWC.model.AquaticBiologySelectMapModel,
-
 	events : {
 		'click #gage-layer-button' : 'toggleGageLayer',
 		'click #huc-layer-button' : 'toggleHucLayer',
@@ -15,8 +13,14 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 		'click #no-layers-button' : 'turnOffLayers'
 	},
 
+	/*
+	 * @construct
+	 * @param {Object} options
+	 *     @prop {NWC.model.AquaticBiologySelectMapModel} model
+	 *     @prop {NWC.model.AquaticBiologyFeaturesModel} aquaticBiologyFeaturesModel
+	 * @returns {undefined}
+	 */
 	initialize : function(options) {
-		this.model = new this.Model();
 		this.context = {selectBox : true};
 		this.aquaticBiologyFeaturesModel = options.aquaticBiologyFeaturesModel;
 

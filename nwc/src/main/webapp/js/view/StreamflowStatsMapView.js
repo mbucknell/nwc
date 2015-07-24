@@ -19,16 +19,13 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		'click #stream-gage-filters-div a' : 'changeGageFilter'
 	},
 
-	Model : NWC.model.StreamflowStatsSelectMapModel,
-
 	/*
 	 * @constructs
 	 * @param {Object options}
 	 *	@prop {String} mapDiv
+	 *	@prop {NWC.model.StreamflowStatsSelectMapModel} model;
 	 */
 	initialize : function(options) {
-		this.model = new this.Model();
-
 		this.gagesLayer = new OpenLayers.Layer.WMS(
 			"Gage Location",
 			CONFIG.endpoint.geoserver + 'NWC/wms',
