@@ -1,3 +1,6 @@
+/*jslint browser: true*/
+/*global OpenLayers*/
+
 var NWC = NWC || {};
 
 NWC.view = NWC.view || {};
@@ -148,8 +151,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
     /**
-     * {String} measurement, the quantity scale of data to plot (usCustomary or metric)
-     * {String} time, the time scale of data to plot (daily or monthly)
+	 * @param {String} time - the time scale of data to plot (daily or monthly)
+     * @param {String} measurement - the quantity scale of data to plot (usCustomary or metric)
      */
 	plotPTandETaData : function(time, measurement) {
 

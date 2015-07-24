@@ -1,5 +1,4 @@
 /*jslint browser: true */
-/*global _*/
 /*global OpenLayers */
 
 var NWC = NWC || {};
@@ -32,7 +31,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	 *	@prop {String} hucId - Previously selected watershed
 	 */
 	initialize : function(options) {
-		if (_.has(options, 'hucId')) {
+		if (Object.has(options, 'hucId')) {
 			this.context.hucId = options.hucId;
 		}
 
@@ -64,7 +63,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			else if (hucCount === 1) {
 				var actualFeature = actualFeatures[0];
 				var huc12 = actualFeature.attributes.huc_12;
-				if (_.has(options, 'hucId')) {
+				if (Object.has(options, 'hucId')) {
 					this.router.navigate('/waterbudget/comparehucs/' + options.hucId + '/' + huc12, {trigger : true});
 				}
 				else {
@@ -78,7 +77,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
 
 		this.map.addLayer(this.hucLayer);
-		if (_.has(options, 'hucId')) {
+		if (Object.has(options, 'hucId')) {
 			var highlightStyle = new OpenLayers.StyleMap({
 				strokeWidth: 2,
 				strokeColor: "black",

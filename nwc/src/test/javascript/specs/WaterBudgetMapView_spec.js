@@ -1,3 +1,8 @@
+/*global jasmine*/
+/*global spyOn*/
+/*global NWC*/
+/*global expect*/
+
 describe('Tests for NWC.view.WaterBudgetMapView', function() {
 	var addLayerSpy;
 	beforeEach(function() {
@@ -18,6 +23,14 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 		expect(view.hucLayer).toBeDefined();
 		expect(addLayerSpy).toHaveBeenCalledWith(view.hucLayer);
 		expect(view.selectControl).toBeDefined();
+		expect(view.context.hucId).not.toBeDefined();
+	});
+
+	it('Expects the hucId property to be in the context if the view is created with a hucId option', function() {
+		var view = new NWC.view.WaterBudgetMapView({
+			hucId : '123456789012'
+		});
+		expect(view.context.hucId).toEqual('123456789012');
 	});
 
 	it('Expects that updates to the model\'s watershedLayerOn attribute updates the view', function() {
@@ -30,7 +43,7 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 		expect(view.hucLayer.getVisibility()).toBe(false);
 	});
 
-	it('Expect that event handler calls to toggleHucVisibility update the models\'s watersheLayerOn attribute', function() {
+	it('Expect that event handler calls to toggleHucVisibility update the models\'s watershedLayerOn attribute', function() {
 		var view = new NWC.view.WaterBudgetMapView();
 
 		var lastVisibility = view.model.get('watershedLayerOn');
