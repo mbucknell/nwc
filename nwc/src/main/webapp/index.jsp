@@ -72,7 +72,7 @@
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/javascript.util.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/jsts.js"></script>
 
-		<script type="text/javascript" src="vendorlibs/dygraph-combined${dygraphsMin}.js"></script> -->
+		<script type="text/javascript" src="webjars/dygraphs/${dygraphsVersion}/dygraph-combined${dygraphsMin}.js"></script> -->
 		<script type="text/javascript" src="vendorlibs/flot-plugins/jquery.flot.tooltip.js"></script>
 		<script type="text/javascript" src="vendorlibs/flot-plugins/jquery.flot.axislabels.js"></script>
 		<script type="text/javascript" src="vendorlibs/FileSaver.js-master/FileSaver.js"></script>

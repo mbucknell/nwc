@@ -89,6 +89,22 @@
             <organizationUrl>http://cida.usgs.gov</organizationUrl>
             <timezone>-6</timezone>
         </developer>
+		<developer>
+            <id>mbucknel</id>
+            <name>Mary Bucknell</name>
+            <email>mbucknell@usgs.gov</email>
+            <organization>Center for Integrated Data Analytics</organization>
+            <organizationUrl>http://cida.usgs.gov</organizationUrl>
+            <timezone>-6</timezone>
+        </developer>
+		<developer>
+            <id>mamcderm</id>
+            <name>Mark McDermond</name>
+            <email>mamcdermp@usgs.gov</email>
+            <organization>Center for Integrated Data Analytics</organization>
+            <organizationUrl>http://cida.usgs.gov</organizationUrl>
+            <timezone>-6</timezone>
+        </developer>		
     </developers>
     <scm>
         <url>https://github.com/USGS-CIDA/nwc</url>
@@ -152,6 +168,7 @@
         <fontawesome.version>4.0.3</fontawesome.version>
         <sugar.version>1.4.1</sugar.version>
         <jsts.version>0.14.0</jsts.version>
+		<dygraphs.version>1.1.1</dygraphs.version>
     </properties>
 	
 	<modules>
@@ -304,6 +321,11 @@
 				<groupId>org.webjars</groupId>
 				<artifactId>jsts</artifactId>
 				<version>${jsts.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>dygraphs</artifactId>
+				<version>${dygraphs.version}</version>
 			</dependency>
 			<!-- </webjars> -->
 		</dependencies>
