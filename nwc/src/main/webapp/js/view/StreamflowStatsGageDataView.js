@@ -178,6 +178,9 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 			$endYear.append(options);
 			$startYear.find('option:first-child').prop('selected', true);
 			$endYear.find('option:last-child').prop('selected', true);
+
+			// Enable show plot button
+			$('.show-plot-btn').removeProp('disabled');
 		});
 		$.when(nwisDataRetrieved, featureLoaded).done(function () {
 			$('#loading-indicator').hide();
@@ -278,7 +281,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 
 	remove : function() {
 		this.streamflowPlotView.remove();
-		NWC.BaseViewStreamflowStatsData.prototype.remove.apply(this, arguments);
+		NWC.view.BaseStreamflowStatsDataView.prototype.remove.apply(this, arguments);
 	},
 
 	_buildStreamFlowUrl : function(startDate, endDate, siteId) {

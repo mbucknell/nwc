@@ -186,6 +186,6 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.exten
 
 	remove : function() {
 		this.streamflowPlotView.remove();
-		NWC.BaseViewStreamflowStatsData.prototype.remove.apply(this, arguments);
+		NWC.view.BaseStreamflowStatsDataView.prototype.remove.apply(this, arguments);
 	}
 });
