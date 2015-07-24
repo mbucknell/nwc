@@ -285,7 +285,6 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 	},
 
 	_buildStreamFlowUrl : function(startDate, endDate, siteId) {
-		//TODO make this a config parameter
 		return CONFIG.endpoint.nwisStreamflow + '?format=waterml,1.1&sites=' + siteId +
 			'&startDT=' + startDate.format('{yyyy}-{MM}-{dd}') + '&endDT=' + endDate.format('{yyyy}-{MM}-{dd}') +
 			'&statCD=00003&parameterCd=00060';
