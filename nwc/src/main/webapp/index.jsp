@@ -17,6 +17,7 @@
 				CONFIG.endpoint.wpsBase = CONFIG.contextPath + '/proxywps/';
 				CONFIG.endpoint.wps = CONFIG.endpoint.wpsBase + 'WebProcessingService'; //TODO inconsistant use of of URL resources
 				CONFIG.endpoint.nwis = '${directNwisEndpoint}';
+				CONFIG.endpoint.nwisStreamflow = '${directNwisStreamflowEndpoint}';
 				
 				CONFIG.endpoint.searchService = '${searchServiceEndpoint}';
 				
@@ -71,7 +72,7 @@
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/javascript.util.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/jsts.js"></script>
 
-		<script type="text/javascript" src="vendorlibs/dygraphs/dygraph${dygraphsMin}.js"></script>
+		<script type="text/javascript" src="webjars/dygraphs/${dygraphsVersion}/dygraph-combined${dygraphsMin}.js"></script> -->
 		<script type="text/javascript" src="vendorlibs/flot-plugins/jquery.flot.tooltip.js"></script>
 		<script type="text/javascript" src="vendorlibs/flot-plugins/jquery.flot.axislabels.js"></script>
 		<script type="text/javascript" src="vendorlibs/FileSaver.js-master/FileSaver.js"></script>
@@ -86,6 +87,7 @@
 <!--	<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesRaster.js"></script>
 -->
 		<script type="text/javascript" src="js/utils/templateLoader.js"></script>
+		<script type="text/javascript" src="js/utils/jqueryUtils.js"></script>
 		<script type="text/javascript" src="js/utils/Conversion.js"></script>
 		<script type="text/javascript" src="js/utils/mapUtils.js"></script>
 		<script type="text/javascript" src="js/utils/CountyWaterUseProperties.js"></script>
@@ -119,9 +121,9 @@
 		<script type="text/javascript" src="js/view/HomeView.js"></script>
                 
 		<script type="text/javascript" src="js/view/AquaticBiologyMapView.js"></script>
-                <script type="text/javascript" src="js/view/AquaticBiologySelectFeaturesView.js"></script>
-                <script type="text/javascript" src="js/view/BiodataGageMapView.js"></script>
-                <script type="text/javascript" src="js/view/AquaticBiologyPairView.js"></script>
+		<script type="text/javascript" src="js/view/AquaticBiologySelectFeaturesView.js"></script>
+		<script type="text/javascript" src="js/view/BiodataGageMapView.js"></script>
+		<script type="text/javascript" src="js/view/AquaticBiologyPairView.js"></script>
 		<script type="text/javascript" src="js/view/DataDiscoveryView.js"></script>
 		<script type="text/javascript" src="js/view/ProjectTabView.js"></script>
 		<script type="text/javascript" src="js/view/ProjectView.js"></script>
@@ -130,6 +132,7 @@
 		<script type="text/javascript" src="js/view/PublicationsTabView.js"></script>
 		
 		<script type="text/javascript" src="js/view/StreamflowStatsMapView.js"></script>
+		<script type="text/javascript" src="js/view/StreamflowPlotView.js"></script>
 		<script type="text/javascript" src="js/view/StreamflowStatsGageDataView.js"></script>
 		<script type="text/javascript" src="js/view/StreamflowStatsHucDataView.js"></script>
 		<script type="text/javascript" src="js/view/StreamflowStatsModeledInfoView.js"></script>

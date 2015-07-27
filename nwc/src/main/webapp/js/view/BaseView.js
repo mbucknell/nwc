@@ -24,7 +24,7 @@ NWC.view.BaseView = Backbone.View.extend({
 
 	/**
 	 * @constructs
-	 * @param Object} options
+	 * @param {Object} options
 	 *		@prop router {Backbone.Router instance} - defaults to null
 	 *		@prop template {Handlers template function} - defaults to loading the template from NWC.templates - this is useful for testing
 	 *		@prop context {Object} to be used when rendering templateName - defaults to {}
