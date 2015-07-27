@@ -155,16 +155,14 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
      * @param {String} measurement - the quantity scale of data to plot (usCustomary or metric)
      */
 	plotPTandETaData : function(time, measurement) {
-
-        var normalization = 'normalizedWater';
-        var plotTimeDensity  = time;
-        var measurementSystem =  measurement;
-        var values = this.dataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
-        var labels = this.dataSeriesStore[plotTimeDensity].getSeriesLabelsAs(
-                measurementSystem, normalization, plotTimeDensity);
-        var ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
-        NWC.util.Plotter.getPlot($('#waterBudgetPlot'), $('#waterBudgetLegend'), values, labels, ylabel);
-        return;
+		var normalization = 'normalizedWater';
+		var plotTimeDensity  = time;
+		var measurementSystem =  measurement;
+		var values = this.dataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
+		var labels = this.dataSeriesStore[plotTimeDensity].getSeriesLabelsAs(measurementSystem, normalization, plotTimeDensity);
+		var ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
+		NWC.util.Plotter.getPlot($('#waterBudgetPlot'), $('#waterBudgetLegend'), values, labels, ylabel);
+		return;
 	},
 
 	displayCountyMap : function() {
