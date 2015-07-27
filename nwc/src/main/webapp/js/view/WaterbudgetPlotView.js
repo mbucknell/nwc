@@ -133,8 +133,8 @@ NWC.view = NWC.view || {};
 
 		getHucFilename : function (series) {
 			var filename = series + '_data.csv';
-			if (this.hucName && this.hucId) {
-				filename = this.buildName(this.hucName, this.hucId, series);
+			if (this.hucId) {
+				filename = this.buildName(this.hucId, series);
 			}
 			return filename;
 		},
