@@ -1,6 +1,14 @@
+/*jslint browser: true*/
+/*global spyOn*/
+/*global expect*/
+/*global NWC*/
+/*global jasmine*/
+/*global sinon*/
+/*global saveAs*/
+
 describe('Tests for WaterBudgetHucCountyDataView', function() {
 	var $testDiv;
-	var $customaryButton, $metricButton, $totalButton, $normalizedButton
+	var $customaryButton, $metricButton, $totalButton, $normalizedButton;
 	var testView;
 	var getTemplateSpy, templateSpy;
 	var server;
@@ -26,7 +34,7 @@ describe('Tests for WaterBudgetHucCountyDataView', function() {
 		$totalButton = $('#total-county-button');
 		$normalizedButton = $('#normalized-county-button');
 
-		getTemplateSpy = jasmine.createSpy('getTemplateSpy')
+		getTemplateSpy = jasmine.createSpy('getTemplateSpy');
 		templateSpy = jasmine.createSpy('templateSpy');
 		NWC.templates = {
 			getTemplate : getTemplateSpy.andReturn(templateSpy)
@@ -43,6 +51,7 @@ describe('Tests for WaterBudgetHucCountyDataView', function() {
 		});
 
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
+		spyOn(NWC.view, 'WaterbudgetPlotView');
 
 		// This prevents any ajax calls to get data
 		server = sinon.fakeServer.create();
@@ -83,7 +92,7 @@ describe('Tests for WaterBudgetHucCountyDataView', function() {
 	it('Expect that event handler calls exist and behave as expected', function() {
 		//the view has an event to wire up the clickable plot options
 		expect(testView.events['click #units-btn-group button']).toBeDefined();
-		expect(testView.events['click #time-scale-btn-group button'])
+		expect(testView.events['click #time-scale-btn-group button']);
 		expect(testView.events['click #water-use-type-btn-group button']).toBeDefined();
 		expect(testView.events['click #water-use-type-btn-group button']).toBeDefined();
 	});
@@ -159,42 +168,6 @@ describe('Tests for WaterBudgetHucCountyDataView', function() {
 		expect(saveAs.calls[0].args[1]).toMatch(testView.fileName);
 		expect(saveAs.calls[0].args[1]).toMatch(testView.fips);
 		expect(testView.waterUseDataSeries.toCSV).toHaveBeenCalled();
-	});
-
-	it('Expects downloadEvapotranspiration to save to appropriate filename', function() {
-		spyOn(window, 'saveAs');
-		spyOn(window, 'Blob');
-		testView.dataSeriesStore = {
-			eta : {
-			toCSV : jasmine.createSpy('toCSVSpy')
-			}
-		};
-		testView.fileName = 'test_' + testView.hucId + '_eta.csv';
-		testView.hucName = 'test';
-		testView.downloadEvapotranspiration();
-
-		expect(saveAs).toHaveBeenCalled();
-		expect(saveAs.calls[0].args[1]).toMatch(testView.fileName);
-		expect(saveAs.calls[0].args[1]).toMatch(testView.context.hucId);
-		expect(testView.dataSeriesStore.eta.toCSV).toHaveBeenCalled();
-	});
-
-	it('Expects downloadPrecipitation to save to appropriate filename', function() {
-		spyOn(window, 'saveAs');
-		spyOn(window, 'Blob');
-		testView.dataSeriesStore = {
-			dayMet : {
-			toCSV : jasmine.createSpy('toCSVSpy')
-			}
-		};
-		testView.fileName = 'test_' + testView.hucId + '_dayMet.csv';
-		testView.hucName = 'test';
-		testView.downloadPrecipitation();
-
-		expect(saveAs).toHaveBeenCalled();
-		expect(saveAs.calls[0].args[1]).toMatch(testView.fileName);
-		expect(saveAs.calls[0].args[1]).toMatch(testView.context.hucId);
-		expect(testView.dataSeriesStore.dayMet.toCSV).toHaveBeenCalled();
 	});
 
 });

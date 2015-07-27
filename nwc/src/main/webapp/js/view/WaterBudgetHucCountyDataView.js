@@ -79,7 +79,13 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 			$('#county-loading-indicator').hide();
 		}.bind(this));
 
-		this.getHucData(this.hucId);
+//TODO revisit this as there seems to be a lot of duplication with WaterBudgetHucDataView. Maybe extending isn't
+// the best thing to do.
+		this.plotView = new NWC.view.WaterbudgetPlotView({
+			hucId : options.hucId,
+			el : this.$el.find('#huc1-plot-container'),
+			model : this.hucPlotModel
+		});
 		this.getCountyData(this.fips);
 	},
 
@@ -193,7 +199,7 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
         // get modified Series labels and throw away "Date"
         var labels = this.waterUseDataSeries.getSeriesLabelsAs(
             measurementSystem, plotNormalization, plotTimeDensity).from(1);
-        var ylabel = NWC.util.Units[measurementSystem][plotNormalization][time]
+        var ylabel = NWC.util.Units[measurementSystem][plotNormalization][time];
         NWC.util.WaterUsageChart.setChart(chartDivSelector, chartLegendDivSelector, values, labels, ylabel,
             NWC.util.Units[measurementSystem][plotNormalization].precision);
         return;
@@ -247,6 +253,16 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
         if (this.countyName && this.fips) {
         	filename = this.buildName(this.countyName, this.fips, series);
         }
+		return filename;
+	},
+
+	buildName : function(selectionName, selectionId, series) {
+		var filename = selectionName;
+		filename += '_' + selectionId;
+		filename += '_' + series;
+		filename += '.csv';
+		filename = filename.replace(/ /g, '_');
+		filename = escape(filename);
 		return filename;
 	}
 });

@@ -1,6 +1,13 @@
+/*jslint browser: true */
+/*global spyOn*/
+/*global NWC*/
+/*global jasmine*/
+/*global sinon*/
+/*global expect*/
+
 describe('Tests for WaterBudgetHucDataView', function() {
 	var $testDiv;
-	var $customaryButton, $metricButton, $dailyButton, $monthlyButton
+	var $customaryButton, $metricButton, $dailyButton, $monthlyButton;
 	var testView;
 	var server;
 
@@ -37,6 +44,8 @@ describe('Tests for WaterBudgetHucDataView', function() {
 
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
 
+		spyOn(NWC.view, 'WaterbudgetPlotView');
+
 		// This prevents any ajax calls to get data
 		server = sinon.fakeServer.create();
 
@@ -44,8 +53,6 @@ describe('Tests for WaterBudgetHucDataView', function() {
 			hucId : '123456789',
 			insetHucMapDiv : 'inset-map-div'
 		});
-
-		spyOn(testView, 'plotPTandETaData');
 	});
 
 	afterEach(function() {
@@ -67,36 +74,33 @@ describe('Tests for WaterBudgetHucDataView', function() {
 		expect(NWC.view.BaseView.prototype.initialize).toHaveBeenCalled();
 	});
 
-	it('Expect that event handler calls exist', function() {
-
-		//the view has an event to wire up the clickable plot options
-		expect(testView.events['click #units-btn-group button']).toBeDefined();
-		expect(testView.events['click #time-scale-btn-group button'])
-		expect(testView.events['click #counties-button']).toBeDefined();
-		expect(testView.events['click .evapotranspiration-download-button']).toBeDefined();
-		expect(testView.events['click .precipitation-download-button']).toBeDefined();
+	it('Expects the view\'s constructor to create a waterBudgetPlotView', function() {
+		expect(NWC.view.WaterbudgetPlotView).toHaveBeenCalled();
 	});
 
-	it('Expects the units to change state and replot when the model changes', function() {
+	it('Expect that event handler calls exist', function() {
+		//the view has an event to wire up the clickable plot options
+		expect(testView.events['click #units-btn-group button']).toBeDefined();
+		expect(testView.events['click #time-scale-btn-group button']);
+		expect(testView.events['click #counties-button']).toBeDefined();
+	});
+
+	it('Expects the units to change state when the model changes', function() {
 		testView.hucPlotModel.set('units', 'metric');
-		expect(testView.plotPTandETaData).toHaveBeenCalledWith(testView.hucPlotModel.get('timeScale'), 'metric');
 		expect($metricButton.hasClass('active')).toBe(true);
 		expect($customaryButton.hasClass('active')).toBe(false);
 
 		testView.hucPlotModel.set('units', 'usCustomary');
-		expect(testView.plotPTandETaData).toHaveBeenCalledWith(testView.hucPlotModel.get('timeScale'), 'usCustomary')
 		expect($metricButton.hasClass('active')).toBe(false);
 		expect($customaryButton.hasClass('active')).toBe(true);
 	});
 
 	it('Expects the timeScale to change state and replot when the model changes', function() {
 		testView.hucPlotModel.set('timeScale', 'daily');
-		expect(testView.plotPTandETaData).toHaveBeenCalledWith('daily', testView.hucPlotModel.get('units'));
 		expect($dailyButton.hasClass('active')).toBe(true);
 		expect($monthlyButton.hasClass('active')).toBe(false);
 
 		testView.hucPlotModel.set('timeScale', 'monthly');
-		expect(testView.plotPTandETaData).toHaveBeenCalledWith('monthly', testView.hucPlotModel.get('units'));
 		expect($dailyButton.hasClass('active')).toBe(false);
 		expect($monthlyButton.hasClass('active')).toBe(true);
 	});
@@ -131,41 +135,4 @@ describe('Tests for WaterBudgetHucDataView', function() {
 		});
 		expect(testView.hucPlotModel.get('timeScale')).toEqual('monthly');
 	});
-
-	it('Expects downloadEvapotranspiration to save to appropriate filename', function() {
-		spyOn(window, 'saveAs');
-		spyOn(window, 'Blob');
-		testView.dataSeriesStore = {
-			eta : {
-			toCSV : jasmine.createSpy('toCSVSpy')
-			}
-		};
-		testView.fileName = 'test_' + testView.hucId + '_eta.csv';
-		testView.hucName = 'test';
-		testView.downloadEvapotranspiration();
-
-		expect(saveAs).toHaveBeenCalled();
-		expect(saveAs.calls[0].args[1]).toMatch(testView.fileName);
-		expect(saveAs.calls[0].args[1]).toMatch(testView.context.hucId);
-		expect(testView.dataSeriesStore.eta.toCSV).toHaveBeenCalled();
-	});
-
-	it('Expects downloadPrecipitation to save to appropriate filename', function() {
-		spyOn(window, 'saveAs');
-		spyOn(window, 'Blob');
-		testView.dataSeriesStore = {
-			dayMet : {
-			toCSV : jasmine.createSpy('toCSVSpy')
-			}
-		};
-		testView.fileName = 'test_' + testView.hucId + '_dayMet.csv';
-		testView.hucName = 'test';
-		testView.downloadPrecipitation();
-
-		expect(saveAs).toHaveBeenCalled();
-		expect(saveAs.calls[0].args[1]).toMatch(testView.fileName);
-		expect(saveAs.calls[0].args[1]).toMatch(testView.context.hucId);
-		expect(testView.dataSeriesStore.dayMet.toCSV).toHaveBeenCalled();
-	});
-
 });
