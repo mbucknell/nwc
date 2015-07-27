@@ -223,13 +223,13 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 
 		var startDate = this.dates.startDate;
 		var endDate = this.dates.endDate;
-		var streamflowUrl = this._buildStreamFlowUrl(startDate, endDate, this.context.gageId);
 		var strToDate = function(dateStr){
 		  return Date.create(dateStr).utc();
 		};
 
 		$.ajax({
-			url : streamflowUrl,
+			url : CONFIG.endpoint.nwisStreamflow,
+			data : this._getStreamflowParams(startDate, endDate, this.context.gageId),
 			method : 'GET',
 			success : function(response) {
 				var dataSeries = NWC.util.DataSeries.newSeries();
@@ -284,10 +284,15 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 		NWC.view.BaseStreamflowStatsDataView.prototype.remove.apply(this, arguments);
 	},
 
-	_buildStreamFlowUrl : function(startDate, endDate, siteId) {
-		return CONFIG.endpoint.nwisStreamflow + '?format=waterml,1.1&sites=' + siteId +
-			'&startDT=' + startDate.format('{yyyy}-{MM}-{dd}') + '&endDT=' + endDate.format('{yyyy}-{MM}-{dd}') +
-			'&statCD=00003&parameterCd=00060';
+	_getStreamflowParams : function(startDate, endDate, siteId) {
+		return {
+			format : 'waterml,1.1',
+			sites : siteId,
+			startDT : startDate.format('{yyyy}-{MM}-{dd}'),
+			endDt : endDate.format('{yyyy}-{MM}-{dd}'),
+			statCD : '00003',
+			parameterCd : '00060'
+		};
 	}
 });
 
