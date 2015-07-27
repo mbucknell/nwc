@@ -9,6 +9,7 @@ $(document).ready(function() {
 	var TEMPLATES = [
 		'home',
 		'waterbudget',
+		'waterbudgetPlot',
 		'waterbudgetHucData',
 		'waterbudgetCountyData',
 		'streamflowStats',

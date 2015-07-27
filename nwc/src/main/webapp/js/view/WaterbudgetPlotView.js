@@ -1,66 +1,86 @@
 /*jslint browser:true*/
 
 var NWC = NWC || {};
-NWC.view = NWC.view || {}
+NWC.view = NWC.view || {};
 
 (function() {
 	"use strict";
 
-	NWC.view.WaterbudgetPlotView = NWC.BaseView.extend({
+	NWC.view.WaterbudgetPlotView = NWC.view.BaseView.extend({
 
-		templateName : 'waterBudgetPlot',
+		templateName : 'waterbudgetPlot',
+
+		ETA : "eta",
+		DAY_MET : "dayMet",
 
 		events : {
 			'click .download-evapotranspiration-btn' : 'downloadEvapotranspiration',
 			'click .download-precipitation-btn' : 'downloadPrecipitation'
 		},
 
+		/*
+		 * @param {Object} options
+		 *      @prop {String} hucId - Id of the huc whose waterbudget data is plotted.
+		 *      @prop {Jquery element} el - Jquery element where this view should be rendered
+		 *      @prop {WaterBudgetHucPlotModel} model - Used to set the units and timeScaled of the plot.t
+		 * @returns {undefined}
+		 */
 		initialize : function(options) {
+			var self = this;
 			this.hucId = options.hucId;
 
-			this.dataSeriesStore = new NWC.util.DataSeriesStore();
-
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
+			this.getHucDataPromise = this.getHucData(options.hucId).done(function() {
+				self.$el.find('.download-btn-container button').prop('disabled', false);
+			});
+
+			this.plotPTandETaData();
+			// Set up model change events
+			this.listenTo(this.model, 'change', this.plotPTandETaData);
 		},
 
 		/**
-		 * This makes a Web service call to get huc data
-		 * then makes call to render the data on a plot
-		 * @param {String} huc 12 digit identifier for the hydrologic unit
-		 * @returns a resolved promise when both ETA and DAYMET data has been retrieved and the dataSeriesStore updated. If
-		 * either call fails the promise will be rejected with either one or two error messages. The datasSeriesStore object will
-		 * contain the data for any successful calls
-		 */
+		* This makes a Web service call to get huc data and transform it into a data series object.
+		*
+		* @param {String} huc 12 digit identifier for the hydrologic unit
+		* @returns a resolved promise when both ETA and DAYMET data has been retrieved and the dataSeriesStore updated. If
+		*      either call fails the promise will be rejected with either one or two error messages. The datasSeriesStore object will
+		*      contain the data for any successful calls
+		*/
 		getHucData: function(huc) {
+			var self = this;
+			var deferred = $.Deferred();
 			var dataSeries = {};
 			var getDataDeferreds = [];
 			//grab the sos sources that will be used to display the initial data
 			//series. ignore other data sources that the user can add later.
 			var initialSosSourceKeys = [this.ETA, this.DAY_MET];
 			var initialSosSources = Object.select(NWC.util.SosSources, initialSosSourceKeys);
+
+			this.dataSeriesStore = new NWC.util.DataSeriesStore();
+
 			Object.keys(initialSosSources, function (sourceId, source) {
 				var d = $.Deferred();
 				var url = NWC.util.buildSosUrlFromSource(huc, source);
 
 				dataSeries[sourceId] = NWC.util.DataSeries.newSeries();
-				getDataDeferred.push(d);
+				getDataDeferreds.push(d);
 
 				$.ajax({
 					url : url,
-					context : {
-						sourceId : sourceId,
-						dataSeries : dataSeries[sourceId]
-					},
 					dataType : "xml",
 					success : function(data, textStatus, jqXHR) {
 						var parsedValues = NWC.util.SosResponseFormatter.formatSosResponse(data);
-						this.dataSeries.metadata.seriesLabels.push({
-							seriesName: NWC.util.SosSources[this.sourceId].propertyLongName,
-							seriesUnits: NWC.util.SosSources[this.sourceId].units
+						var thisDataSeries = dataSeries[sourceId];
+
+						thisDataSeries.metadata.seriesLabels.push({
+							seriesName: NWC.util.SosSources[sourceId].propertyLongName,
+							seriesUnits: NWC.util.SosSources[sourceId].units
 						});
 
-						this.dataSeries.metadata.downloadHeader = NWC.util.SosSources[label].downloadMetadata;
-						this.dataseries.data = parsedValues;
+						thisDataSeries.metadata.downloadHeader = NWC.util.SosSources[sourceId].downloadMetadata;
+						thisDataSeries.data = parsedValues;
+
 						d.resolve();
 					},
 					error : function() {
@@ -71,30 +91,61 @@ NWC.view = NWC.view || {}
 					}
 				});
 			});
-	//STOPPED HERE still need to return the resolved promise correctly.
-			var dataHandler = function() {
-				this.dataSeriesStore.updateHucSeries(labeledResponses);
-				this.plotPTandETaData(this.hucPlotModel.get('timeScale'), this.hucPlotModel.get('units'));
-			}.bind(this);
-			$.when.apply(null, labeledAjaxCalls).then(dataHandler);
-			return;
+
+			$.when.apply(null, getDataDeferreds).done(function() {
+				self.dataSeriesStore.updateHucSeries(dataSeries);
+				deferred.resolve(dataSeries);
+			}).fail(function() {
+				deferred.reject();
+			});
+
+			return deferred.promise();
 		},
 
-		/**
-		 * @param {String} time - the time scale of data to plot (daily or monthly)
-		 * @param {String} measurement - the quantity scale of data to plot (usCustomary or metric)
-		 */
-		plotPTandETaData : function(time, measurement) {
 
-			var normalization = 'normalizedWater';
-			var plotTimeDensity  = time;
-			var measurementSystem =  measurement;
-			var values = this.dataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
-			var labels = this.dataSeriesStore[plotTimeDensity].getSeriesLabelsAs(
-					measurementSystem, normalization, plotTimeDensity);
-			var ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
-			NWC.util.Plotter.getPlot($('#waterBudgetPlot'), $('#waterBudgetLegend'), values, labels, ylabel);
-			return;
+		/**
+		 * Update the plot with the current dataSeriesStore and model.
+		 */
+		plotPTandETaData : function() {
+			var self = this;
+			this.getHucDataPromise.done(function() {
+				var normalization = 'normalizedWater';
+				var plotTimeDensity  = self.model.get('timeScale');
+				var measurementSystem =  self.model.get('units');
+
+				var values = self.dataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
+				var labels = self.dataSeriesStore[plotTimeDensity].getSeriesLabelsAs(measurementSystem, normalization, plotTimeDensity);
+				var ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
+
+				NWC.util.Plotter.getPlot(self.$el.find('.waterbudget-plot'), self.$el.find('.waterbudget-legend'), values, labels, ylabel);
+			});
+		},
+
+		downloadEvapotranspiration : function() {
+			var blob = new Blob([this.dataSeriesStore.eta.toCSV()], {type:'text/csv'});
+			saveAs(blob, this.getHucFilename('eta'));
+		},
+
+		downloadPrecipitation : function() {
+			var blob = new Blob([this.dataSeriesStore.dayMet.toCSV()], {type:'text/csv'});
+			saveAs(blob, this.getHucFilename('dayMet'));
+		},
+
+		getHucFilename : function (series) {
+			var filename = series + '_data.csv';
+			if (this.hucName && this.hucId) {
+				filename = this.buildName(this.hucName, this.hucId, series);
+			}
+			return filename;
+		},
+
+		buildName : function(selectionId, series) {
+			var filename = selectionId;
+			filename += '_' + series;
+			filename += '.csv';
+			filename = filename.replace(/ /g, '_');
+			filename = encodeURIComponent(filename);
+			return filename;
 		}
 	});
 
