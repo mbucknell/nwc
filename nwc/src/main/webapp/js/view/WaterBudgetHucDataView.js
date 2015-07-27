@@ -25,9 +25,13 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	initialize : function(options) {
+		var $plotContainer;
 
 		this.context.hucId = options.hucId;
+		this.context.compareHucId = options.compareHucId ? options.compareHucId :'';
+
 		this.hucId = options.hucId;
+		this.compareHucId = options.compareHucId ? options.compareHucId :'';
 		this.insetHucMapDiv = options.insetHucMapDiv;
 
 		// call superclass initialize to do default initialize
@@ -36,11 +40,27 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		this.setUpHucPlotModel();
 
-		this.plotView = new NWC.view.WaterbudgetPlotView({
-			hucId : options.hucId,
-			el : this.$el.find('#huc1-plot-container'),
-			model : this.hucPlotModel
-		});
+		$plotContainer = this.$el.find('#huc-plot-container');
+		if (this.compareHucId) {
+			$plotContainer.append('<div id="huc-plotview-div"></div><div id="compare-plotview-div"></div>');
+			this.plotView = new NWC.view.WaterbudgetPlotView({
+				hucId : this.hucId,
+				el : $('#huc-plotview-div'),
+				model : this.hucPlotModel
+			});
+			this.comparePlotView = new NWC.view.WaterbudgetPlotView({
+				hucId : this.compareHucId,
+				el : $('#compare-plotview-div'),
+				model : this.hucPlotModel
+			});
+		}
+		else {
+			this.plotView = new NWC.view.WaterbudgetPlotView({
+				hucId : this.hucId,
+				el : $plotContainer,
+				model : this.hucPlotModel
+			});
+		}
 
 		this.buildHucMap(this.hucId);
 		this.hucMap.render(this.insetHucMapDiv);
@@ -137,6 +157,9 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			this.hucCountyMapView.remove();
 		}
 		this.plotView.remove();
+		if (Object.has(this, 'comparePlotView')) {
+			this.comparePlotView.remove();
+		}
 		NWC.view.BaseView.prototype.remove.apply(this, arguments);
 	}
 });

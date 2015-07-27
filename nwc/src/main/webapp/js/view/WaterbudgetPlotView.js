@@ -116,8 +116,9 @@ NWC.view = NWC.view || {};
 				var values = self.dataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
 				var labels = self.dataSeriesStore[plotTimeDensity].getSeriesLabelsAs(measurementSystem, normalization, plotTimeDensity);
 				var ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
+				var title = 'HUC ' + self.hucId;
 
-				NWC.util.Plotter.getPlot(self.$el.find('.waterbudget-plot'), self.$el.find('.waterbudget-legend'), values, labels, ylabel);
+				NWC.util.Plotter.getPlot(self.$el.find('.waterbudget-plot'), self.$el.find('.waterbudget-legend'), values, labels, ylabel, title);
 			});
 		},
 
