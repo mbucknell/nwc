@@ -24,6 +24,15 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	context : {
 	},
 
+	/*
+	 * @constructs
+	 * @param {Object} options
+	 *     @prop {Jquery.Element} el - Container where this view will be rendered
+	 *     @prop {Backbone.Router} router
+	 *     @prop {String} hucId - Id of the huc for which information should be shown.
+	 *     @prop {String} compareHucId (optional) - Huc Id used for second plot to compare to first.
+	 *     @prop {String} fips (optional) - If specified, water use data for the county with fips will be shown.
+	 */
 	initialize : function(options) {
 		var $plotContainer;
 
@@ -41,6 +50,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		this.setUpHucPlotModel();
 
+		// Create additional sub views as needed
 		$plotContainer = this.$el.find('#huc-plot-container');
 		if (this.compareHucId) {
 			$plotContainer.html(NWC.templates.getTemplate('hucComparePlotViewContainer')());
@@ -71,25 +81,29 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			});
 		}
 
+		// Set up inset map and render
 		this.buildHucMap(this.hucId, this.compareHucId);
 		this.hucMap.render(this.insetHucMapDiv);
 	},
 
+	/*
+	 * Creates a new hucPlotModel, sets up listeners and initializes the dom to reflect the default model
+	 */
 	setUpHucPlotModel : function() {
-		// Add listeners to model
 		this.hucPlotModel = new NWC.model.WaterBudgetHucPlotModel();
 		this.listenTo(this.hucPlotModel, 'change:units', this.updateUnits);
 		this.listenTo(this.hucPlotModel, 'change:timeScale', this.updateTimeScale);
 
-		var newTimeScale = this.hucPlotModel.get('timeScale');
-		this.setButtonActive($('#daily-button'), newTimeScale === 'daily');
-		this.setButtonActive($('#monthly-button'), newTimeScale === 'monthly');
-
-		var newUnits = this.hucPlotModel.get('units');
-		this.setButtonActive($('#customary-button'), newUnits === 'usCustomary');
-		this.setButtonActive($('#metric-button'), newUnits === 'metric');
+		this.updateTimeScale();
+		this.updateUnits();
 	},
 
+	/*
+	 * Create the inset map with a feature layer containing huc and compareHuc(if specified).
+	 * @param {String} huc - HUC 12 id
+	 * @param {String} compareHuc - HUC 12 of a 2nd huc. This may be empty.
+	 * @returns Jquery.Promise that is resolved when the huc feature layer has been loaded.
+	 */
 	buildHucMap : function(huc, compareHuc) {
 		var d = $.Deferred();
 
@@ -107,14 +121,14 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			featureadded: function(event){
 				if (event.feature.attributes.huc_12 === huc) {
 					this.hucName = event.feature.attributes.hu_12_name;
-					$('#huc-name').html(event.feature.attributes.hu_12_name);
+					this.$el.find('#huc-name').html(event.feature.attributes.hu_12_name);
 				}
 			},
 			loadend: function(event) {
 				this.hucMap.zoomToExtent(this.hucLayer.getDataExtent());
-				$('#huc-loading-indicator').hide();
-				$('#counties-button').prop('disabled', false);
-				$('#compare-hucs-button').prop('disabled', false);
+				this.$el.find('#huc-loading-indicator').hide();
+				this.$el.find('#counties-button').prop('disabled', false);
+				this.$el.find('#compare-hucs-button').prop('disabled', false);
 				d.resolve();
 			},
 			scope : this
@@ -126,14 +140,16 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		return d.promise();
 	},
 
+	/*
+	 * Create the county map view.
+	 */
 	displayCountyMap : function() {
 		this.hucCountMapView = new NWC.view.HucCountyMapView({
-			mapDiv : 'county-selection-map',
 			hucFeature : new OpenLayers.Feature.Vector(
 					this.hucLayer.features[0].geometry.clone(),
 					this.hucLayer.features[0].attributes),
 			router : this.router,
-			el : $('#county-selection-div')
+			el : this.$el.find('#county-selection-div')
 		});
 	},
 
@@ -147,10 +163,10 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		this.hucPlotModel.set('units', newUnits);
 	},
 
-	updateUnits : function(ev) {
+	updateUnits : function() {
 		var newUnits = this.hucPlotModel.get('units');
-		this.setButtonActive($('#customary-button'), newUnits === 'usCustomary');
-		this.setButtonActive($('#metric-button'), newUnits === 'metric');
+		this.setButtonActive(this.$el.find('#customary-button'), newUnits === 'usCustomary');
+		this.setButtonActive(this.$el.find('#metric-button'), newUnits === 'metric');
 	},
 
 	changeTimeScale : function(ev) {
@@ -159,10 +175,10 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		this.hucPlotModel.set('timeScale', newTimeScale);
 	},
 
-	updateTimeScale : function(ev) {
+	updateTimeScale : function() {
 		var newTimeScale = this.hucPlotModel.get('timeScale');
-		this.setButtonActive($('#daily-button'), newTimeScale === 'daily');
-		this.setButtonActive($('#monthly-button'), newTimeScale === 'monthly');
+		this.setButtonActive(this.$el.find('#daily-button'), newTimeScale === 'daily');
+		this.setButtonActive(this.$el.find('#monthly-button'), newTimeScale === 'monthly');
 	},
 
 	remove : function() {

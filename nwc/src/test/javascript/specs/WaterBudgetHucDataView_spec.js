@@ -65,7 +65,8 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 		beforeEach(function() {
 			testView = new NWC.view.WaterBudgetHucDataView({
 				hucId : '123456789',
-				insetHucMapDiv : 'inset-map-div'
+				insetHucMapDiv : 'inset-map-div',
+				el : $testDiv
 			});
 		});
 
@@ -160,7 +161,8 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 			testView = new NWC.view.WaterBudgetHucDataView({
 				hucId : '123456789',
 				compareHucId : '232323232323',
-				insetHucMapDiv : 'inset-map-div'
+				insetHucMapDiv : 'inset-map-div',
+				el : $testDiv
 			});
 		});
 
@@ -188,7 +190,8 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 			testView = new NWC.view.WaterBudgetHucDataView({
 				hucId : '123456789',
 				fips : '9876',
-				insetHucMapDiv : 'inset-map-div'
+				insetHucMapDiv : 'inset-map-div',
+				el : $testDiv
 			});
 		});
 
