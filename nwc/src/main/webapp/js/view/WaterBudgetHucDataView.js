@@ -43,7 +43,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		$plotContainer = this.$el.find('#huc-plot-container');
 		if (this.compareHucId) {
-			$plotContainer.append('<div id="huc-plotview-div"></div><div id="compare-plotview-div"></div>');
+			$plotContainer.html(NWC.templates.getTemplate('hucComparePlotViewContainer')());
 			this.plotView = new NWC.view.WaterbudgetPlotView({
 				hucId : this.hucId,
 				el : $('#huc-plotview-div'),

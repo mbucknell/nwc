@@ -10,6 +10,7 @@ $(document).ready(function() {
 		'home',
 		'waterbudget',
 		'waterbudgetPlot',
+		'hucComparePlotViewContainer',
 		'waterbudgetHucData',
 		'countyWaterUse',
 		'streamflowStats',

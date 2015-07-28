@@ -60,7 +60,7 @@
 				</div>
 			</div>
 		<![endif]-->
-		<div class="container site_body_content">
+		<div class="container-fluid site_body_content">
 			<div class="row">
 				<div id="site_header" class="col-xs-12">
 					<%@include file="/jsp/USGSHeader.jsp" %>
