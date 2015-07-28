@@ -36,9 +36,30 @@
 					};
 				}
 			}());
+			$(document).ready(function() {
+				$('#ie9-warning-modal').modal();
+			});
 		</script>
 	</head>
 	<body>
+		<!--[if lt IE 9]>
+			<div id="ie9-warning-modal" class="modal fade">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title">IE9 Not Supported</h4>
+						</div>
+						<div class="modal-body">
+							<p>The application has been tested in the latest versions of Chrome, Firefox, and Safari and has been tested on IE10 and IE11.</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		<![endif]-->
 		<div class="container site_body_content">
 			<div class="row">
 				<div id="site_header" class="col-xs-12">
