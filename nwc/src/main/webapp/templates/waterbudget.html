@@ -4,6 +4,15 @@
 			<div class="col-xs-12">
 				<h3>Available Water Budget Components</h3>
 				<div>
+					{{#if hucId }}
+					<em>
+						Add an additional watershed to compare precipitation and evapotranspiration data.
+						<ol>
+							<li>Zoom to a your location of interest.</li>
+							<li>Select a watershed of interest to compare to {{hucId}}.</li>
+						</ol>
+					</em>
+					{{else}}
 					<em>
 						Discover and access precipitation and evapotranspiration data for watersheds and counties.
 						<ol>	
@@ -13,6 +22,7 @@
 							<li>Water use data for counties intersecting the watershed are available on the next page.</li>
 						</ol>
 					</em>
+					{{/if}}
 				</div>
 			</div>
 		</div>

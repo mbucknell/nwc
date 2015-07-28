@@ -1,8 +1,13 @@
+/*jslint browser */
+/*global OpenLayers*/
+
 var NWC = NWC || {};
 
 NWC.util = NWC.util || {};
 
 NWC.util.mapUtils = (function () {
+
+	"use strict";
 
 	var that = {};
 
@@ -124,7 +129,14 @@ NWC.util.mapUtils = (function () {
 		);
 	};
 
-	that.createHucFeatureLayer = function(huc12) {
+	that.createHucFeatureLayer = function(huc12, styleMap) {
+		styleMap = styleMap ? styleMap : new OpenLayers.StyleMap({
+				strokeWidth: 2,
+				strokeColor: "black",
+				fillOpacity: 0,
+				graphicOpacity: 1,
+				fill: false
+			});
 		var filter = new OpenLayers.Filter.Comparison({
 			type: OpenLayers.Filter.Comparison.EQUAL_TO,
 			property: "huc_12",
@@ -143,13 +155,7 @@ NWC.util.mapUtils = (function () {
 		var hucLayer = new OpenLayers.Layer.Vector("WFS", {
 			strategies: [new OpenLayers.Strategy.Fixed()],
 			protocol: protocol,
-			styleMap: new OpenLayers.StyleMap({
-				strokeWidth: 2,
-				strokeColor: "black",
-				fillOpacity: 0,
-				graphicOpacity: 1,
-				fill: false
-			}),
+			styleMap: styleMap,
 			filter:filter
 		});
 		return hucLayer;

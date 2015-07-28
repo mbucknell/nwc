@@ -1,3 +1,6 @@
+/*jslint browser: true*/
+/*global OpenLayers*/
+
 var NWC = NWC || {};
 
 NWC.view = NWC.view || {};
@@ -16,6 +19,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	events: {
 		'click #counties-button' : 'displayCountyMap',
+		'click #compare-hucs-button' : 'goToAddHucMapPage',
 		'click #units-btn-group button' : 'changeUnits',
 		'click #time-scale-btn-group button' : 'changeTimeScale',
 		'click .evapotranspiration-download-button' : 'downloadEvapotranspiration',
@@ -80,6 +84,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			loadend: function(event) {
 				$('#huc-loading-indicator').hide();
 				$('#counties-button').prop('disabled', false);
+				$('#compare-hucs-button').prop('disabled', false);
 			},
 			scope : this
 		});
@@ -146,8 +151,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
     /**
-     * {String} measurement, the quantity scale of data to plot (usCustomary or metric)
-     * {String} time, the time scale of data to plot (daily or monthly)
+	 * @param {String} time - the time scale of data to plot (daily or monthly)
+     * @param {String} measurement - the quantity scale of data to plot (usCustomary or metric)
      */
 	plotPTandETaData : function(time, measurement) {
 		var normalization = 'normalizedWater';
@@ -169,6 +174,10 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			router : this.router,
 			el : $('#county-selection-div')
 		});
+	},
+
+	goToAddHucMapPage : function() {
+		this.router.navigate('waterbudget/map/huc/' + this.hucId, {trigger: true});
 	},
 
 	changeUnits : function(ev) {
