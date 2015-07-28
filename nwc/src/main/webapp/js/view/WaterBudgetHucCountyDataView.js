@@ -79,8 +79,6 @@ NWC.view.WaterBudgetHucCountyDataView = NWC.view.WaterBudgetHucDataView.extend({
 			$('#county-loading-indicator').hide();
 		}.bind(this));
 
-//TODO revisit this as there seems to be a lot of duplication with WaterBudgetHucDataView. Maybe extending isn't
-// the best thing to do.
 		this.plotView = new NWC.view.WaterbudgetPlotView({
 			hucId : options.hucId,
 			el : this.$el.find('#huc1-plot-container'),

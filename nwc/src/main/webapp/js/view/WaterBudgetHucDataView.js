@@ -62,7 +62,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			});
 		}
 
-		this.buildHucMap(this.hucId);
+		this.buildHucMap(this.hucId, this.compareHucId);
 		this.hucMap.render(this.insetHucMapDiv);
 	},
 
@@ -81,28 +81,32 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		this.setButtonActive($('#metric-button'), newUnits === 'metric');
 	},
 
-	buildHucMap : function(huc) {
-
+	buildHucMap : function(huc, compareHuc) {
 		var d = $.Deferred();
 
 		var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
+		var hucsToAdd = [huc];
 
 		this.hucMap = NWC.util.mapUtils.createMap([baseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
 
-		this.hucLayer = NWC.util.mapUtils.createHucFeatureLayer(huc);
+		if (compareHuc) {
+			hucsToAdd.push(compareHuc);
+		}
+		this.hucLayer = NWC.util.mapUtils.createHucFeatureLayer(hucsToAdd);
 
 		this.hucLayer.events.on({
 			featureadded: function(event){
-				this.hucName = event.feature.attributes.hu_12_name;
-				this.hucMap.zoomToExtent(this.hucLayer.getDataExtent());
-
-				$('#huc-name').html(event.feature.attributes.hu_12_name);
-				d.resolve();
+				if (event.feature.attributes.huc_12 === huc) {
+					this.hucName = event.feature.attributes.hu_12_name;
+					$('#huc-name').html(event.feature.attributes.hu_12_name);
+				}
 			},
 			loadend: function(event) {
+				this.hucMap.zoomToExtent(this.hucLayer.getDataExtent());
 				$('#huc-loading-indicator').hide();
 				$('#counties-button').prop('disabled', false);
 				$('#compare-hucs-button').prop('disabled', false);
+				d.resolve();
 			},
 			scope : this
 		});

@@ -84,7 +84,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 				fillColor: '#FF9900',
 				fillOpacity: 0.4
 			});
-			this.map.addLayer(NWC.util.mapUtils.createHucFeatureLayer(options.hucId, highlightStyle));
+			this.map.addLayer(NWC.util.mapUtils.createHucFeatureLayer([options.hucId], highlightStyle));
 		}
 		this.addFlowLines();
 
