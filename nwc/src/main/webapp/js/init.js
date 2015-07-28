@@ -11,7 +11,7 @@ $(document).ready(function() {
 		'waterbudget',
 		'waterbudgetPlot',
 		'waterbudgetHucData',
-		'waterbudgetCountyData',
+		'countyWaterUse',
 		'streamflowStats',
 		'streamflowPlot',
 		'streamflowGageStats',

@@ -59,11 +59,10 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	},
 
 	waterbudgetHucCountyData : function(huc, fips) {
-		this.showView(NWC.view.WaterBudgetHucCountyDataView, {
+		this.showView(NWC.view.WaterBudgetHucDataView, {
 			hucId : huc,
 			fips : fips,
-			insetHucMapDiv : 'huc-inset',
-			insetCountyMapDiv : 'county-inset'
+			insetHucMapDiv : 'huc-inset'
 		});
 	},
 

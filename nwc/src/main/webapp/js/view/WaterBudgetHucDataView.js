@@ -27,12 +27,13 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	initialize : function(options) {
 		var $plotContainer;
 
-		this.context.hucId = options.hucId;
-		this.context.compareHucId = options.compareHucId ? options.compareHucId :'';
-
 		this.hucId = options.hucId;
 		this.compareHucId = options.compareHucId ? options.compareHucId :'';
+		this.fips = options.fips ? options.fips : '';
 		this.insetHucMapDiv = options.insetHucMapDiv;
+
+		this.context.hucId = this.hucId;
+		this.context.showAdditionalDataButtons = !(this.compareHucId || this.fips);
 
 		// call superclass initialize to do default initialize
 		// (includes render)
@@ -59,6 +60,14 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				hucId : this.hucId,
 				el : $plotContainer,
 				model : this.hucPlotModel
+			});
+		}
+
+		if (this.fips) {
+			this.countyWaterUserView = new NWC.view.CountyWaterUseView({
+				hucId : this.hucId,
+				fips : this.fips,
+				el : this.$el.find('#wateruse')
 			});
 		}
 
@@ -163,6 +172,10 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		this.plotView.remove();
 		if (Object.has(this, 'comparePlotView')) {
 			this.comparePlotView.remove();
+		}
+
+		if (Object.has(this, 'countyWaterUseView')) {
+			this.countyWaterUseView.remove();
 		}
 		NWC.view.BaseView.prototype.remove.apply(this, arguments);
 	}
