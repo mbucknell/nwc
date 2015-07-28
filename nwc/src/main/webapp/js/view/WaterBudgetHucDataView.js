@@ -64,7 +64,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		}
 
 		if (this.fips) {
-			this.countyWaterUserView = new NWC.view.CountyWaterUseView({
+			this.countyWaterUseView = new NWC.view.CountyWaterUseView({
 				hucId : this.hucId,
 				fips : this.fips,
 				el : this.$el.find('#wateruse')

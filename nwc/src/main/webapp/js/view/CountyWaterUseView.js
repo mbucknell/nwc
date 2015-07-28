@@ -169,14 +169,14 @@ NWC.view = NWC.view || {};
 			this.listenTo(this.countyPlotModel, 'change:plotType', this.updatePlotType);
 
 			var newType = this.countyPlotModel.get('plotType');
-			this.setButtonActive($('#total-county-button'), newType === 'totalWater');
-			this.setButtonActive($('#normalized-county-button'), newType === 'normalizedWater');
+			this.setButtonActive(this.$el.find('#total-county-button'), newType === 'totalWater');
+			this.setButtonActive(this.$el.find('#normalized-county-button'), newType === 'normalizedWater');
 
 			var newUnits = this.countyPlotModel.get('units');
-			this.setButtonActive($('#county-customary-button'), newUnits === 'usCustomary');
-			this.setButtonActive($('#county-metric-button'), newUnits === 'metric');
+			this.setButtonActive(this.$el.find('#county-customary-button'), newUnits === 'usCustomary');
+			this.setButtonActive(this.$el.find('#county-metric-button'), newUnits === 'metric');
 
-			this.setVisibility($('#normalized-warning'), newType === 'normalizedWater');
+			this.setVisibility(this.$el.find('#normalized-warning'), newType === 'normalizedWater');
 		},
 
 		changeCountyUnits : function(ev) {
@@ -187,8 +187,8 @@ NWC.view = NWC.view || {};
 
 		updateCountyUnits : function() {
 			var newUnits = this.countyPlotModel.get('units');
-			this.setButtonActive($('#county-customary-button'), newUnits === 'usCustomary');
-			this.setButtonActive($('#county-metric-button'), newUnits === 'metric');
+			this.setButtonActive(this.$el.find('#county-customary-button'), newUnits === 'usCustomary');
+			this.setButtonActive(this.$el.find('#county-metric-button'), newUnits === 'metric');
 
 			this.chartWaterUse();
 
@@ -202,10 +202,10 @@ NWC.view = NWC.view || {};
 
 		updatePlotType : function() {
 			var newType = this.countyPlotModel.get('plotType');
-			this.setButtonActive($('#total-county-button'), newType === 'totalWater');
-			this.setButtonActive($('#normalized-county-button'), newType === 'normalizedWater');
+			this.setButtonActive(this.$el.find('#total-county-button'), newType === 'totalWater');
+			this.setButtonActive(this.$el.find('#normalized-county-button'), newType === 'normalizedWater');
 
-			this.setVisibility($('#normalized-warning'), newType === 'normalizedWater');
+			this.setVisibility(this.$el.find('#normalized-warning'), newType === 'normalizedWater');
 
 			this.chartWaterUse();
 		},

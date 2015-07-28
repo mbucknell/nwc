@@ -6,7 +6,7 @@
 /*global sinon*/
 /*global saveAs*/
 
-describe('Tests for WaterBudgetHucCountyDataView', function() {
+describe('Tests for CountyWaterUseView', function() {
 	var $testDiv;
 	var $customaryButton, $metricButton, $totalButton, $normalizedButton;
 	var testView;
@@ -22,7 +22,6 @@ describe('Tests for WaterBudgetHucCountyDataView', function() {
 
 		$('body').append('<div id="test-div"></div>');
 		$testDiv = $('#test-div');
-		$testDiv.append('<div id="huc-inset-map-div"></div>');
 		$testDiv.append('<div id="county-inset-map-div"></div>');
 		$testDiv.append('<button id="county-customary-button" value="usCustomary"></button>');
 		$testDiv.append('<button id="county-metric-button" value="metric"></button>');
@@ -33,12 +32,6 @@ describe('Tests for WaterBudgetHucCountyDataView', function() {
 		$metricButton = $('#county-metric-button');
 		$totalButton = $('#total-county-button');
 		$normalizedButton = $('#normalized-county-button');
-
-		getTemplateSpy = jasmine.createSpy('getTemplateSpy');
-		templateSpy = jasmine.createSpy('templateSpy');
-		NWC.templates = {
-			getTemplate : getTemplateSpy.andReturn(templateSpy)
-		};
 
 		// Stubbing the createMap call so OpenLayers does not try to make any ajax calls
 		spyOn(NWC.util.mapUtils, 'createMap').andCallFake(function() {
@@ -51,16 +44,14 @@ describe('Tests for WaterBudgetHucCountyDataView', function() {
 		});
 
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
-		spyOn(NWC.view, 'WaterbudgetPlotView');
 
 		// This prevents any ajax calls to get data
 		server = sinon.fakeServer.create();
 
-		testView = new NWC.view.WaterBudgetHucCountyDataView({
+		testView = new NWC.view.CountyWaterUseView({
 			hucId : '1234567891',
 			fips : '1234',
-			insetHucMapDiv : 'huc-inset-map-div',
-			insetCountyMapDiv : 'county-inset-map-div'
+			el : $testDiv
 		});
 		spyOn(testView, 'chartWaterUse');
 	});
@@ -74,9 +65,10 @@ describe('Tests for WaterBudgetHucCountyDataView', function() {
 		expect(testView.context.hucId).toEqual('1234567891');
 	});
 
-	it('Expects view\'s constructor to create properties for the countyPlotModel, inset map and hucLayer', function() {
-		expect(testView.countyMap).toBeDefined();
+	it('Expects view\'s constructor to create properties for the countyPlotModel, inset map, countyLayer and hucLayer', function() {
+		expect(testView.map).toBeDefined();
 		expect(testView.countyLayer).toBeDefined();
+		expect(testView.hucLayer).toBeDefined();
 		expect(testView.countyPlotModel).toBeDefined();
 	});
 
@@ -84,39 +76,33 @@ describe('Tests for WaterBudgetHucCountyDataView', function() {
 		expect(NWC.view.BaseView.prototype.initialize).toHaveBeenCalled();
 	});
 
-	it('Expects the waterbudgetCountyData template to be rendered', function() {
-		expect(getTemplateSpy).toHaveBeenCalledWith('waterbudgetCountyData');
-		expect(templateSpy).toHaveBeenCalled();
-	});
-
 	it('Expect that event handler calls exist and behave as expected', function() {
 		//the view has an event to wire up the clickable plot options
-		expect(testView.events['click #units-btn-group button']).toBeDefined();
-		expect(testView.events['click #time-scale-btn-group button']);
+		expect(testView.events['click #county-units-btn-group button']).toBeDefined();
 		expect(testView.events['click #water-use-type-btn-group button']).toBeDefined();
-		expect(testView.events['click #water-use-type-btn-group button']).toBeDefined();
+		expect(testView.events['click .wateruse-download-button']).toBeDefined();
 	});
 
 	it('Expects the units to change state and replot when the model changes', function() {
 		testView.countyPlotModel.set('units', 'metric');
-		expect(testView.chartWaterUse).toHaveBeenCalledWith('metric', testView.countyPlotModel.get('plotType'));
+		expect(testView.chartWaterUse).toHaveBeenCalled();
 		expect($metricButton.hasClass('active')).toBe(true);
 		expect($customaryButton.hasClass('active')).toBe(false);
 
 		testView.countyPlotModel.set('units', 'usCustomary');
-		expect(testView.chartWaterUse).toHaveBeenCalledWith('usCustomary', testView.countyPlotModel.get('plotType'));
+		expect(testView.chartWaterUse).toHaveBeenCalled();
 		expect($metricButton.hasClass('active')).toBe(false);
 		expect($customaryButton.hasClass('active')).toBe(true);
 	});
 
 	it('Expects the plotType to change state and replot when the model changes', function() {
 		testView.countyPlotModel.set('plotType', 'normalizedWater');
-		expect(testView.chartWaterUse).toHaveBeenCalledWith(testView.countyPlotModel.get('units'), 'normalizedWater');
+		expect(testView.chartWaterUse).toHaveBeenCalled();
 		expect($normalizedButton.hasClass('active')).toBe(true);
 		expect($totalButton.hasClass('active')).toBe(false);
 
 		testView.countyPlotModel.set('plotType', 'totalWater');
-		expect(testView.chartWaterUse).toHaveBeenCalledWith(testView.countyPlotModel.get('units'), 'totalWater');
+		expect(testView.chartWaterUse).toHaveBeenCalled();
 		expect($normalizedButton.hasClass('active')).toBe(false);
 		expect($totalButton.hasClass('active')).toBe(true);
 	});
