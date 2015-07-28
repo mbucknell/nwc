@@ -42,13 +42,13 @@
 		</script>
 	</head>
 	<body>
-		<!--[if lt IE 9]>
+		<!--[if lt IE 10]>
 			<div id="ie9-warning-modal" class="modal fade">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title">IE9 Not Supported</h4>
+							<h4 class="modal-title">IE9 and lower not supported</h4>
 						</div>
 						<div class="modal-body">
 							<p>The application has been tested in the latest versions of Chrome, Firefox, and Safari and has been tested on IE10 and IE11.</p>
