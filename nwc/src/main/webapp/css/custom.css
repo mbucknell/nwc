@@ -168,6 +168,10 @@ textarea[readonly] {
     cursor: text !important;
 }
 
+.waterbudget-legend {
+	height: 55px;
+}
+
 #gageList tr.gage-selected {
     background-color: #FFCC00;
 }

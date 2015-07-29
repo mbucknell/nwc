@@ -129,20 +129,15 @@ NWC.util.mapUtils = (function () {
 		);
 	};
 
-	that.createHucFeatureLayer = function(huc12, styleMap) {
-		styleMap = styleMap ? styleMap : new OpenLayers.StyleMap({
-				strokeWidth: 2,
-				strokeColor: "black",
-				fillOpacity: 0,
-				graphicOpacity: 1,
-				fill: false
-			});
-		var filter = new OpenLayers.Filter.Comparison({
-			type: OpenLayers.Filter.Comparison.EQUAL_TO,
-			property: "huc_12",
-			value: huc12
-		});
-
+	/*
+	 * @param {Array of String} huc12s - to create in the feature layer.
+	 * @param {OpenLayers.StyleMap} styleMap - optional style map for the feature layer.
+	 * @returns OpenLayers.Layer.Vector with huc12s.
+	 */
+	that.createHucFeatureLayer = function(huc12s, styleMap) {
+		var filter;
+		var hucFilters = [];
+		var hucLayer;
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
 			featureType: 'nationalwbdsnapshot',
@@ -151,11 +146,39 @@ NWC.util.mapUtils = (function () {
 			geometryName: "the_geom",
 			srsName : "EPSG:3857"
 		});
+		var style = styleMap ? styleMap : new OpenLayers.StyleMap({
+				strokeWidth: 2,
+				strokeColor: "black",
+				fillOpacity: 0,
+				graphicOpacity: 1,
+				fill: false
+			});
 
-		var hucLayer = new OpenLayers.Layer.Vector("WFS", {
+		if (huc12s.length === 1) {
+			filter = new OpenLayers.Filter.Comparison({
+				type: OpenLayers.Filter.Comparison.EQUAL_TO,
+				property: "huc_12",
+				value: huc12s.first()
+			});
+		}
+		else {
+			huc12s.each(function(huc) {
+				hucFilters.push(new OpenLayers.Filter.Comparison({
+					type: OpenLayers.Filter.Comparison.EQUAL_TO,
+					property: 'huc_12',
+					value : huc
+				}));
+			});
+			filter = new OpenLayers.Filter.Logical({
+				filters : hucFilters,
+				type : OpenLayers.Filter.Logical.OR
+			});
+		}
+
+		hucLayer = new OpenLayers.Layer.Vector("WFS", {
 			strategies: [new OpenLayers.Strategy.Fixed()],
 			protocol: protocol,
-			styleMap: styleMap,
+			styleMap: style,
 			filter:filter
 		});
 		return hucLayer;

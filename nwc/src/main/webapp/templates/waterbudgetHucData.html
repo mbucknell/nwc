@@ -1,4 +1,4 @@
-<div class="row">
+<div id=waterbudget-huc-data-container class="row">
 	<div class="col-xs-12 nwc-container">
 		<div class="row">
 			<div class="col-xs-12">
@@ -26,46 +26,31 @@
 				</div>
 			</div>
 			<div class="col-md-6">
+				{{#if showAdditionalDataButtons}}
 				<div class="row spacer spacer_down text-center">
 					<button id="counties-button" class="btn btn-primary" disabled>Plot County Water Use Data <span class="glyphicon glyphicon-arrow-down"></span></button>
 					<span>Or</span>
 					<button id="compare-hucs-button" class="btn btn-primary" disabled>Select Huc for Comparison <span class="glyphicon glyphicon-arrow-right"></span></button>
 				</div>
 				<div class="spacer" id="county-selection-div"></div>
+				{{/if}}
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-sm-3 spacer">
+			<div class="col-sm-12 spacer">
 				<div id="units-btn-group" class="col-xs-12 btn-group">
 					<button type="button" class="btn btn-primary" id="customary-button" value="usCustomary">US Customary</button>
 					<button type="button" class="btn btn-primary" id="metric-button" value="metric">Metric</button>
 				</div>			
 			</div>
-			<div class="spacer spacer_down col-sm-6">
-				<div class="text-center">
-					<div>
-						<button class="btn btn-success evapotranspiration-download-button" disabled>
-						Download Evapotranspiration
-						</button>
-						<button class="btn btn-success precipitation-download-button" disabled>
-						Download Precipitation
-						</button>
-					</div>
-				</div>
-			</div>
-			<div class="spacer col-xs-12">
-				<div style="height: 400px;" id="waterBudgetPlot" class="col-xs-10"></div>
-				<div class="col-sm-2">
-					<div class="row">
-						<div id="waterBudgetLegend" class="col-xs-12"></div>
-					</div>
-				</div>
-				<div class="col-xs-12 spacer spacer_down">
-					<div id="time-scale-btn-group" class="btn-group">
-						<button id="monthly-button"type="button" class="btn btn-primary" value="monthly">Monthly</button>
+			<div class="spacer col-xs-12" id="huc-plot-container"></div>
+			<div class="col-sm-12 spacer spacer_down">
+					<div id="time-scale-btn-group" class="col-xs-12 btn-group">
+						<button id="monthly-button" type="button" class="btn btn-primary" value="monthly">Monthly</button>
 						<button id="daily-button" type="button" class="btn btn-primary" value="daily">Daily</button>
 					</div>
 				</div>
+			<div class="spacer col-xs-12">
 				<div class="row col-xs-12 big_spacer">
 				Precipitation and Evapotranspiration data derived from the
 				<a href="http://daymet.ornl.gov/" target="_blank">Daymet <i class="fa fa-external-link"></i></a>
