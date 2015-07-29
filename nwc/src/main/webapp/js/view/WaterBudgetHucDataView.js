@@ -110,12 +110,28 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
 		var hucsToAdd = [huc];
 
+		var style = {
+			strokeWidth: 2,
+			strokeColor: "black",
+			fillOpacity: 0,
+			graphicOpacity: 1,
+			fill: false
+		};
+
 		this.hucMap = NWC.util.mapUtils.createMap([baseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
 
 		if (compareHuc) {
 			hucsToAdd.push(compareHuc);
+			$.extend(style, {
+				label: '${huc_12}',
+				fontSize: '1em',
+				fontWeight: 'normal',
+				labelOutlineColor: "white",
+				labelOutlineWidth: 1,
+				labelAlign: 'lm'
+			});
 		}
-		this.hucLayer = NWC.util.mapUtils.createHucFeatureLayer(hucsToAdd);
+		this.hucLayer = NWC.util.mapUtils.createHucFeatureLayer(hucsToAdd, new OpenLayers.StyleMap(style));
 
 		this.hucLayer.events.on({
 			featureadded: function(event){
