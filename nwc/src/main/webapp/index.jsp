@@ -17,6 +17,7 @@
 				CONFIG.endpoint.wpsBase = CONFIG.contextPath + '/proxywps/';
 				CONFIG.endpoint.wps = CONFIG.endpoint.wpsBase + 'WebProcessingService'; //TODO inconsistant use of of URL resources
 				CONFIG.endpoint.nwis = '${directNwisEndpoint}';
+				CONFIG.endpoint.nwisStreamflow = '${directNwisStreamflowEndpoint}';
 				
 				CONFIG.endpoint.searchService = '${searchServiceEndpoint}';
 				
@@ -35,10 +36,31 @@
 					};
 				}
 			}());
+			$(document).ready(function() {
+				$('#ie9-warning-modal').modal();
+			});
 		</script>
 	</head>
 	<body>
-		<div class="container site_body_content">
+		<!--[if lt IE 10]>
+			<div id="ie9-warning-modal" class="modal fade">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title">IE9 and lower not supported</h4>
+						</div>
+						<div class="modal-body">
+							<p>The application has been tested in the latest versions of Chrome, Firefox, and Safari and has been tested on IE10 and IE11.</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		<![endif]-->
+		<div class="container-fluid site_body_content">
 			<div class="row">
 				<div id="site_header" class="col-xs-12">
 					<%@include file="/jsp/USGSHeader.jsp" %>
@@ -71,7 +93,7 @@
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/javascript.util.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/jsts.js"></script>
 
-		<script type="text/javascript" src="vendorlibs/dygraphs/dygraph${dygraphsMin}.js"></script>
+		<script type="text/javascript" src="webjars/dygraphs/${dygraphsVersion}/dygraph-combined${dygraphsMin}.js"></script> -->
 		<script type="text/javascript" src="vendorlibs/flot-plugins/jquery.flot.tooltip.js"></script>
 		<script type="text/javascript" src="vendorlibs/flot-plugins/jquery.flot.axislabels.js"></script>
 		<script type="text/javascript" src="vendorlibs/FileSaver.js-master/FileSaver.js"></script>
@@ -86,6 +108,7 @@
 <!--	<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesRaster.js"></script>
 -->
 		<script type="text/javascript" src="js/utils/templateLoader.js"></script>
+		<script type="text/javascript" src="js/utils/jqueryUtils.js"></script>
 		<script type="text/javascript" src="js/utils/Conversion.js"></script>
 		<script type="text/javascript" src="js/utils/mapUtils.js"></script>
 		<script type="text/javascript" src="js/utils/CountyWaterUseProperties.js"></script>
@@ -119,9 +142,9 @@
 		<script type="text/javascript" src="js/view/HomeView.js"></script>
                 
 		<script type="text/javascript" src="js/view/AquaticBiologyMapView.js"></script>
-                <script type="text/javascript" src="js/view/AquaticBiologySelectFeaturesView.js"></script>
-                <script type="text/javascript" src="js/view/BiodataGageMapView.js"></script>
-                <script type="text/javascript" src="js/view/AquaticBiologyPairView.js"></script>
+		<script type="text/javascript" src="js/view/AquaticBiologySelectFeaturesView.js"></script>
+		<script type="text/javascript" src="js/view/BiodataGageMapView.js"></script>
+		<script type="text/javascript" src="js/view/AquaticBiologyPairView.js"></script>
 		<script type="text/javascript" src="js/view/DataDiscoveryView.js"></script>
 		<script type="text/javascript" src="js/view/ProjectTabView.js"></script>
 		<script type="text/javascript" src="js/view/ProjectView.js"></script>
@@ -130,14 +153,16 @@
 		<script type="text/javascript" src="js/view/PublicationsTabView.js"></script>
 		
 		<script type="text/javascript" src="js/view/StreamflowStatsMapView.js"></script>
+		<script type="text/javascript" src="js/view/StreamflowPlotView.js"></script>
 		<script type="text/javascript" src="js/view/StreamflowStatsGageDataView.js"></script>
 		<script type="text/javascript" src="js/view/StreamflowStatsHucDataView.js"></script>
 		<script type="text/javascript" src="js/view/StreamflowStatsModeledInfoView.js"></script>
 		<script type="text/javascript" src="js/view/StreamflowStatsCalculateStatsView.js"></script>
 		<script type="text/javascript" src="js/view/HucCountyMapView.js"></script>
+		<script type="text/javascript" src="js/view/CountyWaterUseView.js"></script>
+		<script type="text/javascript" src="js/view/WaterbudgetPlotView.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetMapView.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetHucDataView.js"></script>
-		<script type="text/javascript" src="js/view/WaterBudgetHucCountyDataView.js"></script>
 		<script type="text/javascript" src="js/controller/NWCRouter.js"></script>
 		
 		<script type="text/javascript" src="js/init.js"></script>

@@ -5,6 +5,7 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 	var eventSpy;
 	var options;
 	var server;
+	var plotStreamflowDataDeferred;
 
 	beforeEach(function() {
 		CONFIG = {
@@ -28,6 +29,10 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		renderSpy = jasmine.createSpy('renderSpy');
 		spyOn(NWC.view.BaseStreamflowStatsDataView.prototype, 'render');
 		spyOn(NWC.view.BaseStreamflowStatsDataView.prototype, 'initialize');
+		plotStreamflowDataDeferred = $.Deferred();
+		spyOn(NWC.view, 'StreamflowPlotView').andReturn({
+			plotStreamflowData : jasmine.createSpy('plotStreamflowDataSpy').andReturn(plotStreamflowDataDeferred)
+		});
 		spyOn(NWC.util.mapUtils, 'createMap').andCallFake(function() {
 			return {
 				addLayers : addLayersSpy,
@@ -130,11 +135,12 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		});
 	});
 
-	it('Expects calling rendering to call the map\s render method', function() {
+	it('Expects calling rendering to call the map\s render method and to create a StreamflowPlotView', function() {
 		testView = new NWC.view.StreamflowStatsGageDataView(options);
 		testView.render();
 		expect(NWC.view.BaseStreamflowStatsDataView.prototype.render).toHaveBeenCalled();
 		expect(renderSpy).toHaveBeenCalled();
+		expect(NWC.view.StreamflowPlotView).toHaveBeenCalled();
 	});
 
 	it('Expects getStats to call getSiteStats and resolves the deferred when data is retrieved', function() {
@@ -166,6 +172,28 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		testView = new NWC.view.StreamflowStatsGageDataView(options);
 		var fname = testView.getStatsFilename();
 		expect(fname).toMatch(options.gageId)
+	});
+
+	describe('Tests for plotStreamflowData', function() {
+		beforeEach(function() {
+			deferred = $.Deferred();
+
+			ev = {
+				preventDefault : jasmine.createSpy('preventDefaultSpy')
+			};
+
+			testView.render();
+		});
+
+		it('Expects a resolved call to plotStreamFlowData to set the dataSeries', function() {
+			var ds = new NWC.util.DataSeries.newSeries();
+
+			testView.plotStreamFlowData(ev);
+			expect(testView.streamflowPlotView.plotStreamflowData).toHaveBeenCalled();
+			plotStreamflowDataDeferred.resolve(ds);
+
+			expect(testView.dataSeries).toEqual(ds);
+		});
 	});
 
 });

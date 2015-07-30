@@ -1,10 +1,18 @@
+/*jslint browser: true */
+/*global OpenLayers*/
+/*global $*/
+
 var NWC = NWC || {};
 
-NWC.view = NWC.view || {}
+NWC.view = NWC.view || {};
 
 NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.extend({
 
 	templateName : 'streamflowGageStats',
+
+	events : {
+		'click .show-plot-btn' : 'plotStreamFlowData'
+	},
 
 	/*
 	 * Query NWIS for information about this.context.gageId. If the call fails
@@ -45,7 +53,9 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 			startColumn.sort(function(a, b) {
 				return a - b;
 			});
-			this.startDate = startColumn[0];
+			if (startColumn.length === 0) {
+				startColumn.push(NWC.util.WaterYearUtil.waterYearStart(1981));
+			}
 
 			var endColumn = table.getColumnByName(END_DATE_COL_NAME);
 			endColumn = endColumn.map(reformatDateStr);
@@ -53,7 +63,10 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 			endColumn.sort(function(a, b) {
 				return b - a;
 			});
-			this.endDate = endColumn[0];
+			if (endColumn.length === 0) {
+				endColumn.push(NWC.util.WaterYearUtil.waterYearEnd(2010));
+			}
+
 			return {
 				startDate : startColumn[0],
 				endDate : endColumn[0]
@@ -65,8 +78,8 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 			return {
 				startDate : NWC.util.WaterYearUtil.waterYearStart(1981),
 				endDate : NWC.util.WaterYearUtil.waterYearEnd(2010)
-			}
-		}
+			};
+		};
 
 		var deferred = $.Deferred();
 		$.ajax({
@@ -89,11 +102,24 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 	render : function() {
 		NWC.view.BaseStreamflowStatsDataView.prototype.render.apply(this, arguments);
 		this.map.render(this.insetMapDiv);
-
+		this.streamflowPlotView = new NWC.view.StreamflowPlotView({
+			el : this.$el.find('.streamflow-plot-container'),
+			getDataSeriesPromise : this.getDataSeriesPromise.bind(this)
+		});
 		return this;
 	},
 
+	/*
+	 * @construct
+	 * @param {Object} options
+	 *
+	 *     @prop {String} gageId - Gage shown in this view
+	 *     @prop {String} insetMapDiv - id of the inset map div
+	 *     @prop {Jquery element} el - jquery element where this view will be rendered.
+	 */
 	initialize : function(options) {
+		var self = this;
+
 		if (!Object.has(this, 'context')) {
 			this.context = {};
 		}
@@ -134,6 +160,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 		this.map.zoomToExtent(this.map.getMaxExtent());
 
 		nwisDataRetrieved.always(function(dates) {
+			self.dates = dates;
 			$('#start-period-of-record').html(dates.startDate.format('{yyyy}-{MM}-{dd}'));
 			$('#end-period-of-record').html(dates.endDate.format('{yyyy}-{MM}-{dd}'));
 
@@ -151,6 +178,9 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 			$endYear.append(options);
 			$startYear.find('option:first-child').prop('selected', true);
 			$endYear.find('option:last-child').prop('selected', true);
+
+			// Enable show plot button
+			$('.show-plot-btn').removeProp('disabled');
 		});
 		$.when(nwisDataRetrieved, featureLoaded).done(function () {
 			$('#loading-indicator').hide();
@@ -181,6 +211,88 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 
 	getStatsFilename : function() {
 		return 'eflowstats_NWIS_' + this.context.gageId + '.tsv';
+	},
+
+
+	/*
+	 * @returns Jquery promise which is resolved with the data series if it is successfully retrieved. If
+	 * unsuccessful is is rejected and forwards on the text response of the bad request
+	 */
+	getDataSeriesPromise : function() {
+		var deferred = $.Deferred();
+
+		var startDate = this.dates.startDate;
+		var endDate = this.dates.endDate;
+		var strToDate = function(dateStr){
+		  return Date.create(dateStr).utc();
+		};
+
+		$.ajax({
+			url : CONFIG.endpoint.nwisStreamflow,
+			data : this._getStreamflowParams(startDate, endDate, this.context.gageId),
+			method : 'GET',
+			success : function(response) {
+				var dataSeries = NWC.util.DataSeries.newSeries();
+				var dataTable = [];
+
+				NWC.util.findXMLNamespaceTags($(response), 'ns1:value').each(function() {
+					var row = [];
+					var value = parseFloat($(this).text());
+					row.push(strToDate($(this).attr('dateTime')));
+					row.push(value);
+					dataTable.push(row);
+				});
+
+				if (dataTable.length === 0) {
+					deferred.reject('No data available to plot');
+				}
+				else {
+					dataSeries.data = dataTable;
+					dataSeries.metadata.seriesLabels.push({
+						seriesName : 'Observed Streamflow',
+						seriesUnits : NWC.util.Units.usCustomary.streamflow.daily
+					});
+
+					deferred.resolve(dataSeries);
+				}
+			},
+			error : function(jqXHR, textStatus) {
+				deferred.reject(textStatus);
+			}
+		});
+
+		return deferred.promise();
+	},
+
+	plotStreamFlowData : function(ev) {
+		var self = this;
+
+		var plotTitle = 'Observed Streamflow';
+
+		ev.preventDefault();
+
+		this.streamflowPlotView.plotStreamflowData(plotTitle).done(function(dataSeries) {
+			self.dataSeries = dataSeries;
+			self.$el.find('.show-plot-btn').hide();
+		}).fail(function(args) {
+			alert('Retrieving data for this plot failed with error: ' + args[0]);
+		});
+	},
+
+	remove : function() {
+		this.streamflowPlotView.remove();
+		NWC.view.BaseStreamflowStatsDataView.prototype.remove.apply(this, arguments);
+	},
+
+	_getStreamflowParams : function(startDate, endDate, siteId) {
+		return {
+			format : 'waterml,1.1',
+			sites : siteId,
+			startDT : startDate.format('{yyyy}-{MM}-{dd}'),
+			endDt : endDate.format('{yyyy}-{MM}-{dd}'),
+			statCD : '00003',
+			parameterCd : '00060'
+		};
 	}
 });
 

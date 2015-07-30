@@ -35,7 +35,7 @@
 				<div id="huc-id">{{ hucId }}</div>
 				<h5>HUC Name</h6>
 				<div id="huc-name"></div>
-				<h5>Drainage Area (km<sup>2</sup>)</h6>
+				<h5>Drainage Area (km<sup>2</sup>)</h5>
 				<div id="huc-drainage-area"></div>
 			</div>
 			<div class="col-xs-12 map_container">
@@ -43,18 +43,10 @@
 			</div>
 		</div>
 		<div class="row col-xs-12 text-center spacer spacer_down">
-			<button id="streamflow-data-plot-button" type="button" class="btn btn-success">Streamflow Data Plot</button>
-			<button style="display:none;" id="streamflow-data-download-button" type="button" class="btn btn-success">Download Modeled Streamflow</button>
+			<button type="button" class="show-plot-btn btn btn-success">Streamflow Data Plot</button>
+			<button style="display:none;" type="button" class="download-streamflow-btn btn btn-success">Download Modeled Streamflow</button>
 		</div>
-		<h4 id="plot-loading-indicator" style="display:none">Loading plot data <i class="fa fa-spinner fa-spin"></i></h4>
-		<div id="streamflow-plot-div" class="row col-xs-12 spacer spacer_down" style="display: none;">
-			<div style="height: 400px;" id="modeledQPlot" class="col-xs-10"></div>
-			<div class="col-xs-2">
-				<div class="row">
-					<div id="modeledQLegend" class="col-xs-12"></div>
-				</div>
-			</div>
-		</div>
+		<div class="streamflow-plot-container"></div>
 		<div class="row spacer">
 			<div id="left" class="calculate-stats col-xs-6"></div>
 			<div id="right" class="calculate-stats col-xs-6"></div>

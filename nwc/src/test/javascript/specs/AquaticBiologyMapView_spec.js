@@ -39,6 +39,7 @@ describe('Tests for NWC.view.AquaticBiologyMapView', function() {
 		eventSpyObj = jasmine.createSpyObj('eventSpyObj', ['preventDefault']);
 
 		view = new NWC.view.AquaticBiologyMapView({
+			model : new NWC.model.AquaticBiologySelectMapModel(),
 			aquaticBiologyFeaturesModel : featuresModel,
 			template : thisTemplate,
 			el : $('#test-div')

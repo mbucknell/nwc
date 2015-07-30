@@ -10,15 +10,11 @@ NWC.view.HucCountyMapView = NWC.view.BaseView.extend({
 	 *
 	 * @constructor
 	 * @param {Object} options
-	 *
-	 *	@prop {String} mapDiv - the id of the div to place the county/huc map.
 	 *	@prop {OpenLayers.Feature.Vector} hucFeature - the feature object for the huc to be drawn on the map
 	 *	@prop {Backbone.Router} router
 	 *	@prop {Jquery el} el
 	 */
 	initialize : function(options) {
-		this.mapDiv = options.mapDiv;
-
 		var countyMapBaseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
 		this.map = NWC.util.mapUtils.createMap([countyMapBaseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
 
@@ -75,7 +71,7 @@ NWC.view.HucCountyMapView = NWC.view.BaseView.extend({
 
 	render : function() {
 		NWC.view.BaseView.prototype.render.apply(this, arguments);
-		this.map.render(this.mapDiv);
+		this.map.render('county-selection-map');
 		return this;
 	}
 });
