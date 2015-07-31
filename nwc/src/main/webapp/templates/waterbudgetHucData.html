@@ -10,9 +10,7 @@
 		</div>
 		<div class="row" id="wateruse"></div>		
 		<div class="row">
-			<div class="huc-inset-map-container col-md-6 spacer spacer_down">
-			</div>
-			<div class="col-md-6">
+			<div class="col-md-6 col-md-push-6">
 				{{#if showAdditionalDataButtons}}
 				<div class="row spacer spacer_down text-center">
 					<button id="counties-button" class="btn btn-primary" disabled>Plot County Water Use Data <span class="glyphicon glyphicon-arrow-down"></span></button>
@@ -21,6 +19,12 @@
 				</div>
 				<div class="spacer" id="county-selection-div"></div>
 				{{/if}}
+			</div>
+			<div class="huc-inset-map-container col-md-6 col-md-pull-6 spacer spacer_down">
+			</div>
+			<div class="compare-huc-inset-map-container space spacer-down col-sm-12">
+				<div class="huc-inset-map-div col-lg-offset-2 col-lg-4 col-md-6 col-sm-12" ></div>
+				<div class="comparehuc-inset-map-div col-lg-offset-2 col-lg-4 col-md-6 col-sm-12"></div>
 			</div>
 		</div>
 		<div class="row">
@@ -31,6 +35,10 @@
 				</div>			
 			</div>
 			<div class="spacer col-xs-12" id="huc-plot-container"></div>
+			<div class="spacer col-xs-12" id="compare-huc-plot-container">
+				<div id="huc-plotview-div" class="col-lg-6 col-md-12"></div>
+				<div id="compare-plotview-div" class="col-lg-6 col-md-12"></div>
+			</div>
 			<div class="col-sm-12 spacer spacer_down">
 					<div id="time-scale-btn-group" class="col-xs-12 btn-group">
 						<button id="monthly-button" type="button" class="btn btn-primary" value="monthly">Monthly</button>

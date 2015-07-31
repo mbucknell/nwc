@@ -54,10 +54,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 
 		// Create additional sub views as needed
-		$insetMapContainer = this.$('.huc-inset-map-container');
 		$plotContainer = this.$('#huc-plot-container');
 		if (this.compareHucId) {
-			$insetMapContainer.html(NWC.templates.getTemplate('hucCompareInsetMapContainer')());
 			this.hucInsetMapView = new NWC.view.HucInsetMapView({
 				el : this.$('.huc-inset-map-div'),
 				hucId : this.hucId
@@ -68,7 +66,6 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				hucId : this.compareHucId
 			});
 
-			$plotContainer.html(NWC.templates.getTemplate('hucComparePlotViewContainer')());
 			this.plotView = new NWC.view.WaterbudgetPlotView({
 				hucId : this.hucId,
 				el : this.$('#huc-plotview-div'),
@@ -82,7 +79,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		}
 		else {
 			this.hucInsetMapView = new NWC.view.HucInsetMapView({
-				el : $insetMapContainer,
+				el : this.$('.huc-inset-map-container'),
 				hucId : this.hucId
 			});
 			this.hucInsetMapView.hucFeatureLoadedPromise.done(function() {
@@ -92,7 +89,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 			this.plotView = new NWC.view.WaterbudgetPlotView({
 				hucId : this.hucId,
-				el : $plotContainer,
+				el : this.$('#huc-plot-container'),
 				model : this.hucPlotModel
 			});
 		}
