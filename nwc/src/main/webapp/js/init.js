@@ -9,6 +9,7 @@ $(document).ready(function() {
 	var TEMPLATES = [
 		'home',
 		'waterbudget',
+		'hucCompareInsetMapContainer',
 		'hucInsetMap',
 		'waterbudgetPlot',
 		'hucComparePlotViewContainer',

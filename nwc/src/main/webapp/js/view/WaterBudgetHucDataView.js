@@ -34,7 +34,9 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	 *     @prop {String} fips (optional) - If specified, water use data for the county with fips will be shown.
 	 */
 	initialize : function(options) {
+		var self = this;
 		var $plotContainer;
+		var $insetMapContainer;
 
 		this.hucId = options.hucId;
 		this.compareHucId = options.compareHucId ? options.compareHucId :'';
@@ -50,18 +52,22 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		this.setUpHucPlotModel();
 
-		// Create additional sub views as needed
-		this.hucInsetMapView = new NWC.view.HucInsetMapView({
-			el : this.$('.huc-inset-map-container'),
-			hucId : this.hucId
-		});
-		this.hucInsetMapView.hucFeatureLoadedPromise.done(function() {
-			this.$('#counties-button').prop('disabled', false);
-			this.$('#compare-hucs-button').prop('disabled', false);
-		});
 
+		// Create additional sub views as needed
+		$insetMapContainer = this.$('.huc-inset-map-container');
 		$plotContainer = this.$('#huc-plot-container');
 		if (this.compareHucId) {
+			$insetMapContainer.html(NWC.templates.getTemplate('hucCompareInsetMapContainer')());
+			this.hucInsetMapView = new NWC.view.HucInsetMapView({
+				el : this.$('.huc-inset-map-div'),
+				hucId : this.hucId
+			});
+
+			this.compareHucInsetMapView = new NWC.view.HucInsetMapView({
+				el : this.$('.comparehuc-inset-map-div'),
+				hucId : this.compareHucId
+			});
+
 			$plotContainer.html(NWC.templates.getTemplate('hucComparePlotViewContainer')());
 			this.plotView = new NWC.view.WaterbudgetPlotView({
 				hucId : this.hucId,
@@ -75,6 +81,15 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			});
 		}
 		else {
+			this.hucInsetMapView = new NWC.view.HucInsetMapView({
+				el : $insetMapContainer,
+				hucId : this.hucId
+			});
+			this.hucInsetMapView.hucFeatureLoadedPromise.done(function() {
+				self.$('#counties-button').prop('disabled', false);
+				self.$('#compare-hucs-button').prop('disabled', false);
+			});
+
 			this.plotView = new NWC.view.WaterbudgetPlotView({
 				hucId : this.hucId,
 				el : $plotContainer,
@@ -145,6 +160,10 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	remove : function() {
+		this.hucInsetMapView.remove();
+		if (Object.has(this, 'compareHucInsetMapView')) {
+			this.compareHucInsetMapView.remove();
+		}
 		if (Object.has(this, 'hucCountyMapView')) {
 			this.hucCountyMapView.remove();
 		}
