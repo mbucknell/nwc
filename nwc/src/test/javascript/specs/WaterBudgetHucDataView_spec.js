@@ -36,17 +36,7 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 		$monthlyButton = $('#monthly-button');
 		$countiesButton = $('#counties-button');
 		$compareHucsButton = $('#compare-hucs-button');
-
-		// Stubbing the createMap call so OpenLayers does not try to make any ajax calls
-		spyOn(NWC.util.mapUtils, 'createMap').andCallFake(function() {
-			return {
-				addLayer : jasmine.createSpy('addLayerSpy'),
-				zoomToExtent : jasmine.createSpy('zoomToExtentSpy'),
-				getMaxExtent : jasmine.createSpy('getMaxExtentSpy'),
-				render : jasmine.createSpy('renderSpy')
-			};
-		});
-
+		
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
 
 		spyOn(NWC.view, 'WaterbudgetPlotView').andReturn({
