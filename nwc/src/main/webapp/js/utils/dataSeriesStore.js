@@ -117,6 +117,8 @@ NWC.util.DataSeriesStore = function () {
 	by the number of days in the month and insert the result in
 	every day-row for that month. If a given month has no eta value,
 	insert NaN in every day-row for that month.
+
+	@param {Object} nameToSeriesMap - properties for dayMet and eta which should both be dataSeries objects.
 	*/
 	self.updateDailyHucSeries = function (nameToSeriesMap) {
 		var dailyTable = [],

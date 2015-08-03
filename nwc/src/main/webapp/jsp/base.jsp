@@ -27,7 +27,7 @@
     request.setAttribute("jsMin", (development) ? "" : ".min");
     request.setAttribute("sugarMin", (development) ? ".development" : ".min");
     request.setAttribute("openlayersMin", (development) ? ".debug" : "");
-    request.setAttribute("dygraphsMin", (development) ? "-dev" : "-combined");
+    request.setAttribute("dygraphsMin", (development) ? "-dev" : "");
     
 
     request.setAttribute("applicationVersion", props.get("version"));
@@ -42,12 +42,14 @@
     request.setAttribute("openlayersVersion", props.get("openlayers.version"));
     request.setAttribute("fontawesomeVersion", props.get("fontawesome.version"));
     request.setAttribute("sugarVersion", props.get("sugar.version"));
+	request.setAttribute("dygraphsVersion", props.get("dygraphs.version"));
     request.setAttribute("jstsVersion", props.get("jsts.version"));
 
     request.setAttribute("directGeoserverEndpoint", props.get("nwc.endpoint.geoserver"));
     request.setAttribute("directThreddsEndpoint", props.get("nwc.endpoint.thredds"));
     request.setAttribute("directWpsEndpoint", props.get("nwc.endpoint.wps"));
     request.setAttribute("directNwisEndpoint", props.get("nwc.endpoint.nwis"));
+	request.setAttribute("directNwisStreamflowEndpoint", props.get("nwc.endpoint.nwis.streamflow"));
 	request.setAttribute("searchServiceEndpoint", props.get("nwc.endpoint.searchService"));
 	request.setAttribute("directSciencebaseEndpoint", props.get("nwc.endpoint.sciencebase"));
 %>

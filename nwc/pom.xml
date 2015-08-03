@@ -122,10 +122,13 @@
 						<include>view/BaseView.js</include>
 						<include>view/BaseSelectMapView.js</include>
 						<include>view/BaseDiscoveryTabView.js</include>
+						<include>view/WaterbudgetPlotView.js</include>
+						<include>view/CountyWaterUseView.js</include>
 						<include>view/WaterBudgetHucDataView.js</include>
 						<include>view/ProjectTabView.js</include>
 						<include>view/DataTabView.js</include>
 						<include>view/PublicationsTabView.js</include>
+						<include>view/StreamflowPlotView.js</include>
 						<include>**/*.js</include>
 					</sourceIncludes>
 					<sourceExcludes>
@@ -290,6 +293,10 @@
             <groupId>org.webjars</groupId>
             <artifactId>jsts</artifactId>
         </dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>dygraphs</artifactId>
+		</dependency>
         <!-- </webjars> -->
                 
     </dependencies>

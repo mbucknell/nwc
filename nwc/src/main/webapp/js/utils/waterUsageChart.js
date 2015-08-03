@@ -71,7 +71,7 @@ NWC.util.WaterUsageChart = (function () {
     };
 
     var privateChart = {};
-    that.setChart = function(chartEltSelector, chartLegendDivSelector, inputData, labels, ylabel, precision) {
+    that.setChart = function(chartEl, chartLegendDivEl, inputData, labels, ylabel, precision) {
     	if (!inputData || !inputData.length) {
     		if (privateChart.shutdown) {
     			privateChart.shutdown()
@@ -138,7 +138,7 @@ NWC.util.WaterUsageChart = (function () {
     		 *  #ms in one day = 1000 * 60 * 60 * 24                            =   86400000
     		 */
     		var yearInMilliseconds = 1000 * 60 * 60 * 24 * 365; // 31536000000
-    		privateChart = $.plot(chartEltSelector, data, {
+    		privateChart = $.plot(chartEl, data, {
     			series: {
 					stack: stack,
 					bars: {
@@ -201,7 +201,7 @@ NWC.util.WaterUsageChart = (function () {
 					}
 				},
 				legend: {
-					container: chartLegendDivSelector
+					container: chartLegendDivEl
 				}
     		});
     	})();
