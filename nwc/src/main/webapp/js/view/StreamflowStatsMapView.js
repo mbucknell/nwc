@@ -69,7 +69,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 				this.showWarningDialog('Multiple gages were selected. Please zoom in and select a single gage.')
 			}
 			else if (responseObject.features.length === 1) {
-				this.router.navigate('/streamflow-stats/gage/' + responseObject.features[0].attributes.STAID, {trigger : true});
+				this.router.navigate('#!streamflow-stats/gage/' + responseObject.features[0].attributes.STAID, {trigger : true});
 			}
 		};
 		this.gageControl = new OpenLayers.Control.WMSGetFeatureInfo({
@@ -105,7 +105,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 				if (km2 > 2000) {
 					this.showWarningDialog("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km<sup>2</sup>). Try looking for a nearby observed flow gage.");
 				} else {
-					this.router.navigate('/streamflow-stats/huc/' + sortedFeature.attributes.huc12, {trigger : true});
+					this.router.navigate('#!streamflow-stats/huc/' + sortedFeature.attributes.huc12, {trigger : true});
 				}
 			}
 		};

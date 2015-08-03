@@ -102,14 +102,14 @@ NWC.view.AquaticBiologySelectFeaturesView = NWC.view.BaseView.extend({
 		e.preventDefault();
 		$cb = $(e.currentTarget);
 		hucID = $cb.attr('id');
-		this.router.navigate('/streamflow-stats/huc/' + hucID, {trigger : true});
+		this.router.navigate('#!streamflow-stats/huc/' + hucID, {trigger : true});
 	},
 	
 	onGageSelect : function(e){
 		e.preventDefault();
 		$cb = $(e.currentTarget);
 		gageID = $cb.attr('id');
-		this.router.navigate('/streamflow-stats/gage/' + gageID, {trigger : true});
+		this.router.navigate('#!streamflow-stats/gage/' + gageID, {trigger : true});
 	},
 	   
 	displayPairList : function (pair) {

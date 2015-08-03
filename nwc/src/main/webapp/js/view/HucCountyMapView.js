@@ -62,7 +62,7 @@ NWC.view.HucCountyMapView = NWC.view.BaseView.extend({
 		// Set up control
 		var selectControl = new OpenLayers.Control.SelectFeature(this.countiesLayer, {
 			onSelect : (function(feature) {
-				this.router.navigate('/waterbudget/huc/' + options.hucFeature.attributes.huc_12 + '/county/' + feature.attributes.fips, {
+				this.router.navigate('#!waterbudget/huc/' + options.hucFeature.attributes.huc_12 + '/county/' + feature.attributes.fips, {
 					trigger : true
 				});
 			}).bind(this)
