@@ -31,8 +31,8 @@ describe('Tests for templateLoader', function() {
 
 	it('Expects loadTemplate to be resolved if the ajax calls where completed', function() {
 		var loadSpy = jasmine.createSpy('loadSpy');
-		server.respondWith('templates/home.html', [200, {"Content-Type" : "text/html"}, "Home content"]);
-		server.respondWith('templates/next.html', [200, {"Content-Type" : "text/html"}, "Next content"]);
+		server.respondWith(/^templates\/home.html/, [200, {"Content-Type" : "text/html"}, "Home content"]);
+		server.respondWith(/^templates\/next.html/, [200, {"Content-Type" : "text/html"}, "Next content"]);
 
 		loader.loadTemplates(['home', 'next']).always(loadSpy);
 		server.respond();
@@ -46,8 +46,8 @@ describe('Tests for templateLoader', function() {
 	});
 
 	it('Expects a template which can\'t be retrieved to use default contents', function() {
-		server.respondWith('templates/home.html', [200, {"Content-Type" : "text/html"}, "Home content"]);
-		server.respondWith('templates/next.html', [500, {}, "Error"]);
+		server.respondWith(/^templates\/home.html/, [200, {"Content-Type" : "text/html"}, "Home content"]);
+		server.respondWith(/^templates\/next.html/, [500, {}, "Error"]);
 
 		loader.loadTemplates(['home', 'next']);
 		server.respond();

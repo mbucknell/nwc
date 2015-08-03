@@ -36,14 +36,11 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	initialize : function(options) {
 		var self = this;
 		var $plotContainer;
-		var $insetMapContainer;
 
 		this.hucId = options.hucId;
 		this.compareHucId = options.compareHucId ? options.compareHucId :'';
 		this.fips = options.fips ? options.fips : '';
-		this.insetHucMapDiv = options.insetHucMapDiv;
 
-		this.context.hucId = this.hucId;
 		this.context.showAdditionalDataButtons = !(this.compareHucId || this.fips);
 
 		// call superclass initialize to do default initialize
