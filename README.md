@@ -16,7 +16,7 @@ This repository houses the [National Water Census data portal.](http://cida.usgs
 
     <!-- disable session persistence across Tomcat restarts -->
     <Manager pathname="" />
-
+	<Environment name="nwc.development" value="True" type="java.lang.String" override="true"/>
 	<Environment name="nwc.endpoint.geoserver" value="http://cida-eros-wsdev.er.usgs.gov:8081/geoserver/" type="java.lang.String" override="true"/>
         <Environment name="nwc.endpoint.thredds" value="http://cida-eros-wsdev.er.usgs.gov:8081/thredds/sos/watersmart/" type="java.lang.String" override="true"/>
         <Environment name="nwc.endpoint.wps" value="http://cida-eros-wsdev.er.usgs.gov:8081/wps/" type="java.lang.String" override="true"/>
