@@ -29,6 +29,7 @@ NWC.util.templateLoader = function() {
 			templates[names[i]] = '';
 			loadingDeferreds.push($.ajax({
 				url : 'templates/' + names[i] + '.html',
+				cache : false,
 				success : function(data) {
 					templates[this] = Handlebars.compile(data);
 				},
