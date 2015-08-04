@@ -9,7 +9,7 @@ NWC.view = NWC.view || {};
  * View for the streamflow stats huc data page
  * @constructor extends NWC.BaseView
  */
-NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.extend({
+NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 
 	templateName : 'streamflowHucStats',
 
@@ -23,7 +23,7 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.exten
 	},
 
 	render : function() {
-		NWC.view.BaseStreamflowStatsDataView.prototype.render.apply(this, arguments);
+		NWC.view.BaseView.prototype.render.apply(this, arguments);
 
 		this.map.render(this.insetMapDiv);
 		this.streamflowPlotView = new NWC.view.StreamflowPlotView({
@@ -71,9 +71,26 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.exten
 		});
 		this.map.addLayer(this.hucLayer);
 
-		$.extend(this.events, NWC.view.BaseStreamflowStatsDataView.prototype.events);
-		NWC.view.BaseStreamflowStatsDataView.prototype.initialize.apply(this, arguments);
+		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 		this.map.zoomToExtent(this.map.getMaxExtent());
+
+		this.CalculateStatsViewLeft = new NWC.view.StreamflowCalculateStatsView({
+			el : $('#left'),
+			hucId : this.context.hucId,
+			years : this.context.years,
+			getStats : this.getStats,
+			getStatsTsvHeader : this.getStatsTsvHeader,
+			getStatsFilename : this.getStatsFilename
+		});
+
+		this.CalculateStatsViewRight = new NWC.view.StreamflowCalculateStatsView({
+			el : $('#right'),
+			hucId : this.context.hucId,
+			years : this.context.years,
+			getStats : this.getStats,
+			getStatsTsvHeader : this.getStatsTsvHeader,
+			getStatsFilename : this.getStatsFilename
+		});
 
 		// Initialize DOM on page
 		var $start = $('.start-year option[value="' + this.context.years.first() + '"]');
@@ -185,7 +202,9 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.exten
 	},
 
 	remove : function() {
+		this.CalculateStatsViewLeft.remove();
+		this.CalculateStatsViewRight.remove();
 		this.streamflowPlotView.remove();
-		NWC.view.BaseStreamflowStatsDataView.prototype.remove.apply(this, arguments);
+		NWC.view.BaseView.prototype.remove.apply(this, arguments);
 	}
 });
