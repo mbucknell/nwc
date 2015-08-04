@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<%@include file="/jsp/USGSHead.jsp" %>
-		
+		<meta name="fragment" content="!">	
 		<script type="text/javascript">
 			(function(){
 				window.CONFIG = {};

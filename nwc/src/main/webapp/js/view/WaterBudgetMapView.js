@@ -64,10 +64,10 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 				var actualFeature = actualFeatures[0];
 				var huc12 = actualFeature.attributes.huc_12;
 				if (Object.has(options, 'hucId')) {
-					this.router.navigate('/waterbudget/comparehucs/' + options.hucId + '/' + huc12, {trigger : true});
+					this.router.navigate('#!waterbudget/comparehucs/' + options.hucId + '/' + huc12, {trigger : true});
 				}
 				else {
-					this.router.navigate('/waterbudget/huc/' + huc12, {trigger : true});
+					this.router.navigate('#!waterbudget/huc/' + huc12, {trigger : true});
 				}
 			}
 		};

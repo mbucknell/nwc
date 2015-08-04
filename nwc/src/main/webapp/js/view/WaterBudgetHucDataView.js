@@ -170,7 +170,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	},
 
 	goToAddHucMapPage : function() {
-		this.router.navigate('waterbudget/map/huc/' + this.hucId, {trigger: true});
+		this.router.navigate('#!waterbudget/map/huc/' + this.hucId, {trigger: true});
 	},
 
 	changeUnits : function(ev) {
