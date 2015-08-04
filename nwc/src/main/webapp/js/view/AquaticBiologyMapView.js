@@ -177,7 +177,7 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 					selected : [],
 					pairs : []
 				});
-				this.router.navigate('/aquatic-biology/select-features', {trigger : true});
+				this.router.navigate('#!aquatic-biology/select-features', {trigger : true});
 			};
 		};
 
