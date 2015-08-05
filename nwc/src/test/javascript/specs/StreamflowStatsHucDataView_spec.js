@@ -20,12 +20,12 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 
 		addLayerSpy = jasmine.createSpy('addLayerSpy');
 		renderSpy = jasmine.createSpy('renderSpy');
-		spyOn(NWC.view.BaseStreamflowStatsDataView.prototype, 'render');
+		spyOn(NWC.view.BaseView.prototype, 'render');
 		plotStreamflowDataDeferred = $.Deferred();
 		spyOn(NWC.view, 'StreamflowPlotView').andReturn({
 			plotStreamflowData : jasmine.createSpy('plotStreamflowDataSpy').andReturn(plotStreamflowDataDeferred)
 		});
-		spyOn(NWC.view.BaseStreamflowStatsDataView.prototype, 'initialize');
+		spyOn(NWC.view.BaseView.prototype, 'initialize');
 		spyOn(NWC.util.mapUtils, 'createMap').andCallFake(function() {
 			return {
 				addLayer : addLayerSpy,
@@ -60,13 +60,13 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 		expect(testView.hucLayer).toBeDefined();
 	});
 
-	it('Expects the view\'s constructor to call BaseStreamflowStatsDataView initialize', function() {
-		expect(NWC.view.BaseStreamflowStatsDataView.prototype.initialize).toHaveBeenCalled();
+	it('Expects the view\'s constructor to call BaseView initialize', function() {
+		expect(NWC.view.BaseView.prototype.initialize).toHaveBeenCalled();
 	});
 
-	it('Expect when the view\'s render method is called that BaseStreamflowStatsDataView render is called, the map is rendered and the streamflowPlotView is created', function() {
+	it('Expect when the view\'s render method is called that BaseView render is called, the map is rendered and the streamflowPlotView is created', function() {
 		testView.render();
-		expect(NWC.view.BaseStreamflowStatsDataView.prototype.render).toHaveBeenCalled();
+		expect(NWC.view.BaseView.prototype.render).toHaveBeenCalled();
 		expect(renderSpy).toHaveBeenCalledWith('inset-map-div');
 		expect(NWC.view.StreamflowPlotView).toHaveBeenCalled();
 	});

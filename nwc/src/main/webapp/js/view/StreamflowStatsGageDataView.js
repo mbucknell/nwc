@@ -6,7 +6,7 @@ var NWC = NWC || {};
 
 NWC.view = NWC.view || {};
 
-NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.extend({
+NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 
 	templateName : 'streamflowGageStats',
 
@@ -100,7 +100,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 	},
 
 	render : function() {
-		NWC.view.BaseStreamflowStatsDataView.prototype.render.apply(this, arguments);
+		NWC.view.BaseView.prototype.render.apply(this, arguments);
 		this.map.render(this.insetMapDiv);
 		this.streamflowPlotView = new NWC.view.StreamflowPlotView({
 			el : this.$el.find('.streamflow-plot-container'),
@@ -155,17 +155,33 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 		});
 		this.map.addLayers([this.gageLayer, this.gageMarkerLayer]);
 
+		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 
-		NWC.view.BaseStreamflowStatsDataView.prototype.initialize.apply(this, arguments);
 		this.map.zoomToExtent(this.map.getMaxExtent());
+
+		this.calculateStatsViewLeft = new NWC.view.StreamflowCalculateStatsView({
+			el : $('#left'),
+			years : null,
+			getStats : this.getStats.bind(this),
+			getStatsTsvHeader : this.getStatsTsvHeader.bind(this),
+			getStatsFilename : this.getStatsFilename.bind(this)
+		});
+
+		this.calculateStatsViewRight = new NWC.view.StreamflowCalculateStatsView({
+			el : $('#right'),
+			years : null,
+			getStats : this.getStats.bind(this),
+			getStatsTsvHeader : this.getStatsTsvHeader.bind(this),
+			getStatsFilename : this.getStatsFilename.bind(this)
+		});
 
 		nwisDataRetrieved.always(function(dates) {
 			self.dates = dates;
 			$('#start-period-of-record').html(dates.startDate.format('{yyyy}-{MM}-{dd}'));
 			$('#end-period-of-record').html(dates.endDate.format('{yyyy}-{MM}-{dd}'));
 
-			var $startYear = $('#start-year');
-			var $endYear = $('#end-year');
+			var $startYear = $('.start-year');
+			var $endYear = $('.end-year');
 
 			var years = NWC.util.WaterYearUtil.yearsAsArray(NWC.util.WaterYearUtil.waterYearRange(Date.range(dates.startDate, dates.endDate)));
 			var i;
@@ -212,7 +228,6 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 	getStatsFilename : function() {
 		return 'eflowstats_NWIS_' + this.context.gageId + '.tsv';
 	},
-
 
 	/*
 	 * @returns Jquery promise which is resolved with the data series if it is successfully retrieved. If
@@ -280,8 +295,10 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 	},
 
 	remove : function() {
+		this.calculateStatsViewLeft.remove();
+		this.calculateStatsViewRight.remove();
 		this.streamflowPlotView.remove();
-		NWC.view.BaseStreamflowStatsDataView.prototype.remove.apply(this, arguments);
+		NWC.view.BaseView.prototype.remove.apply(this, arguments);
 	},
 
 	_getStreamflowParams : function(startDate, endDate, siteId) {
@@ -295,4 +312,3 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseStreamflowStatsDataView.exte
 		};
 	}
 });
-

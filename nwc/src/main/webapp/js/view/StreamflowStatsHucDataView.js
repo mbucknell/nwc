@@ -9,7 +9,7 @@ NWC.view = NWC.view || {};
  * View for the streamflow stats huc data page
  * @constructor extends NWC.BaseView
  */
-NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.extend({
+NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 
 	templateName : 'streamflowHucStats',
 
@@ -23,7 +23,7 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.exten
 	},
 
 	render : function() {
-		NWC.view.BaseStreamflowStatsDataView.prototype.render.apply(this, arguments);
+		NWC.view.BaseView.prototype.render.apply(this, arguments);
 
 		this.map.render(this.insetMapDiv);
 		this.streamflowPlotView = new NWC.view.StreamflowPlotView({
@@ -71,13 +71,28 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.exten
 		});
 		this.map.addLayer(this.hucLayer);
 
-		$.extend(this.events, NWC.view.BaseStreamflowStatsDataView.prototype.events);
-		NWC.view.BaseStreamflowStatsDataView.prototype.initialize.apply(this, arguments);
+		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 		this.map.zoomToExtent(this.map.getMaxExtent());
 
+		this.calculateStatsViewLeft = new NWC.view.StreamflowCalculateStatsView({
+			el : $('#left'),
+			years : this.context.years,
+			getStats : this.getStats.bind(this),
+			getStatsTsvHeader : this.getStatsTsvHeader.bind(this),
+			getStatsFilename : this.getStatsFilename.bind(this)
+		});
+
+		this.calculateStatsViewRight = new NWC.view.StreamflowCalculateStatsView({
+			el : $('#right'),
+			years : this.context.years,
+			getStats : this.getStats.bind(this),
+			getStatsTsvHeader : this.getStatsTsvHeader.bind(this),
+			getStatsFilename : this.getStatsFilename.bind(this)
+		});
+
 		// Initialize DOM on page
-		var $start = $('#start-year option[value="' + this.context.years.first() + '"]');
-		var $end = $('#end-year option[value="' + this.context.years.last() + '"]');
+		var $start = $('.start-year option[value="' + this.context.years.first() + '"]');
+		var $end = $('.end-year option[value="' + this.context.years.last() + '"]');
 		$start.prop('selected', true);
 		$end.prop('selected', true);
 	},
@@ -185,7 +200,9 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.exten
 	},
 
 	remove : function() {
+		this.calculateStatsViewLeft.remove();
+		this.calculateStatsViewRight.remove();
 		this.streamflowPlotView.remove();
-		NWC.view.BaseStreamflowStatsDataView.prototype.remove.apply(this, arguments);
+		NWC.view.BaseView.prototype.remove.apply(this, arguments);
 	}
 });

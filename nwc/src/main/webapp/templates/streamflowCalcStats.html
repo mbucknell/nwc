@@ -9,7 +9,7 @@
 		<div class="col-md-2"></div>
 		<div class="col-md-4">
 			<label>From:</label>
-			<select id="start-year" class="form-control">
+			<select class="start-year form-control">
 				{{#each years}}
 					<option value="{{this}}">{{this}}</option>
 				{{/each}}
@@ -17,7 +17,7 @@
 		</div>
 		<div class="col-md-4">
 			<label>To:</label>
-			<select id="end-year" class="form-control">
+			<select class="end-year form-control">
 				{{#each years}}
 					<option value="{{this}}">{{this}}</option>
 				{{/each}}
@@ -49,7 +49,7 @@
 
 </form>
 <div id="stats-results-div" style="display:none;" class="col-xs-12 table-responsive">
-	<div class="col-sm-4 col-sm-offset-8">
+	<div class="col-sm-4 col-sm-offset-6">
 		<button id="download-stats-button" class="btn btn-success">Download These Statistics</button>
 	</div>
 	<div id="stats-results-table-div"></div>
