@@ -74,22 +74,20 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 		this.map.zoomToExtent(this.map.getMaxExtent());
 
-		this.CalculateStatsViewLeft = new NWC.view.StreamflowCalculateStatsView({
+		this.calculateStatsViewLeft = new NWC.view.StreamflowCalculateStatsView({
 			el : $('#left'),
-			hucId : this.context.hucId,
 			years : this.context.years,
-			getStats : this.getStats,
-			getStatsTsvHeader : this.getStatsTsvHeader,
-			getStatsFilename : this.getStatsFilename
+			getStats : this.getStats.bind(this),
+			getStatsTsvHeader : this.getStatsTsvHeader.bind(this),
+			getStatsFilename : this.getStatsFilename.bind(this)
 		});
 
-		this.CalculateStatsViewRight = new NWC.view.StreamflowCalculateStatsView({
+		this.calculateStatsViewRight = new NWC.view.StreamflowCalculateStatsView({
 			el : $('#right'),
-			hucId : this.context.hucId,
 			years : this.context.years,
-			getStats : this.getStats,
-			getStatsTsvHeader : this.getStatsTsvHeader,
-			getStatsFilename : this.getStatsFilename
+			getStats : this.getStats.bind(this),
+			getStatsTsvHeader : this.getStatsTsvHeader.bind(this),
+			getStatsFilename : this.getStatsFilename.bind(this)
 		});
 
 		// Initialize DOM on page
@@ -202,8 +200,8 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 	},
 
 	remove : function() {
-		this.CalculateStatsViewLeft.remove();
-		this.CalculateStatsViewRight.remove();
+		this.calculateStatsViewLeft.remove();
+		this.calculateStatsViewRight.remove();
 		this.streamflowPlotView.remove();
 		NWC.view.BaseView.prototype.remove.apply(this, arguments);
 	}

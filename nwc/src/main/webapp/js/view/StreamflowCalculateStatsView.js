@@ -25,21 +25,17 @@ NWC.view = NWC.view || {};
 		/*
 		 * @constructs
 		 * @param {Object} options
-		 *     @prop {Jquery element} el - this is where the list will be rendered
+		 *     @prop {Jquery element} el - this is where the view will be rendered
 		 *     @prop {object} streamStatsOptions - this is the list of stat types
-		 *     @prop {object} years (optional) - when using the streamflowHucData view
-		 *     @prop {object} gageId (optional) - when using the streamflowGageData view
-		 *     @prop {object} hucId (optional) - when using the streamflowHucData view
-		 *     @prop {object} getStats - function
-		 *     @prop {object} getStatsTsvHeader - function
-		 *     @prop {object} getStatsFilename - function
+		 *     @prop {object} years (optional) - used to populate the date picker in the template
+		 *     @prop {object} getStats - gets statistics for the gage or huc
+		 *     @prop {object} getStatsTsvHeader - gets header which is different for gage and huc
+		 *     @prop {object} getStatsFilename - get download file name which is different for gage and huc
 		 */
 		initialize : function(options){
 			this.context = {
 					streamStatsOptions : NWC.dictionary.statGroups,
-					years : options.years,
-					gageId : options.gageId || null,
-					hucId : options.hucId || null
+					years : options.years
 				};
 			this.getStats = options.getStats;
 			this.getStatsTsvHeader = options.getStatsTsvHeader;

@@ -162,19 +162,17 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 		this.calculateStatsViewLeft = new NWC.view.StreamflowCalculateStatsView({
 			el : $('#left'),
 			years : null,
-			gageId : this.context.gageId,
-			getStats : this.getStats,
-			getStatsTsvHeader : this.getStatsTsvHeader,
-			getStatsFilename : this.getStatsFilename
+			getStats : this.getStats.bind(this),
+			getStatsTsvHeader : this.getStatsTsvHeader.bind(this),
+			getStatsFilename : this.getStatsFilename.bind(this)
 		});
 
 		this.calculateStatsViewRight = new NWC.view.StreamflowCalculateStatsView({
 			el : $('#right'),
 			years : null,
-			gageId : this.context.gageId,
-			getStats : this.getStats,
-			getStatsTsvHeader : this.getStatsTsvHeader,
-			getStatsFilename : this.getStatsFilename
+			getStats : this.getStats.bind(this),
+			getStatsTsvHeader : this.getStatsTsvHeader.bind(this),
+			getStatsFilename : this.getStatsFilename.bind(this)
 		});
 
 		nwisDataRetrieved.always(function(dates) {
