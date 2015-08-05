@@ -159,6 +159,7 @@
 		<script type="text/javascript" src="js/view/StreamflowCalculateStatsView.js"></script>
 		<script type="text/javascript" src="js/view/HucCountyMapView.js"></script>
 		<script type="text/javascript" src="js/view/CountyWaterUseView.js"></script>
+		<script type="text/javascript" src="js/view/HucInsetMapView.js"></script>
 		<script type="text/javascript" src="js/view/WaterbudgetPlotView.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetMapView.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetHucDataView.js"></script>

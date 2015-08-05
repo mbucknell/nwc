@@ -7,9 +7,11 @@
 
 describe('Tests for NWC.WaterBudgetHucDataView', function() {
 	var $testDiv;
+	var $countiesButton, $compareHucsButton;
 	var $customaryButton, $metricButton, $dailyButton, $monthlyButton;
 	var testView;
 	var server;
+	var hucFeatureLoadedDeferred;
 
 	beforeEach(function() {
 		CONFIG = {
@@ -20,7 +22,8 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 
 		$('body').append('<div id="test-div"></div>');
 		$testDiv = $('#test-div');
-		$testDiv.append('<div id="inset-map-div"></div>');
+		$testDiv.append('<button id="counties-button" disabled></button>');
+		$testDiv.append('<button id="compare-hucs-button" disabled></button>');
 		$testDiv.append('<button id="customary-button" value="usCustomary">US Customary</button>');
 		$testDiv.append('<button id="metric-button" value="metric">Metric</button>');
 		$testDiv.append('<button id="daily-button" value="daily">Daily</button>');
@@ -31,21 +34,19 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 		$metricButton = $('#metric-button');
 		$dailyButton = $('#daily-button');
 		$monthlyButton = $('#monthly-button');
-
-		// Stubbing the createMap call so OpenLayers does not try to make any ajax calls
-		spyOn(NWC.util.mapUtils, 'createMap').andCallFake(function() {
-			return {
-				addLayer : jasmine.createSpy('addLayerSpy'),
-				zoomToExtent : jasmine.createSpy('zoomToExtentSpy'),
-				getMaxExtent : jasmine.createSpy('getMaxExtentSpy'),
-				render : jasmine.createSpy('renderSpy')
-			};
-		});
-
+		$countiesButton = $('#counties-button');
+		$compareHucsButton = $('#compare-hucs-button');
+		
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
 
 		spyOn(NWC.view, 'WaterbudgetPlotView').andReturn({
 			remove : jasmine.createSpy('waterbudgetPlotViewRemoveSpy')
+		});
+
+		hucFeatureLoadedDeferred = $.Deferred();
+		spyOn(NWC.view, 'HucInsetMapView').andReturn({
+			remove : jasmine.createSpy('waterBudgetHucInsetMapSpy'),
+			hucFeatureLoadedPromise : hucFeatureLoadedDeferred.promise()
 		});
 
 		spyOn(NWC.view, 'CountyWaterUseView').andReturn({
@@ -65,19 +66,15 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 		beforeEach(function() {
 			testView = new NWC.view.WaterBudgetHucDataView({
 				hucId : '123456789',
-				insetHucMapDiv : 'inset-map-div',
 				el : $testDiv
 			});
 		});
 
 		it('Expects view\'s constructor to set the context property', function() {
-			expect(testView.context.hucId).toEqual('123456789');
 			expect(testView.context.showAdditionalDataButtons).toBe(true);
 		});
 
-		it('Expects view\'s constructor to create properties for the hucPlotModel, inset map and hucLayer', function() {
-			expect(testView.hucMap).toBeDefined();
-			expect(testView.hucLayer).toBeDefined();
+		it('Expects view\'s constructor to create properties for the hucPlotModel', function() {
 			expect(testView.hucPlotModel).toBeDefined();
 		});
 
@@ -87,9 +84,17 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 
 		it('Expects the view\'s constructor to create a waterBudgetPlotView', function() {
 			expect(NWC.view.WaterbudgetPlotView).toHaveBeenCalled();
+			expect(NWC.view.WaterbudgetPlotView.calls[0].args[0].hucId).toEqual('123456789');
 			expect(testView.plotView).toBeDefined();
 			expect(testView.comparePlotView).not.toBeDefined();
 			expect(testView.countyWaterUseView).not.toBeDefined();
+		});
+
+		it('Expects the view\'s constructor to create create a hucInsetMapView', function() {
+			expect(NWC.view.HucInsetMapView).toHaveBeenCalled();
+			expect(NWC.view.HucInsetMapView.calls[0].args[0].hucId).toEqual('123456789');
+			expect(testView.hucInsetMapView).toBeDefined();
+			expect(testView.compareHucInsetMapView).not.toBeDefined();
 		});
 
 		it('Expect that event handler calls exist', function() {
@@ -99,9 +104,18 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 			expect(testView.events['click #counties-button']).toBeDefined();
 		});
 
+		it('Expect that when the huc feature has been loaded that the counties button and compare hucs buttons are enabled', function() {
+			expect($countiesButton.prop('disabled')).toBe(true);
+			expect($compareHucsButton.prop('disabled')).toBe(true);
+			hucFeatureLoadedDeferred.resolve();
+			expect($countiesButton.prop('disabled')).toBe(false);
+			expect($compareHucsButton.prop('disabled')).toBe(false);
+		});
+
 		it('Expects a call to remove will remove the plotView', function() {
 			testView.remove();
 			expect(testView.plotView.remove).toHaveBeenCalled();
+			expect(testView.hucInsetMapView.remove).toHaveBeenCalled();
 		});
 
 		it('Expects the units to change state when the model changes', function() {
@@ -161,27 +175,37 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 			testView = new NWC.view.WaterBudgetHucDataView({
 				hucId : '123456789',
 				compareHucId : '232323232323',
-				insetHucMapDiv : 'inset-map-div',
 				el : $testDiv
 			});
 		});
 
 		it('Expects that the context properties are set appropriately', function() {
 			expect(testView.context.showAdditionalDataButtons).toBe(false);
-			expect(testView.context.hucId).toBe('123456789');
 		});
 
 		it('Expects WaterBudgetPlotView to be called twice and that the view properties are defined', function() {
 			expect(NWC.view.WaterbudgetPlotView.calls.length).toBe(2);
+			expect(NWC.view.WaterbudgetPlotView.calls[0].args[0].hucId).toEqual('123456789');
+			expect(NWC.view.WaterbudgetPlotView.calls[1].args[0].hucId).toEqual('232323232323');
 			expect(testView.plotView).toBeDefined();
 			expect(testView.comparePlotView).toBeDefined();
 			expect(testView.countyWaterUseView).not.toBeDefined();
 		});
 
-		it('Expects that when remove is called it is called on both the plotView and the comparePlotView', function() {
+		it('Expects HucInsetMapView to be called twice and that the view properties are defined', function() {
+			expect(NWC.view.HucInsetMapView.calls.length).toBe(2);
+			expect(NWC.view.HucInsetMapView.calls[0].args[0].hucId).toEqual('123456789');
+			expect(NWC.view.HucInsetMapView.calls[1].args[0].hucId).toEqual('232323232323');
+			expect(testView.hucInsetMapView).toBeDefined();
+			expect(testView.compareHucInsetMapView).toBeDefined();
+		});
+
+		it('Expects that when remove is called it is called on both the plotViews and the hucInsetMapViews', function() {
 			testView.remove();
 			expect(testView.plotView.remove).toHaveBeenCalled();
 			expect(testView.comparePlotView.remove).toHaveBeenCalled();
+			expect(testView.hucInsetMapView.remove).toHaveBeenCalled();
+			expect(testView.compareHucInsetMapView.remove).toHaveBeenCalled();
 		});
 	});
 
@@ -197,7 +221,6 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 
 		it('Expects that the context properties are set appropriately', function() {
 			expect(testView.context.showAdditionalDataButtons).toBe(false);
-			expect(testView.context.hucId).toBe('123456789');
 		});
 
 		it('Expects WaterBudgetPlotView to be called once, that CountyWaterUserView is called once and that the view properties are defined', function() {

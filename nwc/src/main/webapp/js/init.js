@@ -9,8 +9,8 @@ $(document).ready(function() {
 	var TEMPLATES = [
 		'home',
 		'waterbudget',
+		'hucInsetMap',
 		'waterbudgetPlot',
-		'hucComparePlotViewContainer',
 		'waterbudgetHucData',
 		'countyWaterUse',
 		'streamflowStats',
