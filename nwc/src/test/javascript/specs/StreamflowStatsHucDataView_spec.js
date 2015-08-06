@@ -146,8 +146,8 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 			var ds = new NWC.util.DataSeries.newSeries();
 
 			testView.plotStreamFlowData(ev);
-			expect(testView.streamflowPlotView.plotStreamflowData).toHaveBeenCalled();
-			expect(testView.streamflowPlotView.plotStreamflowData.calls[0].args[0]).toMatch('Huc 12');
+			expect(testView.streamflowPlotViewLeft.plotStreamflowData).toHaveBeenCalled();
+			expect(testView.streamflowPlotViewLeft.plotStreamflowData.calls[0].args[0]).toMatch('Huc 12');
 			plotStreamflowDataDeferred.resolve(ds);
 
 			expect(testView.dataSeries).toEqual(ds);

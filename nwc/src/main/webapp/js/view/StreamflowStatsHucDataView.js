@@ -26,8 +26,12 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		NWC.view.BaseView.prototype.render.apply(this, arguments);
 
 		this.map.render(this.insetMapDiv);
-		this.streamflowPlotView = new NWC.view.StreamflowPlotView({
-			el : this.$el.find('.streamflow-plot-container'),
+		this.streamflowPlotViewLeft = new NWC.view.StreamflowPlotView({
+			el : this.$el.find('#left-plot'),
+			getDataSeriesPromise : this.getDataSeriesPromise.bind(this)
+		});
+		this.streamflowPlotViewRight = new NWC.view.StreamflowPlotView({
+			el : this.$el.find('#right-plot'),
 			getDataSeriesPromise : this.getDataSeriesPromise.bind(this)
 		});
 		return this;
@@ -177,7 +181,14 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		var plotTitle = 'Modeled Streamflow for the ' + this.hucName + ' Watershed.';
 		ev.preventDefault();
 
-		this.streamflowPlotView.plotStreamflowData(plotTitle).done(function(dataSeries) {
+		this.streamflowPlotViewLeft.plotStreamflowData(plotTitle).done(function(dataSeries) {
+			self.dataSeries = dataSeries;
+			self.$el.find('.show-plot-btn').hide();
+			self.$el.find('.download-streamflow-btn').show();
+		}).fail(function(textStatus) {
+			alert('Retrieving data for this plot failed with error: ' + textStatus);
+		});
+		this.streamflowPlotViewRight.plotStreamflowData(plotTitle).done(function(dataSeries) {
 			self.dataSeries = dataSeries;
 			self.$el.find('.show-plot-btn').hide();
 			self.$el.find('.download-streamflow-btn').show();
@@ -202,7 +213,8 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 	remove : function() {
 		this.calculateStatsViewLeft.remove();
 		this.calculateStatsViewRight.remove();
-		this.streamflowPlotView.remove();
+		this.streamflowPlotViewLeft.remove();
+		this.streamflowPlotViewRight.remove();
 		NWC.view.BaseView.prototype.remove.apply(this, arguments);
 	}
 });

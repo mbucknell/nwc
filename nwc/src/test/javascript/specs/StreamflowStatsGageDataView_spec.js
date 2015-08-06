@@ -176,6 +176,7 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 
 	describe('Tests for plotStreamflowData', function() {
 		beforeEach(function() {
+			testView = new NWC.view.StreamflowStatsGageDataView(options);
 			deferred = $.Deferred();
 
 			ev = {
@@ -189,7 +190,8 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 			var ds = new NWC.util.DataSeries.newSeries();
 
 			testView.plotStreamFlowData(ev);
-			expect(testView.streamflowPlotView.plotStreamflowData).toHaveBeenCalled();
+			expect(testView.streamflowPlotViewLeft.plotStreamflowData).toHaveBeenCalled();
+			expect(testView.streamflowPlotViewRight.plotStreamflowData).toHaveBeenCalled();
 			plotStreamflowDataDeferred.resolve(ds);
 
 			expect(testView.dataSeries).toEqual(ds);
