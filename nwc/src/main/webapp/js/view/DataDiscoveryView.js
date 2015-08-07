@@ -56,7 +56,7 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 	 */
 	showTab : function(ev) {
 		var $el = $(ev.currentTarget);
-		this.router.navigate('#data-discovery/' + $el.data('target'));
+		this.router.navigate('#!data-discovery/' + $el.data('target'));
 		var $dataDiscoveryTabs = this.$el.find('#data-discovery-tabs');
 
 		ev.preventDefault();
