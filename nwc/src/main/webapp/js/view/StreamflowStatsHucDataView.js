@@ -99,6 +99,9 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		var $end = $('.end-year option[value="' + this.context.years.last() + '"]');
 		$start.prop('selected', true);
 		$end.prop('selected', true);
+
+		this.dataSeriesLoaded = $.Deferred();
+		this.getDataSeries();
 	},
 
 	getStats : function(statTypes, startDate, endDate) {
@@ -129,11 +132,18 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 	},
 
 	/*
+	 * @returns Jquery promise which is resolved if getDataSeries() returns successfully in init.
+	 */
+	getDataSeriesPromise : function() {
+		return this.dataSeriesLoaded.promise();
+	},
+
+	/*
 	 * @returns Jquery promise which is resolved with the data series if it is successfully retrieved. If
 	 * unsuccessful is is rejected and forwards on the text response of the bad request
 	 */
-	getDataSeriesPromise : function() {
-		var deferred = $.Deferred();
+	getDataSeries : function() {
+		var self = this;
 
 		var sosUrl = NWC.util.buildSosUrlFromSource(this.context.hucId, NWC.util.SosSources.modeledQ);
 
@@ -167,32 +177,29 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 				});
 				dataSeries.metadata.downloadHeader = NWC.util.SosSources.modeledQ.downloadMetadata;
 
-				deferred.resolve(dataSeries);
+				self.dataSeriesLoaded.resolve(dataSeries);
 			},
 			error : function(jqXHR, textStatus) {
-				deferred.reject(textStatus);
+				self.dataSeriesLoaded.reject(textStatus);
 			}
 		});
-		return deferred.promise();
+		return self.dataSeriesLoaded.promise();
 	},
 
 	plotStreamFlowData : function(ev) {
 		var self = this;
+		
 		var plotTitle = 'Modeled Streamflow for the ' + this.hucName + ' Watershed.';
+
 		ev.preventDefault();
 
-		this.streamflowPlotViewLeft.plotStreamflowData(plotTitle).done(function(dataSeries) {
+		self.$el.find('.show-plot-btn').hide();
+		$.when(this.streamflowPlotViewLeft.plotStreamflowData(plotTitle),
+				this.streamflowPlotViewRight.plotStreamflowData(plotTitle))
+		.done(function(dataSeries) {
 			self.dataSeries = dataSeries;
-			self.$el.find('.show-plot-btn').hide();
-			self.$el.find('.download-streamflow-btn').show();
-		}).fail(function(textStatus) {
-			alert('Retrieving data for this plot failed with error: ' + textStatus);
-		});
-		this.streamflowPlotViewRight.plotStreamflowData(plotTitle).done(function(dataSeries) {
-			self.dataSeries = dataSeries;
-			self.$el.find('.show-plot-btn').hide();
-			self.$el.find('.download-streamflow-btn').show();
-		}).fail(function(textStatus) {
+			self.$el.find('.download-streamflow-btn').show();})
+		.fail(function(textStatus) {
 			alert('Retrieving data for this plot failed with error: ' + textStatus);
 		});
 	},

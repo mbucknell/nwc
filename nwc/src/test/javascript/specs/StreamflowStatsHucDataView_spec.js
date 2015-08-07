@@ -113,7 +113,7 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 		expect(testView.dataSeries.toCSV).toHaveBeenCalled();
 	});
 
-	describe('Test getDataSeriesPromise function', function() {
+	describe('Test getDataSeries function', function() {
 		var promise;
 
 		beforeEach(function() {
@@ -124,7 +124,7 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 
 		it('Expects that an ajax call is made to retrieve the data', function() {
 			requestCount = server.requests.length;
-			testView.getDataSeriesPromise();
+			testView.getDataSeries();
 			expect(server.requests.length).toEqual(requestCount + 1);
 			expect(server.requests[requestCount].url).toEqual('http://fakesos.org');
 		});
@@ -153,6 +153,4 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 			expect(testView.dataSeries).toEqual(ds);
 		});
 	});
-
-
 });

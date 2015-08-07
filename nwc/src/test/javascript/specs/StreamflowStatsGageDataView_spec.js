@@ -23,8 +23,6 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		$testDiv.append('<div id="start-period-of-record"></div>');
 		$testDiv.append('<div id="end-period-of-record"></div>');
 
-
-
 		addLayersSpy = jasmine.createSpy('addLayersSpy');
 		renderSpy = jasmine.createSpy('renderSpy');
 		spyOn(NWC.view.BaseView.prototype, 'render');
@@ -174,28 +172,11 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		expect(fname).toMatch(options.gageId)
 	});
 
-	describe('Tests for plotStreamflowData', function() {
-		beforeEach(function() {
-			testView = new NWC.view.StreamflowStatsGageDataView(options);
-			deferred = $.Deferred();
-
-			ev = {
-				preventDefault : jasmine.createSpy('preventDefaultSpy')
-			};
-
-			testView.render();
-		});
-
-		it('Expects a resolved call to plotStreamFlowData to set the dataSeries', function() {
-			var ds = new NWC.util.DataSeries.newSeries();
-
-			testView.plotStreamFlowData(ev);
-			expect(testView.streamflowPlotViewLeft.plotStreamflowData).toHaveBeenCalled();
-			expect(testView.streamflowPlotViewRight.plotStreamflowData).toHaveBeenCalled();
-			plotStreamflowDataDeferred.resolve(ds);
-
-			expect(testView.dataSeries).toEqual(ds);
-		});
+	it('Expects a call to plotStreamFlowData', function() {
+		testView = new NWC.view.StreamflowStatsGageDataView(options);
+		testView.render();
+		testView.plotStreamFlowData(eventSpy);
+		expect(testView.streamflowPlotViewLeft.plotStreamflowData).toHaveBeenCalled();
 	});
 
 });
