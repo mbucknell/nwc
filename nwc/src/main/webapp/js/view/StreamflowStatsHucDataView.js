@@ -26,8 +26,12 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		NWC.view.BaseView.prototype.render.apply(this, arguments);
 
 		this.map.render(this.insetMapDiv);
-		this.streamflowPlotView = new NWC.view.StreamflowPlotView({
-			el : this.$el.find('.streamflow-plot-container'),
+		this.streamflowPlotViewLeft = new NWC.view.StreamflowPlotView({
+			el : this.$el.find('#left-plot'),
+			getDataSeriesPromise : this.getDataSeriesPromise.bind(this)
+		});
+		this.streamflowPlotViewRight = new NWC.view.StreamflowPlotView({
+			el : this.$el.find('#right-plot'),
 			getDataSeriesPromise : this.getDataSeriesPromise.bind(this)
 		});
 		return this;
@@ -73,6 +77,8 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 		this.map.zoomToExtent(this.map.getMaxExtent());
+
+		this.dataSeriesLoaded = $.Deferred();
 
 		this.calculateStatsViewLeft = new NWC.view.StreamflowCalculateStatsView({
 			el : $('#left'),
@@ -125,11 +131,18 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 	},
 
 	/*
+	 * @returns Jquery promise which is resolved if getDataSeries() returns successfully in init.
+	 */
+	getDataSeriesPromise : function() {
+		return this.dataSeriesLoaded.promise();
+	},
+
+	/*
 	 * @returns Jquery promise which is resolved with the data series if it is successfully retrieved. If
 	 * unsuccessful is is rejected and forwards on the text response of the bad request
 	 */
-	getDataSeriesPromise : function() {
-		var deferred = $.Deferred();
+	getDataSeries : function() {
+		var self = this;
 
 		var sosUrl = NWC.util.buildSosUrlFromSource(this.context.hucId, NWC.util.SosSources.modeledQ);
 
@@ -163,25 +176,30 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 				});
 				dataSeries.metadata.downloadHeader = NWC.util.SosSources.modeledQ.downloadMetadata;
 
-				deferred.resolve(dataSeries);
+				self.dataSeriesLoaded.resolve(dataSeries);
 			},
 			error : function(jqXHR, textStatus) {
-				deferred.reject(textStatus);
+				self.dataSeriesLoaded.reject(textStatus);
 			}
 		});
-		return deferred.promise();
+		return self.dataSeriesLoaded.promise();
 	},
 
 	plotStreamFlowData : function(ev) {
 		var self = this;
+		this.getDataSeries();
+		
 		var plotTitle = 'Modeled Streamflow for the ' + this.hucName + ' Watershed.';
+
 		ev.preventDefault();
 
-		this.streamflowPlotView.plotStreamflowData(plotTitle).done(function(dataSeries) {
+		self.$el.find('.show-plot-btn').hide();
+		$.when(this.streamflowPlotViewLeft.plotStreamflowData(plotTitle),
+				this.streamflowPlotViewRight.plotStreamflowData(plotTitle))
+		.done(function(dataSeries) {
 			self.dataSeries = dataSeries;
-			self.$el.find('.show-plot-btn').hide();
-			self.$el.find('.download-streamflow-btn').show();
-		}).fail(function(textStatus) {
+			self.$el.find('.download-streamflow-btn').show();})
+		.fail(function(textStatus) {
 			alert('Retrieving data for this plot failed with error: ' + textStatus);
 		});
 	},
@@ -202,7 +220,8 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 	remove : function() {
 		this.calculateStatsViewLeft.remove();
 		this.calculateStatsViewRight.remove();
-		this.streamflowPlotView.remove();
+		this.streamflowPlotViewLeft.remove();
+		this.streamflowPlotViewRight.remove();
 		NWC.view.BaseView.prototype.remove.apply(this, arguments);
 	}
 });

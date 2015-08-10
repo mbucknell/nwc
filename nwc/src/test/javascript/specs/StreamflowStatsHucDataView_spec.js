@@ -113,7 +113,7 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 		expect(testView.dataSeries.toCSV).toHaveBeenCalled();
 	});
 
-	describe('Test getDataSeriesPromise function', function() {
+	describe('Test getDataSeries function', function() {
 		var promise;
 
 		beforeEach(function() {
@@ -124,7 +124,7 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 
 		it('Expects that an ajax call is made to retrieve the data', function() {
 			requestCount = server.requests.length;
-			testView.getDataSeriesPromise();
+			testView.getDataSeries();
 			expect(server.requests.length).toEqual(requestCount + 1);
 			expect(server.requests[requestCount].url).toEqual('http://fakesos.org');
 		});
@@ -146,13 +146,11 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 			var ds = new NWC.util.DataSeries.newSeries();
 
 			testView.plotStreamFlowData(ev);
-			expect(testView.streamflowPlotView.plotStreamflowData).toHaveBeenCalled();
-			expect(testView.streamflowPlotView.plotStreamflowData.calls[0].args[0]).toMatch('Huc 12');
+			expect(testView.streamflowPlotViewLeft.plotStreamflowData).toHaveBeenCalled();
+			expect(testView.streamflowPlotViewLeft.plotStreamflowData.calls[0].args[0]).toMatch('Huc 12');
 			plotStreamflowDataDeferred.resolve(ds);
 
 			expect(testView.dataSeries).toEqual(ds);
 		});
 	});
-
-
 });

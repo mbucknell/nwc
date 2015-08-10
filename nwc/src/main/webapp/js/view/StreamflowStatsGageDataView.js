@@ -13,7 +13,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 	events : {
 		'click .show-plot-btn' : 'plotStreamFlowData'
 	},
-
+ 
 	/*
 	 * Query NWIS for information about this.context.gageId. If the call fails
 	 * the deferred will be rejected with a default start and end date. Otherwise the start and
@@ -102,8 +102,12 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 	render : function() {
 		NWC.view.BaseView.prototype.render.apply(this, arguments);
 		this.map.render(this.insetMapDiv);
-		this.streamflowPlotView = new NWC.view.StreamflowPlotView({
-			el : this.$el.find('.streamflow-plot-container'),
+		this.streamflowPlotViewLeft = new NWC.view.StreamflowPlotView({
+			el : this.$el.find('#left-plot'),
+			getDataSeriesPromise : this.getDataSeriesPromise.bind(this)
+		});
+		this.streamflowPlotViewRight = new NWC.view.StreamflowPlotView({
+			el : this.$el.find('#right-plot'),
 			getDataSeriesPromise : this.getDataSeriesPromise.bind(this)
 		});
 		return this;
@@ -159,8 +163,10 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 
 		this.map.zoomToExtent(this.map.getMaxExtent());
 
+		this.dataSeriesLoaded = $.Deferred();
+
 		this.calculateStatsViewLeft = new NWC.view.StreamflowCalculateStatsView({
-			el : $('#left'),
+			el : $('#left-stats'),
 			years : null,
 			getStats : this.getStats.bind(this),
 			getStatsTsvHeader : this.getStatsTsvHeader.bind(this),
@@ -168,7 +174,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 		});
 
 		this.calculateStatsViewRight = new NWC.view.StreamflowCalculateStatsView({
-			el : $('#right'),
+			el : $('#right-stats'),
 			years : null,
 			getStats : this.getStats.bind(this),
 			getStatsTsvHeader : this.getStatsTsvHeader.bind(this),
@@ -198,6 +204,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 			// Enable show plot button
 			$('.show-plot-btn').removeProp('disabled');
 		});
+
 		$.when(nwisDataRetrieved, featureLoaded).done(function () {
 			$('#loading-indicator').hide();
 		});
@@ -230,11 +237,18 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 	},
 
 	/*
+	 * @returns Jquery promise which is resolved if getDataSeries() returns successfully in init.
+	 */
+	getDataSeriesPromise : function() {
+		return this.dataSeriesLoaded.promise();
+	},
+
+	/*
 	 * @returns Jquery promise which is resolved with the data series if it is successfully retrieved. If
 	 * unsuccessful is is rejected and forwards on the text response of the bad request
 	 */
-	getDataSeriesPromise : function() {
-		var deferred = $.Deferred();
+	getDataSeries : function() {
+		var self = this;
 
 		var startDate = this.dates.startDate;
 		var endDate = this.dates.endDate;
@@ -253,13 +267,16 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 				NWC.util.findXMLNamespaceTags($(response), 'ns1:value').each(function() {
 					var row = [];
 					var value = parseFloat($(this).text());
+					if (-999999 == value) {
+						value = NaN;
+					}
 					row.push(strToDate($(this).attr('dateTime')));
 					row.push(value);
 					dataTable.push(row);
 				});
 
 				if (dataTable.length === 0) {
-					deferred.reject('No data available to plot');
+					self.dataSeriesLoaded.reject('No data available to plot');
 				}
 				else {
 					dataSeries.data = dataTable;
@@ -268,28 +285,30 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 						seriesUnits : NWC.util.Units.usCustomary.streamflow.daily
 					});
 
-					deferred.resolve(dataSeries);
+					self.dataSeriesLoaded.resolve(dataSeries);
 				}
 			},
 			error : function(jqXHR, textStatus) {
-				deferred.reject(textStatus);
+				self.dataSeriesLoaded.reject(textStatus);
 			}
 		});
 
-		return deferred.promise();
+		return this.dataSeriesLoaded.promise();
 	},
 
 	plotStreamFlowData : function(ev) {
 		var self = this;
+		this.getDataSeries();
 
 		var plotTitle = 'Observed Streamflow';
 
 		ev.preventDefault();
 
-		this.streamflowPlotView.plotStreamflowData(plotTitle).done(function(dataSeries) {
-			self.dataSeries = dataSeries;
-			self.$el.find('.show-plot-btn').hide();
-		}).fail(function(args) {
+		self.$el.find('.show-plot-btn').hide();
+		this.streamflowPlotViewLeft.plotStreamflowData(plotTitle).fail(function(args) {
+			alert('Retrieving data for this plot failed with error: ' + args[0]);
+		});
+		this.streamflowPlotViewRight.plotStreamflowData(plotTitle).fail(function(args) {
 			alert('Retrieving data for this plot failed with error: ' + args[0]);
 		});
 	},
@@ -297,7 +316,8 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 	remove : function() {
 		this.calculateStatsViewLeft.remove();
 		this.calculateStatsViewRight.remove();
-		this.streamflowPlotView.remove();
+		this.streamflowPlotViewLeft.remove();
+		this.streamflowPlotViewRight.remove();
 		NWC.view.BaseView.prototype.remove.apply(this, arguments);
 	},
 
