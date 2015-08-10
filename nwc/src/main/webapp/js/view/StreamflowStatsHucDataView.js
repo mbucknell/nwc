@@ -78,6 +78,8 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 		this.map.zoomToExtent(this.map.getMaxExtent());
 
+		this.dataSeriesLoaded = $.Deferred();
+
 		this.calculateStatsViewLeft = new NWC.view.StreamflowCalculateStatsView({
 			el : $('#left'),
 			years : this.context.years,
@@ -99,9 +101,6 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		var $end = $('.end-year option[value="' + this.context.years.last() + '"]');
 		$start.prop('selected', true);
 		$end.prop('selected', true);
-
-		this.dataSeriesLoaded = $.Deferred();
-		this.getDataSeries();
 	},
 
 	getStats : function(statTypes, startDate, endDate) {
@@ -188,6 +187,7 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 
 	plotStreamFlowData : function(ev) {
 		var self = this;
+		this.getDataSeries();
 		
 		var plotTitle = 'Modeled Streamflow for the ' + this.hucName + ' Watershed.';
 

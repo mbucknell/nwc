@@ -163,6 +163,8 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 
 		this.map.zoomToExtent(this.map.getMaxExtent());
 
+		this.dataSeriesLoaded = $.Deferred();
+
 		this.calculateStatsViewLeft = new NWC.view.StreamflowCalculateStatsView({
 			el : $('#left-stats'),
 			years : null,
@@ -203,10 +205,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 			$('.show-plot-btn').removeProp('disabled');
 		});
 
-		this.dataSeriesLoaded = $.Deferred();
-
 		$.when(nwisDataRetrieved, featureLoaded).done(function () {
-			self.getDataSeries();
 			$('#loading-indicator').hide();
 		});
 
@@ -299,6 +298,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 
 	plotStreamFlowData : function(ev) {
 		var self = this;
+		this.getDataSeries();
 
 		var plotTitle = 'Observed Streamflow';
 
