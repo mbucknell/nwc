@@ -173,6 +173,14 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 	});
 
 	it('Expects a call to plotStreamFlowData', function() {
+		var d = $.Deferred();
+		spyOn(NWC.view.StreamflowStatsGageDataView.prototype, '_retrieveNWISData').andCallFake(function() {
+			return d;
+		});
+		d.resolve({
+			startDate : Date.create('02/01/1990').utc(),
+			endDate : Date.create('03/04/1998').utc()
+		});
 		testView = new NWC.view.StreamflowStatsGageDataView(options);
 		testView.render();
 		testView.plotStreamFlowData(eventSpy);
