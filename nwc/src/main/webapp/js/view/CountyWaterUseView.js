@@ -75,9 +75,9 @@ NWC.view = NWC.view || {};
 					self.hucLayer.features[0],
 					self.countyLayer.features[0]);
 
-				self.$el.find('#percent-of-huc').html('Percentage of HUC in ' + self.countyName + ' County ' +
+				self.$el.find('#percent-of-huc').html('Percentage of watershed in ' + self.countyName + ' County ' +
 						NWC.util.numberFormat.roundToInteger(intersectorInfo.hucInCounty) + '%');
-				self.$el.find('#percent-of-county').html('Percentage of ' + self.countyName + ' County in HUC ' +
+				self.$el.find('#percent-of-county').html('Percentage of ' + self.countyName + ' County in watershed ' +
 						NWC.util.numberFormat.roundToInteger(intersectorInfo.countyInHuc) + '%');
 				self.$el.find('#county-loading-indicator').hide();
 			});
