@@ -150,7 +150,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 				this.map.zoomToExtent(this.gageLayer.getDataExtent());
 
 				$('#gage-name').html(event.feature.attributes.STANAME);
-				$('#drainage-area').html(event.feature.attributes.drain_sqkm);
+				$('#drainage-area').html(event.feature.attributes.DRAIN_SQKM);
 			},
 			loadend: function() {
 				featureLoaded.resolve();
