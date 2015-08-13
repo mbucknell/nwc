@@ -15,7 +15,6 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 	},
 
 	events : {
-		'click #map-streamflow-type-group button' : 'changeStreamflowType',
 		'click #stream-gage-filters-div a' : 'changeGageFilter'
 	},
 
@@ -39,7 +38,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 			{
 				isBaseLayer: false,
 				displayInLayerSwitcher: false,
-				visibility: false
+				visibility: true
 			}
 		);
 
@@ -53,74 +52,58 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 			{
 				opacity: 0.6,
 				displayInLayerSwitcher: false,
-				visibility: false,
+				visibility: true,
 				isBaseLayer: false,
 				tiled: true
 			}
 		);
 
+		this.hucLayer.addOptions({attribution: '<img src="' + this.legendUrl(this.hucLayer.params.LAYERS, "") + '"/>'});
+		
 		this.legendControl = new OpenLayers.Control.Attribution();
-
-		var gageFeatureInfoHandler = function(responseObject) {
-			if (responseObject.features.length > 1) {
-				this.showWarningDialog('Multiple gages were selected. Please zoom in and select a single gage.')
+		
+		var featureInfoHandler = function(responseObject) {
+			if (responseObject.features.length > 2) {
+				this.showWarningDialog('Multiple features were selected. Please zoom in and select a single feature.')
+			}
+			else if (responseObject.features.length === 2) {
+				if (responseObject.features[0].fid.has('gages') && responseObject.features[1].fid.has('huc')) {
+					this.router.navigate('#!streamflow-stats/gage/' + responseObject.features[0].attributes.STAID, {trigger : true});					
+				}
+				else {
+					this.showWarningDialog('Multiple features were selected. Please zoom in and select a single feature.')
+				}
 			}
 			else if (responseObject.features.length === 1) {
-				this.router.navigate('#!streamflow-stats/gage/' + responseObject.features[0].attributes.STAID, {trigger : true});
-			}
-		};
-		this.gageControl = new OpenLayers.Control.WMSGetFeatureInfo({
-			title : 'selection-control',
-			hover : false,
-			autoActivate : false,
-			layers : [this.gagesLayer],
-			queryVisible : true,
-			infoFormat: 'application/vnd.ogc.gml',
-			vendorParams: {
-				radius: 5
-			}
-		});
-		this.gageControl.events.register("getfeatureinfo", this, gageFeatureInfoHandler);
-
-		var hucFeatureHandler = function(responseObject) {
-			var sortedFeature;
-			if (responseObject.features.length > 0) {
-				sortedFeature = responseObject.features.min(function(el) {
-					var result = Infinity;
-
-                    var mi2 = parseFloat(el.data.mi2);
-					if (mi2) {
-						result = mi2;
+				if (responseObject.features[0].fid.has('gages')) {
+					this.router.navigate('#!streamflow-stats/gage/' + responseObject.features[0].attributes.STAID, {trigger : true});					
+				}
+				else {
+					// Determine if the model for this feature is valid
+					var km2 = NWC.util.Convert.acresToSquareKilometers(NWC.util.Convert.squareMilesToAcres(responseObject.features[0].data.mi2));
+					if (km2 > 2000) {
+						this.showWarningDialog("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km<sup>2</sup>). Try looking for a nearby observed flow gage.");
+					} 
+					else {
+						this.router.navigate('#!streamflow-stats/huc/' + responseObject.features[0].attributes.huc12, {trigger : true});
 					}
-
-					return result;
-				});
-
-				// Determine if the model for this feature is valid
-				var km2 = NWC.util.Convert.acresToSquareKilometers(
-							NWC.util.Convert.squareMilesToAcres(sortedFeature.data.mi2));
-				if (km2 > 2000) {
-					this.showWarningDialog("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km<sup>2</sup>). Try looking for a nearby observed flow gage.");
-				} else {
-					this.router.navigate('#!streamflow-stats/huc/' + sortedFeature.attributes.huc12, {trigger : true});
 				}
 			}
 		};
-
-		this.hucsControl = new OpenLayers.Control.WMSGetFeatureInfo({
-			title : 'huc-control',
+		
+		this.selectControl = new OpenLayers.Control.WMSGetFeatureInfo({
+			title : 'selection-control',
+			drillDown : true,
 			hover : false,
-			autoActivate : false,
-			layers : [this.hucLayer],
+			autoActivate : true,
+			layers : [this.gagesLayer, this.hucLayer],
 			queryVisible : true,
 			infoFormat: 'application/vnd.ogc.gml',
 			vendorParams: {
 				radius: 5
 			}
 		});
-		this.hucsControl.events.register('getfeatureinfo', this, hucFeatureHandler);
-
-		this.selectControl = this.gageControl;
+		this.selectControl.events.register("getfeatureinfo", this, featureInfoHandler);
 
 		$.extend(this.events, NWC.view.BaseSelectMapView.prototype.events);
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
@@ -129,83 +112,29 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		this.addFlowLines();
 
 		this.map.addControl(this.legendControl);
-		this.map.addControl(this.hucsControl);
 
-		this.listenTo(this.model, 'change:streamflowType', this.updateSelectionLayer);
 		this.listenTo(this.model, 'change:gageFilter', this.updateGageFilter);
 
-		this.updateSelectionLayer();
 		this.updateGageFilter();
 	},
 
-	changeStreamflowType : function(ev) {
-		this.model.set('streamflowType', ev.target.value);
+	legendUrl : function(layer, style) {
+		return CONFIG.endpoint.geoserver + 'NWC/wms?request=GetLegendGraphic&format=image/png&width=20&height=20' +
+			"&layer=" + layer + "&style=" + style +
+			"&legend_options=forceLabels:on;fontName:Times New Roman;fontAntiAliasing:true;fontColor:0x000033;fontSize:8px;bgColor:0xFFFFEE;dpi:100";
 	},
 
 	changeGageFilter : function(ev) {
 		ev.preventDefault();
 		this.model.set('gageFilter', $(ev.target).data('value'));
 	},
-
-
-	updateSelectionLayer : function() {
-		var $modeledInfo = $('#modeled-streamflow-info-div');
-		var $observedInfo = $('#observed-streamflow-info-div');
-		var $gageFilteringDiv = $('#stream-gage-filters-div');
-
-		var streamflowType = this.model.get('streamflowType');
-
-		var gageVisible = streamflowType === 'observed';
-		var hucVisible = streamflowType === 'modeled';
-
-		var setControlActive = function(toControl, active) {
-			if (active) {
-				toControl.activate();
-			}
-			else {
-				toControl.deactivate();
-			}
-		};
-
-		// Set layer visibility
-		this.gagesLayer.setVisibility(gageVisible);
-		this.hucLayer.setVisibility(hucVisible);
-
-		setControlActive(this.legendControl, gageVisible);
-
-		this.setButtonActive($('#observed-button'), gageVisible);
-		this.setButtonActive($('#modeled-button'), hucVisible);
-
-		this.setVisibility($modeledInfo, hucVisible);
-		if (hucVisible) {
-			setControlActive(this.hucsControl, this.selectControl.active);
-			this.gageControl.deactivate();
-			this.selectControl = this.hucsControl;
-		}
-
-		this.setVisibility($observedInfo, gageVisible);
-		this.setVisibility($gageFilteringDiv, gageVisible);
-		if (gageVisible) {
-			setControlActive(this.gageControl, this.selectControl.active);
-			this.hucsControl.deactivate();
-			this.selectControl = this.gageControl;
-		}
-
-		// Because this shifts the map's location on the page, call updateSize
-		this.map.updateSize();
-	},
-
+	
 	updateGageFilter : function() {
 		var filterVal = this.model.get('gageFilter');
 		var filterDescr = $('#stream-gage-filters-div a[data-value="' + filterVal + '"]').html();
-		var legendUrl = function(style) {
-			return CONFIG.endpoint.geoserver + 'NWC/wms?request=GetLegendGraphic&format=image/png&width=20&height=20' +
-				"&layer=gagesII&style=" + style +
-				"&legend_options=forceLabels:on;fontName:Times New Roman;fontAntiAliasing:true;fontColor:0x000033;fontSize:8px;bgColor:0xFFFFEE;dpi:100";
-		};
 
 		$('#filter-label').html(filterDescr);
-		this.gagesLayer.addOptions({attribution: '<img src="' + legendUrl(this.model.getFilterStyle()) + '"/>'});
+		this.gagesLayer.addOptions({attribution: '<img src="' + this.legendUrl(this.gagesLayer.params.LAYERS, this.model.getFilterStyle()) + '"/>'});
 		this.gagesLayer.mergeNewParams({STYLES : this.model.getFilterStyle()});
 	}
 });

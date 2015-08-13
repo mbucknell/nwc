@@ -6,7 +6,6 @@ NWC.model.StreamflowStatsSelectMapModel = NWC.model.BaseSelectMapModel.extend({
 
 	defaults : function() {
 		return $.extend({
-			streamflowType : 'observed',
 			gageFilter : 'default'
 		}, NWC.model.BaseSelectMapModel.prototype.defaults);
 	},
@@ -20,7 +19,6 @@ NWC.model.StreamflowStatsSelectMapModel = NWC.model.BaseSelectMapModel.extend({
 		};
 		return STYLES[this.get('gageFilter')];
 	}
-
 });
 
 
