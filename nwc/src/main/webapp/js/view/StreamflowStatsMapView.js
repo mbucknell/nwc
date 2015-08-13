@@ -64,38 +64,29 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		
 		var featureInfoHandler = function(responseObject) {
 			if (responseObject.features.length > 2) {
-				this.showWarningDialog('Multiple gages were selected. Please zoom in and select a single gage.')
+				this.showWarningDialog('Multiple features were selected. Please zoom in and select a single feature.')
 			}
 			else if (responseObject.features.length === 2) {
-				this.router.navigate('#!streamflow-stats/gage/' + responseObject.features[0].attributes.STAID, {trigger : true});
+				if (responseObject.features[0].fid.has('gages') && responseObject.features[1].fid.has('huc')) {
+					this.router.navigate('#!streamflow-stats/gage/' + responseObject.features[0].attributes.STAID, {trigger : true});					
+				}
+				else {
+					this.showWarningDialog('Multiple features were selected. Please zoom in and select a single feature.')
+				}
 			}
 			else if (responseObject.features.length === 1) {
 				if (responseObject.features[0].fid.has('gages')) {
 					this.router.navigate('#!streamflow-stats/gage/' + responseObject.features[0].attributes.STAID, {trigger : true});					
 				}
 				else {
-					var sortedFeature;
-					if (responseObject.features.length > 0) {
-						sortedFeature = responseObject.features.min(function(el) {
-							var result = Infinity;
-
-		                    var mi2 = parseFloat(el.data.mi2);
-							if (mi2) {
-								result = mi2;
-							}
-
-							return result;
-						});
-
-						// Determine if the model for this feature is valid
-						var km2 = NWC.util.Convert.acresToSquareKilometers(
-									NWC.util.Convert.squareMilesToAcres(sortedFeature.data.mi2));
-						if (km2 > 2000) {
-							this.showWarningDialog("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km<sup>2</sup>). Try looking for a nearby observed flow gage.");
-						} else {
-							this.router.navigate('#!streamflow-stats/huc/' + sortedFeature.attributes.huc12, {trigger : true});
-						}
-					}									
+					// Determine if the model for this feature is valid
+					var km2 = NWC.util.Convert.acresToSquareKilometers(NWC.util.Convert.squareMilesToAcres(responseObject.features[0].data.mi2));
+					if (km2 > 2000) {
+						this.showWarningDialog("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km<sup>2</sup>). Try looking for a nearby observed flow gage.");
+					} 
+					else {
+						this.router.navigate('#!streamflow-stats/huc/' + responseObject.features[0].attributes.huc12, {trigger : true});
+					}
 				}
 			}
 		};
