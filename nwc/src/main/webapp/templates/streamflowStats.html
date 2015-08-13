@@ -16,33 +16,20 @@
 						<a href="https://github.com/USGS-R/EflowStats" target="_blank">
 							https://github.com/USGS-R/EflowStats <i class="fa fa-external-link"></i>
 						</a>.
+						Observed streamflow from 
+						<a href="http://waterdata.usgs.gov/nwis" target="_blank">
+							National Water Information System <i class="fa fa-external-link"></i>
+						</a> 
+						Gages.					
+						Modeled streamflow data was estimated using methods
+						<a href="#!streamflow-stats/model-info" target="_blank">
+							described here. <i class="fa fa-external-link"></i>
+						</a> 
 					</em>
 				</div>
 			</div>
 		</div>
 		<div class="row">
-			<div class="spacer col-xs-12">
-				<div id="map-streamflow-type-div">
-					Streamflow Type:
-					<div id="map-streamflow-type-group" class="btn-group">
-						<button type="button" id="observed-button" value="observed" class="btn btn-primary">Observed</button>
-						<button type="button" id="modeled-button" value="modeled" class="btn btn-primary">Modeled</button>
-					</div>
-					<span id="observed-streamflow-info-div">
-						Observed streamflow from 
-						<a href="http://waterdata.usgs.gov/nwis" target="_blank">
-							National Water Information System <i class="fa fa-external-link"></i>
-						</a> 
-						Gages.
-					</span>
-                                        <span id="modeled-streamflow-info-div">
-						Modeled streamflow data was estimated using methods
-						<a href="#!streamflow-stats/model-info" target="_blank">
-							described here. <i class="fa fa-external-link"></i>
-						</a> 
-					</span>
-				</div>
-			</div>
 			<div class="spacer col-xs-12">
 				{{> mapControls }}		
 			</div>
