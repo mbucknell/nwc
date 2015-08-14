@@ -58,7 +58,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 			}
 		);
 
-		this.hucLayer.addOptions({attribution: '<img src="' + this.legendUrl(this.hucLayer.params.LAYERS, "") + '"/>'});
+		this.hucLayer.addOptions({attribution: '<img src="' + this.legendUrl(this.hucLayer.params.LAYERS, this.hucLayer.params.STYLES[0]) + '"/>'});
 		
 		this.legendControl = new OpenLayers.Control.Attribution();
 		
