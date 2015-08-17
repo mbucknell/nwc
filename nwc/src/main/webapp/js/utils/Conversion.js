@@ -76,8 +76,8 @@ NWC.util = NWC.util || {};
 		metric: {
 			normalizedWater: {
 				unit: {
-					short: "mm",
-					long: "millimeters"
+					'short': "mm",
+					'long': "millimeters"
 				},
 				daily: "mm per day",
 				monthly: "mm per month",
@@ -87,8 +87,8 @@ NWC.util = NWC.util || {};
 			},
 			totalWater: {
 				unit: {
-					short: "millions of m&sup3; per year",
-					long: "millions of cubic meters per year"
+					'short': "millions of m&sup3; per year",
+					'long': "millions of cubic meters per year"
 				},
 				daily: "millions of m&sup3; per year",
 				monthly: "millions of m&sup3; per year",
@@ -98,8 +98,8 @@ NWC.util = NWC.util || {};
 			},
 			streamflow: {
 				unit: {
-					short: "",
-					long: ""
+					'short': "",
+					'long': ""
 				},
 				daily: "",
 				monthly: "",
@@ -111,8 +111,8 @@ NWC.util = NWC.util || {};
 		usCustomary: {
 			normalizedWater: {
 				unit: {
-					short: "in",
-					long: "inches"
+					'short': "in",
+					'long': "inches"
 				},
 				daily: "in per day",
 				monthly: "in per month",
@@ -122,8 +122,8 @@ NWC.util = NWC.util || {};
 			},
 			totalWater: {
 				unit: {
-					short: "million gallons per day",
-					long: "million of gallons per day"
+					'short': "million gallons per day",
+					'long': "million of gallons per day"
 				},
 				daily: "million gallons per day",
 				monthly: "million gallons per day",
@@ -133,8 +133,8 @@ NWC.util = NWC.util || {};
 			},
 			streamflow: {
 				unit: {
-					short: "cfs",
-					long: "cubic feet per second"
+					'short': "cfs",
+					'long': "cubic feet per second"
 				},
 				daily: "cfs",
 				monthly: "cfs",

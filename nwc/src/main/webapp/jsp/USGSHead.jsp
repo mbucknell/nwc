@@ -27,15 +27,15 @@
 <link rel="stylesheet" type="text/css" href="webjars/select2/${select2Version}/select2.css" />
 <link rel="stylesheet" type="text/css" href="webjars/select2/${select2Version}/select2-bootstrap.css" />
 <!-- USGS CSS -->
-<link rel="stylesheet" type="text/css" href="css/usgs_common.css"/>
-<link rel="stylesheet" type="text/css" href="css/usgs_style_main.css"/>
+<link rel="stylesheet" type="text/css" href="css/usgs_common<%= resourceSuffix %>.css"/>
+<link rel="stylesheet" type="text/css" href="css/usgs_style_main<%= resourceSuffix %>.css"/>
 
 <!-- Site CSS -->
-<link rel="stylesheet" type="text/css" href="css/custom.css"/>
+<link rel="stylesheet" type="text/css" href="css/custom<%= resourceSuffix %>.css"/>
 <link rel="stylesheet" type="text/css" href="webjars/font-awesome/${fontawesomeVersion}/css/font-awesome${jsMin}.css"/>
 
 <!-- Our Bootstrap Theme -->
-<link rel="stylesheet" type="text/css" href="css/theme1.css"/>
+<link rel="stylesheet" type="text/css" href="css/theme1<%= resourceSuffix %>.css"/>
 
 <!-- OpenLayers Theme -->
 <link rel="stylesheet" type="text/css" href="webjars/openlayers/${openlayersVersion}/theme/default/style.css" />

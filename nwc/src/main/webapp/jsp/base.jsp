@@ -29,7 +29,7 @@
     request.setAttribute("openlayersMin", (development) ? ".debug" : "");
     request.setAttribute("dygraphsMin", (development) ? "-dev" : "");
     
-
+    String applicationVersion = props.get("version");
     request.setAttribute("applicationVersion", props.get("version"));
     request.setAttribute("jqueryVersion", props.get("jquery.version"));
     request.setAttribute("bootstrapVersion", props.get("bootstrap.version"));
@@ -52,5 +52,6 @@
 	request.setAttribute("directNwisStreamflowEndpoint", props.get("nwc.endpoint.nwis.streamflow"));
 	request.setAttribute("searchServiceEndpoint", props.get("nwc.endpoint.searchService"));
 	request.setAttribute("directSciencebaseEndpoint", props.get("nwc.endpoint.sciencebase"));
+	String resourceSuffix = development ? "" : "-" + applicationVersion + "-min";
 %>
 
