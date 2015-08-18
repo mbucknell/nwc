@@ -42,9 +42,9 @@ NWC.view = NWC.view || {};
 				var labels = dataSeries.getSeriesLabelsAs(self.MEASUREMENT_SYSTEM, 'streamflow', self.TIME_DENSITY);
 				var ylabel = NWC.util.Units[self.MEASUREMENT_SYSTEM].streamflow[self.TIME_DENSITY];
 				var $plotDiv = self.$el.find('.plot-div');
-				var $legendDiv = self.$el.find('.legend-div');
+				var $legendDiv = self.$el.find('.plot-legend');
 
-				self.$el.find('.plot-legend-div').show();
+				self.$el.find('.plot-container').show();
 				NWC.util.Plotter.getPlot($plotDiv, $legendDiv, values, labels, ylabel, plotTitle);
 				deferred.resolve(dataSeries);
 			}).fail(function() {

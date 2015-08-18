@@ -168,10 +168,11 @@ textarea[readonly] {
     cursor: text !important;
 }
 
-.waterbudget-legend {
+.waterbudget-legend, .plot-legend {
 	height: 55px;
 }
 
+.streamflow-plot-container
 #gageList tr.gage-selected {
     background-color: #FFCC00;
 }
