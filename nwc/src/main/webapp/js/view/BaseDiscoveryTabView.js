@@ -68,6 +68,8 @@ NWC.view = NWC.view || {};
 			this.getList().done(function(data) {
 				self.context.list = data.items;
 				self.$el.html(self.template(self.context));
+			}).fail(function(msg) {
+				self.$el.html("<h5>Sorry, the catalog contents are not available right now, please check back later.</h5>" + msg);				
 			});
 		},
 
@@ -89,7 +91,6 @@ NWC.view = NWC.view || {};
 				error : function() {
 					//@todo - setup app level error handling
 					var errorMessage = 'Error retrieving data from ' + listUrl;
-					alert(errorMessage);
 					deferred.reject(errorMessage);
 				}
 			});
@@ -115,7 +116,7 @@ NWC.view = NWC.view || {};
 				error : function() {
 					//@todo - setup app level error handling
 					var errorMessage = 'Error retrieving detail data from ' + detailsUrl;
-					alert(errorMessage);
+					deferred.reject(errorMessage);
 				}
 			});
 
@@ -147,6 +148,8 @@ NWC.view = NWC.view || {};
 				if (($detailsDiv).html() === '') {
 					this.getDetails($btn.data('id')).done(function(data) {
 						$detailsDiv.html(NWC.templates.getTemplate(self.detailsTemplateName)(data));
+					}).fail(function(msg) {
+						$detailsDiv.html("<h5>Sorry, the catalog contents are not available right now, please check back later.</h5>" + msg);
 					});
 				}
 			}
