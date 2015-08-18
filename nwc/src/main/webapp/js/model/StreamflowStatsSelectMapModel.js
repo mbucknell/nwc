@@ -12,7 +12,7 @@ NWC.model.StreamflowStatsSelectMapModel = NWC.model.BaseSelectMapModel.extend({
 
 	getFilterStyle : function() {
 		var STYLES = {
-			default : 'blue_circle',
+			'default' : 'blue_circle',
 			active : 'gagesii_active',
 			reference : 'gagesii_reference',
 			por : 'gagesii_por'
