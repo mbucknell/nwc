@@ -197,6 +197,21 @@ textarea[readonly] {
     margin-bottom : 10px;
 }
 
+.sites-table .remove-pair {
+	width : 80px;
+}
+.sites-table .site-name, .sites-table .gage-name {
+	width: 300px;
+}
+
+.sites-table .site-drainage-area, .sites-table .gage-drainage-area {
+	width: 140px;
+}
+
+table .pair-comment {
+	width: 100%;
+}
+
 #data-discovery-tabs h5 {
 	font-weight : normal;
 	font-size : 16px;

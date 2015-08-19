@@ -1,6 +1,6 @@
-<td class="xs-col-2"><i title="Remove Pair" class="fa fa-times dismiss-btn"></i></td>
-<td class="xs-col-2">{{site.SiteName}}</td>
-<td class="drain xs-col-2">{{#if site.DrainageAr}}{{site.DrainageAr}}{{else}}not available{{/if}}</td>
-<td class="xs-col-2">{{gage.STANAME}}</td>
-<td class="drain xs-col-2">{{#if gage.DRAIN_SQKM}}{{gage.DRAIN_SQKM}}{{else}}not available{{/if}}</td>
-<td class="xs-col-2"><input type="text" class="pair-comment" name="site-gage pair"></td>
+<td class="remove-pair"><i title="Remove Pair" class="fa fa-times dismiss-btn"></i></td>
+<td class="site-name">{{site.SiteName}}</td>
+<td class="site-drainage-area">{{#if site.DrainageAr}}{{site.DrainageAr}}{{else}}not available{{/if}}</td>
+<td class="gage-name">{{gage.STANAME}}</td>
+<td class="gage-drainage-area">{{#if gage.DRAIN_SQKM}}{{gage.DRAIN_SQKM}}{{else}}not available{{/if}}</td>
+<td><input type="text" class="pair-comment"></td>
