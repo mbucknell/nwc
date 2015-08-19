@@ -79,7 +79,7 @@
 			</thead>
 			<tbody id="gageList">
 			    {{#each gages}}
-			    <tr id="gage-{{attributes.STAID}}">
+			    <tr data-gage-id="{{attributes.STAID}}">
 				<td class="xs-col-3">{{attributes.STAID}}</td>
 				<td class="xs-col-4">{{attributes.STANAME}}</td>
 				<td class="xs-col-3">{{attributes.DRAIN_SQKM}}</td>
@@ -103,7 +103,7 @@
 			</thead>
 			<tbody id="hucList">
 			    {{#each hucs}}
-			    <tr id="{{huc12}}">
+			    <tr data-huc-id="{{huc12}}">
 				<td class="xs-col-2">{{huc12}}</td>
 				<td class="xs-col-4">{{hu_12_name}}</td>
 				<td class="xs-col-4">{{drain_sqkm}}</td>
