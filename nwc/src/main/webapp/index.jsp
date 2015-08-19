@@ -88,6 +88,7 @@
 		<script type="text/javascript" src="webjars/backbonejs/${backboneVersion}/backbone.js"></script>
 		<script type="text/javascript" src="webjars/handlebars/${handlebarsVersion}/handlebars${jsMin}.js"></script>
 		<script type="text/javascript" src="webjars/openlayers/${openlayersVersion}/OpenLayers.js"></script>
+		<script type="text/javascript" src="js/utils/openLayersExtensions/OpenLayersIE11Fix<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="webjars/flot/${flotchartsVersion}/jquery.flot${jsMin}.js"></script>
 		<script type="text/javascript" src="webjars/flot/${flotchartsVersion}/jquery.flot.resize${jsMin}.js"></script>
 		<script type="text/javascript" src="webjars/flot/${flotchartsVersion}/jquery.flot.time${jsMin}.js"></script>
