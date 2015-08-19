@@ -41,6 +41,8 @@ NWC.view = NWC.view || {};
 		detailsUrl : function(id) {
 			return '';
 		},
+		
+		SCIENCEBASE_ERROR : '<h5>Sorry, the catalog contents are not available right now, please check back later.</h5>',
 
 		events : {
 			'click .toggle-details-btn' : 'toggleDetails',
@@ -69,7 +71,7 @@ NWC.view = NWC.view || {};
 				self.context.list = data.items;
 				self.$el.html(self.template(self.context));
 			}).fail(function(msg) {
-				self.$el.html("<h5>Sorry, the catalog contents are not available right now, please check back later.</h5>" + msg);				
+				self.$el.html(self.SCIENCEBASE_ERROR + msg);				
 			});
 		},
 
@@ -149,7 +151,7 @@ NWC.view = NWC.view || {};
 					this.getDetails($btn.data('id')).done(function(data) {
 						$detailsDiv.html(NWC.templates.getTemplate(self.detailsTemplateName)(data));
 					}).fail(function(msg) {
-						$detailsDiv.html("<h5>Sorry, the catalog contents are not available right now, please check back later.</h5>" + msg);
+						$detailsDiv.html(self.SCIENCEBASE_ERROR + msg);
 					});
 				}
 			}
