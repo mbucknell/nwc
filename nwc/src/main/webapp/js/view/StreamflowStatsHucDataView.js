@@ -188,8 +188,8 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 	plotStreamFlowData : function(ev) {
 		var self = this;
 		this.getDataSeries();
-		
-		var plotTitle = 'Modeled Streamflow for the ' + this.hucName + ' Watershed.';
+
+		var plotTitle = 'Modeled Streamflow for the ' + this.hucName + ' Watershed';
 
 		ev.preventDefault();
 

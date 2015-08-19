@@ -60,14 +60,14 @@
 				</div>
 			</div>
 		<![endif]-->
-		<div class="container-fluid site_body_content">
+		<div class="container-fluid">
 			<div class="row">
-				<div id="site_header" class="col-xs-12">
+				<div id="site_header">
 					<%@include file="/jsp/USGSHeader.jsp" %>
 				</div>
 			</div>
 			<div class="row">
-				<div id="site_nav" class="col-xs-12">
+				<div id="site_nav">
 					<%@include file="/jsp/nav.jsp" %>
 				</div>
 			</div>
@@ -75,10 +75,12 @@
 				<div id="site_content" class="col-xs-12">
 				</div>
 			</div>
+				
+			<div id="site_footer">
+				<%@include file="/jsp/USGSFooter.jsp" %>
+			</div>
 		</div>
-		<div id="site_footer">
-			<%@include file="/jsp/USGSFooter.jsp" %>
-		</div>
+		
 		<!-- vendor libraries -->
 		<script type="text/javascript" src="webjars/select2/${select2Version}/select2${jsMin}.js"></script>
 		<script type="text/javascript" src="webjars/sugar/${sugarVersion}/sugar.min.js"></script>
@@ -93,7 +95,7 @@
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/javascript.util.js"></script>
 		<script type="text/javascript" src="webjars/jsts/${jstsVersion}/jsts.js"></script>
 
-		<script type="text/javascript" src="webjars/dygraphs/${dygraphsVersion}/dygraph-combined${dygraphsMin}.js"></script> -->
+		<script type="text/javascript" src="webjars/dygraphs/${dygraphsVersion}/dygraph-combined${dygraphsMin}.js"></script>
 		<script type="text/javascript" src="vendorlibs/flot-plugins/jquery.flot.tooltip.js"></script>
 		<script type="text/javascript" src="vendorlibs/flot-plugins/jquery.flot.axislabels.js"></script>
 		<script type="text/javascript" src="vendorlibs/FileSaver.js-master/FileSaver.js"></script>

@@ -96,7 +96,7 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 		$searchBox.select2({
 			placeholder: 'Hint: Type a place and state (e.g. Franklin AZ), zip code, or area code',
 			minimumInputLength: 3,
-			containerCssClass : 'col-sm-6',
+			containerCssClass : 'col-xs-12 col-sm-6',
 			ajax : {
 				url: CONFIG.endpoint.searchService,
 				dataType: 'json',
