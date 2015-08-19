@@ -4,6 +4,8 @@ NWC.view = NWC.view || {};
 
 NWC.view.DataView = NWC.view.BaseView.extend({
 	templateName : 'data',
+	
+	SCIENCEBASE_ERROR : "<h5>Sorry, the catalog contents are not available right now, please check back later.</h5>",
 
 	detailsUrl : function(id) {
 		return CONFIG.endpoint.direct.sciencebase + '/catalog/item/' + id + '?format=json';
@@ -26,7 +28,12 @@ NWC.view.DataView = NWC.view.BaseView.extend({
 			self.getDetails(data.parentId).done(function(data) {
 				$('#project-details').append(NWC.templates.getTemplate('projectDetail')(data));
 				$('#projectTabLink').hide();
+			}).fail(function(msg) {
+				$('#project-details').append(self.SCIENCEBASE_ERROR + msg);
 			});
+		}).fail(function(msg) {
+			$('#data-details').append(self.SCIENCEBASE_ERROR + msg);
+			$('#project-details').append(self.SCIENCEBASE_ERROR);
 		});
 	},
 
@@ -49,7 +56,7 @@ NWC.view.DataView = NWC.view.BaseView.extend({
 			error : function() {
 				//@todo - setup app level error handling
 				var errorMessage = 'Error retrieving detail data from ' + detailsUrl;
-				alert(errorMessage);
+				deferred.reject(errorMessage);
 			}
 		});
 
