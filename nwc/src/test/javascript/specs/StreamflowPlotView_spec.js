@@ -17,7 +17,7 @@ describe('NWC.view.StreamflowPlotView', function() {
 		$('body').append('<div id="test-div"></div>');
 		$testDiv = $('#test-div');
 		var html = '<div style="display:none" class="plot-loading-indicator"></div>' +
-			'<div style="display:none" class="plot-legend-div"><div class="plot-div"></div></div class="legend-div"></div>';
+			'<div style="display:none" class="plot-container"><div class="plot-div"></div></div class="legend-div"></div>';
 		$testDiv.append(html);
 		testView = new NWC.view.StreamflowPlotView({
 			el : $testDiv,
@@ -49,7 +49,7 @@ describe('NWC.view.StreamflowPlotView', function() {
 		expect(errorSpy).not.toHaveBeenCalled();
 
 		expect($('.plot-loading-indicator').is(':visible')).toBe(false);
-		expect($('.plot-legend-div').is(':visible')).toBe(true);
+		expect($('.plot-container').is(':visible')).toBe(true);
 		expect(NWC.util.Plotter.getPlot).toHaveBeenCalled();
 		var args = NWC.util.Plotter.getPlot.calls[0].args;
 		expect(args[5]).toEqual('this is a title');
@@ -66,7 +66,7 @@ describe('NWC.view.StreamflowPlotView', function() {
 		expect(errorSpy).toHaveBeenCalledWith(['An error message']);
 
 		expect($('.plot-loading-indicator').is(':visible')).toBe(false);
-		expect($('.plot-legend-div').is(':visible')).toBe(false);
+		expect($('.plot-container').is(':visible')).toBe(false);
 		expect(NWC.util.Plotter.getPlot).not.toHaveBeenCalled();
 	});
 });
