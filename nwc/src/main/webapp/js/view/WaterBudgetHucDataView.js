@@ -151,6 +151,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		var newTimeScale = this.hucPlotModel.get('timeScale');
 		this.setButtonActive(this.$('#daily-button'), newTimeScale === 'daily');
 		this.setButtonActive(this.$('#monthly-button'), newTimeScale === 'monthly');
+		this.setButtonActive(this.$('#annual-button'), newTimeScale === 'yearly');
 	},
 
 	remove : function() {

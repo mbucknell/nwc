@@ -94,6 +94,18 @@ NWC.util.DataSeriesStore = function () {
 		return Number(dayString);
 	};
 
+	//these string helpers that are called 100's of times per time series
+	//are faster than constructing a new date from the string and
+	//using the resultant date object's instance methods
+	var getMonthIndexInString = function (stringDate) {
+		return stringDate.indexOf('/') + 1;
+	};
+	var getMonthNumberFromDateString = function (stringDate) {
+		var monthIndexInString = getMonthIndexInString(stringDate);
+		var monthString = stringDate.substr(monthIndexInString, 2);
+		return Number(monthString);
+	};
+
 	//minimize floating point error in accumulation
 	var roundConstant = 9;
 	var saferAdd = function (value1, value2) {
@@ -106,6 +118,7 @@ NWC.util.DataSeriesStore = function () {
 
 	self.daily = NWC.util.DataSeries.newSeries();
 	self.monthly = NWC.util.DataSeries.newSeries();
+	self.yearly = NWC.util.DataSeries.newSeries();
 
 	/*
 	daymet comes in daily
@@ -177,6 +190,8 @@ NWC.util.DataSeriesStore = function () {
 	If the first day of a month has daymet values, daymet values will be present for every day of a month,
 	except if the month in question is the last month in the period of record, in which case it might not have daymet values
 	for every day of the month. If there is not a complete set of daily values for the last month, omit the month.
+	
+	One exception to the previous rule is to ignore the case where only the last value of a month is not present.
 	*/
 	self.updateMonthlyHucSeries = function (nameToSeriesMap) {
 		var monthlyTable = [],
@@ -196,7 +211,10 @@ NWC.util.DataSeriesStore = function () {
 				endOfMonth = Date.create(dayMetDateStr).utc().daysInMonth();
 				monthDateStr = dayMetDateStr;
 			}
-			monthlyAccumulation = saferAdd(monthlyAccumulation, dayMetValue);
+			//this will have the effect of ignoring a missing value at the end of the month
+			if (dayMetValue) {
+				monthlyAccumulation = saferAdd(monthlyAccumulation, dayMetValue);				
+			}
 			if (dayMetDay === endOfMonth) {
 				//join the date, accumulation and the eta for last month
 				var etaRow = etaSeries.data[etaIndex];
@@ -231,6 +249,112 @@ NWC.util.DataSeriesStore = function () {
 	},
 
 	/*
+	daymet comes in daily
+	eta comes in monthly
+	Presume both series' data arrays are sorted in order of ascending date.
+
+	Start accumulating dayMet records at the first full year (i.e. 01-01-yyyy)
+	On the last day of the month, see if there is a corresponding eta record.
+	If there is an eta record, accumulate the value.
+	If there are 12 months of dayMet values, put the accumulated value in the
+	dayMet value for that year-row and put the accumulated eta value in the eta value for that year-row.  
+
+	If the first day of a month has daymet values, daymet values will be present for every day of a month,
+	except if the month in question is the last month in the period of record, in which case it might not have daymet values
+	for every day of the month. If there is not a complete set of daily values for the last month, omit the month.
+	
+	One exception to the previous rule is to ignore the case where only the last value of a month is not present.
+	*/
+	self.updateYearlyHucSeries = function (nameToSeriesMap) {
+		var yearlyTable = [],
+		etaIndex = 0,
+		etaMonths = 0,
+		etaForCurrentMonth = NaN,
+		dayMetSeries = nameToSeriesMap.dayMet,
+		dayMetYearlyAccumulation = 0,
+		etaYearlyAccumulation = 0,
+		monthDateStr = '', //stored at the beginning of every month, used to join monthly values
+		yearDateStr = '', //stored at the beginning of every year, used later once the totals have been accumulated for the year
+		endOfMonth, //stores the end of the current month of iteration
+		etaSeries = nameToSeriesMap.eta;
+
+		dayMetSeries.data.each(function (dayMetRow) {
+			var dayMetDateStr = dayMetRow[0],
+			dayMetValue = dayMetRow[1],
+			dayMetDay = getDayNumberFromDateString(dayMetDateStr);
+			dayMetMonth = getMonthNumberFromDateString(dayMetDateStr);
+			//if first time through or new month is true 
+			if (undefined === endOfMonth) {
+				endOfMonth = Date.create(dayMetDateStr).utc().daysInMonth();
+				monthDateStr = dayMetDateStr;
+				//start on a complete year
+				if (1 === dayMetDay && 1 === dayMetMonth) {
+					//use the first day of the year as the date for the year-row
+					yearDateStr = dayMetDateStr;
+				}
+				//if first time through but not beginning of year is true
+				else if (0 == etaMonths) {
+					endOfMonth = undefined;
+				}
+			}
+			//if first time through but not beginning of year is true skip until beginning of year			
+			if (undefined != endOfMonth) {
+				//this will have effect of ignoring a missing value at the end of the month
+				if (dayMetValue) {
+					//accumulate each daymet value for the entire year
+					dayMetYearlyAccumulation = saferAdd(dayMetYearlyAccumulation, dayMetValue);
+				}
+				//if you hit the end of the month of dayMet values is true
+				if (dayMetDay === endOfMonth) {
+					//add to counter to indicate when you have processed 12 months
+					etaMonths++;
+					//grab the eta row
+					var etaRow = etaSeries.data[etaIndex];
+					if (etaRow) {
+						var etaDateStr = etaRow[0];
+						var etaValue = etaRow[1];
+						//if the eta row date is the same as the dayMet row date is true
+						//otherwise skip until these dates are in sync
+						if (etaDateStr === monthDateStr) {
+							//put the monthly eta value in a variable
+							etaForCurrentMonth = etaValue;
+							etaIndex++;
+						}
+					}
+					//else we have fallen off the end of the eta array
+					else {
+						etaForCurrentMonth = NaN;
+					}
+					//accumulate the monthly eta value
+					etaYearlyAccumulation = saferAdd(etaYearlyAccumulation, etaForCurrentMonth);
+					//reset the days in month indicator to start new month
+					endOfMonth = undefined;						
+
+					//if 12 months of daymet values have been accumulated
+					if (etaMonths == 12) {
+						var date = Date.create(yearDateStr).utc();
+						var rowToAdd = [];
+						rowToAdd[columnIndices.date] = date;
+						rowToAdd[columnIndices.dayMet] = dayMetYearlyAccumulation;
+						rowToAdd[columnIndices.eta] = etaYearlyAccumulation;
+						yearlyTable.push(rowToAdd);
+		
+						//reset for the next years
+						etaMonths = 0;
+						dayMetYearlyAccumulation = 0;
+						etaYearlyAccumulation = 0;
+						endOfYear = undefined;						
+					}
+				}
+			}
+		});
+		self.yearly.data = yearlyTable;
+
+		addSeriesLabel('yearly', dayMetSeries.metadata);
+		addSeriesLabel('yearly', etaSeries.metadata);
+	},
+
+	/*
 	* @param {Map<String, DataSeries>} nameToSeriesMap A map of series id to
 	* DataSeries objects
 	*/
@@ -240,6 +364,7 @@ NWC.util.DataSeriesStore = function () {
 
 		this.updateDailyHucSeries(nameToSeriesMap);
 		this.updateMonthlyHucSeries(nameToSeriesMap);
+		this.updateYearlyHucSeries(nameToSeriesMap);
 	};
 
 };

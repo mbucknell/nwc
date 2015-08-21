@@ -28,12 +28,14 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 		$testDiv.append('<button id="metric-button" value="metric">Metric</button>');
 		$testDiv.append('<button id="daily-button" value="daily">Daily</button>');
 		$testDiv.append('<button id="monthly-button" value="monthly">Monthly</button>');
+		$testDiv.append('<button id="annual-button" value="yearly">Annual</button>');
 		$testDiv.append('<div id="county-selection-div"></div>');
 
 		$customaryButton = $('#customary-button');
 		$metricButton = $('#metric-button');
 		$dailyButton = $('#daily-button');
 		$monthlyButton = $('#monthly-button');
+		$annualButton = $('#annual-button');
 		$countiesButton = $('#counties-button');
 		$compareHucsButton = $('#compare-hucs-button');
 		
@@ -132,10 +134,17 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 			testView.hucPlotModel.set('timeScale', 'daily');
 			expect($dailyButton.hasClass('active')).toBe(true);
 			expect($monthlyButton.hasClass('active')).toBe(false);
+			expect($annualButton.hasClass('active')).toBe(false);
 
 			testView.hucPlotModel.set('timeScale', 'monthly');
 			expect($dailyButton.hasClass('active')).toBe(false);
 			expect($monthlyButton.hasClass('active')).toBe(true);
+			expect($annualButton.hasClass('active')).toBe(false);
+
+			testView.hucPlotModel.set('timeScale', 'yearly');
+			expect($dailyButton.hasClass('active')).toBe(false);
+			expect($monthlyButton.hasClass('active')).toBe(false);
+			expect($annualButton.hasClass('active')).toBe(true);
 		});
 
 		it('Expects changeUnits to update the model', function() {
@@ -167,6 +176,12 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 				target : { value : 'monthly'}
 			});
 			expect(testView.hucPlotModel.get('timeScale')).toEqual('monthly');
+			
+			testView.changeTimeScale({
+				preventDefault : preventSpy,
+				target : { value : 'yearly'}
+			});
+			expect(testView.hucPlotModel.get('timeScale')).toEqual('yearly');
 		});
 	});
 
