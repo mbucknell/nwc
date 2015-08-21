@@ -211,12 +211,10 @@ NWC.util.DataSeriesStore = function () {
 				endOfMonth = Date.create(dayMetDateStr).utc().daysInMonth();
 				monthDateStr = dayMetDateStr;
 			}
-			//ignore a missing value at the end of the month
-			if (!dayMetValue && dayMetDay === endOfMonth) {
-			}
-			else {
+			//this will have the effect of ignoring a missing value at the end of the month
+			if (dayMetValue) {
 				monthlyAccumulation = saferAdd(monthlyAccumulation, dayMetValue);				
-			}			
+			}
 			if (dayMetDay === endOfMonth) {
 				//join the date, accumulation and the eta for last month
 				var etaRow = etaSeries.data[etaIndex];
@@ -301,10 +299,8 @@ NWC.util.DataSeriesStore = function () {
 			}
 			//if first time through but not beginning of year is true skip until beginning of year			
 			if (undefined != endOfMonth) {
-				//ignore a missing value at the end of the month
-				if (!dayMetValue && dayMetDay === endOfMonth) {
-				}
-				else {
+				//this will have effect of ignoring a missing value at the end of the month
+				if (dayMetValue) {
 					//accumulate each daymet value for the entire year
 					dayMetYearlyAccumulation = saferAdd(dayMetYearlyAccumulation, dayMetValue);
 				}
