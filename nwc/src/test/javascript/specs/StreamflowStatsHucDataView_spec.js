@@ -5,6 +5,7 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 	var addLayerSpy, renderSpy;
 	var eventSpy;
 	var server;
+	var plotStreamflowDataDeferred;
 
 	beforeEach(function() {
 		CONFIG = {
@@ -19,8 +20,12 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 
 		addLayerSpy = jasmine.createSpy('addLayerSpy');
 		renderSpy = jasmine.createSpy('renderSpy');
-		spyOn(NWC.view.BaseStreamflowStatsDataView.prototype, 'render');
-		spyOn(NWC.view.BaseStreamflowStatsDataView.prototype, 'initialize');
+		spyOn(NWC.view.BaseView.prototype, 'render');
+		plotStreamflowDataDeferred = $.Deferred();
+		spyOn(NWC.view, 'StreamflowPlotView').andReturn({
+			plotStreamflowData : jasmine.createSpy('plotStreamflowDataSpy').andReturn(plotStreamflowDataDeferred)
+		});
+		spyOn(NWC.view.BaseView.prototype, 'initialize');
 		spyOn(NWC.util.mapUtils, 'createMap').andCallFake(function() {
 			return {
 				addLayer : addLayerSpy,
@@ -55,14 +60,15 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 		expect(testView.hucLayer).toBeDefined();
 	});
 
-	it('Expects the view\'s constructor to call BaseStreamflowStatsDataView initialize', function() {
-		expect(NWC.view.BaseStreamflowStatsDataView.prototype.initialize).toHaveBeenCalled();
+	it('Expects the view\'s constructor to call BaseView initialize', function() {
+		expect(NWC.view.BaseView.prototype.initialize).toHaveBeenCalled();
 	});
 
-	it('Expect when the view\'s render method is called that BaseStreamflowStatsDataView render is called and the map is rendered', function() {
+	it('Expect when the view\'s render method is called that BaseView render is called, the map is rendered and the streamflowPlotView is created', function() {
 		testView.render();
-		expect(NWC.view.BaseStreamflowStatsDataView.prototype.render).toHaveBeenCalled();
+		expect(NWC.view.BaseView.prototype.render).toHaveBeenCalled();
 		expect(renderSpy).toHaveBeenCalledWith('inset-map-div');
+		expect(NWC.view.StreamflowPlotView).toHaveBeenCalled();
 	});
 
 	it('Expects getStats to call getHucStats and resolves the deferred when data is retrieved', function() {
@@ -92,44 +98,59 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 		expect(fname).toMatch('123456789012');
 	});
 
-	it('Expects downloadModeledData to save to appropriate filename', function() {
+	it('Expects downloadData to save to appropriate filename', function() {
 		spyOn(window, 'saveAs');
 		spyOn(window, 'Blob');
-		testView.modeledDataSeries = {
+		testView.dataSeries = {
 			toCSV : jasmine.createSpy('toCSVSpy')
 		};
 		testView.hucName = 'This Huc Name';
-		testView.downloadModeledData(eventSpy);
+		testView.downloadData(eventSpy);
 
 		expect(saveAs).toHaveBeenCalled();
 		expect(saveAs.calls[0].args[1]).toMatch(testView.hucName);
 		expect(saveAs.calls[0].args[1]).toMatch(testView.context.hucId);
-		expect(testView.modeledDataSeries.toCSV).toHaveBeenCalled();
+		expect(testView.dataSeries.toCSV).toHaveBeenCalled();
 	});
 
-	describe('Tests for plotStreamflowData', function() {
+	describe('Test getDataSeries function', function() {
+		var promise;
+
 		beforeEach(function() {
-			spyOn(NWC.util.Plotter, 'getPlot');
 			spyOn(NWC.util, 'buildSosUrlFromSource').andCallFake(function() {
 				return 'http://fakesos.org';
 			});
 		});
 
-		it('Expects plotStreamflowData to call buildSosUrlFromSource with the hucId', function() {
-			testView.plotStreamFlowData(eventSpy);
-			expect(NWC.util.buildSosUrlFromSource).toHaveBeenCalled();
-			expect(NWC.util.buildSosUrlFromSource.calls[0].args[0]).toEqual('123456789012');
+		it('Expects that an ajax call is made to retrieve the data', function() {
+			requestCount = server.requests.length;
+			testView.getDataSeries();
+			expect(server.requests.length).toEqual(requestCount + 1);
+			expect(server.requests[requestCount].url).toEqual('http://fakesos.org');
 		});
-
-		it('Expects plotStreamflowData to make an ajax call to the sos', function() {
-			var requestCount = server.requests.length;
-			testView.plotStreamFlowData(eventSpy);
-			expect(server.requests.length).toBe(requestCount + 1);
-			expect(server.requests.last().url).toMatch('http://fakesos.org');
-		});
-
-		//TODO figure out how to fake out the SOS response formatter in order ot test the successful response
 	});
 
+	describe('Tests for plotStreamflowData', function() {
+		beforeEach(function() {
+			deferred = $.Deferred();
 
+			ev = {
+				preventDefault : jasmine.createSpy('preventDefaultSpy')
+			};
+
+			testView.hucName = 'Huc 12';
+			testView.render();
+		});
+
+		it('Expects a resolved call to plotStreamFlowData to set the dataSeries', function() {
+			var ds = new NWC.util.DataSeries.newSeries();
+
+			testView.plotStreamFlowData(ev);
+			expect(testView.streamflowPlotViewLeft.plotStreamflowData).toHaveBeenCalled();
+			expect(testView.streamflowPlotViewLeft.plotStreamflowData.calls[0].args[0]).toMatch('Huc 12');
+			plotStreamflowDataDeferred.resolve(ds);
+
+			expect(testView.dataSeries).toEqual(ds);
+		});
+	});
 });

@@ -21,11 +21,11 @@
 			<table class="table table-striped sites-table">
 			    <thead>
 				<tr>
-				    <th>Remove Pair</th>
-				    <th>Site Name</th>
-				    <th>Site Drainage Area (mi<sup>2</sup>)</th>
-				    <th>Gage Name</th>
-				    <th>Gage Drainage Area (km<sup>2</sup>)</th>
+					<th>Remove</th>
+				    <th class="site-name">Site Name</th>
+					<th class="site-drainage-area">Site Drainage Area (mi<sup>2</sup>)</th>
+				    <th class="gage-name">Gage Name</th>
+					<th class="gage-drainage-area">Gage Drainage Area (km<sup>2</sup>)</th>
 				    <th>Pair Comment</th>
 				</tr>
 			    </thead>   
@@ -79,7 +79,7 @@
 			</thead>
 			<tbody id="gageList">
 			    {{#each gages}}
-			    <tr id="gage-{{attributes.STAID}}">
+			    <tr data-gage-id="{{attributes.STAID}}">
 				<td class="xs-col-3">{{attributes.STAID}}</td>
 				<td class="xs-col-4">{{attributes.STANAME}}</td>
 				<td class="xs-col-3">{{attributes.DRAIN_SQKM}}</td>
@@ -92,18 +92,18 @@
 		{{#if hucs}}
 		<h4>Watersheds</h4>
 		<div id="hucs-table-div">
-		    <p>Select a HUC to calculate modeled streamflow statistics.</p>
+		    <p>Select a Watershed to calculate modeled streamflow statistics.</p>
 		    <table class="table table-striped selectable-table">
 			<thead>
 			    <tr>
 				<th>Hydrologic Unit Code</th>
-				<th>HUC Name</th>
+				<th>Watershed Name</th>
 				<th>Drainage Area (km<sup>2</sup>)</th>
 			    </tr>
 			</thead>
 			<tbody id="hucList">
 			    {{#each hucs}}
-			    <tr id="{{huc12}}">
+			    <tr data-huc-id="{{huc12}}">
 				<td class="xs-col-2">{{huc12}}</td>
 				<td class="xs-col-4">{{hu_12_name}}</td>
 				<td class="xs-col-4">{{drain_sqkm}}</td>

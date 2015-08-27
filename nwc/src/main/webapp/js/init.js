@@ -9,11 +9,15 @@ $(document).ready(function() {
 	var TEMPLATES = [
 		'home',
 		'waterbudget',
+		'hucInsetMap',
+		'waterbudgetPlot',
 		'waterbudgetHucData',
-		'waterbudgetCountyData',
+		'countyWaterUse',
 		'streamflowStats',
+		'streamflowPlot',
 		'streamflowGageStats',
 		'streamflowHucStats',
+		'streamflowCalcStats',
 		'modeledInfoPage',
 		'aquaticBiology',
 		'aquaticBiologySelectFeatures',
@@ -33,8 +37,7 @@ $(document).ready(function() {
 	var PARTIALS = [
 		'detailToggle',
 		'mapControls',
-		'warningModal',
-		'streamflowCalcStats'
+		'warningModal'
 	];
 
 	NWC.templates = NWC.util.templateLoader();

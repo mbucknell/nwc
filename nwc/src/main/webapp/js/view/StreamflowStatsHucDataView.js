@@ -1,3 +1,6 @@
+/*jslint browser: true */
+/*global OpenLayers*/
+/*global $*/
 var NWC = NWC || {};
 
 NWC.view = NWC.view || {};
@@ -6,7 +9,7 @@ NWC.view = NWC.view || {};
  * View for the streamflow stats huc data page
  * @constructor extends NWC.BaseView
  */
-NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.extend({
+NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 
 	templateName : 'streamflowHucStats',
 
@@ -14,15 +17,34 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.exten
 	MAX_DATE : Date.create('2010/09/30').utc(),
 
 	events : {
-		'click #streamflow-data-plot-button' : 'plotStreamFlowData',
-		'click #streamflow-data-download-button' : 'downloadModeledData'
+
+		'click .show-plot-btn' : 'plotStreamFlowData',
+		'click .download-streamflow-btn' : 'downloadData'
 	},
 
 	render : function() {
-		NWC.view.BaseStreamflowStatsDataView.prototype.render.apply(this, arguments);
+		NWC.view.BaseView.prototype.render.apply(this, arguments);
+
 		this.map.render(this.insetMapDiv);
+		this.streamflowPlotViewLeft = new NWC.view.StreamflowPlotView({
+			el : this.$el.find('#left-plot'),
+			getDataSeriesPromise : this.getDataSeriesPromise.bind(this)
+		});
+		this.streamflowPlotViewRight = new NWC.view.StreamflowPlotView({
+			el : this.$el.find('#right-plot'),
+			getDataSeriesPromise : this.getDataSeriesPromise.bind(this)
+		});
+		return this;
 	},
 
+	/*
+	 * @construct
+	 * @param {Object} options
+	 *
+	 *     @prop {String} hucId - Huc shown in this view
+	 *     @prop {String} insetMapDiv - id of the inset map div
+	 *     @prop {Jquery element} el - jquery element where this view will be rendered.
+	 */
 	initialize : function(options) {
 		if (!Object.has(this, 'context')) {
 			this.context = {};
@@ -53,13 +75,30 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.exten
 		});
 		this.map.addLayer(this.hucLayer);
 
-		$.extend(this.events, NWC.view.BaseStreamflowStatsDataView.prototype.events);
-		NWC.view.BaseStreamflowStatsDataView.prototype.initialize.apply(this, arguments);
+		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 		this.map.zoomToExtent(this.map.getMaxExtent());
 
+		this.dataSeriesLoaded = $.Deferred();
+
+		this.calculateStatsViewLeft = new NWC.view.StreamflowCalculateStatsView({
+			el : $('#left'),
+			years : this.context.years,
+			getStats : this.getStats.bind(this),
+			getStatsTsvHeader : this.getStatsTsvHeader.bind(this),
+			getStatsFilename : this.getStatsFilename.bind(this)
+		});
+
+		this.calculateStatsViewRight = new NWC.view.StreamflowCalculateStatsView({
+			el : $('#right'),
+			years : this.context.years,
+			getStats : this.getStats.bind(this),
+			getStatsTsvHeader : this.getStatsTsvHeader.bind(this),
+			getStatsFilename : this.getStatsFilename.bind(this)
+		});
+
 		// Initialize DOM on page
-		var $start = $('#start-year option[value="' + this.context.years.first() + '"]');
-		var $end = $('#end-year option[value="' + this.context.years.last() + '"]');
+		var $start = $('.start-year option[value="' + this.context.years.first() + '"]');
+		var $end = $('.end-year option[value="' + this.context.years.last() + '"]');
 		$start.prop('selected', true);
 		$end.prop('selected', true);
 	},
@@ -91,79 +130,98 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseStreamflowStatsDataView.exten
 		return 'eflowstats_HUC_' + this.context.hucId + '.tsv';
 	},
 
-	plotStreamFlowData : function(ev) {
+	/*
+	 * @returns Jquery promise which is resolved if getDataSeries() returns successfully in init.
+	 */
+	getDataSeriesPromise : function() {
+		return this.dataSeriesLoaded.promise();
+	},
+
+	/*
+	 * @returns Jquery promise which is resolved with the data series if it is successfully retrieved. If
+	 * unsuccessful is is rejected and forwards on the text response of the bad request
+	 */
+	getDataSeries : function() {
+		var self = this;
+
 		var sosUrl = NWC.util.buildSosUrlFromSource(this.context.hucId, NWC.util.SosSources.modeledQ);
 
 		var strToDate = function(dateStr){
 		  return Date.create(dateStr).utc();
 		};
 
-		var modeledFailure = function (response) {
-			var message = 'An error occurred while retrieving water withdrawals data from:\n' +
-					'See browser logs for details';
-			alert(message);
-		};
-
-		var modeledSuccess = function (data) {
-			$('#streamflow-data-plot-button').hide();
-			$('#streamflow-data-download-button').show();
-			$('#streamflow-plot-div').show();
-			var parsedTable = NWC.util.SosResponseFormatter.formatSosResponse(data);
-			var convertedTable = parsedTable.map(function(row) {
-				return row.map(function(column, index){
-					var val = column;
-					if (index === 0) {
-						val = strToDate(column);
-					}
-					return val;
-				});
-			});
-
-			var modeledDataSeries = NWC.util.DataSeries.newSeries();
-			var TIME_DENSITY = 'daily';
-			var MEASUREMENT_SYSTEM = 'usCustomary';
-
-			var plotDivSelector = '#modeledQPlot';
-			var legendDivSelector = '#modeledQLegend';
-
-			modeledDataSeries.data = convertedTable;
-
-			//use the series metadata as labels
-			var additionalSeriesLabels = NWC.util.SosSources.modeledQ.propertyLongName.split(',');
-			additionalSeriesLabels.each(function(label) {
-				modeledDataSeries.metadata.seriesLabels.push({
-					seriesName: label,
-					seriesUnits: NWC.util.SosSources.modeledQ.units
-				});
-			});
-			modeledDataSeries.metadata.downloadHeader = NWC.util.SosSources.modeledQ.downloadMetadata;
-
-			this.modeledDataSeries = modeledDataSeries;
-
-			var values = this.modeledDataSeries.getDataAs(MEASUREMENT_SYSTEM, 'streamflow');
-			var labels = this.modeledDataSeries.getSeriesLabelsAs(MEASUREMENT_SYSTEM, 'streamflow', TIME_DENSITY);
-			var ylabel = NWC.util.Units[MEASUREMENT_SYSTEM].streamflow[TIME_DENSITY];
-			var title = "Modeled Streamflow for the " + this.hucName + ' Watershed.';
-			NWC.util.Plotter.getPlot(plotDivSelector, legendDivSelector, values, labels, ylabel, title);
-		}.bind(this);
-
-		ev.preventDefault();
-		$('#plot-loading-indicator').show();
 		$.ajax({
 			url: sosUrl,
-			success : modeledSuccess,
-			error : modeledFailure
-		}).always(function() {
-			$('#plot-loading-indicator').hide();
-		});
+			success : function(data) {
+				var dataSeries = NWC.util.DataSeries.newSeries();
+				var parsedTable = NWC.util.SosResponseFormatter.formatSosResponse(data);
+				var convertedTable = parsedTable.map(function(row) {
+					return row.map(function(column, index){
+						var val = column;
+						if (index === 0) {
+							val = strToDate(column);
+						}
+					return val;
+					});
+				});
+				var additionalSeriesLabels = NWC.util.SosSources.modeledQ.propertyLongName.split(',');
 
+				dataSeries.data = convertedTable;
+
+				additionalSeriesLabels.each(function(label) {
+					dataSeries.metadata.seriesLabels.push({
+						seriesName: label,
+						seriesUnits: NWC.util.SosSources.modeledQ.units
+					});
+				});
+				dataSeries.metadata.downloadHeader = NWC.util.SosSources.modeledQ.downloadMetadata;
+
+				self.dataSeriesLoaded.resolve(dataSeries);
+			},
+			error : function(jqXHR, textStatus) {
+				self.dataSeriesLoaded.reject(textStatus);
+			}
+		});
+		return self.dataSeriesLoaded.promise();
 	},
 
-	downloadModeledData : function(ev) {
-		ev.preventDefault();
-		var filename = this.hucName + '_' + this.context.hucId + '_Q.csv';
+	plotStreamFlowData : function(ev) {
+		var self = this;
+		this.getDataSeries();
 
-		var blob = new Blob([this.modeledDataSeries.toCSV()], {type:'text/tsv'});
-		saveAs(blob, filename);
+		var plotTitle = 'Modeled Streamflow for the ' + this.hucName + ' Watershed';
+
+		ev.preventDefault();
+
+		self.$el.find('.show-plot-btn').hide();
+		$.when(this.streamflowPlotViewLeft.plotStreamflowData(plotTitle),
+				this.streamflowPlotViewRight.plotStreamflowData(plotTitle))
+		.done(function(dataSeries) {
+			self.dataSeries = dataSeries;
+			self.$el.find('.download-streamflow-btn').show();})
+		.fail(function(textStatus) {
+			alert('Retrieving data for this plot failed with error: ' + textStatus);
+		});
+	},
+
+	downloadData : function(ev) {
+		ev.preventDefault();
+		if (Object.has(this, 'dataSeries')) {
+			var filename = this.hucName + '_' + this.context.hucId + '_Q.csv';
+
+			var blob = new Blob([this.dataSeries.toCSV()], {type:'text/tsv'});
+			saveAs(blob, filename);
+		}
+		else {
+			alert('No data available to download');
+		}
+	},
+
+	remove : function() {
+		this.calculateStatsViewLeft.remove();
+		this.calculateStatsViewRight.remove();
+		this.streamflowPlotViewLeft.remove();
+		this.streamflowPlotViewRight.remove();
+		NWC.view.BaseView.prototype.remove.apply(this, arguments);
 	}
 });

@@ -4,6 +4,8 @@ NWC.view = NWC.view || {};
 
 NWC.view.ProjectView = NWC.view.BaseView.extend({
 	templateName : 'project',
+	
+	SCIENCEBASE_ERROR : '<h5>Sorry, the catalog contents are not available right now, please check back later.</h5>',
 
 	detailsUrl : function(id) {
 		return CONFIG.endpoint.direct.sciencebase + '/catalog/item/' + id + '?format=json';
@@ -27,12 +29,14 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 		// (includes render)
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 		
+		var self = this;
 		this.getDetails(options.projectId).done(function(data) {
 			$('#project-details').append(NWC.templates.getTemplate('projectDetail')(data));
 			$('#projectTabLink').hide();
+		}).fail(function(msg) {
+			$('#project-details').append(self.SCIENCEBASE_ERROR + msg);
 		});
 		
-		var self = this;
 		this.getDatasetList(options.projectId).done(function(dataList) {
 			if (dataList.items.length == 0) {
 				$('#data-details').append('<div>None available</div>');				
@@ -43,9 +47,13 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 					self.getDetails(dataList.items[i].id).done(function(data) {
 						$('#data-details').append(NWC.templates.getTemplate('dataDetail')(data));
 						$('.dataTabLink').hide();
+					}).fail(function(msg) {
+						$('#data-details').append(self.SCIENCEBASE_ERROR + msg);
 					});
 				};				
 			}
+		}).fail(function(msg) {
+						$('#data-details').append(self.SCIENCEBASE_ERROR + msg);
 		});
 
 		this.getPublicationList(options.projectId).done(function(dataList) {
@@ -57,9 +65,13 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 				for (i=0; i < dataList.items.length; i++) {
 					self.getDetails(dataList.items[i].id).done(function(data) {
 						$('#publication-details').append(NWC.templates.getTemplate('publicationsDetail')(data));
+					}).fail(function(msg) {
+						$('#publication-details').append(self.SCIENCEBASE_ERROR + msg);
 					});
 				};				
 			}
+		}).fail(function(msg) {
+						$('#publication-details').append(self.SCIENCEBASE_ERROR + msg);
 		});
 		
 	},
@@ -83,7 +95,7 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 			error : function() {
 				//@todo - setup app level error handling
 				var errorMessage = 'Error retrieving detail data from ' + detailsUrl;
-				alert(errorMessage);
+				deferred.reject(errorMessage);
 			}
 		});
 
@@ -109,7 +121,7 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 			error : function() {
 				//@todo - setup app level error handling
 				var errorMessage = 'Error retrieving detail data from ' + listUrl;
-				alert(errorMessage);
+				deferred.reject(errorMessage);
 			}
 		});
 
@@ -134,8 +146,8 @@ NWC.view.ProjectView = NWC.view.BaseView.extend({
 			},
 			error : function() {
 				//@todo - setup app level error handling
-				var errorMessage = 'Error retrieving detail data from ' + listUrl;
-				alert(errorMessage);
+				var errorMessage = 'Error retrieving detail data from ' + pubListUrl;
+				deferred.reject(errorMessage);
 			}
 		});
 

@@ -1,3 +1,6 @@
+/*jslint browser: true*/
+/*global OpenLayers*/
+
 var NWC = NWC || {};
 
 NWC.view = NWC.view || {};
@@ -11,25 +14,34 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	templateName : 'waterbudgetHucData',
 
-	ETA : "eta",
-	DAY_MET : "dayMet",
-
 	events: {
 		'click #counties-button' : 'displayCountyMap',
+		'click #compare-hucs-button' : 'goToAddHucMapPage',
 		'click #units-btn-group button' : 'changeUnits',
 		'click #time-scale-btn-group button' : 'changeTimeScale',
-		'click .evapotranspiration-download-button' : 'downloadEvapotranspiration',
-		'click .precipitation-download-button' : 'downloadPrecipitation'
 	},
 
 	context : {
 	},
 
+	/*
+	 * @constructs
+	 * @param {Object} options
+	 *     @prop {Jquery.Element} el - Container where this view will be rendered
+	 *     @prop {Backbone.Router} router
+	 *     @prop {String} hucId - Id of the huc for which information should be shown.
+	 *     @prop {String} compareHucId (optional) - Huc Id used for second plot to compare to first.
+	 *     @prop {String} fips (optional) - If specified, water use data for the county with fips will be shown.
+	 */
 	initialize : function(options) {
+		var self = this;
+		var $plotContainer;
 
-		this.context.hucId = options.hucId;
 		this.hucId = options.hucId;
-		this.insetHucMapDiv = options.insetHucMapDiv;
+		this.compareHucId = options.compareHucId ? options.compareHucId :'';
+		this.fips = options.fips ? options.fips : '';
+
+		this.context.showAdditionalDataButtons = !(this.compareHucId || this.fips);
 
 		// call superclass initialize to do default initialize
 		// (includes render)
@@ -37,141 +49,84 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		this.setUpHucPlotModel();
 
-		this.buildHucMap(this.hucId);
-		this.getHucData(this.hucId);
-		this.hucMap.render(this.insetHucMapDiv);
+
+		// Create additional sub views as needed
+		$plotContainer = this.$('#huc-plot-container');
+		if (this.compareHucId) {
+			this.hucInsetMapView = new NWC.view.HucInsetMapView({
+				el : this.$('.huc-inset-map-div'),
+				hucId : this.hucId
+			});
+
+			this.compareHucInsetMapView = new NWC.view.HucInsetMapView({
+				el : this.$('.comparehuc-inset-map-div'),
+				hucId : this.compareHucId
+			});
+
+			this.plotView = new NWC.view.WaterbudgetPlotView({
+				hucId : this.hucId,
+				el : this.$('#huc-plotview-div'),
+				model : this.hucPlotModel
+			});
+			this.comparePlotView = new NWC.view.WaterbudgetPlotView({
+				hucId : this.compareHucId,
+				el : this.$('#compare-plotview-div'),
+				model : this.hucPlotModel
+			});
+		}
+		else {
+			this.hucInsetMapView = new NWC.view.HucInsetMapView({
+				el : this.$('.huc-inset-map-container'),
+				hucId : this.hucId
+			});
+			this.hucInsetMapView.hucFeatureLoadedPromise.done(function() {
+				self.$('#counties-button').prop('disabled', false);
+				self.$('#compare-hucs-button').prop('disabled', false);
+			});
+
+			this.plotView = new NWC.view.WaterbudgetPlotView({
+				hucId : this.hucId,
+				el : this.$('#huc-plot-container'),
+				model : this.hucPlotModel
+			});
+		}
+
+		if (this.fips) {
+			this.countyWaterUseView = new NWC.view.CountyWaterUseView({
+				hucId : this.hucId,
+				fips : this.fips,
+				el : this.$('#wateruse')
+			});
+		}
 	},
 
+	/*
+	 * Creates a new hucPlotModel, sets up listeners and initializes the dom to reflect the default model
+	 */
 	setUpHucPlotModel : function() {
-		// Add listeners to model
 		this.hucPlotModel = new NWC.model.WaterBudgetHucPlotModel();
 		this.listenTo(this.hucPlotModel, 'change:units', this.updateUnits);
 		this.listenTo(this.hucPlotModel, 'change:timeScale', this.updateTimeScale);
 
-		var newTimeScale = this.hucPlotModel.get('timeScale');
-		this.setButtonActive($('#daily-button'), newTimeScale === 'daily');
-		this.setButtonActive($('#monthly-button'), newTimeScale === 'monthly');
-
-		var newUnits = this.hucPlotModel.get('units');
-		this.setButtonActive($('#customary-button'), newUnits === 'usCustomary');
-		this.setButtonActive($('#metric-button'), newUnits === 'metric');
+		this.updateTimeScale();
+		this.updateUnits();
 	},
 
-	buildHucMap : function(huc) {
-
-		var d = $.Deferred();
-
-		var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
-
-		this.hucMap = NWC.util.mapUtils.createMap([baseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
-
-		this.hucLayer = NWC.util.mapUtils.createHucFeatureLayer(huc);
-
-		this.hucLayer.events.on({
-			featureadded: function(event){
-				this.hucName = event.feature.attributes.hu_12_name;
-				this.hucMap.zoomToExtent(this.hucLayer.getDataExtent());
-
-				$('#huc-name').html(event.feature.attributes.hu_12_name);
-				$('.evapotranspiration-download-button').prop('disabled', false);
-				$('.precipitation-download-button').prop('disabled', false);
-				d.resolve();
-			},
-			loadend: function(event) {
-				$('#huc-loading-indicator').hide();
-				$('#counties-button').prop('disabled', false);
-			},
-			scope : this
-		});
-
-		this.hucMap.addLayer(this.hucLayer);
-		this.hucMap.zoomToExtent(this.hucMap.getMaxExtent());
-
-		return d.promise();
-	},
-
-	//get and instance of dataSeriesStore
-	dataSeriesStore : new NWC.util.DataSeriesStore(),
-
-	/**
-	 * This makes a Web service call to get huc data
-	 * then makes call to render the data on a plot
-	 * @param {String} huc 12 digit identifier for the hydrologic unit
+	/*
+	 * Create the county map view.
 	 */
-	getHucData: function(huc) {
-		var labeledResponses = {};
-		var labeledAjaxCalls = [];
-		//grab the sos sources that will be used to display the initial data
-		//series. ignore other data sources that the user can add later.
-		var initialSosSourceKeys = [this.ETA, this.DAY_MET];
-		var initialSosSources = Object.select(NWC.util.SosSources, initialSosSourceKeys);
-		Object.keys(initialSosSources, function (sourceId, source) {
-			var d;
-			d = $.Deferred();
-			labeledAjaxCalls.push(d);
-			var url = NWC.util.buildSosUrlFromSource(huc, source);
-			$.ajax({
-				url : url,
-				success : function(data, textStatus, jqXHR) {
-					var label = this.valueOf();
-					var parsedValues = NWC.util.SosResponseFormatter.formatSosResponse(data);
-					var labeledDataSeries = NWC.util.DataSeries.newSeries();
-					labeledDataSeries.metadata.seriesLabels.push(
-						{
-							seriesName: NWC.util.SosSources[label].propertyLongName,
-							seriesUnits: NWC.util.SosSources[label].units
-						}
-					);
-					labeledDataSeries.metadata.downloadHeader = NWC.util.SosSources[label].downloadMetadata;
-					labeledDataSeries.data = parsedValues;
-					labeledResponses[label] = labeledDataSeries;
-					d.resolve();
-				},
-				context : sourceId,
-				dataType : "xml",
-				error : function() {
-                    //@todo - setup app level error handling
-                    var errorMessage = 'error retrieving time series data';
-                    alert(errorMessage);
-                    d.reject();
-				}
-			});
-        });
-		var dataHandler = function() {
-			this.dataSeriesStore.updateHucSeries(labeledResponses);
-			this.plotPTandETaData(this.hucPlotModel.get('timeScale'), this.hucPlotModel.get('units'));
-		}.bind(this);
-		$.when.apply(null, labeledAjaxCalls).then(dataHandler);
-		return;
-	},
-
-    /**
-     * {String} measurement, the quantity scale of data to plot (usCustomary or metric)
-     * {String} time, the time scale of data to plot (daily or monthly)
-     */
-	plotPTandETaData : function(time, measurement) {
-        var plotDivSelector = '#waterBudgetPlot';
-        var legendDivSelector = '#waterBudgetLegend';
-        var normalization = 'normalizedWater';
-        var plotTimeDensity  = time;
-        var measurementSystem =  measurement;
-        var values = this.dataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
-        var labels = this.dataSeriesStore[plotTimeDensity].getSeriesLabelsAs(
-                measurementSystem, normalization, plotTimeDensity);
-        var ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
-        NWC.util.Plotter.getPlot(plotDivSelector, legendDivSelector, values, labels, ylabel);
-        return;
-	},
-
 	displayCountyMap : function() {
-		this.hucCountMapView = new NWC.view.HucCountyMapView({
-			mapDiv : 'county-selection-map',
+		this.hucCountyMapView = new NWC.view.HucCountyMapView({
 			hucFeature : new OpenLayers.Feature.Vector(
-					this.hucLayer.features[0].geometry.clone(),
-					this.hucLayer.features[0].attributes),
+					this.hucInsetMapView.hucLayer.features[0].geometry.clone(),
+					this.hucInsetMapView.hucLayer.features[0].attributes),
 			router : this.router,
-			el : $('#county-selection-div')
+			el : this.$('#county-selection-div')
 		});
+	},
+
+	goToAddHucMapPage : function() {
+		this.router.navigate('#!waterbudget/map/huc/' + this.hucId, {trigger: true});
 	},
 
 	changeUnits : function(ev) {
@@ -180,12 +135,10 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		this.hucPlotModel.set('units', newUnits);
 	},
 
-	updateUnits : function(ev) {
+	updateUnits : function() {
 		var newUnits = this.hucPlotModel.get('units');
-		this.setButtonActive($('#customary-button'), newUnits === 'usCustomary');
-		this.setButtonActive($('#metric-button'), newUnits === 'metric');
-
-		this.plotPTandETaData(this.hucPlotModel.get('timeScale'), newUnits);
+		this.setButtonActive(this.$('#customary-button'), newUnits === 'usCustomary');
+		this.setButtonActive(this.$('#metric-button'), newUnits === 'metric');
 	},
 
 	changeTimeScale : function(ev) {
@@ -194,45 +147,28 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		this.hucPlotModel.set('timeScale', newTimeScale);
 	},
 
-	updateTimeScale : function(ev) {
+	updateTimeScale : function() {
 		var newTimeScale = this.hucPlotModel.get('timeScale');
-		this.setButtonActive($('#daily-button'), newTimeScale === 'daily');
-		this.setButtonActive($('#monthly-button'), newTimeScale === 'monthly');
-
-		this.plotPTandETaData(newTimeScale, this.hucPlotModel.get('units'));
-	},
-
-	downloadEvapotranspiration : function() {
-		var blob = new Blob([this.dataSeriesStore.eta.toCSV()], {type:'text/csv'});
-		saveAs(blob, this.getHucFilename('eta'));
-	},
-
-	downloadPrecipitation : function() {
-		var blob = new Blob([this.dataSeriesStore.dayMet.toCSV()], {type:'text/csv'});
-		saveAs(blob, this.getHucFilename('dayMet'));
-	},
-
-	getHucFilename : function (series) {
-		var filename = series + '_data.csv';
-        if (this.hucName && this.hucId) {
-        	filename = this.buildName(this.hucName, this.hucId, series);
-        }
-		return filename;
-	},
-
-	buildName : function(selectionName, selectionId, series) {
-		var filename = selectionName;
-		filename += '_' + selectionId;
-		filename += '_' + series;
-		filename += '.csv';
-		filename = filename.replace(/ /g, '_');
-		filename = escape(filename);
-		return filename;
+		this.setButtonActive(this.$('#daily-button'), newTimeScale === 'daily');
+		this.setButtonActive(this.$('#monthly-button'), newTimeScale === 'monthly');
+		this.setButtonActive(this.$('#annual-button'), newTimeScale === 'yearly');
 	},
 
 	remove : function() {
+		this.hucInsetMapView.remove();
+		if (Object.has(this, 'compareHucInsetMapView')) {
+			this.compareHucInsetMapView.remove();
+		}
 		if (Object.has(this, 'hucCountyMapView')) {
 			this.hucCountyMapView.remove();
+		}
+		this.plotView.remove();
+		if (Object.has(this, 'comparePlotView')) {
+			this.comparePlotView.remove();
+		}
+
+		if (Object.has(this, 'countyWaterUseView')) {
+			this.countyWaterUseView.remove();
 		}
 		NWC.view.BaseView.prototype.remove.apply(this, arguments);
 	}

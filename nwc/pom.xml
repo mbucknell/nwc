@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>nwc-parent</artifactId>
 		<groupId>gov.usgs.cida.nwc</groupId>
-		<version>1.0.4-SNAPSHOT</version>
+		<version>1.0.5-SNAPSHOT</version>
 	</parent>
     <packaging>war</packaging>
 	
@@ -31,6 +31,28 @@
                     <goal>process-resources</goal>
                 </configuration>
             </plugin>
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compress</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<suffix>-${project.version}-min</suffix>
+					<excludes>
+						<exclude>**/Flowlines*.js</exclude>
+						<exclude>**/Gage*/*.js</exclude>
+						<exclude>**/WaterCensusControls.js</exclude>
+						<exclude>**/FileSaver*.js</exclude>
+						<exclude>**/demo*.*</exclude>
+						<exclude>**/jquery.flot.*.js</exclude>
+					</excludes>
+				</configuration>  
+			</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -122,10 +144,13 @@
 						<include>view/BaseView.js</include>
 						<include>view/BaseSelectMapView.js</include>
 						<include>view/BaseDiscoveryTabView.js</include>
+						<include>view/WaterbudgetPlotView.js</include>
+						<include>view/CountyWaterUseView.js</include>
 						<include>view/WaterBudgetHucDataView.js</include>
 						<include>view/ProjectTabView.js</include>
 						<include>view/DataTabView.js</include>
 						<include>view/PublicationsTabView.js</include>
+						<include>view/StreamflowPlotView.js</include>
 						<include>**/*.js</include>
 					</sourceIncludes>
 					<sourceExcludes>
@@ -290,6 +315,10 @@
             <groupId>org.webjars</groupId>
             <artifactId>jsts</artifactId>
         </dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>dygraphs</artifactId>
+		</dependency>
         <!-- </webjars> -->
                 
     </dependencies>

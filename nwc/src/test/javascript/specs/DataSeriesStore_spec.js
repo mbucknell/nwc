@@ -8,6 +8,7 @@ describe('DataSeriesStore', function(){
         dateRangeEnd
     );
     var monthsInDateRange = dateRangeEnd.monthsSince(dateRangeStart);
+    var yearsInDateRange = dateRangeEnd.yearsSince(dateRangeStart);
 
     var formatDate = function(date){
         return date.format('{yyyy}/{MM}/{dd}');
@@ -56,6 +57,30 @@ describe('DataSeriesStore', function(){
         nameToSeriesMap=nameToSeriesMap;
         dateRangeStart = dateRangeStart;
         dateRangeEnd = dateRangeEnd;
+    });
+    describe('DataSeriesStore.updateYearlyHucSeries', function(){
+        it('should include the correct number of years', function(){
+            expect(dss.yearly.data.length).toBe(yearsInDateRange-1);
+        });
+        it('should correctly sum all the daily daymet values for a year and place them in the daymet value for that year', function(){
+            //presuming all days in the test data have the same value and not a leap year.
+            var sum = dayMetValue * 365;
+            var dayMetIndex = DataSeriesStore.getIndexOfColumnNamed('dayMet');
+            var secondYearsAccumulatedDaymet = dss.yearly.data[etaOffsetInMonths][dayMetIndex];
+            expect(secondYearsAccumulatedDaymet).toBe(sum);
+        });
+        it('should correctly sum all the daily daymet values for a leap year and place them in the daymet value for that year', function(){
+            //presuming all days in the test data have the same value and is a leap year.
+            var sum = dayMetValue * 366;
+            var dayMetIndex = DataSeriesStore.getIndexOfColumnNamed('dayMet');
+            var firstYearsAccumulatedDaymet = dss.yearly.data[0][dayMetIndex];
+            expect(firstYearsAccumulatedDaymet).toBe(sum);
+        });
+        it('should place NaN in the eta field for a year having no eta records', function(){
+            //test before the daymet values start
+            var firstYearsAccumulatedEta = dss.yearly.data[etaIndex][etaIndex];
+            expect(isNaN(firstYearsAccumulatedEta)).toBe(true);
+        });
     });
     describe('DataSeriesStore.updateMonthlyHucSeries', function(){
         it('should include the correct number of months', function(){

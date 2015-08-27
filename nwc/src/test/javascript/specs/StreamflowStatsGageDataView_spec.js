@@ -5,6 +5,7 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 	var eventSpy;
 	var options;
 	var server;
+	var plotStreamflowDataDeferred;
 
 	beforeEach(function() {
 		CONFIG = {
@@ -17,17 +18,19 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		$('body').append('<div id="test-div"></div>');
 		$testDiv = $('#test-div');
 		$testDiv.append('<div id="inset-map-div"></div>');
-		$testDiv.append('<select id="start-year"><option value="1991"></option></select>');
-		$testDiv.append('<select id="end-year"><option value="1992"></option></select');
+		$testDiv.append('<select class="start-year"><option value="1991"></option></select>');
+		$testDiv.append('<select class="end-year"><option value="1992"></option></select');
 		$testDiv.append('<div id="start-period-of-record"></div>');
 		$testDiv.append('<div id="end-period-of-record"></div>');
 
-
-
 		addLayersSpy = jasmine.createSpy('addLayersSpy');
 		renderSpy = jasmine.createSpy('renderSpy');
-		spyOn(NWC.view.BaseStreamflowStatsDataView.prototype, 'render');
-		spyOn(NWC.view.BaseStreamflowStatsDataView.prototype, 'initialize');
+		spyOn(NWC.view.BaseView.prototype, 'render');
+		spyOn(NWC.view.BaseView.prototype, 'initialize');
+		plotStreamflowDataDeferred = $.Deferred();
+		spyOn(NWC.view, 'StreamflowPlotView').andReturn({
+			plotStreamflowData : jasmine.createSpy('plotStreamflowDataSpy').andReturn(plotStreamflowDataDeferred)
+		});
 		spyOn(NWC.util.mapUtils, 'createMap').andCallFake(function() {
 			return {
 				addLayers : addLayersSpy,
@@ -86,8 +89,8 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		expect($('#start-period-of-record').html()).toEqual('1990-02-01');
 		expect($('#end-period-of-record').html()).toEqual('1998-03-04');
 
-		expect($('#start-year option:selected').val()).toEqual('1991');
-		expect($('#end-year option:selected').val()).toEqual('1997');
+		expect($('.start-year option:selected').val()).toEqual('1991');
+		expect($('.end-year option:selected').val()).toEqual('1997');
 	});
 
 	it('Expects _retrieveNWISData to make an ajax call', function(){
@@ -130,11 +133,12 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		});
 	});
 
-	it('Expects calling rendering to call the map\s render method', function() {
+	it('Expects calling rendering to call the map\s render method and to create a StreamflowPlotView', function() {
 		testView = new NWC.view.StreamflowStatsGageDataView(options);
 		testView.render();
-		expect(NWC.view.BaseStreamflowStatsDataView.prototype.render).toHaveBeenCalled();
+		expect(NWC.view.BaseView.prototype.render).toHaveBeenCalled();
 		expect(renderSpy).toHaveBeenCalled();
+		expect(NWC.view.StreamflowPlotView).toHaveBeenCalled();
 	});
 
 	it('Expects getStats to call getSiteStats and resolves the deferred when data is retrieved', function() {
@@ -166,6 +170,21 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		testView = new NWC.view.StreamflowStatsGageDataView(options);
 		var fname = testView.getStatsFilename();
 		expect(fname).toMatch(options.gageId)
+	});
+
+	it('Expects a call to plotStreamFlowData', function() {
+		var d = $.Deferred();
+		spyOn(NWC.view.StreamflowStatsGageDataView.prototype, '_retrieveNWISData').andCallFake(function() {
+			return d;
+		});
+		d.resolve({
+			startDate : Date.create('02/01/1990').utc(),
+			endDate : Date.create('03/04/1998').utc()
+		});
+		testView = new NWC.view.StreamflowStatsGageDataView(options);
+		testView.render();
+		testView.plotStreamFlowData(eventSpy);
+		expect(testView.streamflowPlotViewLeft.plotStreamflowData).toHaveBeenCalled();
 	});
 
 });

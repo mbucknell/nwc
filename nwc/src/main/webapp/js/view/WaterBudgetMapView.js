@@ -1,3 +1,6 @@
+/*jslint browser: true */
+/*global OpenLayers */
+
 var NWC = NWC || {};
 
 NWC.view = NWC.view || {};
@@ -10,8 +13,6 @@ NWC.view = NWC.view || {};
 
 NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	templateName : 'waterbudget',
-
-	Model : NWC.model.WaterBudgetSelectMapModel,
 
 	events: {
 		'click #toggle-huc-layer' : 'toggleHucVisibility'
@@ -26,9 +27,13 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	 * @constructs
 	 * @param {Object} options
 	 *	@prop {String} mapDiv
+	 *	@prop {NWC.model.WaterBudgetSelectMapModel} model
+	 *	@prop {String} hucId - Previously selected watershed
 	 */
 	initialize : function(options) {
-		this.model = new this.Model();
+		if (Object.has(options, 'hucId')) {
+			this.context.hucId = options.hucId;
+		}
 
 		this.hucLayer = NWC.util.mapUtils.createHucLayer({
 			visibility : false
@@ -58,7 +63,12 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			else if (hucCount === 1) {
 				var actualFeature = actualFeatures[0];
 				var huc12 = actualFeature.attributes.huc_12;
-				this.router.navigate('/waterbudget/huc/' + huc12, {trigger : true});
+				if (Object.has(options, 'hucId')) {
+					this.router.navigate('#!waterbudget/comparehucs/' + options.hucId + '/' + huc12, {trigger : true});
+				}
+				else {
+					this.router.navigate('#!waterbudget/huc/' + huc12, {trigger : true});
+				}
 			}
 		};
         this.selectControl.events.register("getfeatureinfo", this, featureInfoHandler);
@@ -67,6 +77,15 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
 
 		this.map.addLayer(this.hucLayer);
+		if (Object.has(options, 'hucId')) {
+			var highlightStyle = new OpenLayers.StyleMap({
+				strokeWidth: 2,
+				strokeColor: "black",
+				fillColor: '#FF9900',
+				fillOpacity: 0.4
+			});
+			this.map.addLayer(NWC.util.mapUtils.createHucFeatureLayer([options.hucId], highlightStyle));
+		}
 		this.addFlowLines();
 
 		this.listenTo(this.model, 'change:watershedLayerOn', this.updateLayerVisibility);
