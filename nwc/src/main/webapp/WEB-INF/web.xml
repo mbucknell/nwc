@@ -58,5 +58,12 @@
         <servlet-name>WPSProxy</servlet-name>
          <url-pattern>/proxywps/*</url-pattern>
     </servlet-mapping>	
-
+<filter>
+    <filter-name>SearchBotUglyUrlFilter</filter-name>
+    <filter-class>gov.usgs.cida.nwc.filters.SearchBotUglyUrlFilter</filter-class>
+</filter>
+<filter-mapping>
+    <filter-name>SearchBotUglyUrlFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
 </web-app>
