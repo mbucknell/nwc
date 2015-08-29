@@ -294,7 +294,11 @@
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
         </dependency>
-
+	<dependency>
+		<groupId>org.mockito</groupId>
+		<artifactId>mockito-core</artifactId>
+		<version>1.10.19</version>
+	</dependency>
         <dependency>
             <groupId>gov.usgs.cida</groupId>
             <artifactId>proxy-utils</artifactId>
