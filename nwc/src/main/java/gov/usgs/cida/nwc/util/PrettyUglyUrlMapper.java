@@ -1,19 +1,14 @@
 package gov.usgs.cida.nwc.util;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URLEncodedUtils;
 
 /**
@@ -37,11 +32,32 @@ public class PrettyUglyUrlMapper {
 		}
 	}
 	public static URI uglyToPretty(URI ugly){
-		List<NameValuePair> prettyParams = new ArrayList<NameValuePair>();
-		List<NameValuePair> uglyParams;
-		uglyParams = URLEncodedUtils.parse(ugly.toString(), Charset.forName("utf-8"), '&');
+		String uglyQuery = ugly.getRawQuery();
+		List<NameValuePair> uglyParams = URLEncodedUtils.parse(uglyQuery, Charset.forName("utf-8"), '&');
+		URIBuilder uriBuilder = new URIBuilder(ugly);
 		
-		return null;
+		//rebuild the query using the rules from Google's Spec.
+		uriBuilder.removeQuery();
+		for(NameValuePair uglyParamPair : uglyParams){
+			String lowerCaseParamName = uglyParamPair.getName().toLowerCase(Locale.ENGLISH);
+			if(SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME.equals(lowerCaseParamName)){
+				String fragmentValue = uglyParamPair.getValue();
+				if(!fragmentValue.isEmpty()){
+					uriBuilder.setFragment("!" + uglyParamPair.getValue());
+				}
+			} else {
+				uriBuilder.addParameter(uglyParamPair.getName(), uglyParamPair.getValue());
+			}
+		}
+		
+		URI builtUri;
+		try {
+			builtUri = uriBuilder.build();
+		} catch (URISyntaxException ex) {
+			throw new IllegalArgumentException(ex);
+		}
+		
+		return builtUri;
 	}
 	
 	public static String prettyToUgly(String pretty){

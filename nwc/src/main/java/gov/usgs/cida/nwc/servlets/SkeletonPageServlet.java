@@ -12,6 +12,7 @@ public class SkeletonPageServlet extends HttpServlet{
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException{
 //		String urlWithoutContextPath = getUrlWithoutContextPath(request);
 		response.getWriter().append("WARKS").close();
+		String uglyUrl = request.getRequestURL()+request.getQueryString();
 	}
 	
 	/**
