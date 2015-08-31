@@ -48,6 +48,7 @@ $(document).ready(function() {
 	NWC.templates.registerHelpers();
 
 	$.when(loadTemplates, loadPartials).always(function() {
+		NWC.config = new NWC.model.Config();
 		NWC.router = new NWC.controller.NWCRouter();
 		Backbone.history.start();
 	});

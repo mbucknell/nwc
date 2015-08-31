@@ -28,6 +28,7 @@ NWC.view = NWC.view || {};
 		 */
 		initialize : function(options) {
 			var self = this;
+			var watershedConfig = NWC.config.get('watershed').huc12.attributes;
 			var baseLayer;
 			var countyLayerLoaded = $.Deferred();
 			var hucLayerLoaded = $.Deferred();
@@ -60,7 +61,10 @@ NWC.view = NWC.view || {};
 			});
 			this.map.addLayer(this.countyLayer);
 
-			this.hucLayer = NWC.util.mapUtils.createHucFeatureLayer([this.hucId]);
+			this.hucLayer = NWC.util.mapUtils.createHucFeatureLayer(
+				watershedConfig.namespace,
+				watershedConfig.layerName,
+				[this.hucId]);
 			this.hucLayer.events.on({
 				loadend : function() {
 					hucLayerLoaded.resolve();

@@ -116,11 +116,11 @@ NWC.util.mapUtils = (function () {
 		tiled: true
 	};
 
-	that.createHucLayer = function(config) {
+	that.createHucLayer = function(namespace, layerName, config) {
 		return new OpenLayers.Layer.WMS('National WBD Snapshot',
 			CONFIG.endpoint.geoserver + 'ows?',
 			{
-				layers: 'NHDPlusHUCs:nationalwbdsnapshot',
+				layers: namespace + ':' + layerName,
 				transparent: true,
 				styles: ['polygon'],
 				tiled: true
@@ -134,14 +134,14 @@ NWC.util.mapUtils = (function () {
 	 * @param {OpenLayers.StyleMap} styleMap - optional style map for the feature layer.
 	 * @returns OpenLayers.Layer.Vector with huc12s.
 	 */
-	that.createHucFeatureLayer = function(huc12s, styleMap) {
+	that.createHucFeatureLayer = function(namespace, layerName, huc12s, styleMap) {
 		var filter;
 		var hucFilters = [];
 		var hucLayer;
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
-			featureType: 'nationalwbdsnapshot',
-			featureNS: "http://cida.usgs.gov/NHDPlusHUCs",
+			featureType: layerName,
+			featureNS: "http://cida.usgs.gov/" + namespace,
 			version: "1.1.0",
 			geometryName: "the_geom",
 			srsName : "EPSG:3857"
