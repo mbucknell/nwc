@@ -303,6 +303,16 @@
             <groupId>gov.usgs.cida</groupId>
             <artifactId>proxy-utils</artifactId>
         </dependency>
+	<dependency>
+		<groupId>org.apache.httpcomponents</groupId>
+		<artifactId>httpclient</artifactId>
+		<version>4.5</version>
+	</dependency>
+	<dependency>
+		<groupId>commons-codec</groupId>
+		<artifactId>commons-codec</artifactId>
+		<version>1.9</version>
+	</dependency>
         <!-- ================================================================== -->
                 
         <!-- <webjars> -->
@@ -355,6 +365,5 @@
 			<artifactId>dygraphs</artifactId>
 		</dependency>
         <!-- </webjars> -->
-                
     </dependencies>
 </project>
