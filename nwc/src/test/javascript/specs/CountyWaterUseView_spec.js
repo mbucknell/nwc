@@ -19,7 +19,7 @@ describe('Tests for CountyWaterUseView', function() {
 					geoserver : 'http://fakeserver.com'
 				}
 			};
-
+		NWC.config = new NWC.model.Config();
 		$('body').append('<div id="test-div"></div>');
 		$testDiv = $('#test-div');
 		$testDiv.append('<div id="county-inset-map-div"></div>');
