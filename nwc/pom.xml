@@ -220,7 +220,34 @@
         </plugins>
         <finalName>${warName}</finalName>
     </build>
-
+	<profiles>
+		<profile>
+			<id>generate-search-engine-files-mac-and-linux</id>
+			<build>
+			<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.4.0</version>
+					<executions>
+						<execution>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>exec</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<executable>src/main/python/generate_all.sh</executable>
+						<!-- optional -->
+						<workingDirectory>src/main/python</workingDirectory>
+						<commandlineArgs>${project.build.outputDirectory} ${geoserver_for_search_engine_file_generation}</commandlineArgs>
+					</configuration>
+				</plugin>
+			</plugins>
+			</build>
+		</profile>
+	</profiles>
     <dependencies>
         <dependency>
             <groupId>gov.usgs.cida</groupId>
