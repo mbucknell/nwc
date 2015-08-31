@@ -10,9 +10,6 @@ NWC.view = NWC.view || {};
 
 		templateName : 'waterbudgetPlot',
 
-		ETA : "eta",
-		DAY_MET : "dayMet",
-
 		events : {
 			'click .download-evapotranspiration-btn' : 'downloadEvapotranspiration',
 			'click .download-precipitation-btn' : 'downloadPrecipitation'
@@ -28,6 +25,7 @@ NWC.view = NWC.view || {};
 		initialize : function(options) {
 			var self = this;
 			this.hucId = options.hucId;
+			this.watershedVariables = NWC.config.get('watershed').huc12.get('variables');
 
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 			this.getHucDataPromise = this.getHucData(options.hucId).done(function() {
@@ -54,12 +52,14 @@ NWC.view = NWC.view || {};
 			var getDataDeferreds = [];
 			//grab the sos sources that will be used to display the initial data
 			//series. ignore other data sources that the user can add later.
-			var initialSosSourceKeys = [this.ETA, this.DAY_MET];
-			var initialSosSources = Object.select(NWC.util.SosSources, initialSosSourceKeys);
+			var sosSources = {
+				eta : this.watershedVariables.eta.attributes,
+				dayMet : this.watershedVariables.dayMet.attributes
+			};
 
 			this.dataSeriesStore = new NWC.util.DataSeriesStore();
 
-			Object.keys(initialSosSources, function (sourceId, source) {
+			Object.keys(sosSources, function (sourceId, source) {
 				var d = $.Deferred();
 				var url = NWC.util.buildSosUrlFromSource(huc, source);
 
@@ -74,11 +74,11 @@ NWC.view = NWC.view || {};
 						var thisDataSeries = dataSeries[sourceId];
 
 						thisDataSeries.metadata.seriesLabels.push({
-							seriesName: NWC.util.SosSources[sourceId].propertyLongName,
-							seriesUnits: NWC.util.SosSources[sourceId].units
+							seriesName: source.propertyLongName,
+							seriesUnits: source.units
 						});
 
-						thisDataSeries.metadata.downloadHeader = NWC.util.SosSources[sourceId].downloadMetadata;
+						thisDataSeries.metadata.downloadHeader = source.downloadMetadata;
 						thisDataSeries.data = parsedValues;
 
 						d.resolve();
