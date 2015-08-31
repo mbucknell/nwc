@@ -1,6 +1,9 @@
 package gov.usgs.cida.nwc.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.After;
@@ -48,22 +51,21 @@ public class PrettyUglyUrlMapperTest {
 	 * Test of uglyToPretty method, of class PrettyUglyUrlMapper.
 	 */
 	@Test
-	public void testUglyToPretty() {
+	public void testUglyToPretty() throws UnsupportedEncodingException, URISyntaxException {
 		for(PrettyUglyPair pair : prettyUglyPairs){
-			String result = PrettyUglyUrlMapper.uglyToPretty(pair.ugly);
-			assertEquals(pair.pretty, result);
+			URI result = PrettyUglyUrlMapper.uglyToPretty(new URI(pair.ugly));
+			assertEquals(new URI(pair.pretty), result);
 		}
 	}
 
 	/**
 	 * Test of prettyToUgly method, of class PrettyUglyUrlMapper.
 	 */
-	@Ignore
 	@Test
-	public void testPrettyToUgly() {
+	public void testPrettyToUgly() throws URISyntaxException {
 		for(PrettyUglyPair pair : prettyUglyPairs){
-			String result = PrettyUglyUrlMapper.prettyToUgly(pair.pretty);
-			assertEquals(pair.ugly, result);
+			URI result = PrettyUglyUrlMapper.prettyToUgly(new URI(pair.pretty));
+			assertEquals(new URI(pair.ugly), result);
 		}
 	}
 	

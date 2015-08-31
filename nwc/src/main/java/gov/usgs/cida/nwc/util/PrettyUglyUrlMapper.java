@@ -19,6 +19,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
  */
 public class PrettyUglyUrlMapper {
 	static final String SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME = "_escaped_fragment_";
+	public static final String BANG = "!";
 	public static String uglyToPretty(String ugly){
 		try {
 			String result = null;
@@ -43,7 +44,7 @@ public class PrettyUglyUrlMapper {
 			if(SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME.equals(lowerCaseParamName)){
 				String fragmentValue = uglyParamPair.getValue();
 				if(!fragmentValue.isEmpty()){
-					uriBuilder.setFragment("!" + uglyParamPair.getValue());
+					uriBuilder.setFragment(BANG + uglyParamPair.getValue());
 				}
 			} else {
 				uriBuilder.addParameter(uglyParamPair.getName(), uglyParamPair.getValue());
@@ -73,7 +74,26 @@ public class PrettyUglyUrlMapper {
 		}
 	}
 	public static URI prettyToUgly(URI pretty){
-		return null;
+		URI ugly = null;
+		URIBuilder uriBuilder = new URIBuilder(pretty);
+		String fragment = pretty.getFragment();
+		try {
+		if(fragment.isEmpty()){
+			ugly = uriBuilder.build();
+		}
+		else{
+			if(fragment.startsWith(BANG)){
+				uriBuilder.addParameter(SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME, fragment);
+				uriBuilder.setFragment(null);
+			} else{
+				throw new IllegalArgumentException("the fragment of a pretty url must begin with a'!'. Got '" + fragment + "' instead.");
+			}
+			ugly = uriBuilder.build();
+			}
+		} catch (URISyntaxException ex) {
+				throw new IllegalArgumentException(ex);
+		}
+		return ugly;
 	}
 		
 }
