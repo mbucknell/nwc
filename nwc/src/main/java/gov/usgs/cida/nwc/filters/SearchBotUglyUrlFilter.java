@@ -25,9 +25,11 @@ public class SearchBotUglyUrlFilter implements Filter{
 
 	/**
 	 * If the request contains the searchbot escaped fragment parameter, then
-	 * bypass the rest of the filter chain and handle request via this instance's 
-	 * delegate servlet. If the request does not contain the searchbot parameter, 
-	 * then continue through the filter chain as normal.
+	 * handle the request via this instance's delegate servlet and continue
+	 * down the filter chain. If the request does not contain the 
+	 * searchbot parameter, then continue through the filter chain.
+	 * The detection of the searchbot escaped fragment parameter is
+	 * case-insensitive
 	 * @param request
 	 * @param response
 	 * @param chain
@@ -48,9 +50,8 @@ public class SearchBotUglyUrlFilter implements Filter{
 		if(lowerCaseParamNames.contains(SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME)){
 			//bypass any other defined filters, delegate to the servlet
 			getDelegateServlet().service(request, response);
-		} else {
-			chain.doFilter(request, response);
 		}
+		chain.doFilter(request, response);
 	}
 
 	@Override

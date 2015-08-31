@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gov.usgs.cida.nwc.filters;
 
 import static org.mockito.Mockito.*;
@@ -54,12 +49,12 @@ public class SearchBotUglyUrlFilterTest {
 		}
 	}
 
-	public void assertFilterChainWasBypassed(){
-		assertFalse("filter chain was not called", filterChain.wasCalled);
+	public void assertDelegateServletWasCalled(){
+		assertTrue("filter chain was called", filterChain.wasCalled);
 		assertTrue("delegate servlet was called", mockServlet.wasCalled);
 	}
 	
-	public void assertFilterChainWasCalled(){
+	public void assertDelegateServletWasNotCalled(){
 		assertTrue("filter chain was called", filterChain.wasCalled);
 		assertFalse("delegate servlet was not called", mockServlet.wasCalled);
 	}
@@ -87,54 +82,54 @@ public class SearchBotUglyUrlFilterTest {
 	 * Test of doFilter method, of class SearchBotUglyUrlFilter.
 	 */
 	@Test
-	public void assertRequestWithoutParamsHitsFilterChain() throws Exception {
+	public void assertRequestWithoutParamsDoesNotCallDelegate() throws Exception {
 		filter.doFilter(req, res, filterChain);
-		assertFilterChainWasCalled();
+		assertDelegateServletWasNotCalled();
 	}
 	
 	/**
 	 * Test of doFilter method, of class SearchBotUglyUrlFilter.
 	 */
 	@Test
-	public void assertRequestWithIrrelevantParamsHitsFilterChain() throws Exception {
+	public void assertRequestWithIrrelevantParamsDoesNotCallDelegate() throws Exception {
 		String irrelevantParamName = "somethingIrrelevant" + SearchBotUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME;
 		when(req.getParameterNames()).thenReturn(enumOf(irrelevantParamName));
 		filter.doFilter(req, res, filterChain);
-		assertFilterChainWasCalled();
+		assertDelegateServletWasNotCalled();
 	}
 
 	/**
 	 * Test of doFilter method, of class SearchBotUglyUrlFilter.
 	 */
 	@Test
-	public void assertRequestWithTheLowerCaseParamBypassesFilterChain() throws Exception {
+	public void assertRequestWithTheLowerCaseParamCallsTheDelegate() throws Exception {
 		when(req.getParameterNames()).thenReturn(enumOf(SearchBotUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME));
 		filter.doFilter(req, res, filterChain);
-		assertFilterChainWasBypassed();
+		assertDelegateServletWasCalled();
 	}
 	
 	/**
 	 * Test of doFilter method, of class SearchBotUglyUrlFilter.
 	 */
 	@Test
-	public void assertRequestWithTheUpperCaseParamBypassesFilterChain() throws Exception {
+	public void assertRequestWithTheUpperCaseParamCallsTheDelegate() throws Exception {
 		when(req.getParameterNames()).thenReturn(enumOf(SearchBotUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME.toUpperCase(Locale.ENGLISH)));
 		filter.doFilter(req, res, filterChain);
-		assertFilterChainWasBypassed();
+		assertDelegateServletWasCalled();
 	}
 
 	/**
 	 * Test of doFilter method, of class SearchBotUglyUrlFilter.
 	 */
 	@Test
-	public void assertRequestWithTheParamAndIrrelevantParamsBypassesFilterChain() throws Exception {
+	public void assertRequestWithTheParamAndIrrelevantParamsCallsTheDelegate() throws Exception {
 		when(req.getParameterNames()).thenReturn(enumOf(
 			"somethingIrrelevant" + SearchBotUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME,
 			SearchBotUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME,
 			"anotherSomethingIrrelevant" + SearchBotUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME
 		));
 		filter.doFilter(req, res, filterChain);
-		assertFilterChainWasBypassed();
+		assertDelegateServletWasCalled();
 	}
 
 }
