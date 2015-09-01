@@ -1,8 +1,6 @@
 package gov.usgs.cida.nwc.util;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
@@ -12,12 +10,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
-/**
- *
- * @author cschroed
- */
 public class PrettyUglyUrlMapperTest {
 
 	public static final List<PrettyUglyPair> prettyUglyPairs = Arrays.asList(
