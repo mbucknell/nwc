@@ -6,13 +6,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import gov.usgs.cida.simplehash.SimpleHash;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.io.IOUtils;
 
 public class SkeletonPageServlet extends HttpServlet{
-
+	public static final String SKELETON_FILE_EXTENSION = "html";
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String uglyUrl = getFullUrl(request);
@@ -21,8 +22,21 @@ public class SkeletonPageServlet extends HttpServlet{
 		String prettyUrlWithoutContextPath = getUrlWithoutContextPath(prettyUrl, contextPath);
 		try {
 			String prettyUrlFragment = "#" + new URI(prettyUrlWithoutContextPath).getFragment();
-			response.getWriter().append(prettyUrlFragment);
-			response.getWriter().flush();
+			String prettyUrlFragmentHash = SimpleHash.hash(prettyUrlFragment, "SHA-1");
+			String fileName = "/skeleton/" + prettyUrlFragmentHash + "." + SKELETON_FILE_EXTENSION;
+			
+			try (
+				InputStream skeletonStream = this.getClass().getResourceAsStream(fileName);
+				OutputStream responseStream = response.getOutputStream();
+			) {
+				if(null == skeletonStream){
+					response.sendError(404);
+				} else {
+					IOUtils.copy(skeletonStream, responseStream);
+				}
+			}
+
+			
 		} catch (URISyntaxException ex) {
 			throw new IllegalArgumentException(ex);
 		}
@@ -41,6 +55,9 @@ public class SkeletonPageServlet extends HttpServlet{
 	 * @return 
 	 */
 	String getUrlWithoutContextPath(String fullUrl, String contextPath){
+		if(null == contextPath || contextPath.isEmpty()){
+			throw new IllegalArgumentException("Received empty context path. Context path must be non-empty");
+		}
 		String urlWithoutContextPath = fullUrl.replaceFirst(".*" + contextPath, "");
 		return urlWithoutContextPath;
 	}

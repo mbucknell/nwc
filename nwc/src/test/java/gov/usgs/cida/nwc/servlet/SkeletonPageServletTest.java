@@ -1,6 +1,5 @@
 package gov.usgs.cida.nwc.servlet;
 
-import gov.usgs.cida.nwc.servlet.SkeletonPageServlet;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -21,7 +20,14 @@ public class SkeletonPageServletTest {
 		String result = instance.getUrlWithoutContextPath(fullUrl, contextPath);
 		assertEquals(expResult, result);
 	}
-
-
-	
+	/**
+	 * Test of getUrlWithoutContextPath method, of class SkeletonPageServlet.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowExceptionOnEmptyContextPath() {
+		String fullUrl = "http://localhost:8080/";
+		String contextPath = "";
+		SkeletonPageServlet instance = new SkeletonPageServlet();
+		instance.getUrlWithoutContextPath(fullUrl, contextPath);
+	}
 }
