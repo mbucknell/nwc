@@ -1,3 +1,10 @@
+/*global jasmine*/
+/*global spyOn*/
+/*global NWC*/
+/*global sinon */
+/*global expect */
+/*global saveAs */
+
 describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 
 	var $testDiv;
@@ -10,7 +17,8 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 	beforeEach(function() {
 		CONFIG = {
 			endpoint : {
-				geoserver : 'http://fakeserver.com'
+				geoserver : 'http://fakeserver.com',
+				thredds : 'http://fakesos.org/'
 			}
 		};
 
@@ -73,7 +81,7 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 
 	it('Expects getStats to call getHucStats and resolves the deferred when data is retrieved', function() {
 			spyOn(NWC.util.streamStats, 'getHucStats');
-			var doneSpy = jasmine.createSpy('doneSpy')
+			var doneSpy = jasmine.createSpy('doneSpy');
 			var d = testView.getStats(['s1', 's2'], '1990', '1991').done(doneSpy);
 			expect(NWC.util.streamStats.getHucStats).toHaveBeenCalled();
 			expect(NWC.util.streamStats.getHucStats.calls[0].args[0]).toEqual(['123456789012']);
@@ -114,19 +122,13 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 	});
 
 	describe('Test getDataSeries function', function() {
-		var promise;
-
-		beforeEach(function() {
-			spyOn(NWC.util, 'buildSosUrlFromSource').andCallFake(function() {
-				return 'http://fakesos.org';
-			});
-		});
 
 		it('Expects that an ajax call is made to retrieve the data', function() {
 			requestCount = server.requests.length;
 			testView.getDataSeries();
 			expect(server.requests.length).toEqual(requestCount + 1);
-			expect(server.requests[requestCount].url).toEqual('http://fakesos.org');
+			expect(server.requests[requestCount].url).toContain('http://fakesos.org');
+			expect(server.requests[requestCount].url).toContain('offering=123456789012');
 		});
 	});
 
