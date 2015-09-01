@@ -1,6 +1,6 @@
-package gov.usgs.cida.nwc.filters;
+package gov.usgs.cida.nwc.filter;
 
-import gov.usgs.cida.nwc.servlets.SkeletonPageServlet;
+import gov.usgs.cida.nwc.servlet.SkeletonPageServlet;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -50,8 +50,9 @@ public class SearchBotUglyUrlFilter implements Filter{
 		if(lowerCaseParamNames.contains(SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME)){
 			//bypass any other defined filters, delegate to the servlet
 			getDelegateServlet().service(request, response);
+		} else {
+			chain.doFilter(request, response);
 		}
-		chain.doFilter(request, response);
 	}
 
 	@Override

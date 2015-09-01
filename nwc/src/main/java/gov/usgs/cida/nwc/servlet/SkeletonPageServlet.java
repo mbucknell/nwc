@@ -1,4 +1,4 @@
-package gov.usgs.cida.nwc.servlets;
+package gov.usgs.cida.nwc.servlet;
 
 import gov.usgs.cida.nwc.util.PrettyUglyUrlMapper;
 import javax.servlet.http.HttpServlet;

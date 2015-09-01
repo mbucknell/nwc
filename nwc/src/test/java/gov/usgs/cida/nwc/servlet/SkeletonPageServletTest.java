@@ -1,5 +1,6 @@
-package gov.usgs.cida.nwc.servlets;
+package gov.usgs.cida.nwc.servlet;
 
+import gov.usgs.cida.nwc.servlet.SkeletonPageServlet;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

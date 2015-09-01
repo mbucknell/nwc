@@ -1,5 +1,6 @@
-package gov.usgs.cida.nwc.filters;
+package gov.usgs.cida.nwc.filter;
 
+import gov.usgs.cida.nwc.filter.SearchBotUglyUrlFilter;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class SearchBotUglyUrlFilterTest {
 	}
 
 	public void assertDelegateServletWasCalled(){
-		assertTrue("filter chain was called", filterChain.wasCalled);
+		assertFalse("filter chain was not called", filterChain.wasCalled);
 		assertTrue("delegate servlet was called", mockServlet.wasCalled);
 	}
 	

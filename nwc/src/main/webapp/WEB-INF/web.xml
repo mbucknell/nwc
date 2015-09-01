@@ -10,7 +10,7 @@
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-	<servlet>
+    <servlet>
         <servlet-name>GeoserverProxy</servlet-name>
         <servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
         <init-param>
@@ -22,7 +22,7 @@
             <param-value>http://localhost:8080/proxygeoserver</param-value>
         </init-param>
     </servlet>
-	<servlet>
+    <servlet>
         <servlet-name>ThreddsProxy</servlet-name>
         <servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
         <init-param>
@@ -34,7 +34,7 @@
             <param-value>http://localhost:8080/proxythredds</param-value>
         </init-param>
     </servlet>
-	<servlet>
+    <servlet>
         <servlet-name>WPSProxy</servlet-name>
         <servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
         <init-param>
@@ -46,24 +46,24 @@
             <param-value>http://localhost:8080/proxywps</param-value>
         </init-param>
     </servlet>
-	<servlet-mapping>
+    <servlet-mapping>
         <servlet-name>GeoserverProxy</servlet-name>
-         <url-pattern>/proxygeoserver/*</url-pattern>
-    </servlet-mapping>	
-	<servlet-mapping>
+        <url-pattern>/proxygeoserver/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>ThreddsProxy</servlet-name>
-         <url-pattern>/proxythredds/*</url-pattern>
-    </servlet-mapping>	
-	<servlet-mapping>
+        <url-pattern>/proxythredds/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>WPSProxy</servlet-name>
-         <url-pattern>/proxywps/*</url-pattern>
-    </servlet-mapping>	
-<filter>
-    <filter-name>SearchBotUglyUrlFilter</filter-name>
-    <filter-class>gov.usgs.cida.nwc.filters.SearchBotUglyUrlFilter</filter-class>
-</filter>
-<filter-mapping>
-    <filter-name>SearchBotUglyUrlFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-</filter-mapping>
+        <url-pattern>/proxywps/*</url-pattern>
+    </servlet-mapping>
+    <filter>
+        <filter-name>SearchBotUglyUrlFilter</filter-name>
+        <filter-class>gov.usgs.cida.nwc.filter.SearchBotUglyUrlFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SearchBotUglyUrlFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>
