@@ -107,9 +107,9 @@ NWC.view = NWC.view || {};
 
 		getWaterUseDataSeries : function(fips) {
 			var self = this;
-			var waterUseConfig = NWC.config.get('county').attributes.variables.waterUse.attributes
+			var waterUseConfig = NWC.config.get('county').attributes.variables.waterUse;
 			var deferred = $.Deferred();
-			var url = NWC.util.buildSosUrlFromSource(fips, waterUseConfig);
+			var url = waterUseConfig.getSosUrl(fips);
 			this.waterUseDataSeries = NWC.util.DataSeries.newSeries();
 
 			$.ajax({
@@ -120,15 +120,15 @@ NWC.view = NWC.view || {};
 					self.waterUseDataSeries.data = parsedTable;
 
 					//use the series metadata as labels
-					var additionalSeriesLabels = waterUseConfig.propertyLongName.split(',');
+					var additionalSeriesLabels = waterUseConfig.get('propertyLongName').split(',');
 					additionalSeriesLabels.each(function(label) {
 						self.waterUseDataSeries.metadata.seriesLabels.push({
 							seriesName: label,
-							seriesUnits: waterUseConfig.units
+							seriesUnits: waterUseConfig.get('units')
 						});
 					});
 
-					self.waterUseDataSeries.metadata.downloadHeader = waterUseConfig.downloadMetadata;
+					self.waterUseDataSeries.metadata.downloadHeader = waterUseConfig.get('tdownloadMetadata');
 					deferred.resolve();
 				},
 				dataType : "xml",

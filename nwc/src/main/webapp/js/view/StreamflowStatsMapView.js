@@ -49,7 +49,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		this.hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
 			CONFIG.endpoint.geoserver + 'gwc/service/wms',
 			{
-				layers: huc12Config.namespace + ':' + huc12Config.layerName,
+				layers: huc12Config.namespace + ':' + huc12Config.localLayerName,
 				transparent: true,
 				styles: ['seOutline']
 			},

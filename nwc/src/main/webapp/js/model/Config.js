@@ -1,5 +1,7 @@
 /*jslint browser: true */
 /*global Backbone */
+/*global $ */
+/*global CONFIG */
 
 var NWC = NWC || {};
 
@@ -8,7 +10,7 @@ NWC.model = NWC.model || {};
 (function() {
 	"use strict";
 
-	NWC.model.SosVariable = Backbone.Model.extend({
+	var SosVariable = Backbone.Model.extend({
 		defaults : {
 			observedProperty : '',
 			propertyLongName : '',
@@ -19,26 +21,32 @@ NWC.model = NWC.model || {};
 		},
 
 		getSosUrl : function (offering) {
-			// fill in from SosSources.js
-			return '';
+			var sosParams = Object.extended({
+				request: 'GetObservation',
+				service: 'SOS',
+				version: '1.0.0',
+				observedProperty: this.get('observedProperty'),
+				offering: offering
+			});
+			return CONFIG.endpoint.thredds + this.get('dataset') + '/' + this.get('fileName') + '?' + $.param(sosParams);
 		}
 	});
 
-	NWC.model.DataSourceModel = Backbone.Model.extend({
+	var DataSourceModel = Backbone.Model.extend({
 		layerName : '',
 		namespace : '',
 		variables : {}
 	});
 
-	NWC.model.Config = Backbone.Model.extend({
+	var Config = Backbone.Model.extend({
 		defaults : function() {
 			return {
 				watershed : {
-					huc12 : new NWC.model.DataSourceModel({
+					huc12 : new DataSourceModel({
 						layerName : 'nationalwbdsnapshot', // get from mapUtils
 						namespace : 'NHDPlusHUCs', // getfrom mapUtils
 						variables : {
-							dayMet : new NWC.model.SosVariable({
+							dayMet : new SosVariable({
 								observedProperty: 'MEAN_prcp',
 								propertyLongName: 'Area Weighted Mean Precipitation',
 								units: NWC.util.Units.metric.normalizedWater.daily,
@@ -46,7 +54,7 @@ NWC.model = NWC.model || {};
 								fileName: 'HUC12_daymet.nc',
 								downloadMetadata: 'Data derived by sampling the DayMet precipitation variable to NHD+ Version II\n12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://daymet.ornl.gov/ http://cida.usgs.gov/gdp/\nhttp://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
 							}),
-							eta : new NWC.model.SosVariable({
+							eta : new SosVariable({
 								observedProperty: 'MEAN_et',
 								propertyLongName: 'Area Weighted Mean Actual Evapotranspiration',
 								units: NWC.util.Units.metric.normalizedWater.monthly,
@@ -57,11 +65,11 @@ NWC.model = NWC.model || {};
 						}
 					})
 				},
-				county : new NWC.model.DataSourceModel({
+				county : new DataSourceModel({
 					layerName : 'us_historical_counties',
 					namespace : 'NWC',
 					variables : {
-						waterUse : new NWC.model.SosVariable({
+						waterUse : new SosVariable({
 							observedProperty: NWC.util.CountyWaterUseProperties.getObservedProperties().join(),
 							propertyLongName: NWC.util.CountyWaterUseProperties.getPropertyLongNames().join(),
 							units: NWC.util.Units.usCustomary.totalWater.yearly,
@@ -72,11 +80,12 @@ NWC.model = NWC.model || {};
 					}
 				}),
 				streamflow : {
-					huc12 : new NWC.model.DataSourceModel({
-						layerName : 'huc12_se_basins_v2',
+					huc12 : new DataSourceModel({
+						localLayerName : 'huc12_se_basins_v2_local', // this is used for the selection map
+						accumulatedLayerName : 'huc12_se_basins_v2', // this is used for the inset map
 						namespace : 'NWC',
 						variables : {
-							modeledQ : new NWC.model.SosVariable({
+							modeledQ : new SosVariable({
 								observedProperty: 'MEAN_streamflow',
 								propertyLongName: 'Modeled Streamflow',
 								units: NWC.util.Units.usCustomary.streamflow.daily,
@@ -86,7 +95,7 @@ NWC.model = NWC.model || {};
 							})
 						}
 					}),
-					gage : new NWC.model.DataSourceModel({
+					gage : new DataSourceModel({
 						layerName : 'gagesII',
 						namespace : 'NWC',
 						variables : {
@@ -104,6 +113,8 @@ NWC.model = NWC.model || {};
 			// Add things as needed for the county variable and streamflow variables.
 		}
 	});
+
+	NWC.config = new Config();
 }());
 
 

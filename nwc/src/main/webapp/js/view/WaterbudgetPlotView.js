@@ -53,15 +53,15 @@ NWC.view = NWC.view || {};
 			//grab the sos sources that will be used to display the initial data
 			//series. ignore other data sources that the user can add later.
 			var sosSources = {
-				eta : this.watershedVariables.eta.attributes,
-				dayMet : this.watershedVariables.dayMet.attributes
+				eta : this.watershedVariables.eta,
+				dayMet : this.watershedVariables.dayMet
 			};
 
 			this.dataSeriesStore = new NWC.util.DataSeriesStore();
 
 			Object.keys(sosSources, function (sourceId, source) {
 				var d = $.Deferred();
-				var url = NWC.util.buildSosUrlFromSource(huc, source);
+				var url = source.getSosUrl(huc);
 
 				dataSeries[sourceId] = NWC.util.DataSeries.newSeries();
 				getDataDeferreds.push(d);
@@ -74,11 +74,11 @@ NWC.view = NWC.view || {};
 						var thisDataSeries = dataSeries[sourceId];
 
 						thisDataSeries.metadata.seriesLabels.push({
-							seriesName: source.propertyLongName,
-							seriesUnits: source.units
+							seriesName: source.get('propertyLongName'),
+							seriesUnits: source.get('units')
 						});
 
-						thisDataSeries.metadata.downloadHeader = source.downloadMetadata;
+						thisDataSeries.metadata.downloadHeader = source.get('downloadMetadata');
 						thisDataSeries.data = parsedValues;
 
 						d.resolve();
