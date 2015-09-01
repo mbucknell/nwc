@@ -14,8 +14,15 @@ import org.apache.commons.io.IOUtils;
 
 public class SkeletonPageServlet extends HttpServlet{
 	public static final String SKELETON_FILE_EXTENSION = "html";
+	/**
+	 * Given a request from a searchbot, serve up a cached page that is
+	 * easily interpreted by the searchbot
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
 	@Override
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String uglyUrl = getFullUrl(request);
 		String prettyUrl = PrettyUglyUrlMapper.uglyToPretty(uglyUrl);
 		String contextPath = request.getContextPath();
@@ -23,10 +30,10 @@ public class SkeletonPageServlet extends HttpServlet{
 		try {
 			String prettyUrlFragment = "#" + new URI(prettyUrlWithoutContextPath).getFragment();
 			String prettyUrlFragmentHash = SimpleHash.hash(prettyUrlFragment, "SHA-1");
-			String fileName = "/skeleton/" + prettyUrlFragmentHash + "." + SKELETON_FILE_EXTENSION;
+			String resourceName = "/skeleton/" + prettyUrlFragmentHash + "." + SKELETON_FILE_EXTENSION;
 			
 			try (
-				InputStream skeletonStream = this.getClass().getResourceAsStream(fileName);
+				InputStream skeletonStream = this.getClass().getResourceAsStream(resourceName);
 				OutputStream responseStream = response.getOutputStream();
 			) {
 				if(null == skeletonStream){
@@ -51,6 +58,7 @@ public class SkeletonPageServlet extends HttpServlet{
 	 * and includes:
 	 *	* non-context path 
 	 *	* the query string
+	 *	* fragment
 	 * @param request
 	 * @return 
 	 */
