@@ -20,6 +20,12 @@ import org.apache.http.client.utils.URLEncodedUtils;
 public class PrettyUglyUrlMapper {
 	static final String SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME = "_escaped_fragment_";
 	public static final String BANG = "!";
+	
+	/**
+	 * Convenience wrapper for converting string urls
+	 * @param ugly
+	 * @return pretty url
+	 */
 	public static String uglyToPretty(String ugly){
 		try {
 			String result = null;
@@ -32,6 +38,13 @@ public class PrettyUglyUrlMapper {
 			throw new IllegalArgumentException(ex);
 		}
 	}
+	/**
+	 * Maps ugly urls to pretty urls as specified in the Google 
+	 * specification for Making AJAX Applications Crawlable:
+	 * https://developers.google.com/webmasters/ajax-crawling/docs/specification?hl=en
+	 * @param ugly
+	 * @return pretty url
+	 */
 	public static URI uglyToPretty(URI ugly){
 		String uglyQuery = ugly.getRawQuery();
 		List<NameValuePair> uglyParams = URLEncodedUtils.parse(uglyQuery, Charset.forName("utf-8"), '&');
@@ -60,7 +73,11 @@ public class PrettyUglyUrlMapper {
 		
 		return builtUri;
 	}
-	
+	/**
+	 * Convenience wrapper for converting string urls
+	 * @param pretty
+	 * @return ugly url
+	 */
 	public static String prettyToUgly(String pretty){
 		try {
 			String result = null;
@@ -73,6 +90,14 @@ public class PrettyUglyUrlMapper {
 			throw new IllegalArgumentException(ex);
 		}
 	}
+	
+	/**
+	 * Maps pretty urls to ugly urls as specified in the Google 
+	 * specification for Making AJAX Applications Crawlable:
+	 * https://developers.google.com/webmasters/ajax-crawling/docs/specification?hl=en
+	 * @param ugly
+	 * @return pretty url
+	 */
 	public static URI prettyToUgly(URI pretty) {
 		URI ugly = null;
 		URIBuilder uriBuilder = new URIBuilder(pretty);
