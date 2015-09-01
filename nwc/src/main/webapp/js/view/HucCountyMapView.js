@@ -15,6 +15,7 @@ NWC.view.HucCountyMapView = NWC.view.BaseView.extend({
 	 *	@prop {Jquery el} el
 	 */
 	initialize : function(options) {
+		var countyDataConfig = NWC.config.get('county').attributes
 		var countyMapBaseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
 		this.map = NWC.util.mapUtils.createMap([countyMapBaseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
 
@@ -33,7 +34,11 @@ NWC.view.HucCountyMapView = NWC.view.BaseView.extend({
 		this.map.addLayer(this.countyHucFeatureLayer);
 
 		// Create a layer representing the counties which interes
-		this.countiesLayer = NWC.util.mapUtils.createIntersectingCountiesLayer(options.hucFeature.geometry);
+		this.countiesLayer = NWC.util.mapUtils.createIntersectingCountiesLayer(
+			countyDataConfig.namespace,
+			countyDataConfig.layerName,
+			options.hucFeature.geometry
+		);
 		this.map.addLayer(this.countiesLayer);
 
 		this.countiesLayer.events.on({

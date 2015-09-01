@@ -13,7 +13,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 	events : {
 		'click .show-plot-btn' : 'plotStreamFlowData'
 	},
- 
+
 	/*
 	 * Query NWIS for information about this.context.gageId. If the call fails
 	 * the deferred will be rejected with a default start and end date. Otherwise the start and
@@ -124,6 +124,8 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 	initialize : function(options) {
 		var self = this;
 
+		this.streamflowGageConfig = NWC.config.get('streamflow').gage.attributes;
+
 		if (!Object.has(this, 'context')) {
 			this.context = {};
 		}
@@ -137,7 +139,10 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 
 		this.map = NWC.util.mapUtils.createMap([baseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
 
-		this.gageLayer = NWC.util.mapUtils.createGageFeatureLayer(options.gageId);
+		this.gageLayer = NWC.util.mapUtils.createGageFeatureLayer(
+			this.streamflowGageConfig.namespace,
+			this.streamflowGageConfig.layerName,
+			options.gageId);
 		this.gageMarkerLayer = new OpenLayers.Layer.Markers("Markers");
 
 		// featureLoaded will be resolved when the gageLayer feature has been loaded.
@@ -267,8 +272,8 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 				NWC.util.findXMLNamespaceTags($(response), 'ns1:value').each(function() {
 					var row = [];
 					var value = parseFloat($(this).text());
-					if (-999999 == value) {
-						value = NaN;
+					if (-999999 === value) {
+						value = Number.NaN;
 					}
 					row.push(strToDate($(this).attr('dateTime')));
 					row.push(value);
@@ -322,13 +327,10 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 	},
 
 	_getStreamflowParams : function(startDate, endDate, siteId) {
-		return {
-			format : 'waterml,1.1',
+		return $.extend({}, this.streamflowGageConfig.variables.nwisData.queryParams, {
 			sites : siteId,
 			startDT : startDate.format('{yyyy}-{MM}-{dd}'),
-			endDt : endDate.format('{yyyy}-{MM}-{dd}'),
-			statCD : '00003',
-			parameterCd : '00060'
-		};
+			endDt : endDate.format('{yyyy}-{MM}-{dd}')
+		});
 	}
 });

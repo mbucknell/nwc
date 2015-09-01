@@ -49,6 +49,9 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 		if (!Object.has(this, 'context')) {
 			this.context = {};
 		}
+
+		this.hucStreamflowConfig = NWC.config.get('streamflow').huc12.attributes;
+
 		this.context.hucId = options.hucId;
 		this.context.years = NWC.util.WaterYearUtil.yearsAsArray(NWC.util.WaterYearUtil.waterYearRange(Date.range(this.MIN_DATE, this.MAX_DATE)));
 
@@ -58,7 +61,10 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 
 		this.map = NWC.util.mapUtils.createMap([baseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
 
-		this.hucLayer = NWC.util.mapUtils.createHucSEBasinFeatureLayer(options.hucId);
+		this.hucLayer = NWC.util.mapUtils.createHucSEBasinFeatureLayer(
+			this.hucStreamflowConfig.namespace,
+			this.hucStreamflowConfig.layerName,
+			options.hucId);
 
 		this.hucLayer.events.on({
 			featureadded: function(event){
@@ -143,8 +149,9 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 	 */
 	getDataSeries : function() {
 		var self = this;
+		var modeledQConfig = this.hucStreamflowConfig.variables.modeledQ.attributes;
 
-		var sosUrl = NWC.util.buildSosUrlFromSource(this.context.hucId, NWC.util.SosSources.modeledQ);
+		var sosUrl = NWC.util.buildSosUrlFromSource(this.context.hucId, modeledQConfig);
 
 		var strToDate = function(dateStr){
 		  return Date.create(dateStr).utc();
@@ -164,17 +171,17 @@ NWC.view.StreamflowStatsHucDataView = NWC.view.BaseView.extend({
 					return val;
 					});
 				});
-				var additionalSeriesLabels = NWC.util.SosSources.modeledQ.propertyLongName.split(',');
+				var additionalSeriesLabels = modeledQConfig.propertyLongName.split(',');
 
 				dataSeries.data = convertedTable;
 
 				additionalSeriesLabels.each(function(label) {
 					dataSeries.metadata.seriesLabels.push({
 						seriesName: label,
-						seriesUnits: NWC.util.SosSources.modeledQ.units
+						seriesUnits: modeledQConfig.units
 					});
 				});
-				dataSeries.metadata.downloadHeader = NWC.util.SosSources.modeledQ.downloadMetadata;
+				dataSeries.metadata.downloadHeader = modeledQConfig.downloadMetadata;
 
 				self.dataSeriesLoaded.resolve(dataSeries);
 			},

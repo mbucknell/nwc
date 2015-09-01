@@ -28,11 +28,11 @@ NWC.view = NWC.view || {};
 		 */
 		initialize : function(options) {
 			var self = this;
-			var watershedConfig = NWC.config.get('watershed').huc12.attributes;
 			var baseLayer;
 			var countyLayerLoaded = $.Deferred();
 			var hucLayerLoaded = $.Deferred();
 
+			var watershedConfig = NWC.config.get('watershed').huc12.attributes;
 			var waterUseDataLoaded = this.getWaterUseDataSeries(options.fips);
 
 			this.hucId = options.hucId;
@@ -40,12 +40,16 @@ NWC.view = NWC.view || {};
 			this.context = {
 				hucId : this.hucId
 			};
+			this.countyConfig = NWC.config.get('county').attributes;
 
 			// Create inset map containing the county and the huc
 			baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
 			this.map = NWC.util.mapUtils.createMap([baseLayer], [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()]);
 
-			this.countyLayer = NWC.util.mapUtils.createCountyFeatureLayer(this.fips);
+			this.countyLayer = NWC.util.mapUtils.createCountyFeatureLayer(
+				this.countyConfig.namespace,
+				this.countyConfig.layerName,
+				this.fips);
 			this.countyLayer.events.on({
 				featureadded: function(event){
 					this.countyName = event.feature.attributes.full_name.capitalize(true);
@@ -103,8 +107,9 @@ NWC.view = NWC.view || {};
 
 		getWaterUseDataSeries : function(fips) {
 			var self = this;
+			var waterUseConfig = NWC.config.get('county').attributes.variables.waterUse.attributes
 			var deferred = $.Deferred();
-			var url = NWC.util.buildSosUrlFromSource(fips, NWC.util.SosSources.countyWaterUse);
+			var url = NWC.util.buildSosUrlFromSource(fips, waterUseConfig);
 			this.waterUseDataSeries = NWC.util.DataSeries.newSeries();
 
 			$.ajax({
@@ -115,15 +120,15 @@ NWC.view = NWC.view || {};
 					self.waterUseDataSeries.data = parsedTable;
 
 					//use the series metadata as labels
-					var additionalSeriesLabels = NWC.util.SosSources.countyWaterUse.propertyLongName.split(',');
+					var additionalSeriesLabels = waterUseConfig.propertyLongName.split(',');
 					additionalSeriesLabels.each(function(label) {
 						self.waterUseDataSeries.metadata.seriesLabels.push({
 							seriesName: label,
-							seriesUnits: NWC.util.SosSources.countyWaterUse.units
+							seriesUnits: waterUseConfig.units
 						});
 					});
 
-					self.waterUseDataSeries.metadata.downloadHeader = NWC.util.SosSources.countyWaterUse.downloadMetadata;
+					self.waterUseDataSeries.metadata.downloadHeader = waterUseConfig.downloadMetadata;
 					deferred.resolve();
 				},
 				dataType : "xml",

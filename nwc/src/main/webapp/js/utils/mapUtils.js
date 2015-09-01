@@ -184,7 +184,7 @@ NWC.util.mapUtils = (function () {
 		return hucLayer;
 	};
 
-	that.createHucSEBasinFeatureLayer = function(huc12) {
+	that.createHucSEBasinFeatureLayer = function(namespace, layerName, huc12) {
 		var filter = new OpenLayers.Filter.Comparison({
 			type: OpenLayers.Filter.Comparison.EQUAL_TO,
 			property: "huc12",
@@ -193,8 +193,8 @@ NWC.util.mapUtils = (function () {
 
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
-			featureType: 'huc12_se_basins_v2',
-			featureNS: "http://cida.usgs.gov/NWC",
+			featureType: layerName,
+			featureNS: "http://cida.usgs.gov/" + namespace,
 			version: "1.1.0",
 			geometryName: "the_geom",
 			srsName : "EPSG:900913"
@@ -215,7 +215,7 @@ NWC.util.mapUtils = (function () {
 		return hucLayer;
 	};
 
-	that.createGageFeatureLayer = function(gageId) {
+	that.createGageFeatureLayer = function(namespace, layerName, gageId) {
 		var filter = new OpenLayers.Filter.Comparison({
 			type: OpenLayers.Filter.Comparison.EQUAL_TO,
 			property: "STAID",
@@ -224,8 +224,8 @@ NWC.util.mapUtils = (function () {
 
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
-			featureType: 'gagesII',
-			featureNS: "http://cida.usgs.gov/NWC",
+			featureType: layerName,
+			featureNS: "http://cida.usgs.gov/" + namespace,
 			version: "1.1.0",
 			geometryName: "the_geom",
 			srsName : "EPSG:900913"
@@ -239,7 +239,7 @@ NWC.util.mapUtils = (function () {
 		return gageLayer;
 	};
 
-	that.createCountyFeatureLayer = function(fips) {
+	that.createCountyFeatureLayer = function(namespace, layerName, fips) {
 		var filter = new OpenLayers.Filter.Comparison({
 			type: OpenLayers.Filter.Comparison.EQUAL_TO,
 			property: "fips",
@@ -248,8 +248,8 @@ NWC.util.mapUtils = (function () {
 
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
-			featureType: 'us_historical_counties',
-			featureNS: "http://cida.usgs.gov/NWC",
+			featureType: layerName,
+			featureNS: "http://cida.usgs.gov/" + namespace,
 			version: "1.1.0",
 			geometryName: "the_geom",
 			srsName : "EPSG:900913"
@@ -263,7 +263,7 @@ NWC.util.mapUtils = (function () {
 		return countyLayer;
 	};
 
-	that.createIntersectingCountiesLayer = function(geometry) {
+	that.createIntersectingCountiesLayer = function(namespace, layerName, geometry) {
 		var filter = new OpenLayers.Filter.Spatial({
 			type: OpenLayers.Filter.Spatial.INTERSECTS,
 			property: 'the_geom',
@@ -273,8 +273,8 @@ NWC.util.mapUtils = (function () {
 		var protocol = new OpenLayers.Protocol.WFS({
 			version: '1.1.0',
 			url: CONFIG.endpoint.geoserver + 'wfs',
-			featureType: "us_historical_counties",
-			featureNS: 'http://cida.usgs.gov/NWC',
+			featureType: layerName,
+			featureNS: 'http://cida.usgs.gov/' + namespace,
 			geometryName: 'the_geom',
 			srsName: 'EPSG:900913'
 		});
