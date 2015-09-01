@@ -115,7 +115,6 @@
 		<script type="text/javascript" src="js/utils/Conversion<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/mapUtils<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/CountyWaterUseProperties<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/utils/SosSources<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/SosResponseParser<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/dataSeriesStore<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/Plotter<%= resourceSuffix %>.js"></script>
@@ -128,6 +127,7 @@
 		<script type="text/javascript" src="js/utils/hucCountiesIntersector<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/numberFormat<%= resourceSuffix %>.js"></script>
 
+		<script type="text/javascript" src="js/model/Config<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/model/BaseSelectMapModel<%= resourceSuffix %>.js"></script>
 		
 		<script type="text/javascript" src="js/model/WaterBudgetSelectMapModel<%= resourceSuffix %>.js"></script>

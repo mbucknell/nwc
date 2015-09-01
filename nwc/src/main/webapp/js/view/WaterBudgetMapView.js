@@ -31,11 +31,9 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	 *	@prop {String} hucId - Previously selected watershed
 	 */
 	initialize : function(options) {
-		if (Object.has(options, 'hucId')) {
-			this.context.hucId = options.hucId;
-		}
+		var watershedConfig = NWC.config.get('watershed').huc12.attributes;
 
-		this.hucLayer = NWC.util.mapUtils.createHucLayer({
+		this.hucLayer = NWC.util.mapUtils.createHucLayer(watershedConfig.namespace, watershedConfig.layerName, {
 			visibility : false
 		});
 
@@ -84,7 +82,11 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 				fillColor: '#FF9900',
 				fillOpacity: 0.4
 			});
-			this.map.addLayer(NWC.util.mapUtils.createHucFeatureLayer([options.hucId], highlightStyle));
+			this.map.addLayer(NWC.util.mapUtils.createHucFeatureLayer(
+				watershedConfig.namespace,
+				watershedConfig.layerName,
+				[options.hucId],
+				highlightStyle));
 		}
 		this.addFlowLines();
 
