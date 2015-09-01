@@ -73,27 +73,29 @@ public class PrettyUglyUrlMapper {
 			throw new IllegalArgumentException(ex);
 		}
 	}
-	public static URI prettyToUgly(URI pretty){
+	public static URI prettyToUgly(URI pretty) {
 		URI ugly = null;
 		URIBuilder uriBuilder = new URIBuilder(pretty);
 		String fragment = pretty.getFragment();
-		try {
-		if(fragment.isEmpty()){
-			ugly = uriBuilder.build();
-		}
-		else{
-			if(fragment.startsWith(BANG)){
-				uriBuilder.addParameter(SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME, fragment);
+		if (null != fragment && !fragment.isEmpty()) {
+			if (fragment.startsWith(BANG)) {
+				//move the content of the escaped fragment param
+				//to the fragment. Exclude the initial "!"
+				uriBuilder.addParameter(SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME, fragment.substring(1));
 				uriBuilder.setFragment(null);
-			} else{
-				throw new IllegalArgumentException("the fragment of a pretty url must begin with a'!'. Got '" + fragment + "' instead.");
+			} else {
+				throw new IllegalArgumentException(
+					"the fragment of a pretty url must begin with a'!'. Got '"
+					+ fragment + "' instead."
+				);
 			}
+		}
+		try {
 			ugly = uriBuilder.build();
-			}
+
 		} catch (URISyntaxException ex) {
-				throw new IllegalArgumentException(ex);
+			throw new IllegalArgumentException(ex);
 		}
 		return ugly;
 	}
-		
 }
