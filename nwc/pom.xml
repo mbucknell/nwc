@@ -138,9 +138,9 @@
 						<source>${basedir}/src/main/webapp/vendorlibs/FileSaver.js-master/FileSaver.js</source>
 					</preloadSources>
 					<sourceIncludes>
+						<include>utils/*.js</include>
 						<include>model/BaseSelectMapModel.js</include>
 						<include>model/*.js</include>
-						<include>utils/*.js</include>
 						<include>view/BaseView.js</include>
 						<include>view/BaseSelectMapView.js</include>
 						<include>view/BaseDiscoveryTabView.js</include>

@@ -26,13 +26,6 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 		expect(view.context.hucId).not.toBeDefined();
 	});
 
-	it('Expects the hucId property to be in the context if the view is created with a hucId option', function() {
-		var view = new NWC.view.WaterBudgetMapView({
-			hucId : '123456789012'
-		});
-		expect(view.context.hucId).toEqual('123456789012');
-	});
-
 	it('Expects that updates to the model\'s watershedLayerOn attribute updates the view', function() {
 		var view = new NWC.view.WaterBudgetMapView();
 

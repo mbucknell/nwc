@@ -25,11 +25,15 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 	 *	@prop {NWC.model.StreamflowStatsSelectMapModel} model;
 	 */
 	initialize : function(options) {
+		var streamflowConfig = NWC.config.get('streamflow');
+		var huc12Config = streamflowConfig.huc12.attributes;
+		var gageConfig = streamflowConfig.gage.attributes;
+
 		this.gagesLayer = new OpenLayers.Layer.WMS(
 			"Gage Location",
 			CONFIG.endpoint.geoserver + 'NWC/wms',
 			{
-				LAYERS: "NWC:gagesII",
+				LAYERS: gageConfig.namespace + ':' + gageConfig.layerName,
 				STYLES: 'blue_circle',
 				format: 'image/png',
 				transparent: true,
@@ -45,7 +49,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		this.hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
 			CONFIG.endpoint.geoserver + 'gwc/service/wms',
 			{
-				layers: 'NWC:huc12_se_basins_v2_local',
+				layers: huc12Config.namespace + ':' + huc12Config.localLayerName,
 				transparent: true,
 				styles: ['seOutline']
 			},
@@ -59,16 +63,16 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		);
 
 		this.hucLayer.addOptions({attribution: '<img src="' + this.legendUrl(this.hucLayer.params.LAYERS, this.hucLayer.params.STYLES[0]) + '"/>'});
-		
+
 		this.legendControl = new OpenLayers.Control.Attribution();
-		
+
 		var featureInfoHandler = function(responseObject) {
 			if (responseObject.features.length > 2) {
 				this.showWarningDialog('Multiple features were selected. Please zoom in and select a single feature.')
 			}
 			else if (responseObject.features.length === 2) {
 				if (responseObject.features[0].fid.has('gages') && responseObject.features[1].fid.has('huc')) {
-					this.router.navigate('#!streamflow-stats/gage/' + responseObject.features[0].attributes.STAID, {trigger : true});					
+					this.router.navigate('#!streamflow-stats/gage/' + responseObject.features[0].attributes.STAID, {trigger : true});
 				}
 				else {
 					this.showWarningDialog('Multiple features were selected. Please zoom in and select a single feature.')
@@ -76,21 +80,21 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 			}
 			else if (responseObject.features.length === 1) {
 				if (responseObject.features[0].fid.has('gages')) {
-					this.router.navigate('#!streamflow-stats/gage/' + responseObject.features[0].attributes.STAID, {trigger : true});					
+					this.router.navigate('#!streamflow-stats/gage/' + responseObject.features[0].attributes.STAID, {trigger : true});
 				}
 				else {
 					// Determine if the model for this feature is valid
 					var km2 = NWC.util.Convert.acresToSquareKilometers(NWC.util.Convert.squareMilesToAcres(responseObject.features[0].data.mi2));
 					if (km2 > 2000) {
 						this.showWarningDialog("Hydrologic model results are not valid for watersheds this large (" + km2.round(0) + " km<sup>2</sup>). Try looking for a nearby observed flow gage.");
-					} 
+					}
 					else {
 						this.router.navigate('#!streamflow-stats/huc/' + responseObject.features[0].attributes.huc12, {trigger : true});
 					}
 				}
 			}
 		};
-		
+
 		this.selectControl = new OpenLayers.Control.WMSGetFeatureInfo({
 			title : 'selection-control',
 			drillDown : true,
@@ -128,7 +132,7 @@ NWC.view.StreamflowStatsMapView = NWC.view.BaseSelectMapView.extend({
 		ev.preventDefault();
 		this.model.set('gageFilter', $(ev.target).data('value'));
 	},
-	
+
 	updateGageFilter : function() {
 		var filterVal = this.model.get('gageFilter');
 		var filterDescr = $('#stream-gage-filters-div a[data-value="' + filterVal + '"]').html();

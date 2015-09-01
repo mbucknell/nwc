@@ -13,7 +13,8 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 	beforeEach(function() {
 		CONFIG = {
 			endpoint: {
-				geoserver : 'http:fakegeoserver.com'
+				geoserver : 'http:fakegeoserver.com',
+				thredds : 'http://fakeservice'
 			}
 		};
 		fakeServer = sinon.fakeServer.create();
@@ -29,7 +30,6 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
 		spyOn(NWC.view.WaterbudgetPlotView.prototype, 'plotPTandETaData').andCallThrough();
 		spyOn(NWC.view.WaterbudgetPlotView.prototype, 'getHucData').andCallThrough();
-		spyOn(NWC.util, 'buildSosUrlFromSource').andReturn('http://fakeservice');
 
 		model = new NWC.model.WaterBudgetHucPlotModel();
 
@@ -51,7 +51,6 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 	});
 
 	it('Expects that $.ajax is called for each data source', function() {
-		expect(NWC.util.buildSosUrlFromSource.calls.length).toBe(2);
 		expect(fakeServer.requests.length).toBe(2);
 	});
 
