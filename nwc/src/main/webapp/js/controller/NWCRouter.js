@@ -69,7 +69,7 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	waterbudgetCompareHucs : function(hucX, hucY) {
 		this.showView(NWC.view.WaterBudgetHucDataView, {
 			hucId : hucX,
-			compareHucId : hucY,
+			compareHucId : hucY
 		});
 	},
 

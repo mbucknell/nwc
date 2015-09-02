@@ -9,7 +9,7 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 	data : 'Data',
 
 	events: {
-		'click #data-discovery-tabs .nav a': "showTab",
+		'click #data-discovery-tabs .nav a': "showTab"
 	},
 
 	projectTabView : null,
@@ -46,8 +46,8 @@ NWC.view.DataDiscoveryView = NWC.view.BaseView.extend({
 		});
 
 		$('#' + this.tab + '-button').addClass('active');
-		$('#' + this.tab).addClass('active');			
-		
+		$('#' + this.tab).addClass('active');
+
 	},
 
 	/*
