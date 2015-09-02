@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 PREFIX="generate_all.sh:"
 echo "$PREFIX Creating virtualenv for project"
 virtualenv --no-site-packages --python=python2.7 env
