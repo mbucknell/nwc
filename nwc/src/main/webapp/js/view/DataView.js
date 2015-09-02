@@ -4,7 +4,7 @@ NWC.view = NWC.view || {};
 
 NWC.view.DataView = NWC.view.BaseView.extend({
 	templateName : 'data',
-	
+
 	SCIENCEBASE_ERROR : "<h5>Sorry, the catalog contents are not available right now, please check back later.</h5>",
 
 	detailsUrl : function(id) {
@@ -20,7 +20,7 @@ NWC.view.DataView = NWC.view.BaseView.extend({
 		// call superclass initialize to do default initialize
 		// (includes render)
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
-		
+
 		var self = this;
 		this.getDetails(options.datasetId).done(function(data) {
 			$('#data-details').append(NWC.templates.getTemplate('dataDetail')(data));
@@ -61,5 +61,5 @@ NWC.view.DataView = NWC.view.BaseView.extend({
 		});
 
 		return deferred.promise();
-	},
+	}
 });
