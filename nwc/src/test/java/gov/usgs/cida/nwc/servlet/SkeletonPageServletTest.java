@@ -4,9 +4,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class SkeletonPageServletTest {
-	
-	public SkeletonPageServletTest() {
-	}
 
 	/**
 	 * Test of getUrlWithoutContextPath method, of class SkeletonPageServlet.

@@ -26,9 +26,6 @@ public class SearchBotUglyUrlFilterTest {
 	HttpServletRequest req;
 	HttpServletResponse res;
 	
-	public SearchBotUglyUrlFilterTest() {
-	}
-	
 	class MockFilterChain implements FilterChain {
 		public boolean wasCalled = false;
 		@Override
@@ -68,10 +65,6 @@ public class SearchBotUglyUrlFilterTest {
 	
 	private static Enumeration<String> enumOf(String... strings){
 		return Collections.enumeration(Arrays.asList(strings));
-	}
-	
-	@After
-	public void tearDown() {
 	}
 
 	/**

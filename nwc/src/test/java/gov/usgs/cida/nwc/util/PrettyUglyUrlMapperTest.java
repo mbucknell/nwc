@@ -22,25 +22,6 @@ public class PrettyUglyUrlMapperTest {
 		new PrettyUglyPair("/path?queryparams#!hashfragment", "/path?queryparams&_escaped_fragment_=hashfragment")
 	);
 	
-	public PrettyUglyUrlMapperTest() {
-	}
-	
-	@BeforeClass
-	public static void setUpClass() {
-	}
-	
-	@AfterClass
-	public static void tearDownClass() {
-	}
-	
-	@Before
-	public void setUp() {
-	}
-	
-	@After
-	public void tearDown() {
-	}
-
 	/**
 	 * Test of uglyToPretty method, of class PrettyUglyUrlMapper.
 	 */
