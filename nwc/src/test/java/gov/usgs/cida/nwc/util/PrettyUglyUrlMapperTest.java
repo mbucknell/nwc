@@ -4,10 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -70,4 +66,15 @@ public class PrettyUglyUrlMapperTest {
 		}
 	}
 	
+	/**
+	 * Test a corner case where the fragment is present, but it does not obey the 
+	 * hashbang convention, i.e. it doesn't start with an "!". In that case,
+	 * the url should be returned as-is.
+	 */
+	@Test
+	public void testNonHashbangFragment(){
+		String urlWithoutFragment = "http://cida.usgs.gov/#blah";
+		String result = PrettyUglyUrlMapper.prettyToUgly("" + urlWithoutFragment);
+		assertEquals(urlWithoutFragment, result);
+	}
 }

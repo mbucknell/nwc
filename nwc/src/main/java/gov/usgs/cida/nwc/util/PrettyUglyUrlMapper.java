@@ -93,8 +93,10 @@ public class PrettyUglyUrlMapper {
 	 * Maps pretty urls to ugly urls as specified in the Google 
 	 * specification for Making AJAX Applications Crawlable:
 	 * https://developers.google.com/webmasters/ajax-crawling/docs/specification?hl=en
-	 * @param ugly
-	 * @return pretty url
+	 * 
+	 * @param pretty
+	 * @return ugly url. If the pretty url does not contain a hashbang (#!),
+	 * then the pretty url is returned as is. In that case pretty.equals(ugly).
 	 */
 	public static URI prettyToUgly(URI pretty) {
 		URI ugly = null;
@@ -106,11 +108,6 @@ public class PrettyUglyUrlMapper {
 				//to the fragment. Exclude the initial "!"
 				uriBuilder.addParameter(SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME, fragment.substring(1));
 				uriBuilder.setFragment(null);
-			} else {
-				throw new IllegalArgumentException(
-					"the fragment of a pretty url must begin with a'!'. Got '"
-					+ fragment + "' instead."
-				);
 			}
 		}
 		try {
