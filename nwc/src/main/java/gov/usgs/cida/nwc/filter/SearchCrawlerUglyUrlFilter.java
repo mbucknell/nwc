@@ -1,12 +1,15 @@
 package gov.usgs.cida.nwc.filter;
 
-import gov.usgs.cida.nwc.servlet.SkeletonPageServlet;
+import gov.usgs.cida.nwc.conversion.IPrettyUrlToResourceMapper;
+import gov.usgs.cida.nwc.servlet.SearchCrawlerServlet;
 import gov.usgs.cida.nwc.util.PrettyUglyUrlMapper;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -16,12 +19,47 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 
 
-public class SearchBotUglyUrlFilter implements Filter{
+public class SearchCrawlerUglyUrlFilter implements Filter{
 	private HttpServlet delegateServlet;
+	
+	//http GET parameter
 	public static final String SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME = PrettyUglyUrlMapper.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME;
+	
+	//filter config parameter definied in web.xml
+	public static final String PRETTY_URL_TO_RESOURCE_MAPPER_PARAM_NAME = "pretty-url-to-resource-mapper";
+	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		setDelegateServlet(new SkeletonPageServlet());
+		String prettyUrlToResourceMapper = filterConfig.getInitParameter(PRETTY_URL_TO_RESOURCE_MAPPER_PARAM_NAME);
+		if(null == prettyUrlToResourceMapper || prettyUrlToResourceMapper.isEmpty()){
+			throw new IllegalArgumentException(
+				"an init config value must be specified for the '" +
+				PRETTY_URL_TO_RESOURCE_MAPPER_PARAM_NAME +"' " +
+				"parameter of the '" + this.getClass().getSimpleName() +
+				"' filter."
+			);
+		} else{
+			prettyUrlToResourceMapper = prettyUrlToResourceMapper.trim();
+			try {
+				Class<?> clazz = Class.forName(prettyUrlToResourceMapper);
+				IPrettyUrlToResourceMapper instance = (IPrettyUrlToResourceMapper) clazz.newInstance();
+				SearchCrawlerServlet searchCrawlerServlet = new SearchCrawlerServlet(instance);
+				setDelegateServlet(searchCrawlerServlet);
+			} catch (ClassNotFoundException ex){
+				throw new IllegalArgumentException(
+					"Could not find class '" + 
+					prettyUrlToResourceMapper + "' "+
+					", the init config value specified for the '" +
+					PRETTY_URL_TO_RESOURCE_MAPPER_PARAM_NAME +"' " +
+					"parameter of the '" + this.getClass().getSimpleName() +
+					"' filter."
+				);
+			}
+			catch (InstantiationException | IllegalAccessException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+		
 	}
 
 	/**

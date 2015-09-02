@@ -20,7 +20,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class SearchBotUglyUrlFilterTest {
-	SearchBotUglyUrlFilter filter;
+	SearchCrawlerUglyUrlFilter filter;
 	MockHttpServlet mockServlet;
 	MockFilterChain filterChain;
 	HttpServletRequest req;
@@ -54,7 +54,7 @@ public class SearchBotUglyUrlFilterTest {
 	
 	@Before
 	public void setUp() {
-		filter = new SearchBotUglyUrlFilter();
+		filter = new SearchCrawlerUglyUrlFilter();
 		mockServlet = new MockHttpServlet();
 		filter.setDelegateServlet(mockServlet);
 		filterChain = new MockFilterChain();
@@ -81,7 +81,7 @@ public class SearchBotUglyUrlFilterTest {
 	 */
 	@Test
 	public void assertRequestWithIrrelevantParamsDoesNotCallDelegate() throws Exception {
-		String irrelevantParamName = "somethingIrrelevant" + SearchBotUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME;
+		String irrelevantParamName = "somethingIrrelevant" + SearchCrawlerUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME;
 		when(req.getParameterNames()).thenReturn(enumOf(irrelevantParamName));
 		filter.doFilter(req, res, filterChain);
 		assertDelegateServletWasNotCalled();
@@ -92,7 +92,7 @@ public class SearchBotUglyUrlFilterTest {
 	 */
 	@Test
 	public void assertRequestWithTheLowerCaseParamCallsTheDelegate() throws Exception {
-		when(req.getParameterNames()).thenReturn(enumOf(SearchBotUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME));
+		when(req.getParameterNames()).thenReturn(enumOf(SearchCrawlerUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME));
 		filter.doFilter(req, res, filterChain);
 		assertDelegateServletWasCalled();
 	}
@@ -102,7 +102,7 @@ public class SearchBotUglyUrlFilterTest {
 	 */
 	@Test
 	public void assertRequestWithTheUpperCaseParamCallsTheDelegate() throws Exception {
-		when(req.getParameterNames()).thenReturn(enumOf(SearchBotUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME.toUpperCase(Locale.ENGLISH)));
+		when(req.getParameterNames()).thenReturn(enumOf(SearchCrawlerUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME.toUpperCase(Locale.ENGLISH)));
 		filter.doFilter(req, res, filterChain);
 		assertDelegateServletWasCalled();
 	}
@@ -113,9 +113,9 @@ public class SearchBotUglyUrlFilterTest {
 	@Test
 	public void assertRequestWithTheParamAndIrrelevantParamsCallsTheDelegate() throws Exception {
 		when(req.getParameterNames()).thenReturn(enumOf(
-			"somethingIrrelevant" + SearchBotUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME,
-			SearchBotUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME,
-			"anotherSomethingIrrelevant" + SearchBotUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME
+			"somethingIrrelevant" + SearchCrawlerUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME,
+			SearchCrawlerUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME,
+			"anotherSomethingIrrelevant" + SearchCrawlerUglyUrlFilter.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME
 		));
 		filter.doFilter(req, res, filterChain);
 		assertDelegateServletWasCalled();

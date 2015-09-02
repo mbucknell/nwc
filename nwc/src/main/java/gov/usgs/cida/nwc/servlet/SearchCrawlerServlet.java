@@ -1,5 +1,6 @@
 package gov.usgs.cida.nwc.servlet;
 
+import gov.usgs.cida.nwc.conversion.IPrettyUrlToResourceMapper;
 import gov.usgs.cida.nwc.util.PrettyUglyUrlMapper;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -10,13 +11,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.utils.URIBuilder;
 
-public class SkeletonPageServlet extends HttpServlet{
+public class SearchCrawlerServlet extends HttpServlet{
 	public static final String SKELETON_FILE_EXTENSION = "html";
+	private final IPrettyUrlToResourceMapper mapper;
 	/**
 	 * Given a request from a searchbot, serve up a cached page that is
 	 * easily interpreted by the searchbot
@@ -24,6 +24,9 @@ public class SkeletonPageServlet extends HttpServlet{
 	 * @param response
 	 * @throws IOException 
 	 */
+	public SearchCrawlerServlet(IPrettyUrlToResourceMapper mapper){
+		this.mapper = mapper;
+	}
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String uglyUrl = getFullUrl(request);
