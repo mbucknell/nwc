@@ -1,6 +1,5 @@
 package gov.usgs.cida.nwc.filter;
 
-import gov.usgs.cida.nwc.filter.SearchBotUglyUrlFilter;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
