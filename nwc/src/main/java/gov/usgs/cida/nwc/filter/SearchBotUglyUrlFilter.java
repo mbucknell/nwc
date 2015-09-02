@@ -1,6 +1,7 @@
 package gov.usgs.cida.nwc.filter;
 
 import gov.usgs.cida.nwc.servlet.SkeletonPageServlet;
+import gov.usgs.cida.nwc.util.PrettyUglyUrlMapper;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServlet;
 
 public class SearchBotUglyUrlFilter implements Filter{
 	private HttpServlet delegateServlet;
-	public static final String SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME = "_escaped_fragment_";
+	public static final String SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME = PrettyUglyUrlMapper.SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME;
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		setDelegateServlet(new SkeletonPageServlet());

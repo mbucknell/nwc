@@ -16,7 +16,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
  * 
  */
 public class PrettyUglyUrlMapper {
-	static final String SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME = "_escaped_fragment_";
+	public static final String SEARCHBOT_ESCAPED_FRAGMENT_PARAM_NAME = "_escaped_fragment_";
 	public static final String BANG = "!";
 	
 	/**
