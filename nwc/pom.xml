@@ -238,9 +238,9 @@
 						</execution>
 					</executions>
 					<configuration>
-						<executable>./generate_all.sh</executable>
+						<executable>bash </executable>
 						<workingDirectory>src/main/python</workingDirectory>
-						<commandlineArgs>${project.build.outputDirectory} ${geoserver_for_search_engine_file_generation}</commandlineArgs>
+						<commandlineArgs>generate_all.sh ${project.build.outputDirectory} ${geoserver_for_search_engine_file_generation}</commandlineArgs>
 					</configuration>
 				</plugin>
 			</plugins>
