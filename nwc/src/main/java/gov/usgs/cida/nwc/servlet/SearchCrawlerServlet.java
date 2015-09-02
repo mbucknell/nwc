@@ -15,7 +15,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.client.utils.URIBuilder;
 
 public class SearchCrawlerServlet extends HttpServlet{
-	public static final String SKELETON_FILE_EXTENSION = "html";
 	private final IPrettyUrlToResourceMapper mapper;
 	/**
 	 * Given a request from a searchbot, serve up a cached page that is
@@ -31,60 +30,22 @@ public class SearchCrawlerServlet extends HttpServlet{
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String uglyUrl = getFullUrl(request);
 		String prettyUrl = PrettyUglyUrlMapper.uglyToPretty(uglyUrl);
-		String contextPath = request.getContextPath();
-		String prettyUrlWithoutContextPath = getUrlWithoutContextPath(prettyUrl, contextPath);
-		try {
-			String prettyUrlFragment = "#" + new URI(prettyUrlWithoutContextPath).getFragment();
-			String prettyUrlFragmentHash = SimpleHash.hash(prettyUrlFragment, "SHA-1");
-			String resourceName = "/skeleton/" + prettyUrlFragmentHash + "." + SKELETON_FILE_EXTENSION;
+		String resourceName = mapper.map(prettyUrl, request);
 			
-			try (
-				InputStream skeletonStream = this.getClass().getResourceAsStream(resourceName);
-				OutputStream responseStream = response.getOutputStream();
-			) {
-				if(null == skeletonStream){
-					response.sendError(404);
-				} else {
-					IOUtils.copy(skeletonStream, responseStream);
-				}
+		try (
+			InputStream skeletonStream = this.getClass().getResourceAsStream(resourceName);
+			OutputStream responseStream = response.getOutputStream();
+		) {
+			if(null == skeletonStream){
+				response.sendError(404);
+			} else {
+				IOUtils.copy(skeletonStream, responseStream);
 			}
-
-			
-		} catch (URISyntaxException ex) {
-			throw new IllegalArgumentException(ex);
 		}
+
+
 	}
 	
-	/**
-	 * Returns the url of the request after the context path. This excludes:
-	 *	* protocol
-	 *	* host
-	 *	* port
-	 *	* context path
-	 * and includes:
-	 *	* non-context path 
-	 *	* the query string
-	 *	* fragment
-	 * @param request
-	 * @return 
-	 */
-	String getUrlWithoutContextPath(String fullUrl, String contextPath){
-		URI fullUri;
-		String urlWithoutContextPath = null;
-		try {
-			fullUri = new URI(fullUrl);
-			URIBuilder builder = new URIBuilder(fullUri);
-			builder.setHost(null)
-			.setScheme(null);
-			if(null != contextPath && !contextPath.isEmpty()){
-				builder.setPath(fullUri.getPath().replaceFirst(".*" + contextPath, ""));
-			}
-			urlWithoutContextPath = builder.build().toString();
-		} catch (URISyntaxException ex) {
-			throw new IllegalArgumentException(ex);
-		}
-		return urlWithoutContextPath;
-	}
 	/**
 	 * Get an HttpServletRequest's full url, including query string
 	 * Inspired by: http://stackoverflow.com/a/2222268

@@ -12,7 +12,9 @@ public interface IPrettyUrlToResourceMapper {
 	 * @param request the original request from the searchbot. The original 
 	 * request can be used to get the context path, or other relevant 
 	 * information needed to perform the conversion.
-	 * @return 
+	 * @return the String name used to locate the skeleton page resource 
+	 * on the classpath (most likely the path within the war/jar/ear).
+	 * @link java.lang.Class#getResourceAsStream()
 	 */
-	public String convert(String prettyUrl, HttpServletRequest request);
+	public String map(String prettyUrl, HttpServletRequest request);
 }
