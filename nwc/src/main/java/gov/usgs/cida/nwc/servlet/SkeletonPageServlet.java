@@ -10,7 +10,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.client.utils.URIBuilder;
 
 public class SkeletonPageServlet extends HttpServlet{
 	public static final String SKELETON_FILE_EXTENSION = "html";
@@ -63,10 +66,20 @@ public class SkeletonPageServlet extends HttpServlet{
 	 * @return 
 	 */
 	String getUrlWithoutContextPath(String fullUrl, String contextPath){
-		if(null == contextPath || contextPath.isEmpty()){
-			throw new IllegalArgumentException("Received empty context path. Context path must be non-empty");
+		URI fullUri;
+		String urlWithoutContextPath = null;
+		try {
+			fullUri = new URI(fullUrl);
+			URIBuilder builder = new URIBuilder(fullUri);
+			builder.setHost(null)
+			.setScheme(null);
+			if(null != contextPath && !contextPath.isEmpty()){
+				builder.setPath(fullUri.getPath().replaceFirst(".*" + contextPath, ""));
+			}
+			urlWithoutContextPath = builder.build().toString();
+		} catch (URISyntaxException ex) {
+			throw new IllegalArgumentException(ex);
 		}
-		String urlWithoutContextPath = fullUrl.replaceFirst(".*" + contextPath, "");
 		return urlWithoutContextPath;
 	}
 	/**

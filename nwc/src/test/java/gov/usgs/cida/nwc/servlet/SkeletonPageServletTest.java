@@ -23,11 +23,13 @@ public class SkeletonPageServletTest {
 	/**
 	 * Test of getUrlWithoutContextPath method, of class SkeletonPageServlet.
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowExceptionOnEmptyContextPath() {
+	@Test
+	public void testEmptyContextPath() {
 		String fullUrl = "http://localhost:8080/";
 		String contextPath = "";
 		SkeletonPageServlet instance = new SkeletonPageServlet();
-		instance.getUrlWithoutContextPath(fullUrl, contextPath);
+		String result = instance.getUrlWithoutContextPath(fullUrl, contextPath);
+		String expected = "/";
+		assertEquals(expected, result);
 	}
 }
