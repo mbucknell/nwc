@@ -10,8 +10,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.utils.URIBuilder;
 
@@ -34,7 +32,7 @@ public class SkeletonPageServlet extends HttpServlet{
 			String prettyUrlFragment = "#" + new URI(prettyUrlWithoutContextPath).getFragment();
 			String prettyUrlFragmentHash = SimpleHash.hash(prettyUrlFragment, "SHA-1");
 			String resourceName = "/skeleton/" + prettyUrlFragmentHash + "." + SKELETON_FILE_EXTENSION;
-			
+			response.setContentType("text/html");
 			try (
 				InputStream skeletonStream = this.getClass().getResourceAsStream(resourceName);
 				OutputStream responseStream = response.getOutputStream();
