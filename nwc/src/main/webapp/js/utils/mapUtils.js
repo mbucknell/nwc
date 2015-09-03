@@ -130,11 +130,11 @@ NWC.util.mapUtils = (function () {
 	};
 
 	/*
-	 * @param {Array of String} huc12s - to create in the feature layer.
+	 * @param {Array of String} hucs - to create in the feature layer. assuming all the same type.
 	 * @param {OpenLayers.StyleMap} styleMap - optional style map for the feature layer.
-	 * @returns OpenLayers.Layer.Vector with huc12s.
+	 * @returns OpenLayers.Layer.Vector with hucs.
 	 */
-	that.createHucFeatureLayer = function(namespace, layerName, huc12s, styleMap) {
+	that.createHucFeatureLayer = function(namespace, layerName, hucs, styleMap) {
 		var filter;
 		var hucFilters = [];
 		var hucLayer;
@@ -154,18 +154,25 @@ NWC.util.mapUtils = (function () {
 				fill: false
 			});
 
-		if (huc12s.length === 1) {
+		var hucProperty;
+		if (hucs[0].length === 8) {
+			hucProperty = "huc_8";
+		}
+		else {
+			hucProperty = "huc_12";
+		}
+		if (hucs.length === 1) {
 			filter = new OpenLayers.Filter.Comparison({
 				type: OpenLayers.Filter.Comparison.EQUAL_TO,
-				property: "huc_12",
-				value: huc12s.first()
+				property: hucProperty,
+				value: hucs.first()
 			});
 		}
 		else {
-			huc12s.each(function(huc) {
+			hucs.each(function(huc) {
 				hucFilters.push(new OpenLayers.Filter.Comparison({
 					type: OpenLayers.Filter.Comparison.EQUAL_TO,
-					property: 'huc_12',
+					property: hucProperty,
 					value : huc
 				}));
 			});

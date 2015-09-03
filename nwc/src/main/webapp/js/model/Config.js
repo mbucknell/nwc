@@ -63,6 +63,28 @@ NWC.model = NWC.model || {};
 								downloadMetadata: 'Data derived by sampling the SSEBop Actual Evapotranspiration dataset to NHD+\nVersion II 12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly\nhttp://cida.usgs.gov/gdp/ http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
 							})
 						}
+					}),
+					huc8 : new DataSourceModel({
+						layerName : 'nationalwbdsnapshot', // get from mapUtils
+						namespace : 'NHDPlusHUCs', // getfrom mapUtils
+						variables : {
+							dayMet : new SosVariable({
+								observedProperty: 'MEAN_prcp',
+								propertyLongName: 'Area Weighted Mean Precipitation',
+								units: NWC.util.Units.metric.normalizedWater.daily,
+								dataset: 'HUC8_data',
+								fileName: 'HUC8_daymet.nc',
+								downloadMetadata: 'Data derived by sampling the DayMet precipitation variable to NHD+ Version II\n8-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://daymet.ornl.gov/ http://cida.usgs.gov/gdp/\nhttp://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
+							}),
+							eta : new SosVariable({
+								observedProperty: 'MEAN_et',
+								propertyLongName: 'Area Weighted Mean Actual Evapotranspiration',
+								units: NWC.util.Units.metric.normalizedWater.monthly,
+								dataset: 'HUC8_data',
+								fileName: 'HUC8_eta.nc',
+								downloadMetadata: 'Data derived by sampling the SSEBop Actual Evapotranspiration dataset to NHD+\nVersion II 8-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly\nhttp://cida.usgs.gov/gdp/ http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
+							})
+						}
 					})
 				},
 				county : new DataSourceModel({

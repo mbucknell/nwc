@@ -15,7 +15,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	templateName : 'waterbudget',
 
 	events: {
-		'click #toggle-huc-layer' : 'toggleHucVisibility'
+		'click #huc-controls-group a' : 'toggleLayer'
 	},
 
 	context : {
@@ -31,9 +31,14 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	 *	@prop {String} hucId - Previously selected watershed
 	 */
 	initialize : function(options) {
-		var watershedConfig = NWC.config.get('watershed').huc12.attributes;
+		var watershedHuc8Config = NWC.config.get('watershed').huc8.attributes;
+		var watershedHuc12Config = NWC.config.get('watershed').huc12.attributes;
 
-		this.hucLayer = NWC.util.mapUtils.createHucLayer(watershedConfig.namespace, watershedConfig.layerName, {
+		this.huc8Layer = NWC.util.mapUtils.createHucLayer(watershedHuc8Config.namespace, watershedHuc8Config.layerName, {
+			visibility : false
+		});
+
+		this.huc12Layer = NWC.util.mapUtils.createHucLayer(watershedHuc12Config.namespace, watershedHuc12Config.layerName, {
 			visibility : false
 		});
 
@@ -41,7 +46,8 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			title: 'huc-identify-control',
 			hover: false,
 			layers: [
-				this.hucLayer
+				this.huc8Layer,
+				this.huc12Layer
 			],
 			queryVisible: true,
 			infoFormat: 'application/vnd.ogc.gml',
@@ -60,12 +66,18 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			}
 			else if (hucCount === 1) {
 				var actualFeature = actualFeatures[0];
-				var huc12 = actualFeature.attributes.huc_12;
-				if (Object.has(options, 'hucId')) {
-					this.router.navigate('#!waterbudget/comparehucs/' + options.hucId + '/' + huc12, {trigger : true});
+				var huc;
+				if (this.huc8Layer.visibility) {
+					huc = actualFeature.attributes.huc_8;					
 				}
 				else {
-					this.router.navigate('#!waterbudget/huc/' + huc12, {trigger : true});
+					huc = actualFeature.attributes.huc_12;										
+				}
+				if (Object.has(options, 'hucId')) {
+					this.router.navigate('#!waterbudget/comparehucs/' + options.hucId + '/' + huc, {trigger : true});
+				}
+				else {
+					this.router.navigate('#!waterbudget/huc/' + huc, {trigger : true});
 				}
 			}
 		};
@@ -74,7 +86,8 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		$.extend(this.events, NWC.view.BaseSelectMapView.prototype.events);
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
 
-		this.map.addLayer(this.hucLayer);
+		this.map.addLayer(this.huc8Layer);
+		this.map.addLayer(this.huc12Layer);
 		if (Object.has(options, 'hucId')) {
 			var highlightStyle = new OpenLayers.StyleMap({
 				strokeWidth: 2,
@@ -82,33 +95,98 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 				fillColor: '#FF9900',
 				fillOpacity: 0.4
 			});
+			var namespace;
+			var layerName;
+			//these are actually the same but could change?
+			if (options.hucId.length === 8) {
+				namespace = watershedHuc8Config.namespace;
+				layerName = watershedHuc8Config.layerName;
+			}
+			else {
+				namespace = watershedHuc12Config.namespace;
+				layerName = watershedHuc12Config.layerName;				
+			}
 			this.map.addLayer(NWC.util.mapUtils.createHucFeatureLayer(
-				watershedConfig.namespace,
-				watershedConfig.layerName,
+				namespace,
+				layerName,
 				[options.hucId],
 				highlightStyle));
 		}
 		this.addFlowLines();
 
-		this.listenTo(this.model, 'change:watershedLayerOn', this.updateLayerVisibility);
+		this.listenTo(this.model, 'change:Layer', this.updateLayerSelection);
+		this.listenTo(this.model, 'change:LayerOn', this.updateLayerVisibility);
+		this.updateLayerSelection();
 		this.updateLayerVisibility();
 	},
 
 	/**
-	 * Toggles the model's waterShedLayerOn attribute
+	 * Toggles the model's Layer and LayerOn attribute
+	 * @param {jquery.Event} ev
 	 */
-	toggleHucVisibility : function() {
-		this.model.set('watershedLayerOn', !this.model.get('watershedLayerOn'));
+	toggleLayer : function(ev) {
+		ev.preventDefault();
+		var newSelection = ev.target.id;
+		var oldSelection = this.model.get('Layer');
+		var isVisible = this.model.get('LayerOn');
+		
+		if (null === oldSelection) {   //first click
+			this.model.set('Layer', newSelection);
+			this.$el.find('#toggle-' + newSelection + '-span').html('Off');
+			this.model.set('LayerOn', !this.model.get('LayerOn'));							
+		} else if (oldSelection === newSelection) {  //click same huc button
+			if (isVisible) {
+				this.setButtonActive($('#' + newSelection), false);				
+			}
+			else {
+				this.setButtonActive($('#' + newSelection), true);
+			}
+			this.$el.find('#toggle-' + newSelection + '-span').html(isVisible ? 'On' : 'Off');
+			this.model.set('LayerOn', !this.model.get('LayerOn'));
+		}
+		else {  //click other huc button
+			this.model.set('Layer', newSelection);
+			this.$el.find('#toggle-' + oldSelection + '-span').html('On');
+			this.$el.find('#toggle-' + newSelection + '-span').html('Off');
+			if (isVisible) {  //previous huc button was active so will not trigger updateLayerVisibility
+				this.updateLayerVisibility();  
+			}
+			else {
+				this.model.set('LayerOn', !this.model.get('LayerOn'));					
+			}
+		}
 	},
 
 	/**
-	 * Sets the hucLayer visibility to match this.model's watershedLayerOn attribute.
+	 * Updates the view to reflect the map layer selected.
+	 */
+	updateLayerSelection : function() {
+		var newSelection = this.model.get('Layer');
+		var huc8Active = newSelection === 'huc8-layer';
+		var huc12Active = newSelection === 'huc12-layer';
+
+		this.setButtonActive($('#huc8-layer'), huc8Active);
+		this.setButtonActive($('#huc12-layer'), huc12Active);
+	},
+
+	/**
+	 * Sets the hucLayer visibility to match this.model's layer and LayerOn attribute.
 	 */
 	updateLayerVisibility : function() {
-		var isVisible = this.model.get('watershedLayerOn');
-		this.$el.find('#toggle-huc-layer-span').html(isVisible ? 'Off' : 'On');
-		this.hucLayer.setVisibility(isVisible);
-	}
+		var layer = this.model.get('Layer');
+		var huc8Active = layer === 'huc8-layer';
+		var huc12Active = layer === 'huc12-layer';
+		var isVisible = this.model.get('LayerOn');
+		
+		if (huc8Active) {
+			this.huc12Layer.setVisibility(false);
+			this.huc8Layer.setVisibility(isVisible);
+		}
+		else if (huc12Active) {
+			this.huc12Layer.setVisibility(isVisible);
+			this.huc8Layer.setVisibility(false);
+		}
+	},
 });
 
 
