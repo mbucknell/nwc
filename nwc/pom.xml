@@ -222,6 +222,9 @@
     </build>
 	<profiles>
 		<profile>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<id>generate-search-engine-files-mac-and-linux</id>
 			<build>
 			<plugins>
@@ -240,7 +243,7 @@
 					<configuration>
 						<executable>bash </executable>
 						<workingDirectory>src/main/python</workingDirectory>
-						<commandlineArgs>generate_all.sh ${project.build.outputDirectory} ${geoserver_for_search_engine_file_generation}</commandlineArgs>
+						<commandlineArgs>generate_all.sh ${project.build.outputDirectory} http://cida.usgs.gov/nwc/geoserver/</commandlineArgs>
 					</configuration>
 				</plugin>
 			</plugins>
