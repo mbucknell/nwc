@@ -3,7 +3,7 @@
 
     <groupId>gov.usgs.cida.nwc</groupId>
     <artifactId>nwc-parent</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.5</version>
     <packaging>pom</packaging>
 
     <name>NWC</name>
@@ -110,7 +110,8 @@
         <url>https://github.com/USGS-CIDA/nwc</url>
         <connection>scm:git:git@github.com:USGS-CIDA/nwc.git</connection>
         <developerConnection>scm:git:git@github.com:USGS-CIDA/nwc.git</developerConnection>
-    </scm>
+      <tag>nwc-parent-1.0.5</tag>
+  </scm>
     <distributionManagement>
         <repository>
             <id>cida-releases</id>
