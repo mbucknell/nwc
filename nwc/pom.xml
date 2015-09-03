@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>nwc-parent</artifactId>
 		<groupId>gov.usgs.cida.nwc</groupId>
-		<version>1.0.5-SNAPSHOT</version>
+		<version>1.0.7-SNAPSHOT</version>
 	</parent>
     <packaging>war</packaging>
 	
@@ -222,6 +222,9 @@
     </build>
 	<profiles>
 		<profile>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<id>generate-search-engine-files-mac-and-linux</id>
 			<build>
 			<plugins>
@@ -238,10 +241,9 @@
 						</execution>
 					</executions>
 					<configuration>
-						<executable>src/main/python/generate_all.sh</executable>
-						<!-- optional -->
+						<executable>bash </executable>
 						<workingDirectory>src/main/python</workingDirectory>
-						<commandlineArgs>${project.build.outputDirectory} ${geoserver_for_search_engine_file_generation}</commandlineArgs>
+						<commandlineArgs>generate_all.sh ${project.build.outputDirectory} http://cida.usgs.gov/nwc/geoserver/</commandlineArgs>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -253,6 +255,11 @@
             <groupId>gov.usgs.cida</groupId>
             <artifactId>dynamicProperties</artifactId>
         </dependency>
+	<dependency>
+		<groupId>gov.usgs.cida.simplehash</groupId>
+		<artifactId>simplehash</artifactId>
+		<version>0.1.2</version>
+	</dependency>
         <dependency>
             <groupId>gov.usgs.cida.jslibs</groupId>
             <artifactId>openlayers-raster-jar</artifactId>
@@ -290,11 +297,26 @@
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
         </dependency>
-
+	<dependency>
+		<groupId>org.mockito</groupId>
+		<artifactId>mockito-core</artifactId>
+		<version>1.10.19</version>
+		<scope>test</scope>
+	</dependency>
         <dependency>
             <groupId>gov.usgs.cida</groupId>
             <artifactId>proxy-utils</artifactId>
         </dependency>
+	<dependency>
+		<groupId>org.apache.httpcomponents</groupId>
+		<artifactId>httpclient</artifactId>
+		<version>4.5</version>
+	</dependency>
+	<dependency>
+		<groupId>commons-codec</groupId>
+		<artifactId>commons-codec</artifactId>
+		<version>1.9</version>
+	</dependency>
         <!-- ================================================================== -->
                 
         <!-- <webjars> -->
@@ -347,6 +369,5 @@
 			<artifactId>dygraphs</artifactId>
 		</dependency>
         <!-- </webjars> -->
-                
     </dependencies>
 </project>
