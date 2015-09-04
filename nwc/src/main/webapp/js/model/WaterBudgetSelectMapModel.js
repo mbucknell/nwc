@@ -10,8 +10,8 @@ NWC.model = NWC.model || {};
 NWC.model.WaterBudgetSelectMapModel = NWC.model.BaseSelectMapModel.extend({
 	defaults : function() {
 		return $.extend({
-			Layer : null,
-			LayerOn : false
+			watershedLayer : null,
+			watershedLayerOn : false
 		}, NWC.model.BaseSelectMapModel.prototype.defaults);
 	}
 });

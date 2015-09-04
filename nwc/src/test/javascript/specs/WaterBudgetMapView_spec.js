@@ -20,8 +20,10 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 		var view = new NWC.view.WaterBudgetMapView();
 
 		expect(NWC.view.BaseSelectMapView.prototype.initialize).toHaveBeenCalled();
-		expect(view.hucLayer).toBeDefined();
-		expect(addLayerSpy).toHaveBeenCalledWith(view.hucLayer);
+		expect(view.huc8Layer).toBeDefined();
+		expect(view.huc12Layer).toBeDefined();
+		expect(addLayerSpy).toHaveBeenCalledWith(view.huc8Layer);
+		expect(addLayerSpy).toHaveBeenCalledWith(view.huc12Layer);
 		expect(view.selectControl).toBeDefined();
 		expect(view.context.hucId).not.toBeDefined();
 	});
@@ -29,22 +31,26 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 	it('Expects that updates to the model\'s watershedLayerOn attribute updates the view', function() {
 		var view = new NWC.view.WaterBudgetMapView();
 
+		view.model.set('watershedLayer', 'huc8-layer');
 		view.model.set('watershedLayerOn', true);
-		expect(view.hucLayer.getVisibility()).toBe(true);
+		expect(view.huc8Layer.getVisibility()).toBe(true);
 
 		view.model.set('watershedLayerOn', false);
-		expect(view.hucLayer.getVisibility()).toBe(false);
+		expect(view.huc8Layer.getVisibility()).toBe(false);
 	});
 
-	it('Expect that event handler calls to toggleHucVisibility update the models\'s watershedLayerOn attribute', function() {
+	it('Expect that event handler calls to toggleLayer update the models\'s watershedLayer and watershedLayerOn attributes', function() {
 		var view = new NWC.view.WaterBudgetMapView();
-
+		
+		view.model.set('watershedLayer', null);
+		view.model.set('watershedLayerOn', false);
 		var lastVisibility = view.model.get('watershedLayerOn');
-		view.toggleHucVisibility();
+		var ev = jQuery.Event( 'click', {target : {id :'huc8-layer'}});		
+		view.toggleLayer(ev);
 		expect(!lastVisibility).toBe(view.model.get('watershedLayerOn'));
 		lastVisibility = !lastVisibility;
 
-		view.toggleHucVisibility();
+		view.toggleLayer(ev);
 		expect(!lastVisibility).toBe(view.model.get('watershedLayerOn'));
 	});
 });

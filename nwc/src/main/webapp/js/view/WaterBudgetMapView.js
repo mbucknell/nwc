@@ -114,8 +114,8 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		}
 		this.addFlowLines();
 
-		this.listenTo(this.model, 'change:Layer', this.updateLayerSelection);
-		this.listenTo(this.model, 'change:LayerOn', this.updateLayerVisibility);
+		this.listenTo(this.model, 'change:watershedLayer', this.updateLayerSelection);
+		this.listenTo(this.model, 'change:watershedLayerOn', this.updateLayerVisibility);
 		this.updateLayerSelection();
 		this.updateLayerVisibility();
 	},
@@ -127,13 +127,13 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	toggleLayer : function(ev) {
 		ev.preventDefault();
 		var newSelection = ev.target.id;
-		var oldSelection = this.model.get('Layer');
-		var isVisible = this.model.get('LayerOn');
+		var oldSelection = this.model.get('watershedLayer');
+		var isVisible = this.model.get('watershedLayerOn');
 		
 		if (null === oldSelection) {   //first click
-			this.model.set('Layer', newSelection);
+			this.model.set('watershedLayer', newSelection);
 			this.$el.find('#toggle-' + newSelection + '-span').html('Off');
-			this.model.set('LayerOn', !this.model.get('LayerOn'));							
+			this.model.set('watershedLayerOn', !this.model.get('watershedLayerOn'));							
 		} else if (oldSelection === newSelection) {  //click same huc button
 			if (isVisible) {
 				this.setButtonActive($('#' + newSelection), false);				
@@ -142,7 +142,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 				this.setButtonActive($('#' + newSelection), true);
 			}
 			this.$el.find('#toggle-' + newSelection + '-span').html(isVisible ? 'On' : 'Off');
-			this.model.set('LayerOn', !this.model.get('LayerOn'));
+			this.model.set('watershedLayerOn', !this.model.get('watershedLayerOn'));
 		}
 		else {  //click other huc button
 			this.model.set('Layer', newSelection);
@@ -152,7 +152,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 				this.updateLayerVisibility();  
 			}
 			else {
-				this.model.set('LayerOn', !this.model.get('LayerOn'));					
+				this.model.set('watershedLayerOn', !this.model.get('watershedLayerOn'));					
 			}
 		}
 	},
@@ -161,7 +161,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	 * Updates the view to reflect the map layer selected.
 	 */
 	updateLayerSelection : function() {
-		var newSelection = this.model.get('Layer');
+		var newSelection = this.model.get('watershedLayer');
 		var huc8Active = newSelection === 'huc8-layer';
 		var huc12Active = newSelection === 'huc12-layer';
 
@@ -173,10 +173,10 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	 * Sets the hucLayer visibility to match this.model's layer and LayerOn attribute.
 	 */
 	updateLayerVisibility : function() {
-		var layer = this.model.get('Layer');
+		var layer = this.model.get('watershedLayer');
 		var huc8Active = layer === 'huc8-layer';
 		var huc12Active = layer === 'huc12-layer';
-		var isVisible = this.model.get('LayerOn');
+		var isVisible = this.model.get('watershedLayerOn');
 		
 		if (huc8Active) {
 			this.huc12Layer.setVisibility(false);
