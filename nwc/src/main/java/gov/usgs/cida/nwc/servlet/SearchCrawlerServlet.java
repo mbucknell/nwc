@@ -16,6 +16,7 @@ import org.apache.http.client.utils.URIBuilder;
 
 public class SearchCrawlerServlet extends HttpServlet{
 	private final IPrettyUrlToResourceMapper mapper;
+	public final String TEXT_HTML_CONTENT_TYPE = "text/html";
 	/**
 	 * Given a request from a searchbot, serve up a cached page that is
 	 * easily interpreted by the searchbot
@@ -31,7 +32,7 @@ public class SearchCrawlerServlet extends HttpServlet{
 		String uglyUrl = getFullUrl(request);
 		String prettyUrl = PrettyUglyUrlMapper.uglyToPretty(uglyUrl);
 		String resourceName = mapper.map(prettyUrl, request);
-			
+		response.setContentType(TEXT_HTML_CONTENT_TYPE);
 		try (
 			InputStream skeletonStream = this.getClass().getResourceAsStream(resourceName);
 			OutputStream responseStream = response.getOutputStream();
