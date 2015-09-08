@@ -14,6 +14,16 @@ public class SearchCrawlerServlet extends HttpServlet{
 	private final IPrettyUrlToResourceMapper mapper;
 	public static final String TEXT_HTML_CONTENT_TYPE = "text/html";
 	public static final int NOT_FOUND = 404;
+
+	/**
+	 * Instantiate an instance of this class with the specified mapper.
+	 * @param mapper - a project-specific instance that is aware of the
+	 * project's convention for the resource location of the skeleton pages.
+	 */
+	public SearchCrawlerServlet(IPrettyUrlToResourceMapper mapper){
+		this.mapper = mapper;
+	}
+	
 	/**
 	 * Given a request from a searchbot, serve up a cached page that is
 	 * easily interpreted by the searchbot
@@ -21,9 +31,6 @@ public class SearchCrawlerServlet extends HttpServlet{
 	 * @param response
 	 * @throws IOException 
 	 */
-	public SearchCrawlerServlet(IPrettyUrlToResourceMapper mapper){
-		this.mapper = mapper;
-	}
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String uglyUrl = getFullUrl(request);
