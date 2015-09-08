@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>nwc-parent</artifactId>
 		<groupId>gov.usgs.cida.nwc</groupId>
-		<version>1.0.5-SNAPSHOT</version>
+		<version>1.0.7-SNAPSHOT</version>
 	</parent>
     <packaging>war</packaging>
 	
@@ -220,34 +220,12 @@
         </plugins>
         <finalName>${warName}</finalName>
     </build>
-	<profiles>
-		<profile>
-			<id>generate-search-engine-files-mac-and-linux</id>
-			<build>
-			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>exec-maven-plugin</artifactId>
-					<version>1.4.0</version>
-					<executions>
-						<execution>
-							<phase>prepare-package</phase>
-							<goals>
-								<goal>exec</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<executable>bash </executable>
-						<workingDirectory>src/main/python</workingDirectory>
-						<commandlineArgs>generate_all.sh ${project.build.outputDirectory} ${geoserver_for_search_engine_file_generation}</commandlineArgs>
-					</configuration>
-				</plugin>
-			</plugins>
-			</build>
-		</profile>
-	</profiles>
     <dependencies>
+	<dependency>
+		<groupId>gov.usgs.cida.nwc</groupId>
+		<artifactId>search-engine-files</artifactId>
+		<version>1.0.7</version>
+	</dependency>
         <dependency>
             <groupId>gov.usgs.cida</groupId>
             <artifactId>dynamicProperties</artifactId>
@@ -255,7 +233,7 @@
 	<dependency>
 		<groupId>gov.usgs.cida.simplehash</groupId>
 		<artifactId>simplehash</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
+		<version>0.1.2</version>
 	</dependency>
         <dependency>
             <groupId>gov.usgs.cida.jslibs</groupId>
