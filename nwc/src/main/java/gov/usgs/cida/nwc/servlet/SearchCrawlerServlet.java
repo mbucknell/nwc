@@ -12,7 +12,8 @@ import org.apache.commons.io.IOUtils;
 
 public class SearchCrawlerServlet extends HttpServlet{
 	private final IPrettyUrlToResourceMapper mapper;
-	public final String TEXT_HTML_CONTENT_TYPE = "text/html";
+	public static final String TEXT_HTML_CONTENT_TYPE = "text/html";
+	public static final int NOT_FOUND = 404;
 	/**
 	 * Given a request from a searchbot, serve up a cached page that is
 	 * easily interpreted by the searchbot
@@ -34,7 +35,7 @@ public class SearchCrawlerServlet extends HttpServlet{
 			OutputStream responseStream = response.getOutputStream();
 		) {
 			if(null == skeletonStream){
-				response.sendError(404);
+				response.sendError(NOT_FOUND);
 			} else {
 				IOUtils.copy(skeletonStream, responseStream);
 			}
