@@ -5,14 +5,10 @@ import gov.usgs.cida.nwc.util.PrettyUglyUrlMapper;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import gov.usgs.cida.simplehash.SimpleHash;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.client.utils.URIBuilder;
 
 public class SearchCrawlerServlet extends HttpServlet{
 	private final IPrettyUrlToResourceMapper mapper;
