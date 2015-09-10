@@ -134,7 +134,7 @@ NWC.util.mapUtils = (function () {
 	 * @param {OpenLayers.StyleMap} styleMap - optional style map for the feature layer.
 	 * @returns OpenLayers.Layer.Vector with hucs.
 	 */
-	that.createHucFeatureLayer = function(namespace, layerName, hucs, styleMap) {
+	that.createHucFeatureLayer = function(namespace, layerName, property, hucs, styleMap) {
 		var filter;
 		var hucFilters = [];
 		var hucLayer;
@@ -154,17 +154,10 @@ NWC.util.mapUtils = (function () {
 				fill: false
 			});
 
-		var hucProperty;
-		if (hucs[0].length === 8) {
-			hucProperty = "huc_8";
-		}
-		else {
-			hucProperty = "huc_12";
-		}
 		if (hucs.length === 1) {
 			filter = new OpenLayers.Filter.Comparison({
 				type: OpenLayers.Filter.Comparison.EQUAL_TO,
-				property: hucProperty,
+				property: property,
 				value: hucs.first()
 			});
 		}
@@ -172,7 +165,7 @@ NWC.util.mapUtils = (function () {
 			hucs.each(function(huc) {
 				hucFilters.push(new OpenLayers.Filter.Comparison({
 					type: OpenLayers.Filter.Comparison.EQUAL_TO,
-					property: hucProperty,
+					property: property,
 					value : huc
 				}));
 			});

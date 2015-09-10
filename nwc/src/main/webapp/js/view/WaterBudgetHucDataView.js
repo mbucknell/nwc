@@ -117,6 +117,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	 */
 	displayCountyMap : function() {
 		this.hucCountyMapView = new NWC.view.HucCountyMapView({
+			huc : this.hucId,
 			hucFeature : new OpenLayers.Feature.Vector(
 					this.hucInsetMapView.hucLayer.features[0].geometry.clone(),
 					this.hucInsetMapView.hucLayer.features[0].attributes),
