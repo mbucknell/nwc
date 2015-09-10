@@ -38,7 +38,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		var watershedConfig = NWC.config.get('watershed');
 				
 		var index = 0;
-    	Object.keys(watershedConfig, function(key, value) {
+		Object.keys(watershedConfig, function(key, value) {
     		self.hucLayers[index] = NWC.util.mapUtils.createHucLayer(value.attributes.namespace, value.attributes.layerName, {
     		visibility : false
     		});
