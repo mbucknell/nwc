@@ -30,18 +30,18 @@
 				{{> mapControls }}
 		</div>
 		<div class="row spacer">
-			<div class="col-sm-1 spacer">
-					Huc Layer:
+			<div class="col-sm-1">
+			Huc Layer:
 			</div>
 			<div class="col-sm-2">
-					<select class="huc-layers form-control">
-						{{#each hucs}}
-						<option value="{{this}}">{{this}}</option>
-						{{/each}}
-					</select>
+				<select class="huc-layers form-control">
+				{{#each hucs}}
+					<option value="{{value}}">{{display}}</option>
+				{{/each}}
+				</select>
 			</div>
-			<div class="spacer col-sm-9">
-					<span>Turn on/off map-display of <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_documentation.php" target="_blank">Watershed Boundary Dataset</a> <i class="fa fa-external-link"></i> for which water budget information is available.</span>
+			<div class="col-sm-9">
+				<span>Turn on/off map-display of <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_documentation.php" target="_blank">Watershed Boundary Dataset</a> <i class="fa fa-external-link"></i> for which water budget information is available.</span>
 			</div>
 		</div>
 		<div class="row">

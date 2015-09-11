@@ -19,7 +19,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	},
 
 	context : {
-		hucs : {none : "none"},
+		hucs : [{value : "none", display : "none"}],
 		warningModalTitle : 'Warning'
 	},
 	
@@ -42,7 +42,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 				visibility : false
 			}));
 			self.hucLayersIndex.push(value.attributes.property);
-			self.context.hucs[value.attributes.property] = value.attributes.property;
+			self.context.hucs.push({value: value.attributes.property, display : value.attributes.selectDisplay});
 		});
 
 		this.selectControl = new OpenLayers.Control.WMSGetFeatureInfo({

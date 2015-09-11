@@ -47,6 +47,7 @@ NWC.model = NWC.model || {};
 						namespace : 'NHDPlusHUCs', // getfrom mapUtils
 						property : 'huc_12',
 						name : 'hu_12_name',
+						selectDisplay : '12 Digit',
 						variables : {
 							dayMet : new SosVariable({
 								observedProperty: 'MEAN_prcp',
@@ -71,6 +72,7 @@ NWC.model = NWC.model || {};
 						namespace : 'WBD', // getfrom mapUtils
 						property : 'huc8',
 						name : 'name',
+						selectDisplay : '8 Digit',
 						variables : {
 							dayMet : new SosVariable({
 								observedProperty: 'prcp',
