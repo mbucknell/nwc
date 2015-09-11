@@ -15,7 +15,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	templateName : 'waterbudget',
 
 	events: {
-		'change select' : 'toggleLayer'
+		'change select' : 'selectLayer'
 	},
 
 	context : {
@@ -37,15 +37,13 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		var self = this;
 		var watershedConfig = NWC.config.get('watershed');
 				
-		var index = 0;
 		Object.keys(watershedConfig, function(key, value) {
-    		self.hucLayers[index] = NWC.util.mapUtils.createHucLayer(value.attributes.namespace, value.attributes.layerName, {
-    		visibility : false
-    		});
-    		self.hucLayersIndex[index] = value.attributes.property;
-    		self.context.hucs[value.attributes.property] = value.attributes.property;
-    		index++;
-    	});
+			self.hucLayers.push(NWC.util.mapUtils.createHucLayer(value.attributes.namespace, value.attributes.layerName, {
+				visibility : false
+			}));
+			self.hucLayersIndex.push(value.attributes.property);
+			self.context.hucs[value.attributes.property] = value.attributes.property;
+		});
 
 		this.selectControl = new OpenLayers.Control.WMSGetFeatureInfo({
 			title: 'huc-identify-control',
@@ -67,15 +65,18 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			}
 			else if (hucCount === 1) {
 				var actualFeature = actualFeatures[0];
-				var huc;				
-		    	Object.keys(watershedConfig, function(key, value) {
-		    		if (actualFeature.attributes[value.attributes.property]) {
+				var huc;
+				Object.keys(watershedConfig, function(key, value) {
+					if (actualFeature.attributes[value.attributes.property]) {
 						huc = actualFeature.attributes[value.attributes.property];
-		    		};
-		    	});
+					};
+				});
 		    	
 				if (Object.has(options, 'hucId')) {
-					if (options.hucId === huc) {
+					if (options.hucId === null) {
+						this.showWarningDialog('Problem with huc, please try again.');						
+					}
+					else if (options.hucId === huc) {
 						this.showWarningDialog('The same watershed has been selected for comparison. Please select a different watershed');						
 					}
 					else {
@@ -87,7 +88,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 				}
 			}
 		};
-        this.selectControl.events.register("getfeatureinfo", this, featureInfoHandler);
+		this.selectControl.events.register("getfeatureinfo", this, featureInfoHandler);
 
 		$.extend(this.events, NWC.view.BaseSelectMapView.prototype.events);
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
@@ -119,10 +120,10 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	},
 
 	/**
-	 * Toggles the model's Layer attribute
+	 * Selects the model's Layer attribute
 	 * @param {jquery.Event} ev
 	 */
-	toggleLayer : function(ev) {
+	selectLayer : function(ev) {
 		var newSelection = this.$el.find('.huc-layers option:selected').val();
 		this.model.set('watershedLayer', newSelection);
 		ev.preventDefault();
@@ -135,16 +136,13 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		var self = this;
 		var layer = this.model.get('watershedLayer');
 
-		//better way to do this?
-    	this.hucLayersIndex.forEach(function(el, index) {
-    		if (el === layer) {
-    			self.hucLayers[index].setVisibility(true)
-    		}
-    		else {
-    			self.hucLayers[index].setVisibility(false)    			
-    		}
-    	});	
+		this.hucLayersIndex.forEach(function(el, index) {
+			if (el === layer) {
+				self.hucLayers[index].setVisibility(true)
+			}
+			else {
+				self.hucLayers[index].setVisibility(false)    			
+			}
+		});	
 	}
 });
-
-

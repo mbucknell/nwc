@@ -44,7 +44,7 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 				'<option value="huc_12" selected>huc_12</option>' +
 				'</select>');
 		var ev = jQuery.Event('click');
-		view.toggleLayer(ev);
+		view.selectLayer(ev);
 		expect(view.model.get('watershedLayer')).toBe('huc_12');
 	});
 });

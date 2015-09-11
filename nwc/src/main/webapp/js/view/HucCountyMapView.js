@@ -10,7 +10,7 @@ NWC.view.HucCountyMapView = NWC.view.BaseView.extend({
 	 *
 	 * @constructor
 	 * @param {Object} options
-	 *  @prop {String} hucId - Id of the huc for which information should be shown.
+	 *  @prop {String} huc - Id of the huc for which information should be shown.
 	 *	@prop {OpenLayers.Feature.Vector} hucFeature - the feature object for the huc to be drawn on the map
 	 *	@prop {Backbone.Router} router
 	 *	@prop {Jquery el} el
