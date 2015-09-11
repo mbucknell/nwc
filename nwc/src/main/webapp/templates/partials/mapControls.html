@@ -1,10 +1,13 @@
 <div id="map-controls-div">
+	<div class="col-sm-1">
 	Map Controls:
-	<div id="map-controls-group" class="btn-group">
+	</div>
+	<div id="map-controls-group" class="btn-group col-sm-2">
 		<button type="button" id="select-button" class="btn btn-primary" value="select">Select</button>
 		<button type="button" id="pan-button" class="btn btn-primary" value="pan">Pan</button>
 		<button type="button" id="zoom-button" class="btn btn-primary" value="zoom">Zoom</button>
 	</div>
+	<div class="spacer col-sm-9">
 	{{#if selectBox }}
 		<span id="map-control-select">Click and hold to drag a bounding box around sites</span>
 	{{else}}
@@ -14,4 +17,5 @@
 	{{/if}}
 	<span id="map-control-pan">Can pan by click and drag. Zoom with double click, map buttons or scroll wheel</span>
 	<span id="map-control-zoom">Click and hold to drag a bounding box to zoom.</span>
+	</div>
 </div>		

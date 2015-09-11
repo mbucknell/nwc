@@ -25,7 +25,7 @@ NWC.view = NWC.view || {};
 		initialize : function(options) {
 			var self = this;
 			this.hucId = options.hucId;
-			this.watershedVariables = NWC.config.get('watershed').huc12.get('variables');
+			this.watershedVariables = NWC.config.getWatershed(options.hucId).variables;
 
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 			this.getHucDataPromise = this.getHucData(options.hucId).done(function() {

@@ -24,7 +24,7 @@ NWC.view = NWC.view || {};
 		 */
 		initialize : function(options) {
 			var self = this;
-			var watershedConfig = NWC.config.get('watershed').huc12.attributes;
+			var watershedConfig = NWC.config.getWatershed(options.hucId);
 			var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
 			var mapControls = [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()];
 			var hucLoadedDeferred = $.Deferred();
@@ -41,11 +41,12 @@ NWC.view = NWC.view || {};
 			this.hucLayer = NWC.util.mapUtils.createHucFeatureLayer(
 				watershedConfig.namespace,
 				watershedConfig.layerName,
+				watershedConfig.property,
 				[this.hucId]
 			);
 			this.hucLayer.events.on({
 				featureadded : function(event) {
-					self.hucName = event.feature.attributes.hu_12_name;
+					self.hucName = event.feature.attributes[watershedConfig.name];
 					self.$('.huc-name').html(self.hucName);
 				},
 				loadend : function(event) {

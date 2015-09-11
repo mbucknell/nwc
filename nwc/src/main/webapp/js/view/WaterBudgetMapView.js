@@ -15,13 +15,16 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	templateName : 'waterbudget',
 
 	events: {
-		'click #toggle-huc-layer' : 'toggleHucVisibility'
+		'change select' : 'selectLayer'
 	},
 
 	context : {
-		warningModalText : 'Multiple watersheds have been selected. Please zoom in and select a single watershed',
+		hucs : {none : "none"},
 		warningModalTitle : 'Warning'
 	},
+	
+	hucLayers : [],
+	hucLayersIndex : [],
 
 	/**
 	 * @constructs
@@ -31,18 +34,21 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	 *	@prop {String} hucId - Previously selected watershed
 	 */
 	initialize : function(options) {
-		var watershedConfig = NWC.config.get('watershed').huc12.attributes;
-
-		this.hucLayer = NWC.util.mapUtils.createHucLayer(watershedConfig.namespace, watershedConfig.layerName, {
-			visibility : false
+		var self = this;
+		var watershedConfig = NWC.config.get('watershed');
+				
+		Object.keys(watershedConfig, function(key, value) {
+			self.hucLayers.push(NWC.util.mapUtils.createHucLayer(value.attributes.namespace, value.attributes.layerName, {
+				visibility : false
+			}));
+			self.hucLayersIndex.push(value.attributes.property);
+			self.context.hucs[value.attributes.property] = value.attributes.property;
 		});
 
 		this.selectControl = new OpenLayers.Control.WMSGetFeatureInfo({
 			title: 'huc-identify-control',
 			hover: false,
-			layers: [
-				this.hucLayer
-			],
+			layers: this.hucLayers,
 			queryVisible: true,
 			infoFormat: 'application/vnd.ogc.gml',
 			vendorParams: {
@@ -51,30 +57,44 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			autoActivate: false
 		});
 
-
 		var featureInfoHandler = function (responseObject) {
 			var actualFeatures = responseObject.features;
 			var hucCount = actualFeatures.length;
 			if (hucCount > 1) {
-				this.showWarningDialog();
+				this.showWarningDialog('Multiple watersheds have been selected. Please zoom in and select a single watershed');
 			}
 			else if (hucCount === 1) {
 				var actualFeature = actualFeatures[0];
-				var huc12 = actualFeature.attributes.huc_12;
+				var huc;
+				Object.keys(watershedConfig, function(key, value) {
+					if (actualFeature.attributes[value.attributes.property]) {
+						huc = actualFeature.attributes[value.attributes.property];
+					};
+				});
+		    	
 				if (Object.has(options, 'hucId')) {
-					this.router.navigate('#!waterbudget/comparehucs/' + options.hucId + '/' + huc12, {trigger : true});
+					if (options.hucId === null) {
+						this.showWarningDialog('Problem with huc, please try again.');						
+					}
+					else if (options.hucId === huc) {
+						this.showWarningDialog('The same watershed has been selected for comparison. Please select a different watershed');						
+					}
+					else {
+						this.router.navigate('#!waterbudget/comparehucs/' + options.hucId + '/' + huc, {trigger : true});
+					}
 				}
 				else {
-					this.router.navigate('#!waterbudget/huc/' + huc12, {trigger : true});
+					this.router.navigate('#!waterbudget/huc/' + huc, {trigger : true});
 				}
 			}
 		};
-        this.selectControl.events.register("getfeatureinfo", this, featureInfoHandler);
+		this.selectControl.events.register("getfeatureinfo", this, featureInfoHandler);
 
 		$.extend(this.events, NWC.view.BaseSelectMapView.prototype.events);
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
 
-		this.map.addLayer(this.hucLayer);
+		this.map.addLayers(this.hucLayers);
+		
 		if (Object.has(options, 'hucId')) {
 			var highlightStyle = new OpenLayers.StyleMap({
 				strokeWidth: 2,
@@ -82,33 +102,47 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 				fillColor: '#FF9900',
 				fillOpacity: 0.4
 			});
+			var watershedHucConfig = NWC.config.getWatershed(options.hucId);
 			this.map.addLayer(NWC.util.mapUtils.createHucFeatureLayer(
-				watershedConfig.namespace,
-				watershedConfig.layerName,
+				watershedHucConfig.namespace,
+				watershedHucConfig.layerName,
+				watershedHucConfig.property,
 				[options.hucId],
 				highlightStyle));
+			this.model.set('watershedLayer', watershedHucConfig.property);
+			this.$el.find('.huc-layers').val(watershedHucConfig.property).prop('selected');
+			this.$el.find('.huc-layers').prop('disabled', true);			
+			this.updateLayerVisibility();
 		}
 		this.addFlowLines();
 
-		this.listenTo(this.model, 'change:watershedLayerOn', this.updateLayerVisibility);
-		this.updateLayerVisibility();
+		this.listenTo(this.model, 'change:watershedLayer', this.updateLayerVisibility);
 	},
 
 	/**
-	 * Toggles the model's waterShedLayerOn attribute
+	 * Selects the model's Layer attribute
+	 * @param {jquery.Event} ev
 	 */
-	toggleHucVisibility : function() {
-		this.model.set('watershedLayerOn', !this.model.get('watershedLayerOn'));
+	selectLayer : function(ev) {
+		var newSelection = this.$el.find('.huc-layers option:selected').val();
+		this.model.set('watershedLayer', newSelection);
+		ev.preventDefault();
 	},
 
 	/**
-	 * Sets the hucLayer visibility to match this.model's watershedLayerOn attribute.
+	 * Sets the hucLayer visibility to match this.model's layer attribute.
 	 */
 	updateLayerVisibility : function() {
-		var isVisible = this.model.get('watershedLayerOn');
-		this.$el.find('#toggle-huc-layer-span').html(isVisible ? 'Off' : 'On');
-		this.hucLayer.setVisibility(isVisible);
+		var self = this;
+		var layer = this.model.get('watershedLayer');
+
+		this.hucLayersIndex.forEach(function(el, index) {
+			if (el === layer) {
+				self.hucLayers[index].setVisibility(true)
+			}
+			else {
+				self.hucLayers[index].setVisibility(false)    			
+			}
+		});	
 	}
 });
-
-

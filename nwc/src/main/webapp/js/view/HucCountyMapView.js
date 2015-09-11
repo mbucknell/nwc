@@ -10,6 +10,7 @@ NWC.view.HucCountyMapView = NWC.view.BaseView.extend({
 	 *
 	 * @constructor
 	 * @param {Object} options
+	 *  @prop {String} huc - Id of the huc for which information should be shown.
 	 *	@prop {OpenLayers.Feature.Vector} hucFeature - the feature object for the huc to be drawn on the map
 	 *	@prop {Backbone.Router} router
 	 *	@prop {Jquery el} el
@@ -63,7 +64,7 @@ NWC.view.HucCountyMapView = NWC.view.BaseView.extend({
 		// Set up control
 		var selectControl = new OpenLayers.Control.SelectFeature(this.countiesLayer, {
 			onSelect : (function(feature) {
-				this.router.navigate('#!waterbudget/huc/' + options.hucFeature.attributes.huc_12 + '/county/' + feature.attributes.fips, {
+				this.router.navigate('#!waterbudget/huc/' + options.huc + '/county/' + feature.attributes.fips, {
 					trigger : true
 				});
 			}).bind(this)

@@ -26,13 +26,25 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="spacer col-xs-12">
+		<div class="row spacer">
 				{{> mapControls }}
-				<a id="toggle-huc-layer" class="btn btn-primary" data-toggle="button">Turn Watersheds <span id="toggle-huc-layer-span">On</span></a>
-				<span>Turn on/off map-display of <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_documentation.php" target="_blank">Watershed Boundary Dataset</a> <i class="fa fa-external-link"></i> for which water budget information is available.</span>
-
+		</div>
+		<div class="row spacer">
+			<div class="col-sm-1 spacer">
+					Huc Layer:
 			</div>
+			<div class="col-sm-2">
+					<select class="huc-layers form-control">
+						{{#each hucs}}
+						<option value="{{this}}">{{this}}</option>
+						{{/each}}
+					</select>
+			</div>
+			<div class="spacer col-sm-9">
+					<span>Turn on/off map-display of <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_documentation.php" target="_blank">Watershed Boundary Dataset</a> <i class="fa fa-external-link"></i> for which water budget information is available.</span>
+			</div>
+		</div>
+		<div class="row">
 			<div class="row col-xs-12 spacer spacer_down">
 				<input type="hidden" id="map-search-box" />
 			</div>
