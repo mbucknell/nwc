@@ -24,7 +24,6 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	},
 	
 	hucLayers : [],
-	hucLayersIndex : [],
 
 	/**
 	 * @constructs
@@ -36,19 +35,27 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	initialize : function(options) {
 		var self = this;
 		var watershedConfig = NWC.config.get('watershed');
-				
-		Object.keys(watershedConfig, function(key, value) {
-			self.hucLayers.push(NWC.util.mapUtils.createHucLayer(value.attributes.namespace, value.attributes.layerName, {
-				visibility : false
-			}));
-			self.hucLayersIndex.push(value.attributes.property);
-			self.context.hucs.push({value: value.attributes.property, display : value.attributes.selectDisplay});
-		});
+
+		/*if you come into this view from WaterBudgetHucDataView the hucLayers
+		 *already exist because they were persisted to model via the select control
+		 *if you come into this view from landing page or direct url, the hucLayers
+		 *need to be created.
+		 */
+		if (this.hucLayers.length === 0) {
+			Object.keys(watershedConfig, function(key, value) {
+				self.hucLayers.push({layer : NWC.util.mapUtils.createHucLayer(value.attributes.namespace, value.attributes.layerName, {
+					visibility : false
+				}), propertyId : value.attributes.property});
+				self.context.hucs.push({value: value.attributes.property, display : value.attributes.selectDisplay});
+			});			
+		}
 
 		this.selectControl = new OpenLayers.Control.WMSGetFeatureInfo({
 			title: 'huc-identify-control',
 			hover: false,
-			layers: this.hucLayers,
+			layers: this.hucLayers.map(function(n) {
+				return n.layer;
+			}),
 			queryVisible: true,
 			infoFormat: 'application/vnd.ogc.gml',
 			vendorParams: {
@@ -93,7 +100,9 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		$.extend(this.events, NWC.view.BaseSelectMapView.prototype.events);
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
 
-		this.map.addLayers(this.hucLayers);
+		this.map.addLayers(this.hucLayers.map(function(n) {
+			return n.layer;
+		}));
 		
 		if (Object.has(options, 'hucId')) {
 			var highlightStyle = new OpenLayers.StyleMap({
@@ -109,10 +118,15 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 				watershedHucConfig.property,
 				[options.hucId],
 				highlightStyle));
-			this.model.set('watershedLayer', watershedHucConfig.property);
 			this.$el.find('.huc-layers').val(watershedHucConfig.property).prop('selected');
-			this.$el.find('.huc-layers').prop('disabled', true);			
-			this.updateLayerVisibility();
+			this.$el.find('.huc-layers').prop('disabled', true);
+			/*if you come into this view directly rather than from WaterBudgetHucDataView
+			 *the layer needs to be set to visible
+			 */
+			if (this.model.get('watershedLayer') === 'none') {
+				this.model.set('watershedLayer', watershedHucConfig.property);
+				this.updateLayerVisibility();				
+			}
 		}
 		this.addFlowLines();
 
@@ -136,13 +150,12 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		var self = this;
 		var layer = this.model.get('watershedLayer');
 
-		this.hucLayersIndex.forEach(function(el, index) {
-			if (el === layer) {
-				self.hucLayers[index].setVisibility(true)
-			}
+		this.hucLayers.map(function(n) {
+			if (layer === n.propertyId)
+				n.layer.setVisibility(true)
 			else {
-				self.hucLayers[index].setVisibility(false)    			
+				n.layer.setVisibility(false)				
 			}
-		});	
+		});
 	}
 });
