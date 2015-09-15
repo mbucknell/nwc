@@ -21,7 +21,9 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 
 		expect(NWC.view.BaseSelectMapView.prototype.initialize).toHaveBeenCalled();
 		expect(view.hucLayers).toBeDefined();
-		expect(addLayerSpy).toHaveBeenCalledWith(view.hucLayers);
+		expect(addLayerSpy).toHaveBeenCalledWith(view.hucLayers.map(function(n) {
+			return n.layer;
+		}));
 		expect(view.selectControl).toBeDefined();
 		expect(view.context.hucId).not.toBeDefined();
 	});
@@ -30,10 +32,10 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 		var view = new NWC.view.WaterBudgetMapView();
 
 		view.model.set('watershedLayer', 'huc8');
-		expect(view.hucLayers[1].getVisibility()).toBe(true);
+		expect(view.hucLayers[1].layer.getVisibility()).toBe(true);
 
 		view.model.set('watershedLayer', 'huc_12');
-		expect(view.hucLayers[1].getVisibility()).toBe(false);
+		expect(view.hucLayers[1].layer.getVisibility()).toBe(false);
 	});
 
 	it('Expect that event handler calls to toggleLayer update the models\'s watershedLayer attribute', function() {

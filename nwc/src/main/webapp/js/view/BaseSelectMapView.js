@@ -196,7 +196,5 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 			this.selectControl.deactivate();
 		}
 	}
-
-
 });
 
