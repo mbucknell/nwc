@@ -105,13 +105,8 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 				highlightStyle));
 			this.$el.find('.huc-layers').val(watershedHucConfig.property).prop('selected');
 			this.$el.find('.huc-layers').prop('disabled', true);
-			/*if you come into this view directly rather than from WaterBudgetHucDataView
-			 *the layer needs to be set to visible since the model is not passed in
-			 */
-			if (this.model.get('watershedLayer') === 'none') {
-				this.model.set('watershedLayer', watershedHucConfig.property);
-				this.updateLayerVisibility();				
-			}
+			this.model.set('watershedLayer', watershedHucConfig.property);
+			this.updateLayerVisibility();				
 		}
 		this.addFlowLines();
 
