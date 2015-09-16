@@ -60,7 +60,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			}
 		);
 
-		_.map(this.hucLayers, function(val, key) {
+		_.each(this.hucLayers, function(val) {
 			val.layer.addOptions({attribution: '<img src="' + self.legendUrl(val.layer.params.LAYERS, val.layer.params.STYLES[0]) + '"/>'});
 		});
 
@@ -162,7 +162,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		var self = this;
 		var layer = this.model.get('watershedLayer');
 
-		_.map(this.hucLayers, function(val, key) {
+		_.each(this.hucLayers, function(val) {
 			val.layer.setVisibility(layer === val.propertyId);
 		});
 	},
