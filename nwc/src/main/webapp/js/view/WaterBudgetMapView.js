@@ -15,7 +15,8 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	templateName : 'waterbudget',
 
 	events: {
-		'change select' : 'selectLayer'
+		'change select' : 'selectHucLayer',
+		'click #toggle-gage-layer' : 'toggleGageVisibility'
 	},
 
 	/**
@@ -26,12 +27,13 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	 *	@prop {String} hucId - Previously selected watershed
 	 */
 	initialize : function(options) {
+		var self = this;
 		this.context = {
 			hucs : [{value : "none", display : "none"}],
 			warningModalTitle : 'Warning'
 		};
+		
 		this.hucLayers = [];
-		var self = this;
 		var watershedConfig = NWC.config.get('watershed');
 		Object.keys(watershedConfig, function(key, value) {
 			self.hucLayers.push({layer : NWC.util.mapUtils.createHucLayer(value.attributes.namespace, value.attributes.layerName, {
@@ -39,6 +41,32 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			}), propertyId : value.attributes.property});
 			self.context.hucs.push({value: value.attributes.property, display : value.attributes.selectDisplay});
 		});
+
+		var gageConfig = NWC.config.get('streamflow').gage.attributes;
+		this.gageLayer = new OpenLayers.Layer.WMS(
+			"Gage Location",
+			CONFIG.endpoint.geoserver + 'NWC/wms',
+			{
+				LAYERS: gageConfig.namespace + ':' + gageConfig.layerName,
+				STYLES: 'blue_circle',
+				format: 'image/png',
+				transparent: true,
+				tiled: true
+			},
+			{
+				isBaseLayer: false,
+				displayInLayerSwitcher: false,
+				visibility: false
+			}
+		);
+
+		_.map(this.hucLayers, function(val, key) {
+			val.layer.addOptions({attribution: '<img src="' + self.legendUrl(val.layer.params.LAYERS, val.layer.params.STYLES[0]) + '"/>'});
+		});
+
+		this.gageLayer.addOptions({attribution: '<img src="' + self.legendUrl(this.gageLayer.params.LAYERS, 'blue_circle') + '"/>'});
+
+		this.legendControl = new OpenLayers.Control.Attribution();
 		
 		this.selectControl = new OpenLayers.Control.WMSGetFeatureInfo({
 			title: 'huc-identify-control',
@@ -83,10 +111,11 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			}
 		};
 		this.selectControl.events.register("getfeatureinfo", this, featureInfoHandler);
-
+		
 		$.extend(this.events, NWC.view.BaseSelectMapView.prototype.events);
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
 
+		this.map.addLayer(this.gageLayer);
 		this.map.addLayers(_.pluck(this.hucLayers, 'layer'));
 		
 		if (Object.has(options, 'hucId')) {
@@ -110,14 +139,17 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		}
 		this.addFlowLines();
 
-		this.listenTo(this.model, 'change:watershedLayer', this.updateLayerVisibility);
+		this.map.addControl(this.legendControl);
+
+		this.listenTo(this.model, 'change:watershedLayer', this.updateHucLayerVisibility);
+		this.listenTo(this.model, 'change:gageLayerOn', this.updateGageLayerVisibility);
 	},
 
 	/**
-	 * Selects the model's Layer attribute
+	 * Selects the model's watershedLayer attribute
 	 * @param {jquery.Event} ev
 	 */
-	selectLayer : function(ev) {
+	selectHucLayer : function(ev) {
 		var newSelection = this.$el.find('.huc-layers option:selected').val();
 		this.model.set('watershedLayer', newSelection);
 		ev.preventDefault();
@@ -126,12 +158,29 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	/**
 	 * Sets the hucLayer visibility to match this.model's layer attribute.
 	 */
-	updateLayerVisibility : function() {
+	updateHucLayerVisibility : function() {
 		var self = this;
 		var layer = this.model.get('watershedLayer');
 
 		_.map(this.hucLayers, function(val, key) {
 			val.layer.setVisibility(layer === val.propertyId);
 		});
+	},
+
+	/**
+	 * Toggles the model's gageLayerOn attribute
+	 */
+	toggleGageVisibility : function() {
+		this.model.set('gageLayerOn', !this.model.get('gageLayerOn'));
+	},
+
+	/**
+	 * Sets the gageLayer visibility to match this.model's gageLayerOn attribute.
+	 */
+	updateGageLayerVisibility : function() {
+		var isVisible = this.model.get('gageLayerOn');
+		this.$el.find('#toggle-gage-layer-span').html(isVisible ? 'Off' : 'On');
+		this.gageLayer.setVisibility(isVisible);
 	}
+
 });

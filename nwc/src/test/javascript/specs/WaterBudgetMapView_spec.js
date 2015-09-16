@@ -5,12 +5,16 @@
 
 describe('Tests for NWC.view.WaterBudgetMapView', function() {
 	var addLayerSpy;
+	var addControlSpy;
 	beforeEach(function() {
 		addLayerSpy = jasmine.createSpy('addLayerSpy');
-		spyOn(NWC.util.mapUtils, 'addFlowLinesToMap');
+		addControlSpy = jasmine.createSpy('addControlSpy');
+		 spyOn(NWC.util.mapUtils, 'addFlowLinesToMap');
 		spyOn(NWC.view.BaseSelectMapView.prototype, 'initialize').andCallFake(function() {
 			this.map = {
-				addLayers : addLayerSpy
+				addLayer : addLayerSpy,
+				addLayers : addLayerSpy,
+				addControl : addControlSpy,
 			};
 			this.model = new this.Model();
 		});
@@ -21,9 +25,9 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 
 		expect(NWC.view.BaseSelectMapView.prototype.initialize).toHaveBeenCalled();
 		expect(view.hucLayers).toBeDefined();
-		expect(addLayerSpy).toHaveBeenCalledWith(view.hucLayers.map(function(n) {
-			return n.layer;
-		}));
+		expect(view.gageLayer).toBeDefined();
+		expect(addLayerSpy).toHaveBeenCalledWith(_.pluck(view.hucLayers, 'layer'));
+		expect(addLayerSpy).toHaveBeenCalledWith(view.gageLayer);
 		expect(view.selectControl).toBeDefined();
 		expect(view.context.hucId).not.toBeDefined();
 	});
@@ -38,7 +42,7 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 		expect(view.hucLayers[1].layer.getVisibility()).toBe(false);
 	});
 
-	it('Expect that event handler calls to toggleLayer update the models\'s watershedLayer attribute', function() {
+	it('Expect that event handler calls to selectHucLayer update the models\'s watershedLayer attribute', function() {
 		var view = new NWC.view.WaterBudgetMapView();
 		
 		view.model.set('watershedLayer', 'huc8');
@@ -46,7 +50,28 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 				'<option value="huc_12" selected>huc_12</option>' +
 				'</select>');
 		var ev = jQuery.Event('click');
-		view.selectLayer(ev);
+		view.selectHucLayer(ev);
 		expect(view.model.get('watershedLayer')).toBe('huc_12');
 	});
+
+	it('Expects that updates to the model\'s gageLayer attribute updates the view', function() {
+		var view = new NWC.view.WaterBudgetMapView();
+
+		view.model.set('gageLayerOn', true);
+		expect(view.gageLayer.getVisibility()).toBe(true);
+
+		view.model.set('gageLayerOn', false);
+		expect(view.gageLayer.getVisibility()).toBe(false);
+	});
+
+	it('Expect that event handler calls to toggleGageLayer update the models\'s gageLayer attribute', function() {
+		var view = new NWC.view.WaterBudgetMapView();
+		
+		view.model.set('gageLayerOn', false);
+		view.toggleGageVisibility();
+		expect(view.model.get('gageLayerOn')).toBe(true);
+		view.model.set('gageLayerOn', false);
+		expect(view.model.get('gageLayerOn')).toBe(false);
+	});
+
 });
