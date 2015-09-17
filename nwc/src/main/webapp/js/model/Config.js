@@ -50,7 +50,7 @@ NWC.model = NWC.model || {};
 						selectDisplay : '12 Digit',
 						variables : {
 							dayMet : new SosVariable({
-								observedProperty: 'MEAN_prcp',
+								observedProperty: 'prcp',
 								propertyLongName: 'Area Weighted Mean Precipitation',
 								units: NWC.util.Units.metric.normalizedWater.daily,
 								dataset: 'HUC12_data',
