@@ -198,7 +198,7 @@ NWC.view.BaseSelectMapView = NWC.view.BaseView.extend({
 	},
 
 	legendUrl : function(layer, style) {
-		return CONFIG.endpoint.geoserver + 'NWC/wms?request=GetLegendGraphic&format=image/png&width=20&height=20' +
+		return CONFIG.endpoint.geoserver + 'wms?request=GetLegendGraphic&format=image/png&width=20&height=20' +
 			"&layer=" + layer + "&style=" + style +
 			"&legend_options=forceLabels:on;fontName:Times New Roman;fontAntiAliasing:true;fontColor:0x000033;fontSize:8px;bgColor:0xFFFFEE;dpi:100";
 	},

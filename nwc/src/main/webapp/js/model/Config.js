@@ -41,10 +41,13 @@ NWC.model = NWC.model || {};
 	var Config = Backbone.Model.extend({
 		defaults : function() {
 			return {
+				featureToggles : {
+					enableAccumulatedWaterBudget : false
+				},
 				watershed : {
 					huc12 : new DataSourceModel({
-						layerName : 'nationalwbdsnapshot', // get from mapUtils
-						namespace : 'NHDPlusHUCs', // getfrom mapUtils
+						layerName : 'huc12', // get from mapUtils
+						namespace : 'WBD', // getfrom mapUtils
 						property : 'huc_12',
 						name : 'hu_12_name',
 						selectDisplay : '12 Digit',
@@ -140,7 +143,7 @@ NWC.model = NWC.model || {};
 			};
 			// Add things as needed for the county variable and streamflow variables.
 		},
-		
+
 		getWatershed : function (hucId) {
 			if (hucId.length === 8) {
 				return this.get('watershed').huc08.attributes;
@@ -148,7 +151,7 @@ NWC.model = NWC.model || {};
 			else {
 				return this.get('watershed').huc12.attributes;
 			}
-		} 
+		}
 	});
 
 	NWC.config = new Config();

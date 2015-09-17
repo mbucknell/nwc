@@ -30,9 +30,10 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		var self = this;
 		this.context = {
 			hucs : [{value : "none", display : "none"}],
+			featureToggles : NWC.config.get('featureToggles'),
 			warningModalTitle : 'Warning'
 		};
-		
+
 		this.hucLayers = [];
 		var watershedConfig = NWC.config.get('watershed');
 		Object.keys(watershedConfig, function(key, value) {
@@ -67,7 +68,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 		this.gageLayer.addOptions({attribution: '<img src="' + self.legendUrl(this.gageLayer.params.LAYERS, 'blue_circle') + '"/>'});
 
 		this.legendControl = new OpenLayers.Control.Attribution();
-		
+
 		this.selectControl = new OpenLayers.Control.WMSGetFeatureInfo({
 			title: 'huc-identify-control',
 			hover: false,
@@ -96,10 +97,10 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 				});
 				if (Object.has(options, 'hucId')) {
 					if (options.hucId === null) {
-						this.showWarningDialog('Problem with huc, please try again.');						
+						this.showWarningDialog('Problem with huc, please try again.');
 					}
 					else if (options.hucId === huc) {
-						this.showWarningDialog('The same watershed has been selected for comparison. Please select a different watershed');						
+						this.showWarningDialog('The same watershed has been selected for comparison. Please select a different watershed');
 					}
 					else {
 						this.router.navigate('#!waterbudget/comparehucs/' + options.hucId + '/' + huc, {trigger : true});
@@ -111,13 +112,13 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			}
 		};
 		this.selectControl.events.register("getfeatureinfo", this, featureInfoHandler);
-		
+
 		$.extend(this.events, NWC.view.BaseSelectMapView.prototype.events);
 		NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
 
 		this.map.addLayer(this.gageLayer);
 		this.map.addLayers(_.pluck(this.hucLayers, 'layer'));
-		
+
 		if (Object.has(options, 'hucId')) {
 			var highlightStyle = new OpenLayers.StyleMap({
 				strokeWidth: 2,
@@ -135,11 +136,12 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			this.$el.find('.huc-layers').val(watershedHucConfig.property).prop('selected');
 			this.$el.find('.huc-layers').prop('disabled', true);
 			this.model.set('watershedLayer', watershedHucConfig.property);
-			this.updateLayerVisibility();				
+			this.updateLayerVisibility();
 		}
 		this.addFlowLines();
-
-		this.map.addControl(this.legendControl);
+		if (NWC.config.get('featureToggles').enableAccumulatedWaterBudget) {
+			this.map.addControl(this.legendControl);
+		}
 
 		this.listenTo(this.model, 'change:watershedLayer', this.updateHucLayerVisibility);
 		this.listenTo(this.model, 'change:gageLayerOn', this.updateGageLayerVisibility);

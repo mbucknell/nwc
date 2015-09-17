@@ -104,6 +104,10 @@ h5, h6 {
 	border: 1px solid #a3a3a3;
 	height: 500px;
 }
+.waterbudget-map-controls .huc-layers {
+	width: 8em;
+	display: inline-block;
+}
 #biodata-gage-selection-map {
 	border: 1px solid #a3a3a3;
 	height: 500px;
