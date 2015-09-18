@@ -38,6 +38,37 @@ NWC.model = NWC.model || {};
 		variables : {}
 	});
 
+	var WaterUseModel = Backbone.Model.extend({
+		name : '',
+		observedProperties : [],
+		color : ''
+	});
+
+	var WaterUseCollection = Backbone.Collection.extend({
+		model : WaterUseModel,
+
+		getProperties : function() {
+			return _.map(this.models, function(model) {
+				return model.attributes.observedProperties;
+			});
+		},
+
+		getName : function(observedProperty) {
+			var model = _.find(this.models, function(model) {
+				var foundProp =  _.find(model.attributes.observedProperties, function(prop) {
+					return prop === observedProperty;
+				});
+				if (foundProp) { return true; }
+			});
+			if (model) {
+				return model.name;
+			}
+			else {
+				return undefined;
+			}
+		}
+	});
+
 	var Config = Backbone.Model.extend({
 		defaults : function() {
 			return {
@@ -139,7 +170,38 @@ NWC.model = NWC.model || {};
 							}
 						}
 					})
-				}
+				},
+				countyWaterUse : new WaterUseCollection([
+					{
+						name : 'Public Supply',
+						observed_properties : ["PS-WGWFr", "PS-WGWSa", "PS-WSWFr", "PS-WSWSa"],
+						color : '#67609e'
+					},{
+						name : 'Domestic',
+						observed_properties : ["DO-WGWFr", "DO-WGWSa", "DO-WSWFr", "DO-WSWSa"],
+						color : '#ed1c24'
+					},{
+						name : 'Irrigation',
+						observed_properties : ["IT-WGWFr", "IT-WGWSa", "IT-WSWFr", "IT-WSWSa"],
+						color : '#009c88'
+					},{
+						name : 'Thermoelectric Power',
+						observed_properties : ["PF-WGWFr", "PF-WGWSa", "PF-WSWFr", "PF-WSWSa", "PG-WGWFr", "PG-WGWSa", "PG-WSWFr", "PG-WSWSa", "PN-WGWFr", "PN-WGWSa", "PN-WSWFr", "PN-WSWSa", "PO-WGWFr", "PO-WGWSa", "PO-WSWFr", "PO-WSWSa", "PC-WGWFr", "PC-WGWSa", "PC-WSWFr", "PC-WSWSa"],
+						color : '#f1b650'
+					},{
+						name : 'Livestock and Aquaculture',
+						observed_properties : ["LS-WGWFr", "LS-WGWSa", "LS-WSWFr", "LS-WSWSa", "LI-WGWFr", "LI-WSWFr", "LA-WGWFr", "LA-WGWSa", "LA-WSWFr", "LA-WSWSa", "AQ-WGWFr", "AQ-WGWSa", "AQ-WSWFr", "AQ-WSWSa"],
+						color : '#b9cfe6'
+					},{
+						name: 'Industrial',
+						observed_properties : ["IN-WGWFr", "IN-WGWSa", "IN-WSWFr", "IN-WSWSa"],
+						color : '#0080b7'
+					},{
+						name : 'Mining',
+						observed_properties : ["MI-WGWFr", "MI-WGWSa", "MI-WSWFr", "MI-WSWSa"],
+						color : '#f5833c'
+					}
+				])
 			};
 			// Add things as needed for the county variable and streamflow variables.
 		},
