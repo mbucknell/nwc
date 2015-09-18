@@ -136,7 +136,6 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			this.$el.find('.huc-layers').val(watershedHucConfig.property).prop('selected');
 			this.$el.find('.huc-layers').prop('disabled', true);
 			this.model.set('watershedLayer', watershedHucConfig.property);
-			this.updateLayerVisibility();
 		}
 		this.addFlowLines();
 		if (NWC.config.get('featureToggles').enableAccumulatedWaterBudget) {
@@ -145,6 +144,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 
 		this.listenTo(this.model, 'change:watershedLayer', this.updateHucLayerVisibility);
 		this.listenTo(this.model, 'change:gageLayerOn', this.updateGageLayerVisibility);
+		this.updateHucLayerVisibility();
 	},
 
 	/**

@@ -77,10 +77,10 @@ NWC.model = NWC.model || {};
 				},
 				watershed : {
 					huc12 : new DataSourceModel({
-						layerName : 'huc12', // get from mapUtils
-						namespace : 'WBD', // getfrom mapUtils
-						property : 'huc_12',
-						name : 'hu_12_name',
+						layerName : 'huc12',
+						namespace : 'WBD',
+						property : 'huc12',
+						name : 'name',
 						selectDisplay : '12 Digit',
 						variables : {
 							dayMet : new SosVariable({
@@ -102,8 +102,8 @@ NWC.model = NWC.model || {};
 						}
 					}),
 					huc08 : new DataSourceModel({
-						layerName : 'huc08', // get from mapUtils
-						namespace : 'WBD', // getfrom mapUtils
+						layerName : 'huc08',
+						namespace : 'WBD',
 						property : 'huc8',
 						name : 'name',
 						selectDisplay : '8 Digit',
