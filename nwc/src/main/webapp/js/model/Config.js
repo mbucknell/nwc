@@ -2,6 +2,7 @@
 /*global Backbone */
 /*global $ */
 /*global CONFIG */
+/*global _*/
 
 var NWC = NWC || {};
 
@@ -10,7 +11,7 @@ NWC.model = NWC.model || {};
 (function() {
 	"use strict";
 
-	var SosVariable = Backbone.Model.extend({
+	NWC.model.SosVariable = Backbone.Model.extend({
 		defaults : {
 			observedProperty : '',
 			propertyLongName : '',
@@ -32,27 +33,112 @@ NWC.model = NWC.model || {};
 		}
 	});
 
-	var DataSourceModel = Backbone.Model.extend({
+	NWC.model.DataSourceModel = Backbone.Model.extend({
 		layerName : '',
 		namespace : '',
 		variables : {}
 	});
 
+	NWC.model.WaterUseModel = Backbone.Model.extend({
+		name : '',
+		observedProperties : [],
+		color : ''
+	});
+
+	// Assumes that the collection is never updated once created.
+	NWC.model.WaterUseCollection = Backbone.Collection.extend({
+		model : NWC.model.WaterUseModel,
+
+		initialize : function(options) {
+			Backbone.Collection.prototype.initialize.apply(this, arguments);
+			// Create fast lookups
+			this.waterUseNames = _.pluck(options, 'name');
+			this.observedProperties = _.chain(options)
+				.pluck('observedProperties')
+				.flatten()
+				.value();
+
+			this.lookupByName = {};
+			_.each(options, function(waterUse) {
+				this.lookupByName[waterUse.name] = waterUse;
+			}, this);
+			
+			this.lookupNameByObservedProperty = {};
+				_.each(options, function(waterUse) {
+					var result = {};
+					_.each(waterUse.observedProperties, function(prop) {
+						result[prop] = waterUse.name;
+					});
+				_.extend(this.lookupNameByObservedProperty, result);
+			}, this);
+		},
+
+		getAllObservedProperties : function() {
+			return this.observedProperties;
+		},
+
+		getAllNames : function() {
+			return this.waterUseNames;
+		},
+
+		getName : function(observedProperty) {
+			return this.lookupNameByObservedProperty[observedProperty];
+		},
+		getObservedProperties : function(name) {
+			return this.lookupByName[name].observedProperties;
+		},
+		getColor : function(name) {
+			return this.lookupByName[name].color;
+		}
+	});
+
 	var Config = Backbone.Model.extend({
 		defaults : function() {
+			var countyWaterUse = new NWC.model.WaterUseCollection([
+				{
+					name : 'Public Supply',
+					observedProperties : ["PS-WGWFr", "PS-WGWSa", "PS-WSWFr", "PS-WSWSa"],
+					color : '#67609e'
+				},{
+					name : 'Domestic',
+					observedProperties : ["DO-WGWFr", "DO-WGWSa", "DO-WSWFr", "DO-WSWSa"],
+					color : '#ed1c24'
+				},{
+					name : 'Irrigation',
+					observedProperties : ["IT-WGWFr", "IT-WGWSa", "IT-WSWFr", "IT-WSWSa"],
+					color : '#009c88'
+				},{
+					name : 'Thermoelectric Power',
+					observedProperties : ["PF-WGWFr", "PF-WGWSa", "PF-WSWFr", "PF-WSWSa", "PG-WGWFr", "PG-WGWSa", "PG-WSWFr", "PG-WSWSa", "PN-WGWFr", "PN-WGWSa", "PN-WSWFr", "PN-WSWSa", "PO-WGWFr", "PO-WGWSa", "PO-WSWFr", "PO-WSWSa", "PC-WGWFr", "PC-WGWSa", "PC-WSWFr", "PC-WSWSa"],
+					color : '#f1b650'
+				},{
+					name : 'Livestock and Aquaculture',
+					observedProperties : ["LS-WGWFr", "LS-WGWSa", "LS-WSWFr", "LS-WSWSa", "LI-WGWFr", "LI-WSWFr", "LA-WGWFr", "LA-WGWSa", "LA-WSWFr", "LA-WSWSa", "AQ-WGWFr", "AQ-WGWSa", "AQ-WSWFr", "AQ-WSWSa"],
+					color : '#b9cfe6'
+				},{
+					name: 'Industrial',
+					observedProperties : ["IN-WGWFr", "IN-WGWSa", "IN-WSWFr", "IN-WSWSa"],
+					color : '#0080b7'
+				},{
+					name : 'Mining',
+					observedProperties : ["MI-WGWFr", "MI-WGWSa", "MI-WSWFr", "MI-WSWSa"],
+					color : '#f5833c'
+				}
+			]);
+
 			return {
 				featureToggles : {
 					enableAccumulatedWaterBudget : false
 				},
 				watershed : {
-					huc12 : new DataSourceModel({
+					huc12 : new NWC.model.DataSourceModel({
 						layerName : 'huc12',
 						namespace : 'WBD',
 						property : 'huc12',
 						name : 'name',
 						selectDisplay : '12 Digit',
 						variables : {
-							dayMet : new SosVariable({
+							dayMet : new NWC.model.SosVariable({
 								observedProperty: 'prcp',
 								propertyLongName: 'Area Weighted Mean Precipitation',
 								units: NWC.util.Units.metric.normalizedWater.daily,
@@ -60,7 +146,7 @@ NWC.model = NWC.model || {};
 								fileName: 'HUC12_daymet.nc',
 								downloadMetadata: 'Data derived by sampling the DayMet precipitation variable to NHD+ Version II\n12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://daymet.ornl.gov/ http://cida.usgs.gov/gdp/\nhttp://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
 							}),
-							eta : new SosVariable({
+							eta : new NWC.model.SosVariable({
 								observedProperty: 'MEAN_et',
 								propertyLongName: 'Area Weighted Mean Actual Evapotranspiration',
 								units: NWC.util.Units.metric.normalizedWater.monthly,
@@ -70,14 +156,14 @@ NWC.model = NWC.model || {};
 							})
 						}
 					}),
-					huc08 : new DataSourceModel({
+					huc08 : new NWC.model.DataSourceModel({
 						layerName : 'huc08',
 						namespace : 'WBD',
 						property : 'huc8',
 						name : 'name',
 						selectDisplay : '8 Digit',
 						variables : {
-							dayMet : new SosVariable({
+							dayMet : new NWC.model.SosVariable({
 								observedProperty: 'prcp',
 								propertyLongName: 'Area Weighted Mean Precipitation',
 								units: NWC.util.Units.metric.normalizedWater.daily,
@@ -85,7 +171,7 @@ NWC.model = NWC.model || {};
 								fileName: 'HUC08_daymet.nc',
 								downloadMetadata: 'Data derived by sampling the DayMet precipitation variable to NHD+ Version II\n8-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://daymet.ornl.gov/ http://cida.usgs.gov/gdp/\nhttp://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
 							}),
-							eta : new SosVariable({
+							eta : new NWC.model.SosVariable({
 								observedProperty: 'et',
 								propertyLongName: 'Area Weighted Mean Actual Evapotranspiration',
 								units: NWC.util.Units.metric.normalizedWater.monthly,
@@ -96,13 +182,13 @@ NWC.model = NWC.model || {};
 						}
 					})
 				},
-				county : new DataSourceModel({
+				county : new NWC.model.DataSourceModel({
 					layerName : 'us_historical_counties',
 					namespace : 'NWC',
 					variables : {
-						waterUse : new SosVariable({
-							observedProperty: NWC.util.CountyWaterUseProperties.getObservedProperties().join(),
-							propertyLongName: NWC.util.CountyWaterUseProperties.getPropertyLongNames().join(),
+						waterUse : new NWC.model.SosVariable({
+							observedProperty: countyWaterUse.getAllObservedProperties().join(','),
+							propertyLongName: countyWaterUse.getAllNames().join(','),
 							units: NWC.util.Units.usCustomary.totalWater.yearly,
 							dataset: 'county_data',
 							fileName: 'AWUDS.nc',
@@ -111,12 +197,12 @@ NWC.model = NWC.model || {};
 					}
 				}),
 				streamflow : {
-					huc12 : new DataSourceModel({
+					huc12 : new NWC.model.DataSourceModel({
 						localLayerName : 'huc12_se_basins_v2_local', // this is used for the selection map
 						accumulatedLayerName : 'huc12_se_basins_v2', // this is used for the inset map
 						namespace : 'NWC',
 						variables : {
-							modeledQ : new SosVariable({
+							modeledQ : new NWC.model.SosVariable({
 								observedProperty: 'MEAN_streamflow',
 								propertyLongName: 'Modeled Streamflow',
 								units: NWC.util.Units.usCustomary.streamflow.daily,
@@ -126,7 +212,7 @@ NWC.model = NWC.model || {};
 							})
 						}
 					}),
-					gage : new DataSourceModel({
+					gage : new NWC.model.DataSourceModel({
 						layerName : 'gagesII',
 						namespace : 'NWC',
 						variables : {
@@ -139,7 +225,8 @@ NWC.model = NWC.model || {};
 							}
 						}
 					})
-				}
+				},
+				countyWaterUse : countyWaterUse
 			};
 			// Add things as needed for the county variable and streamflow variables.
 		},

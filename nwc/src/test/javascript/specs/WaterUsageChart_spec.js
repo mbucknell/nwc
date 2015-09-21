@@ -1,56 +1,9 @@
+/* global NWC */
+/* global expect */
+
 describe('Tests for WaterUsageChart', function() {
-    var WaterUsageChart = NWC.util.WaterUsageChart;
-    var CountyWaterUseProperties = NWC.util.CountyWaterUseProperties;
-    
-    describe('Data Combination', function() {
-        it('should have the right number of columns', function() {
-            var expected = oneSplit[0].values.length;
-            var actual = CountyWaterUseProperties.getObservedProperties().length;
-            expect(actual).toBe(expected);
-        })
-        
-        it('should match labels ordering', function() {
-            var expected = labels.map(function(el) {
-                return el.slice(0, (-1 * unitsPart.length));
-            });
-            var actual = CountyWaterUseProperties.getPropertyLongNames();
-            expect(actual).toEqual(expected);
-        })
-        
-        it('should split like a banananana', function() {
-            var expected = oneSplit[0];
-            var actual = WaterUsageChart.splitRow(oneData[0]);
-            expect(actual).toEqual(expected);
-        })
-        
-        it('should combine a rows values', function() {
-            var expected = oneCombined;
-            var actual = WaterUsageChart.combineDataRow(
-                oneSplit[0].values,
-                CountyWaterUseProperties.getObservedProperties(),
-                CountyWaterUseProperties.getPropertyLongNames(),
-                CountyWaterUseProperties.propertyLongNameLookup());
-            expect(actual).toEqual(expected);
-        })
-        
-        it('should do something', function() {
-            var expected = oneResult;
-            var actual = WaterUsageChart.combineData(oneData);
-            expect(actual).toEqual(expected);
-        })
-    });
-    
-    var unitsPart = ' (mgd)';
-    var labels = [
-        "Public Supply (mgd)",
-        "Domestic (mgd)",
-        "Irrigation (mgd)",
-        "Thermoelectric Power (mgd)",
-        "Livestock and Aquaculture (mgd)",
-        "Industrial (mgd)",
-        "Mining (mgd)"
-    ];
-    
+    var WaterUsageChart;
+
     var oneData = [
         ["1985/01/01",0.25,null,0,null,0.85,null,0,null,20.27,null,0,null,0,null,0,0,0,0,null,null,0,null,0,0,null,null,null,null,null,null,null,null,0.54,null,0.02,null,null,null,null,null,null,null,null,null,null,null,0,0,3.44,0,0,0,0,0]
     ];
@@ -84,4 +37,60 @@ describe('Tests for WaterUsageChart', function() {
         ["2004/01/01",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
         ["2005/01/01",0.69,0,0,0,0.77,null,0,null,48.81,null,0.27,null,null,null,null,null,null,null,null,null,null,null,null,null,0,0,0,0,0,0,0,0,null,null,null,null,0.29,0.03,null,null,null,null,0.89,null,0,null,0.23,0,0,0,0.01,0,0.01,0]
     ];
-})
+	var waterUseConfig;
+
+    describe('Data Combination', function() {
+		beforeEach (function() {
+			waterUseConfig = new NWC.model.WaterUseCollection([{
+					name : 'Public Supply',
+					observedProperties : ["PS-WGWFr", "PS-WGWSa", "PS-WSWFr", "PS-WSWSa"],
+					color : '#67609e'
+				},{
+					name : 'Domestic',
+					observedProperties : ["DO-WGWFr", "DO-WGWSa", "DO-WSWFr", "DO-WSWSa"],
+					color : '#ed1c24'
+				},{
+					name : 'Irrigation',
+					observedProperties : ["IT-WGWFr", "IT-WGWSa", "IT-WSWFr", "IT-WSWSa"],
+					color : '#009c88'
+				},{
+					name : 'Thermoelectric Power',
+					observedProperties : ["PF-WGWFr", "PF-WGWSa", "PF-WSWFr", "PF-WSWSa", "PG-WGWFr", "PG-WGWSa", "PG-WSWFr", "PG-WSWSa", "PN-WGWFr", "PN-WGWSa", "PN-WSWFr", "PN-WSWSa", "PO-WGWFr", "PO-WGWSa", "PO-WSWFr", "PO-WSWSa", "PC-WGWFr", "PC-WGWSa", "PC-WSWFr", "PC-WSWSa"],
+					color : '#f1b650'
+				},{
+					name : 'Livestock and Aquaculture',
+					observedProperties : ["LS-WGWFr", "LS-WGWSa", "LS-WSWFr", "LS-WSWSa", "LI-WGWFr", "LI-WSWFr", "LA-WGWFr", "LA-WGWSa", "LA-WSWFr", "LA-WSWSa", "AQ-WGWFr", "AQ-WGWSa", "AQ-WSWFr", "AQ-WSWSa"],
+					color : '#b9cfe6'
+				},{
+					name: 'Industrial',
+					observedProperties : ["IN-WGWFr", "IN-WGWSa", "IN-WSWFr", "IN-WSWSa"],
+					color : '#0080b7'
+				},{
+					name : 'Mining',
+					observedProperties : ["MI-WGWFr", "MI-WGWSa", "MI-WSWFr", "MI-WSWSa"],
+					color : '#f5833c'
+				}
+			]);
+			WaterUsageChart = NWC.util.WaterUsageChart(waterUseConfig);
+		});
+
+
+        it('should split a row into an object with date and values', function() {
+            var expected = oneSplit[0];
+            var actual = WaterUsageChart.splitRow(oneData[0]);
+            expect(actual).toEqual(expected);
+        });
+
+        it('should combine a rows values', function() {
+            var expected = oneCombined;
+            var actual = WaterUsageChart.combineDataRow(oneSplit[0].values);
+            expect(actual).toEqual(expected);
+        });
+
+        it('should do something', function() {
+            var expected = oneResult;
+            var actual = WaterUsageChart.combineData(oneData);
+            expect(actual).toEqual(expected);
+        });
+    });
+});
