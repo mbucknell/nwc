@@ -209,7 +209,16 @@ NWC.model = NWC.model || {};
 								dataset: 'HUC12_data',
 								fileName: 'HUC12_Q.nc',
 								downloadMetadata: 'Streamflow data documentation can be found here:\nhttp://pubs.er.usgs.gov/publication/sir20145231'
-							})
+							}),
+							statsWpsService : {
+								identifier : 'org.n52.wps.server.r.stats_huc12_modeled',
+								sos : CONFIG.endpoint.direct.thredds + 'HUC12_data/HUC12_Q.nc',
+								observedProperty : 'MEAN_streamflow',
+								wfsUrl : CONFIG.endpoint.direct.geoserver + 'ows',
+								wfsTypename : 'NWC:huc12_se_basins_v2',
+								wfsFilterProperty : 'NWC:huc12',
+								wfsAreaPropertyname : 'NWC:mi2'
+							}
 						}
 					}),
 					gage : new NWC.model.DataSourceModel({
@@ -234,6 +243,9 @@ NWC.model = NWC.model || {};
 									beginDate : 'begin_date',
 									endDate : 'end_date'
 								}
+							},
+							statsWpsService : {
+								identifier : 'org.n52.wps.server.r.stats_nwis'
 							}
 						}
 					})
