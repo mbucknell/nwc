@@ -62,7 +62,7 @@ NWC.model = NWC.model || {};
 			_.each(options, function(waterUse) {
 				this.lookupByName[waterUse.name] = waterUse;
 			}, this);
-			
+
 			this.lookupNameByObservedProperty = {};
 				_.each(options, function(waterUse) {
 					var result = {};
@@ -216,11 +216,23 @@ NWC.model = NWC.model || {};
 						layerName : 'gagesII',
 						namespace : 'NWC',
 						variables : {
-							nwisData : {
+							nwisStreamFlowData : {
 								queryParams : {
 									'format': 'waterml,1.1',
 									'statCD' : '00003',
 									'parameterCd': '00060'
+								}
+							},
+							nwisSiteFileData : {
+								queryParams : {
+									'format' : 'rdb',
+									'seriesCatalogOutput': 'true',
+									'parameterCd': '00060',
+									'outputDataTypeCd': 'dv'
+								},
+								colNames : {
+									beginDate : 'begin_date',
+									endDate : 'end_date'
 								}
 							}
 						}

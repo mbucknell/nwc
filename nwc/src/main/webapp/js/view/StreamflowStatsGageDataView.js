@@ -21,15 +21,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 	 * @return {Jquery.deferred}
 	 */
 	_retrieveNWISData : function() {
-		var NWIS_QUERY_PARAMS = {
-			'format': 'rdb',
-			'seriesCatalogOutput': 'true',
-			'parameterCd': '00060',
-			'outputDataTypeCd': 'dv'
-		};
-
-		var START_DATE_COL_NAME = 'begin_date';
-		var END_DATE_COL_NAME = 'end_date';
+		var nwisSiteFileDataConfig = this.streamflowGageConfig.variables.nwisSiteFileData;
 
 		var reformatDateStr = function(dateStr){
 			return dateStr.replace(/-/g, '/');
@@ -38,7 +30,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 			return Date.create(dateStr).utc();
 		};
 
-		var params = $.extend({}, NWIS_QUERY_PARAMS, {sites : this.context.gageId});
+		var params = $.extend({}, nwisSiteFileDataConfig.queryParams, {sites : this.context.gageId});
 
 		var gageInfoSuccess = function(response) {
 			var rdbTables = NWC.util.RdbParser.parse(response);
@@ -47,7 +39,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 			}
 
 			var table = rdbTables[0];
-			var startColumn = table.getColumnByName(START_DATE_COL_NAME);
+			var startColumn = table.getColumnByName(nwisSiteFileDataConfig.colNames.beginDate);
 			startColumn = startColumn.map(reformatDateStr);
 			startColumn = startColumn.map(strToDate);
 			startColumn.sort(function(a, b) {
@@ -57,7 +49,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 				startColumn.push(NWC.util.WaterYearUtil.waterYearStart(1981));
 			}
 
-			var endColumn = table.getColumnByName(END_DATE_COL_NAME);
+			var endColumn = table.getColumnByName(nwisSiteFileDataConfig.colNames.endDate);
 			endColumn = endColumn.map(reformatDateStr);
 			endColumn = endColumn.map(strToDate);
 			endColumn.sort(function(a, b) {
@@ -327,7 +319,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 	},
 
 	_getStreamflowParams : function(startDate, endDate, siteId) {
-		return $.extend({}, this.streamflowGageConfig.variables.nwisData.queryParams, {
+		return $.extend({}, this.streamflowGageConfig.variables.nwisStreamFlowData.queryParams, {
 			sites : siteId,
 			startDT : startDate.format('{yyyy}-{MM}-{dd}'),
 			endDt : endDate.format('{yyyy}-{MM}-{dd}')
