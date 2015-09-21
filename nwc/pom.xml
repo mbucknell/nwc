@@ -45,10 +45,7 @@
 					<suffix>-${project.version}-min</suffix>
 					<excludes>
 						<exclude>**/Flowlines*.js</exclude>
-						<exclude>**/Gage*/*.js</exclude>
-						<exclude>**/WaterCensusControls.js</exclude>
 						<exclude>**/FileSaver*.js</exclude>
-						<exclude>**/demo*.*</exclude>
 						<exclude>**/jquery.flot.*.js</exclude>
 					</excludes>
 				</configuration>  

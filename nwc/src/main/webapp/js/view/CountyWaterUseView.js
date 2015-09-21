@@ -29,18 +29,23 @@ NWC.view = NWC.view || {};
 		initialize : function(options) {
 			var self = this;
 			var baseLayer;
+			var watershedConfig;
+			var waterUseDataLoaded;
 			var countyLayerLoaded = $.Deferred();
 			var hucLayerLoaded = $.Deferred();
 
-			var watershedConfig = NWC.config.getWatershed(options.hucId);
-			var waterUseDataLoaded = this.getWaterUseDataSeries(options.fips);
+			this.countyConfig = NWC.config.get('county').attributes;
+
+			watershedConfig = NWC.config.getWatershed(options.hucId);
+			waterUseDataLoaded = this.getWaterUseDataSeries(options.fips);
 
 			this.hucId = options.hucId;
 			this.fips = options.fips;
 			this.context = {
 				hucId : this.hucId
 			};
-			this.countyConfig = NWC.config.get('county').attributes;
+
+			this.waterUsageChart = NWC.util.WaterUsageChart(NWC.config.get('countyWaterUse'));
 
 			// Create inset map containing the county and the huc
 			baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
@@ -108,9 +113,9 @@ NWC.view = NWC.view || {};
 
 		getWaterUseDataSeries : function(fips) {
 			var self = this;
-			var waterUseConfig = NWC.config.get('county').attributes.variables.waterUse;
+			var countyWaterUseVariables = this.countyConfig.variables.waterUse;
 			var deferred = $.Deferred();
-			var url = waterUseConfig.getSosUrl(fips);
+			var url = countyWaterUseVariables.getSosUrl(fips);
 			this.waterUseDataSeries = NWC.util.DataSeries.newSeries();
 
 			$.ajax({
@@ -121,15 +126,15 @@ NWC.view = NWC.view || {};
 					self.waterUseDataSeries.data = parsedTable;
 
 					//use the series metadata as labels
-					var additionalSeriesLabels = waterUseConfig.get('propertyLongName').split(',');
+					var additionalSeriesLabels = NWC.config.get('countyWaterUse').getAllNames();
 					additionalSeriesLabels.each(function(label) {
 						self.waterUseDataSeries.metadata.seriesLabels.push({
 							seriesName: label,
-							seriesUnits: waterUseConfig.get('units')
+							seriesUnits: countyWaterUseVariables.get('units')
 						});
 					});
 
-					self.waterUseDataSeries.metadata.downloadHeader = waterUseConfig.get('tdownloadMetadata');
+					self.waterUseDataSeries.metadata.downloadHeader = countyWaterUseVariables.get('downloadMetadata');
 					deferred.resolve();
 				},
 				dataType : "xml",
@@ -167,7 +172,7 @@ NWC.view = NWC.view || {};
 				measurementSystem, plotNormalization, plotTimeDensity).from(1);
 			var ylabel = NWC.util.Units[measurementSystem][plotNormalization][plotTimeDensity];
 
-			NWC.util.WaterUsageChart.setChart(chartDivEl, chartLegendDivEl, values, labels, ylabel,
+			this.waterUsageChart.setChart(chartDivEl, chartLegendDivEl, values, labels, ylabel,
 				NWC.util.Units[measurementSystem][plotNormalization].precision);
 			return;
 		},
@@ -227,7 +232,7 @@ NWC.view = NWC.view || {};
 
 		getCombinedWaterUse : function(dataSeries) {
 			var result = Object.clone(dataSeries);
-			result.data = NWC.util.WaterUsageChart.combineData(result.data);
+			result.data = this.waterUsageChart.combineData(result.data);
 			return result;
 		},
 

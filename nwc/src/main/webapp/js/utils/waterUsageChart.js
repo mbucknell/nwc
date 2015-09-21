@@ -2,7 +2,12 @@ NWC = NWC || {};
 
 NWC.util = NWC.util || {};
 
-NWC.util.WaterUsageChart = (function () {
+/*
+ *
+ * @param {NWC.model.WaterUseCollection} waterUseConfig
+ * @returns {NWC.util.WaterUsageChart.that}
+ */
+NWC.util.WaterUsageChart = function (waterUseConfig) {
 	var that = {};
 
     var numberOfDatesPerRow = 1; //TODO[Sibley] Copy paste from SosResponseParser, figure out a better place for this
@@ -22,19 +27,23 @@ NWC.util.WaterUsageChart = (function () {
     	return (val || 0 === val);
     };
 
-    that.combineDataRow = function(row, inLabels, outLabels, lookup) {
+    that.combineDataRow = function(row) {
     	var result = null;
-    	var segregatedValueHolder = outLabels.reduce(function(prev, curr) {
+		var observedProperties = waterUseConfig.getAllObservedProperties();
+		var names = waterUseConfig.getAllNames();
+
+    	var segregatedValueHolder = names.reduce(function(prev, curr) {
     		prev[curr] = [];
     		return prev;
     	}, {});
 
+		// This assumes that the rows are in the same order as the observedProperies
     	row.forEach(function(el, index) {
-    		segregatedValueHolder[lookup[inLabels[index]]].push(el);
+			segregatedValueHolder[waterUseConfig.getName(observedProperties[index])].push(el);
     	});
 
-    	result = outLabels.map(function(outLabel) {
-    		return segregatedValueHolder[outLabel].reduce(function(runningTotal, nextValue) {
+    	result = names.map(function(name) {
+    		return segregatedValueHolder[name].reduce(function(runningTotal, nextValue) {
     			var result = runningTotal;
     			if (isSomeData(nextValue)) {
     				if (isSomeData(runningTotal)) {
@@ -50,6 +59,11 @@ NWC.util.WaterUsageChart = (function () {
     	return result;
     };
 
+	/*
+	 * @param {Array of row} rows - timeSeries data. Each row is assumed to have the date as the first elements.
+	 *     The remaining elements are the data for each observedProperty in waterUseConfig.getAllObservedProperties()
+	 * @returns {Array}
+	 */
     that.combineData = function(rows) {
     	var result = [];
 
@@ -58,12 +72,8 @@ NWC.util.WaterUsageChart = (function () {
     			return that.splitRow(row);
     		});
 
-    		var inLabels = NWC.util.CountyWaterUseProperties.getObservedProperties();
-    		var outLabels = NWC.util.CountyWaterUseProperties.getPropertyLongNames();
-    		var lookup = NWC.util.CountyWaterUseProperties.propertyLongNameLookup();
-
     		result = splitRows.map(function(row) {
-    			return row.dates.concat(that.combineDataRow(row.values, inLabels, outLabels, lookup));
+    			return row.dates.concat(that.combineDataRow(row.values));
     		});
     	}
 
@@ -71,10 +81,20 @@ NWC.util.WaterUsageChart = (function () {
     };
 
     var privateChart = {};
-    that.setChart = function(chartEl, chartLegendDivEl, inputData, labels, ylabel, precision) {
+
+	/*
+	 * @param {String} chartEl
+	 * @param {Jquery element} chartLegendDivEl
+	 * @param {Array of array of time series data} inputData -First element in inner array is assumed to be the date.
+	 *      The remaining elements are the time series data for each observerProperty in waterUseConfig.getAllObservedProperties
+	 * @param {String} ylabel
+	 * @param {Number} precision
+	 */
+    that.setChart = function(chartEl, chartLegendDivEl, inputData, ylabel, precision) {
+		var labels = waterUseConfig.getAllNames();
     	if (!inputData || !inputData.length) {
     		if (privateChart.shutdown) {
-    			privateChart.shutdown()
+    			privateChart.shutdown();
     		}
     		return;
     	}
@@ -103,12 +123,10 @@ NWC.util.WaterUsageChart = (function () {
     		throw new Exception(errMsg);
     	}
 
-		var props = NWC.util.CountyWaterUseProperties.observedPropertiesLookup();
-
     	labels.each(function(label, labelIndex) {
     		var column = {
 				label: label,
-				color : props[label].color
+				color : NWC.config.get('countyWaterUse').getColor(label)
 			};
     		//date column offsets index calculation by one
     		var valueIndex = labelIndex + 1;
@@ -157,7 +175,7 @@ NWC.util.WaterUsageChart = (function () {
 					color: "black",
 					axisLabel: "Date",
 					axisLabelPadding: 10,
-                                        min: 473212800000, // This is the number of milliseconds since 1884-12-30 00:00:00
+					min: 473212800000, // This is the number of milliseconds since 1884-12-30 00:00:00
 					font: {
 						size: 12,
 						family: "sans-serif",
@@ -212,4 +230,4 @@ NWC.util.WaterUsageChart = (function () {
 	};
 
     return that;
-}());
+};

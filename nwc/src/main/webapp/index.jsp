@@ -114,7 +114,6 @@
 		<script type="text/javascript" src="js/utils/jqueryUtils<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/Conversion<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/mapUtils<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/utils/CountyWaterUseProperties<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/SosResponseParser<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/dataSeriesStore<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/Plotter<%= resourceSuffix %>.js"></script>
