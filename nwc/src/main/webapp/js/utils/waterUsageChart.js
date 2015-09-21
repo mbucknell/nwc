@@ -8,6 +8,8 @@ NWC.util = NWC.util || {};
  * @returns {NWC.util.WaterUsageChart.that}
  */
 NWC.util.WaterUsageChart = function (waterUseConfig) {
+	"use strict";
+	
 	var that = {};
 
     var numberOfDatesPerRow = 1; //TODO[Sibley] Copy paste from SosResponseParser, figure out a better place for this
@@ -126,7 +128,7 @@ NWC.util.WaterUsageChart = function (waterUseConfig) {
     	labels.each(function(label, labelIndex) {
     		var column = {
 				label: label,
-				color : NWC.config.get('countyWaterUse').getColor(label)
+				color : waterUseConfig.getColor(label)
 			};
     		//date column offsets index calculation by one
     		var valueIndex = labelIndex + 1;

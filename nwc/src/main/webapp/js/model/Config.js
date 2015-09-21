@@ -58,12 +58,11 @@ NWC.model = NWC.model || {};
 				.flatten()
 				.value();
 
-			this.lookupByName = _.groupBy(options, function(waterUse) {
-				return waterUse.name;
-			});
-			var gBy = _.groupBy(options, function(waterUse) {
-					return waterUse.observedProperty;
-				});
+			this.lookupByName = {};
+			_.each(options, function(waterUse) {
+				this.lookupByName[waterUse.name] = waterUse;
+			}, this);
+			
 			this.lookupNameByObservedProperty = {};
 				_.each(options, function(waterUse) {
 					var result = {};

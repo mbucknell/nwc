@@ -172,7 +172,7 @@ NWC.view = NWC.view || {};
 				measurementSystem, plotNormalization, plotTimeDensity).from(1);
 			var ylabel = NWC.util.Units[measurementSystem][plotNormalization][plotTimeDensity];
 
-			this.waterUsageChart.setChart(chartDivEl, chartLegendDivEl, values, labels, ylabel,
+			this.waterUsageChart.setChart(chartDivEl, chartLegendDivEl, values, ylabel,
 				NWC.util.Units[measurementSystem][plotNormalization].precision);
 			return;
 		},
