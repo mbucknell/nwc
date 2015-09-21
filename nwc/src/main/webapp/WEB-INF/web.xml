@@ -60,7 +60,11 @@
     </servlet-mapping>
     <filter>
         <filter-name>SearchBotUglyUrlFilter</filter-name>
-        <filter-class>gov.usgs.cida.nwc.filter.SearchBotUglyUrlFilter</filter-class>
+        <filter-class>gov.usgs.cida.ajax_search_crawler_tools.SearchCrawlerUglyUrlFilter</filter-class>
+        <init-param>
+            <param-name>search-crawler-servicer</param-name>
+            <param-value>gov.usgs.cida.nwc.servlet.NWCSearchCrawlerServicer</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>SearchBotUglyUrlFilter</filter-name>
