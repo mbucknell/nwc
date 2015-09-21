@@ -103,9 +103,9 @@ NWC.util = NWC.util || {};
 					'startdate': startDateString,
 					'enddate': endDateString,
 					'stats': statTypesString,
-					'sos': hucStatsWpsService.sos,
+					'sos': CONFIG.endpoint.direct.thredds + hucStatsWpsService.sos,
 					'observedProperty': hucStatsWpsService.observedProperty,
-					'wfsUrl': hucStatsWpsService.wfsUrl,
+					'wfsUrl': CONFIG.endpoint.direct.geoserver + 'ows',
 					'wfsTypename': hucStatsWpsService.wfsTypename,
 					'wfsFilterProperty': hucStatsWpsService.wfsFilterProperty,
 					'wfsAreaPropertyname': hucStatsWpsService.wfsAreaPropertyname

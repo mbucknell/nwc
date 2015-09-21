@@ -212,9 +212,8 @@ NWC.model = NWC.model || {};
 							}),
 							statsWpsService : {
 								identifier : 'org.n52.wps.server.r.stats_huc12_modeled',
-								sos : CONFIG.endpoint.direct.thredds + 'HUC12_data/HUC12_Q.nc',
+								sos : 'HUC12_data/HUC12_Q.nc',
 								observedProperty : 'MEAN_streamflow',
-								wfsUrl : CONFIG.endpoint.direct.geoserver + 'ows',
 								wfsTypename : 'NWC:huc12_se_basins_v2',
 								wfsFilterProperty : 'NWC:huc12',
 								wfsAreaPropertyname : 'NWC:mi2'
