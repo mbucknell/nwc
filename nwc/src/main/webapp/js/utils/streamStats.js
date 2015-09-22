@@ -9,9 +9,9 @@ NWC.util = NWC.util || {};
 	"use strict";
 
 	var streamStatsDateFormat = '{yyyy}-{MM}-{dd}';
-    var statTypesToString = function (statTypes) {
-        return statTypes.join(',');
-    };
+	var statTypesToString = function (statTypes) {
+		return statTypes.join(',');
+	};
     var siteIdsToString = function (siteIds) {
         return siteIds.join(',');
     };
