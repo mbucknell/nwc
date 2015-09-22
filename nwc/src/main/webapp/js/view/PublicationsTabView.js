@@ -9,13 +9,13 @@ NWC.view = NWC.view || {};
 
 	NWC.view.PublicationsTabView = NWC.view.BaseDiscoveryTabView.extend({
 		listTemplateName : 'dataDiscoveryList',
-		detailsTemplateName : 'publicationsDetail', //TODO: change to publications template
+		detailsTemplateName : 'publicationsDetail',
 
 		listUrl : function() {
-			return CONFIG.endpoint.direct.sciencebase + '/catalog/items?&q=&filter0=browseCategory%3DPublication&community=National+Water+Census&format=json';
+			return CONFIG.endpoint.direct.sciencebase + NWC.config.get('sciencebaseUrlFragment').getPublicationsFragment();
 		},
 		detailsUrl : function(id) {
-			return CONFIG.endpoint.direct.sciencebase + '/catalog/item/' + id + '?format=json';
+			return CONFIG.endpoint.direct.sciencebase + NWC.config.get('sciencebaseUrlFragment').getSingleItemFragment(id);
 		}
 	});
 }());
