@@ -62,7 +62,7 @@ NWC.model = NWC.model || {};
 			_.each(options, function(waterUse) {
 				this.lookupByName[waterUse.name] = waterUse;
 			}, this);
-			
+
 			this.lookupNameByObservedProperty = {};
 				_.each(options, function(waterUse) {
 					var result = {};
@@ -209,19 +209,42 @@ NWC.model = NWC.model || {};
 								dataset: 'HUC12_data',
 								fileName: 'HUC12_Q.nc',
 								downloadMetadata: 'Streamflow data documentation can be found here:\nhttp://pubs.er.usgs.gov/publication/sir20145231'
-							})
+							}),
+							statsWpsService : {
+								identifier : 'org.n52.wps.server.r.stats_huc12_modeled',
+								sos : 'HUC12_data/HUC12_Q.nc',
+								observedProperty : 'MEAN_streamflow',
+								wfsTypename : 'NWC:huc12_se_basins_v2',
+								wfsFilterProperty : 'NWC:huc12',
+								wfsAreaPropertyname : 'NWC:mi2'
+							}
 						}
 					}),
 					gage : new NWC.model.DataSourceModel({
 						layerName : 'gagesII',
 						namespace : 'NWC',
 						variables : {
-							nwisData : {
+							nwisStreamFlowData : {
 								queryParams : {
 									'format': 'waterml,1.1',
 									'statCD' : '00003',
 									'parameterCd': '00060'
 								}
+							},
+							nwisSiteFileData : {
+								queryParams : {
+									'format' : 'rdb',
+									'seriesCatalogOutput': 'true',
+									'parameterCd': '00060',
+									'outputDataTypeCd': 'dv'
+								},
+								colNames : {
+									beginDate : 'begin_date',
+									endDate : 'end_date'
+								}
+							},
+							statsWpsService : {
+								identifier : 'org.n52.wps.server.r.stats_nwis'
 							}
 						}
 					})

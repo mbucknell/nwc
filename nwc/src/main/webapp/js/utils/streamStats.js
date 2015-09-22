@@ -1,12 +1,17 @@
+/*jslint browser: true */
+
+
 var NWC = NWC || {};
 
 NWC.util = NWC.util || {};
 
 (function() {
+	"use strict";
+
 	var streamStatsDateFormat = '{yyyy}-{MM}-{dd}';
-    var statTypesToString = function (statTypes) {
-        return statTypes.join(',');
-    };
+	var statTypesToString = function (statTypes) {
+		return statTypes.join(',');
+	};
     var siteIdsToString = function (siteIds) {
         return siteIds.join(',');
     };
@@ -60,12 +65,6 @@ NWC.util = NWC.util || {};
 					},
 					error: resultsCouldNotBeObtained
 				});
-				//$get(NWC.util.wps.getProxyUrl(resultsUrl)).then(
-				//	function (response) {
-				//		resultsHaveBeenObtained(response, NWC.util.wps.getProxyUrl(resultsUrl), callback);
-				//	},
-				//	resultsCouldNotBeObtained
-				//);
 			}
 		};
 	};
@@ -95,19 +94,21 @@ NWC.util = NWC.util || {};
 			var startDateString = dateToString(startDate);
 			var endDateString = dateToString(endDate);
 
+			var hucStatsWpsService = NWC.config.get('streamflow').huc12.attributes.variables.statsWpsService;
+
 			// need to add the http: back in
-			var doc = NWC.util.wps.createWpsExecuteRequestDocument('org.n52.wps.server.r.stats_huc12_modeled',
+			var doc = NWC.util.wps.createWpsExecuteRequestDocument(hucStatsWpsService.identifier,
 				{
 					'sites': siteIdsString,
 					'startdate': startDateString,
 					'enddate': endDateString,
 					'stats': statTypesString,
-					'sos': CONFIG.endpoint.direct.thredds + 'HUC12_data/HUC12_Q.nc',
-					'observedProperty': 'MEAN_streamflow',
+					'sos': CONFIG.endpoint.direct.thredds + hucStatsWpsService.sos,
+					'observedProperty': hucStatsWpsService.observedProperty,
 					'wfsUrl': CONFIG.endpoint.direct.geoserver + 'ows',
-					'wfsTypename': 'NWC:huc12_se_basins_v2',
-					'wfsFilterProperty': 'NWC:huc12',
-					'wfsAreaPropertyname': 'NWC:mi2'
+					'wfsTypename': hucStatsWpsService.wfsTypename,
+					'wfsFilterProperty': hucStatsWpsService.wfsFilterProperty,
+					'wfsAreaPropertyname': hucStatsWpsService.wfsAreaPropertyname
 				},
 				NWC.util.wps.getDefaultAsynchronousResponseForm()
 			);
@@ -134,7 +135,7 @@ NWC.util = NWC.util || {};
 			var endDateString = dateToString(endDate);
 
 
-			var doc = NWC.util.wps.createWpsExecuteRequestDocument('org.n52.wps.server.r.stats_nwis',
+			var doc = NWC.util.wps.createWpsExecuteRequestDocument(NWC.config.get('streamflow').gage.attributes.variables.statsWpsService.identifier,
 				{
 					'sites': siteIdsString,
 					'startdate': startDateString,
