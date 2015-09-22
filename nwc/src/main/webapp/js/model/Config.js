@@ -92,6 +92,40 @@ NWC.model = NWC.model || {};
 		}
 	});
 
+	NWC.model.SciencebaseUrlFragmentModel = Backbone.Model.extend({
+		defaults : {
+			singleitem : '/catalog/item/',
+			dataItems : '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DData',
+			projectItems : '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DProject',
+			publicationItems : '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DPublication'
+		},
+
+		getSingleItemFragment : function(id) {
+			return this.get('singleitem') + id + '?format=json';
+		},
+
+		getProjectsFragment : function() {
+			return this.get('projectItems') + '&format=json';
+		},
+
+		getDataFragment : function(parentId) {
+			if (parentId) {
+				return this.get('dataItems') + '&parentId=' + parentId + '&format=json';
+			}
+			else {
+				return this.get('dataItems') + '&format=json';
+			}
+		},
+		getPublicationsFragment : function(parentId) {
+			if (parentId) {
+				return this.get('publicationItems') + '&parentId=' + parentId + '&format=json';
+			}
+			else {
+				return this.get('publicationItems') + '&format=json';
+			}
+		}
+	});
+
 	var Config = Backbone.Model.extend({
 		defaults : function() {
 			var countyWaterUse = new NWC.model.WaterUseCollection([
@@ -249,7 +283,8 @@ NWC.model = NWC.model || {};
 						}
 					})
 				},
-				countyWaterUse : countyWaterUse
+				countyWaterUse : countyWaterUse,
+				sciencebaseUrlFragment : new NWC.model.SciencebaseUrlFragmentModel()
 			};
 			// Add things as needed for the county variable and streamflow variables.
 		},

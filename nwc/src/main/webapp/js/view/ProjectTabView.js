@@ -14,10 +14,10 @@ NWC.view = NWC.view || {};
 		detailsTemplateName : 'projectDetail',
 
 		listUrl : function() {
-			return CONFIG.endpoint.direct.sciencebase + '/catalog/items?facetTermLevelLimit=false&q=&community=National+Water+Census&filter0=browseCategory%3DProject&format=json';
+			return CONFIG.endpoint.direct.sciencebase + NWC.config.get('sciencebaseUrlFragment').getProjectsFragment();
 		},
 		detailsUrl : function(id) {
-			return CONFIG.endpoint.direct.sciencebase + '/catalog/item/' + id + '?format=json';
+			return CONFIG.endpoint.direct.sciencebase + NWC.config.get('sciencebaseUrlFragment').getSingleItemFragment(id);
 		}
 	});
 }());
