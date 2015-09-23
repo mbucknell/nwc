@@ -16,6 +16,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	events: {
 		'click #counties-button' : 'displayCountyMap',
+		'click #accumulated-button' : 'displayAccumulated',
 		'click #compare-hucs-button' : 'goToAddHucMapPage',
 		'click #units-btn-group button' : 'changeUnits',
 		'click #time-scale-btn-group button' : 'changeTimeScale'
@@ -41,7 +42,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		this.compareHucId = options.compareHucId ? options.compareHucId :'';
 		this.fips = options.fips ? options.fips : '';
 
-		this.context.showAdditionalDataButtons = !(this.compareHucId || this.fips);
+		this.context.showAdditionalDataButtons = !(this.compareHucId || this.fips || this.gageId);
 
 		// call superclass initialize to do default initialize
 		// (includes render)
@@ -116,6 +117,20 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	 * Create the county map view.
 	 */
 	displayCountyMap : function() {
+		this.hucCountyMapView = new NWC.view.HucCountyMapView({
+			huc : this.hucId,
+			hucFeature : new OpenLayers.Feature.Vector(
+					this.hucInsetMapView.hucLayer.features[0].geometry.clone(),
+					this.hucInsetMapView.hucLayer.features[0].attributes),
+			router : this.router,
+			el : this.$('#county-selection-div')
+		});
+	},
+
+	/*
+	 * Create the county map view.
+	 */
+	displayAccumulated : function() {
 		this.hucCountyMapView = new NWC.view.HucCountyMapView({
 			huc : this.hucId,
 			hucFeature : new OpenLayers.Feature.Vector(
