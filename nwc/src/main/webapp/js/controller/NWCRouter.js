@@ -17,6 +17,7 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 	routes: {
 		'' : 'home',
 		'!home' : 'home',
+		'!waterbudget/achuc/:huc' : 'waterbudgetAccumulated',
 		'!waterbudget/huc/:huc' : 'waterbudgetHucData',
 		'!waterbudget/huc/:huc/county/:fips' : 'waterbudgetHucCountyData',
 		'!waterbudget/comparehucs/:hucX/:hucY' : 'waterbudgetCompareHucs',
@@ -50,6 +51,13 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 			model : this.waterBudgetSelectMapModel,
 			hucId : huc
 		});
+	},
+
+	waterbudgetAccumulated : function(huc) {
+		this.showView(NWC.view.WaterBudgetHucDataView, {
+			accumulated : true,
+			hucId : huc,
+			insetHucMapDiv : 'huc-inset'});
 	},
 
 	waterbudgetHucData : function(huc) {

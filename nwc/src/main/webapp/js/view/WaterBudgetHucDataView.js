@@ -16,7 +16,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	events: {
 		'click #counties-button' : 'displayCountyMap',
-		'click #accumulated-button' : 'displayAccumulated',
+		'click #accumulated-button' : 'goToAccumulatedPage',
 		'click #compare-hucs-button' : 'goToAddHucMapPage',
 		'click #units-btn-group button' : 'changeUnits',
 		'click #time-scale-btn-group button' : 'changeTimeScale'
@@ -30,6 +30,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	 * @param {Object} options
 	 *     @prop {Jquery.Element} el - Container where this view will be rendered
 	 *     @prop {Backbone.Router} router
+	 *     @prop {Boolean} accumulated - false indicates if this is local watershed, true indicates accumulated.
 	 *     @prop {String} hucId - Id of the huc for which information should be shown.
 	 *     @prop {String} compareHucId (optional) - Huc Id used for second plot to compare to first.
 	 *     @prop {String} fips (optional) - If specified, water use data for the county with fips will be shown.
@@ -38,18 +39,29 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		var self = this;
 		var $plotContainer;
 
+		this.accumulated = options.accumulated ? options.accumulated : false;
 		this.hucId = options.hucId;
 		this.compareHucId = options.compareHucId ? options.compareHucId :'';
 		this.fips = options.fips ? options.fips : '';
 
-		this.context.showAdditionalDataButtons = !(this.compareHucId || this.fips || this.gageId);
+		this.context.showAdditionalDataButtons = !(this.compareHucId || this.fips);
+
+		//	if accumulated view only show the compare button, 
+		if (this.accumulated) {
+			this.context.showWaterUseButton = false;
+			this.context.showAccumulatedButton = false;
+		}
+		else {
+			//if huc_12 watershed and local view, show button for accumulated water budget
+			this.context.showAccumulatedButton = (this.hucId.length === 12);			
+			this.context.showWaterUseButton = true;			
+		}
 
 		// call superclass initialize to do default initialize
 		// (includes render)
 		NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 
 		this.setUpHucPlotModel();
-
 
 		// Create additional sub views as needed
 		$plotContainer = this.$('#huc-plot-container');
@@ -75,16 +87,38 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				model : this.hucPlotModel
 			});
 		}
+		else if (this.accumulated) {
+			this.hucInsetMapView = new NWC.view.HucInsetMapView({
+				el : this.$('.huc-inset-map-container'),
+				accumulated : true,
+				hucId : this.hucId,
+				gageId : this.gageId,
+				model : this.hucPlotModel
+			});
+			
+			/*	get the gage, if there is one,
+			*	create the plot view after watershedAcres has been updated
+			*	by the HucInsetMap feature
+			*/ 
+			var watershedGages = NWC.config.get('watershedGages');
+			this.gageId = watershedGages.getGageId(this.hucId);
+			this.listenTo(this.hucPlotModel, 'change:watershedAcres', this.accumulatedPlotView);
+			
+			this.hucInsetMapView.hucFeatureLoadedPromise.done(function() {
+				self.$('#compare-hucs-button').prop('disabled', false);
+			});
+		}
 		else {
 			this.hucInsetMapView = new NWC.view.HucInsetMapView({
 				el : this.$('.huc-inset-map-container'),
-				hucId : this.hucId
+				hucId : this.hucId,
+				model : this.hucPlotModel
 			});
 			this.hucInsetMapView.hucFeatureLoadedPromise.done(function() {
+				self.$('#accumulated-button').prop('disabled', false);
 				self.$('#counties-button').prop('disabled', false);
 				self.$('#compare-hucs-button').prop('disabled', false);
 			});
-
 			this.plotView = new NWC.view.WaterbudgetPlotView({
 				hucId : this.hucId,
 				el : this.$('#huc-plot-container'),
@@ -99,6 +133,16 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				el : this.$('#wateruse')
 			});
 		}
+	},
+	
+	accumulatedPlotView : function () {
+		this.plotView = new NWC.view.WaterbudgetPlotView({
+			accumulated : true,
+			hucId : this.hucId,
+			gageId : this.gageId,
+			el : this.$('#huc-plot-container'),
+			model : this.hucPlotModel
+		});		
 	},
 
 	/*
@@ -127,18 +171,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		});
 	},
 
-	/*
-	 * Create the county map view.
-	 */
-	displayAccumulated : function() {
-		this.hucCountyMapView = new NWC.view.HucCountyMapView({
-			huc : this.hucId,
-			hucFeature : new OpenLayers.Feature.Vector(
-					this.hucInsetMapView.hucLayer.features[0].geometry.clone(),
-					this.hucInsetMapView.hucLayer.features[0].attributes),
-			router : this.router,
-			el : this.$('#county-selection-div')
-		});
+	goToAccumulatedPage : function() {
+		this.router.navigate('#!waterbudget/achuc/' + this.hucId, {trigger: true});
 	},
 
 	goToAddHucMapPage : function() {

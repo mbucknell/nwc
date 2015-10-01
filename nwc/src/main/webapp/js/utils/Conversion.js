@@ -51,6 +51,21 @@ NWC.util = NWC.util || {};
         return result;
     };
 
+    /**
+     * Dimensional analysis for conversion factor
+     * 
+     * watershed-area acres * 43560 ft^2/acre = watershed area ft^2
+     *
+     *      ft^3/s                                                604.562 mm/day365 day
+     * ___________________  *    86400 s/day   *  304.8 mm/ft  =  _____________________
+     * watershed area ft^2                                           watershed area
+     */
+    var cfsToMmdConversionFactor = 604.562;
+    var cfsToMmd = function(cfs, acres) {
+        var result = (cfs * cfsToMmdConversionFactor)/acres;
+        return result;
+    };
+
     //go from Millions of Gallons per time to Millimeters per time
     var normalize = function(val, areaSqMiles) {
         var result = mgdToMmAcresPerDay(val) / squareMilesToAcres(areaSqMiles);
@@ -68,6 +83,7 @@ NWC.util = NWC.util || {};
 		acresToSquareMeters: acresToSquareMeters,
 		mmToInches: mmToInches,
 		mgdToMillionCubicMetersPerYear: mgdToMillionCubicMetersPerYear,
+		cfsToMmd: cfsToMmd,
 		normalize: normalize,
 		noop: noop
 	};
