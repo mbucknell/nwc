@@ -111,8 +111,7 @@ NWC.model = NWC.model || {};
 		},
 		getGageId : function(hucId) {
 			return this.lookupByHucId[hucId].gageId;
-		}
-		
+		}		
 	});
 
 	NWC.model.SciencebaseUrlFragmentModel = Backbone.Model.extend({
@@ -182,9 +181,6 @@ NWC.model = NWC.model || {};
 					color : '#f5833c'
 				}
 			]);
-			
-			var watershedGages = new NWC.model.WatershedGagesCollection();
-			watershedGages.fetch({reset : true});
 
 			return {
 				featureToggles : {
@@ -196,7 +192,7 @@ NWC.model = NWC.model || {};
 						namespace : 'WBD',
 						property : 'huc12',
 						name : 'name',
-						watershedAcres : 'areaacres', //should this be in variables?
+						watershedAcres : 'areaacres',
 						selectDisplay : '12 Digit',
 						variables : {
 							dayMet : new NWC.model.SosVariable({
@@ -222,7 +218,6 @@ NWC.model = NWC.model || {};
 						namespace : 'WBD',
 						property : 'huc8',
 						name : 'name',
-						watershedAcres : 'areaacres', //should this be in variables?
 						selectDisplay : '8 Digit',
 						variables : {
 							dayMet : new NWC.model.SosVariable({
@@ -340,9 +335,13 @@ NWC.model = NWC.model || {};
 				},
 				countyWaterUse : countyWaterUse,
 				sciencebaseUrlFragment : new NWC.model.SciencebaseUrlFragmentModel(),
-				watershedGages : watershedGages
+				watershedGages : new NWC.model.WatershedGagesCollection()
 			};
 			// Add things as needed for the county variable and streamflow variables.
+		},
+
+		fetch : function() {
+			return this.get('watershedGages').fetch();
 		},
 
 		getWatershed : function (hucId) {

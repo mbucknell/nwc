@@ -40,7 +40,6 @@ NWC.view = NWC.view || {};
 			var mapControls = [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()];
 			var hucLoadedDeferred = $.Deferred();
 
-			//do we want to put gage Id on view?
 			this.hucId = options.hucId;
 			this.context = {
 				hucId : this.hucId
@@ -59,15 +58,16 @@ NWC.view = NWC.view || {};
 			var watershedAcres;
 			this.hucLayer.events.on({
 				featureadded : function(event) {
-					self.hucName = event.feature.attributes[watershedConfig.name];
-					self.$('.huc-name').html(self.hucName);
-					self.model.set('watershedAcres', event.feature.attributes[watershedConfig.watershedAcres]);
+					this.hucName = event.feature.attributes[watershedConfig.name];
+					this.$('.huc-name').html(this.hucName);
+					this.model.set('watershedAcres', event.feature.attributes[watershedConfig.watershedAcres]);
 				},
 				loadend : function(event) {
-					self.map.zoomToExtent(self.hucLayer.getDataExtent());
-					self.$('.huc-loading-indicator').hide();
+					this.map.zoomToExtent(this.hucLayer.getDataExtent());
+					this.$('.huc-loading-indicator').hide();
 					hucLoadedDeferred.resolve();
-				}
+				},
+				scope : this
 			});
 			
 			var gageId = options.gageId ? options.gageId : null;
@@ -77,11 +77,15 @@ NWC.view = NWC.view || {};
 						this.streamflowGageConfig.namespace,
 						this.streamflowGageConfig.layerName,
 						gageId);
-				//might need to change the gage marker symbol?
-				//also might need other gage info?
-//				this.gageMarkerLayer = new OpenLayers.Layer.Markers("Markers");
-//				this.map.addLayers([this.gageLayer, this.gageMarkerLayer]);
-				this.map.addLayer(this.gageLayer);
+				this.gageMarkerLayer = new OpenLayers.Layer.Markers("Markers");
+				this.gageLayer.events.on({
+					featureadded : function(event) {
+						var lonlat = new OpenLayers.LonLat(event.feature.geometry.x, event.feature.geometry.y);
+						this.gageMarkerLayer.addMarker(new OpenLayers.Marker(lonlat));
+					},
+					scope : this
+				});
+				this.map.addLayers([this.gageLayer, this.gageMarkerLayer]);
 			}
 
 			this.map.addLayer(this.hucLayer);
@@ -90,7 +94,4 @@ NWC.view = NWC.view || {};
 			this.map.render('huc-inset-' + this.hucId);
 		}
 	});
-
 }());
-
-

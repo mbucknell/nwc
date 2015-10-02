@@ -88,6 +88,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			});
 		}
 		else if (this.accumulated) {
+			var watershedGages = NWC.config.get('watershedGages');
+			this.gageId = watershedGages.getGageId(this.hucId);
 			this.hucInsetMapView = new NWC.view.HucInsetMapView({
 				el : this.$('.huc-inset-map-container'),
 				accumulated : true,
@@ -96,12 +98,9 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				model : this.hucPlotModel
 			});
 			
-			/*	get the gage, if there is one,
-			*	create the plot view after watershedAcres has been updated
+			/*	create the plot view after watershedAcres has been updated
 			*	by the HucInsetMap feature
 			*/ 
-			var watershedGages = NWC.config.get('watershedGages');
-			this.gageId = watershedGages.getGageId(this.hucId);
 			this.listenTo(this.hucPlotModel, 'change:watershedAcres', this.accumulatedPlotView);
 			
 			this.hucInsetMapView.hucFeatureLoadedPromise.done(function() {

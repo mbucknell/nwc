@@ -90,8 +90,8 @@ NWC.view = NWC.view || {};
 				getDataDeferreds.push(d);
 				
 				if (sourceId === 'nwisStreamFlowData') {					
-					var startDate = '1838-01-01';  //this is the earliest date for all dv data
-					var endDate = '';  //use today? or, just leave blank?
+					var startDate = '1838-01-01';
+					var endDate = '';
 					var parseDateStr = function(dateStr){
 						var tokens = dateStr.split('T');
 						var newDateStr = tokens[0].replace(/-/g, '/');
@@ -126,8 +126,7 @@ NWC.view = NWC.view || {};
 
 							if (dataTable.length === 0) {
 								var errorMessage = 'No data available to plot ' + self.sourceId;
-								alert(errorMessage);
-//								d.reject(errorMessage);  //do we want to reject?
+								console.log(errorMessage);
 							}
 							else {
 								thisDataSeries.data = dataTable;
