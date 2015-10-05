@@ -39,13 +39,13 @@ NWC.view = NWC.view || {};
 			}
 
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
-			this.getHucDataPromise = this.getHucData(options.hucId, this.gageId).done(function() {
+			this.getHucDataPromise = this.getPlotData(options.hucId, this.gageId).done(function() {
 				self.$el.find('.download-btn-container button').prop('disabled', false);
 			});
 
-			this.plotPTandETaData();
+			this.plotData();
 			// Set up model change events
-			this.listenTo(this.model, 'change', this.plotPTandETaData);
+			this.listenTo(this.model, 'change', this.plotData);
 		},
 
 		/**
@@ -55,11 +55,12 @@ NWC.view = NWC.view || {};
 		* with the selected watershed. 
 		*
 		* @param {String} huc 12 digit identifier for the hydrologic unit
+		* @param {String} gageId (optional) identifier for the streamflow gage
 		* @returns a resolved promise when both ETA and DAYMET data has been retrieved and the dataSeriesStore updated. If
 		*      either call fails the promise will be rejected with either one or two error messages. The datasSeriesStore object will
 		*      contain the data for any successful calls
 		*/
-		getHucData: function(huc, gage) {
+		getPlotData: function(huc, gage) {
 			var self = this;
 			var deferred = $.Deferred();
 			var dataSeries = {};
@@ -91,7 +92,6 @@ NWC.view = NWC.view || {};
 				
 				if (sourceId === 'nwisStreamFlowData') {					
 					var startDate = '1838-01-01';
-					var endDate = '';
 					var parseDateStr = function(dateStr){
 						var tokens = dateStr.split('T');
 						var newDateStr = tokens[0].replace(/-/g, '/');
@@ -186,7 +186,7 @@ NWC.view = NWC.view || {};
 		 *	If this is an accumulated type of view from the WaterBudgetHucDataView and there is
 		 *	an associated gage with the selected watershed, then streamflow will also be plotted. 
 		 */
-		plotPTandETaData : function() {
+		plotData : function() {
 			var self = this;
 			this.getHucDataPromise.done(function() {
 				var normalization = 'normalizedWater';

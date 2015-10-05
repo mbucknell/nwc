@@ -46,16 +46,10 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		this.context.showAdditionalDataButtons = !(this.compareHucId || this.fips);
 
-		//	if accumulated view only show the compare button, 
-		if (this.accumulated) {
-			this.context.showWaterUseButton = false;
-			this.context.showAccumulatedButton = false;
-		}
-		else {
-			//if huc_12 watershed and local view, show button for accumulated water budget
-			this.context.showAccumulatedButton = (this.hucId.length === 12);			
-			this.context.showWaterUseButton = true;			
-		}
+		//if accumulated view only show the compare button
+		//if huc_12 watershed and local view, show button for accumulated water budget
+		this.context.showWaterUseButton = !this.accumulated;
+		this.context.showAccumulatedButton = (!this.accumulated) && (this.hucId.length === 12);
 
 		// call superclass initialize to do default initialize
 		// (includes render)
@@ -68,12 +62,14 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		if (this.compareHucId) {
 			this.hucInsetMapView = new NWC.view.HucInsetMapView({
 				el : this.$('.huc-inset-map-div'),
-				hucId : this.hucId
+				hucId : this.hucId,
+				model : this.hucPlotModel
 			});
 
 			this.compareHucInsetMapView = new NWC.view.HucInsetMapView({
 				el : this.$('.comparehuc-inset-map-div'),
-				hucId : this.compareHucId
+				hucId : this.compareHucId,
+				model : this.hucPlotModel
 			});
 
 			this.plotView = new NWC.view.WaterbudgetPlotView({
@@ -101,7 +97,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			/*	create the plot view after watershedAcres has been updated
 			*	by the HucInsetMap feature
 			*/ 
-			this.listenTo(this.hucPlotModel, 'change:watershedAcres', this.accumulatedPlotView);
+			this.listenTo(this.hucPlotModel, 'change:watershedAcres', this.createAccumulatedPlotView);
 			
 			this.hucInsetMapView.hucFeatureLoadedPromise.done(function() {
 				self.$('#compare-hucs-button').prop('disabled', false);
@@ -134,7 +130,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		}
 	},
 	
-	accumulatedPlotView : function () {
+	createAccumulatedPlotView : function () {
 		this.plotView = new NWC.view.WaterbudgetPlotView({
 			accumulated : true,
 			hucId : this.hucId,

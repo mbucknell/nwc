@@ -7,7 +7,7 @@
 
 describe('Tests for NWC.WaterBudgetHucDataView', function() {
 	var $testDiv;
-	var $countiesButton, $compareHucsButton;
+	var $countiesButton, $accumulatedButton, $compareHucsButton;
 	var $customaryButton, $metricButton, $dailyButton, $monthlyButton;
 	var testView;
 	var server;
@@ -23,6 +23,7 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 		$('body').append('<div id="test-div"></div>');
 		$testDiv = $('#test-div');
 		$testDiv.append('<button id="counties-button" disabled></button>');
+		$testDiv.append('<button id="accumulated-button" disabled></button>');
 		$testDiv.append('<button id="compare-hucs-button" disabled></button>');
 		$testDiv.append('<button id="customary-button" value="usCustomary">US Customary</button>');
 		$testDiv.append('<button id="metric-button" value="metric">Metric</button>');
@@ -37,6 +38,7 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 		$monthlyButton = $('#monthly-button');
 		$annualButton = $('#annual-button');
 		$countiesButton = $('#counties-button');
+		$accumulatedButton = $('#accumulated-button');
 		$compareHucsButton = $('#compare-hucs-button');
 		
 		spyOn(NWC.view.BaseView.prototype, 'initialize');

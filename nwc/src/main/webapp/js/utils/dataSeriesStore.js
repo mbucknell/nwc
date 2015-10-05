@@ -117,15 +117,16 @@ NWC.util.DataSeriesStore = function () {
 			return columnIndices[columnName];
 	};
 
-	//if we have a streamflow series, trim any entries that may be present
-	//that precede the first dayMet series entry and follow the last dayMet
-	//series entry.	
+	/*	If we have a streamflow series, trim any entries that may be present
+	 *	that precede the first dayMet series entry and follow the last dayMet
+	 *	series entry. At some point, we may want to include all streamflow 
+	 *	on the plot.
+	*/	
 	self.trimNwisStreamFlowData = function (nwisSeries) {
 		var dayMetSeriesStartDate = this.dayMet.data[0][0];
 		var total = _.size(self.dayMet.data);
 		var dayMetSeriesEndDate = self.dayMet.data[_.size(self.dayMet.data)-1][0];
-
-		self.nwisData = _.filter(nwisSeries.data, function (entry) {
+		nwisSeries.data = _.filter(nwisSeries.data, function (entry) {
 			return ((entry[0] >= dayMetSeriesStartDate) &&
 					(entry[0] <= dayMetSeriesEndDate));
 		});
@@ -164,8 +165,8 @@ NWC.util.DataSeriesStore = function () {
 			dayMetValue = dayMetRow[1],
 			dayMetDay = getDayNumberFromDateString(dayMetDateStr);
 			
-			if (self.nwisData) {
-				var nwisRow = self.nwisData[nwisDataIndex];
+			if (nwisStreamFlowDataSeries) {
+				var nwisRow = nwisStreamFlowDataSeries.data[nwisDataIndex];
 				var nwisDataValue = NaN;
 				if (nwisRow[0] === dayMetDateStr) {
 					nwisDataValue = nwisRow[1];
@@ -196,7 +197,7 @@ NWC.util.DataSeriesStore = function () {
 			rowToAdd[columnIndices.date] = date;
 			rowToAdd[columnIndices.dayMet] = dayMetValue;
 			rowToAdd[columnIndices.eta] = averageDailyEta;
-			if (self.nwisData) {
+			if (nwisStreamFlowDataSeries) {
 				rowToAdd[columnIndices.nwisStreamFlowData] = nwisDataValue;
 			}
 			dailyTable.push(rowToAdd);
@@ -205,7 +206,7 @@ NWC.util.DataSeriesStore = function () {
 
 		addSeriesLabel('daily', dayMetSeries.metadata);
 		addSeriesLabel('daily', etaSeries.metadata);
-		if (self.nwisData) {
+		if (nwisStreamFlowDataSeries) {
 			addSeriesLabel('daily', nwisStreamFlowDataSeries.metadata);
 		}
 	},
@@ -255,8 +256,8 @@ NWC.util.DataSeriesStore = function () {
 				monthlyAccumulation = saferAdd(monthlyAccumulation, dayMetValue);				
 			}
 			
-			if (self.nwisData) {
-				var nwisRow = self.nwisData[nwisDataIndex];
+			if (nwisStreamFlowDataSeries) {
+				var nwisRow = nwisStreamFlowDataSeries.data[nwisDataIndex];
 				var nwisDataValue = NaN;
 				if (nwisRow[0] === dayMetDateStr) {
 					nwisDataValue = nwisRow[1];
@@ -287,7 +288,7 @@ NWC.util.DataSeriesStore = function () {
 				rowToAdd[columnIndices.date] = date;
 				rowToAdd[columnIndices.dayMet] = monthlyAccumulation;
 				rowToAdd[columnIndices.eta] = etaForCurrentMonth;
-				if (self.nwisData) {
+				if (nwisStreamFlowDataSeries) {
 					rowToAdd[columnIndices.nwisStreamFlowData] = nwisMonthlyAccumulation;
 				}
 				monthlyTable.push(rowToAdd);
@@ -302,7 +303,7 @@ NWC.util.DataSeriesStore = function () {
 
 		addSeriesLabel('monthly', dayMetSeries.metadata);
 		addSeriesLabel('monthly', etaSeries.metadata);
-		if (self.nwisData) {
+		if (nwisStreamFlowDataSeries) {
 			addSeriesLabel('monthly', nwisStreamFlowDataSeries.metadata);
 		}
 	},
@@ -368,8 +369,8 @@ NWC.util.DataSeriesStore = function () {
 					dayMetYearlyAccumulation = saferAdd(dayMetYearlyAccumulation, dayMetValue);
 				}
 
-				if (self.nwisData) {
-					var nwisRow = self.nwisData[nwisDataIndex];
+				if (nwisStreamFlowDataSeries) {
+					var nwisRow = nwisStreamFlowDataSeries.data[nwisDataIndex];
 					var nwisDataValue = NaN;
 					if (nwisRow[0] === dayMetDateStr) {
 						nwisDataValue = nwisRow[1];
@@ -413,7 +414,7 @@ NWC.util.DataSeriesStore = function () {
 						rowToAdd[columnIndices.date] = date;
 						rowToAdd[columnIndices.dayMet] = dayMetYearlyAccumulation;
 						rowToAdd[columnIndices.eta] = etaYearlyAccumulation;
-						if (self.nwisData) {
+						if (nwisStreamFlowDataSeries) {
 							rowToAdd[columnIndices.nwisStreamFlowData] = nwisYearlyAccumulation;
 						}
 						yearlyTable.push(rowToAdd);
@@ -432,7 +433,7 @@ NWC.util.DataSeriesStore = function () {
 
 		addSeriesLabel('yearly', dayMetSeries.metadata);
 		addSeriesLabel('yearly', etaSeries.metadata);
-		if (self.nwisData) {
+		if (nwisStreamFlowDataSeries) {
 			addSeriesLabel('yearly', nwisStreamFlowDataSeries.metadata);
 		}
 	},
