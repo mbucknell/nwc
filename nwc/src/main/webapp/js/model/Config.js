@@ -92,6 +92,28 @@ NWC.model = NWC.model || {};
 		}
 	});
 
+	NWC.model.WatershedGagesModel = Backbone.Model.extend({
+			hucId : '',
+			gageId : ''
+	});
+
+	// Assumes that the collection is never updated once created.
+	NWC.model.WatershedGagesCollection = Backbone.Collection.extend({
+		model : NWC.model.WatershedGagesModel,
+		url : 'json/watershed_gages.json',
+		// Create fast lookup
+		parse : function (data) {
+			this.lookupByHucId = {};
+			_.each(data, function(watershed) {
+				this.lookupByHucId[watershed.hucId] = watershed;
+			}, this);
+			return this;
+		},
+		getGageId : function(hucId) {
+			return this.lookupByHucId[hucId].gageId;
+		}		
+	});
+
 	NWC.model.SciencebaseUrlFragmentModel = Backbone.Model.extend({
 		defaults : {
 			singleitem : '/catalog/item/',
@@ -170,6 +192,7 @@ NWC.model = NWC.model || {};
 						namespace : 'WBD',
 						property : 'huc12',
 						name : 'name',
+						watershedAcres : 'areaacres',
 						selectDisplay : '12 Digit',
 						variables : {
 							dayMet : new NWC.model.SosVariable({
@@ -216,6 +239,33 @@ NWC.model = NWC.model || {};
 						}
 					})
 				},
+				//just a copy of huc12 watershed, need to update
+				accumulated : new NWC.model.DataSourceModel({
+					layerName : 'huc12',
+					namespace : 'WBD',
+					property : 'huc12',
+					name : 'name',
+					watershedAcres : 'areaacres', //should this be in variables?
+					selectDisplay : 'Accumulated',
+					variables : {
+						dayMet : new NWC.model.SosVariable({
+							observedProperty: 'prcp',
+							propertyLongName: 'Area Weighted Mean Precipitation',
+							units: NWC.util.Units.metric.normalizedWater.daily,
+							dataset: 'HUC12_data',
+							fileName: 'HUC12_daymet.nc',
+							downloadMetadata: 'Data derived by sampling the DayMet precipitation variable to NHD+ Version II\n12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://daymet.ornl.gov/ http://cida.usgs.gov/gdp/\nhttp://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
+						}),
+						eta : new NWC.model.SosVariable({
+							observedProperty: 'MEAN_et',
+							propertyLongName: 'Area Weighted Mean Actual Evapotranspiration',
+							units: NWC.util.Units.metric.normalizedWater.monthly,
+							dataset: 'HUC12_data',
+							fileName: 'HUC12_eta.nc',
+							downloadMetadata: 'Data derived by sampling the SSEBop Actual Evapotranspiration dataset to NHD+\nVersion II 12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly\nhttp://cida.usgs.gov/gdp/ http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
+						})
+					}
+				}),
 				county : new NWC.model.DataSourceModel({
 					layerName : 'us_historical_counties',
 					namespace : 'NWC',
@@ -284,9 +334,14 @@ NWC.model = NWC.model || {};
 					})
 				},
 				countyWaterUse : countyWaterUse,
-				sciencebaseUrlFragment : new NWC.model.SciencebaseUrlFragmentModel()
+				sciencebaseUrlFragment : new NWC.model.SciencebaseUrlFragmentModel(),
+				watershedGages : new NWC.model.WatershedGagesCollection()
 			};
 			// Add things as needed for the county variable and streamflow variables.
+		},
+
+		fetch : function() {
+			return this.get('watershedGages').fetch();
 		},
 
 		getWatershed : function (hucId) {

@@ -28,8 +28,8 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 		$('body').append(html);
 
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
-		spyOn(NWC.view.WaterbudgetPlotView.prototype, 'plotPTandETaData').andCallThrough();
-		spyOn(NWC.view.WaterbudgetPlotView.prototype, 'getHucData').andCallThrough();
+		spyOn(NWC.view.WaterbudgetPlotView.prototype, 'plotData').andCallThrough();
+		spyOn(NWC.view.WaterbudgetPlotView.prototype, 'getPlotData').andCallThrough();
 
 		model = new NWC.model.WaterBudgetHucPlotModel();
 
@@ -46,20 +46,20 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 
 	it('Expects the view to be initialized be retrieving the plot data and rendering the view', function() {
 		expect(NWC.view.BaseView.prototype.initialize).toHaveBeenCalled();
-		expect(NWC.view.WaterbudgetPlotView.prototype.getHucData).toHaveBeenCalledWith('123456');
-		expect(NWC.view.WaterbudgetPlotView.prototype.plotPTandETaData).toHaveBeenCalled();
+		expect(NWC.view.WaterbudgetPlotView.prototype.getPlotData).toHaveBeenCalledWith('123456', null);
+		expect(NWC.view.WaterbudgetPlotView.prototype.plotData).toHaveBeenCalled();
 	});
 
 	it('Expects that $.ajax is called for each data source', function() {
 		expect(fakeServer.requests.length).toBe(2);
 	});
 
-	it('Expects an update to the model to call plotPTandETaData', function() {
-		expect(NWC.view.WaterbudgetPlotView.prototype.plotPTandETaData.calls.length).toBe(1);
+	it('Expects an update to the model to call plotData', function() {
+		expect(NWC.view.WaterbudgetPlotView.prototype.plotData.calls.length).toBe(1);
 		model.set('units', 'METRIC');
-		expect(NWC.view.WaterbudgetPlotView.prototype.plotPTandETaData.calls.length).toBe(2);
+		expect(NWC.view.WaterbudgetPlotView.prototype.plotData.calls.length).toBe(2);
 		model.set('timeScale', 'daily');
-		expect(NWC.view.WaterbudgetPlotView.prototype.plotPTandETaData.calls.length).toBe(3);
+		expect(NWC.view.WaterbudgetPlotView.prototype.plotData.calls.length).toBe(3);
 	});
 
 	it('Expects downloadEvapotranspiration to save to appropriate filename', function() {

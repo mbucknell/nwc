@@ -71,7 +71,8 @@ NWC.util.DataSeriesStore = function () {
 	var columnIndices = {
 			date: 0,
 			dayMet: 1,
-			eta: 2
+			eta: 2,
+			nwisStreamFlowData: 3
 	};
 
 	var addSeriesLabel = function (seriesClass, metadata) {
@@ -116,6 +117,21 @@ NWC.util.DataSeriesStore = function () {
 			return columnIndices[columnName];
 	};
 
+	/*	If we have a streamflow series, trim any entries that may be present
+	 *	that precede the first dayMet series entry and follow the last dayMet
+	 *	series entry. At some point, we may want to include all streamflow 
+	 *	on the plot.
+	*/	
+	self.trimNwisStreamFlowData = function (nwisSeries) {
+		var dayMetSeriesStartDate = this.dayMet.data[0][0];
+		var total = _.size(self.dayMet.data);
+		var dayMetSeriesEndDate = self.dayMet.data[_.size(self.dayMet.data)-1][0];
+		nwisSeries.data = _.filter(nwisSeries.data, function (entry) {
+			return ((entry[0] >= dayMetSeriesStartDate) &&
+					(entry[0] <= dayMetSeriesEndDate));
+		});
+	};
+
 	self.daily = NWC.util.DataSeries.newSeries();
 	self.monthly = NWC.util.DataSeries.newSeries();
 	self.yearly = NWC.util.DataSeries.newSeries();
@@ -123,6 +139,7 @@ NWC.util.DataSeriesStore = function () {
 	/*
 	daymet comes in daily
 	eta comes in monthly
+	(optional) nwisStreamFlowData comes in daily
 	Presume both series' data arrays are sorted in order of ascending date.
 
 	Every day-row of every month must have a daymet value as-is
@@ -136,15 +153,27 @@ NWC.util.DataSeriesStore = function () {
 	self.updateDailyHucSeries = function (nameToSeriesMap) {
 		var dailyTable = [],
 		etaIndex = 0,
+		nwisDataIndex = 0,
 		//set eta for daily
 		etaForCurrentMonth = NaN,
 		dayMetSeries = nameToSeriesMap.dayMet,
-		etaSeries = nameToSeriesMap.eta;
+		etaSeries = nameToSeriesMap.eta,
+		nwisStreamFlowDataSeries = nameToSeriesMap.nwisStreamFlowData;
 
 		dayMetSeries.data.each(function (dayMetRow) {
 			var dayMetDateStr = dayMetRow[0],
 			dayMetValue = dayMetRow[1],
 			dayMetDay = getDayNumberFromDateString(dayMetDateStr);
+			
+			if (nwisStreamFlowDataSeries) {
+				var nwisRow = nwisStreamFlowDataSeries.data[nwisDataIndex];
+				var nwisDataValue = NaN;
+				if (nwisRow[0] === dayMetDateStr) {
+					nwisDataValue = nwisRow[1];
+					nwisDataIndex++;
+				}
+			}
+			
 			//if looking at the first day of a month
 			if (1 === dayMetDay) {
 				var etaRow = etaSeries.data[etaIndex];
@@ -168,17 +197,24 @@ NWC.util.DataSeriesStore = function () {
 			rowToAdd[columnIndices.date] = date;
 			rowToAdd[columnIndices.dayMet] = dayMetValue;
 			rowToAdd[columnIndices.eta] = averageDailyEta;
+			if (nwisStreamFlowDataSeries) {
+				rowToAdd[columnIndices.nwisStreamFlowData] = nwisDataValue;
+			}
 			dailyTable.push(rowToAdd);
 		});
 		self.daily.data = dailyTable;
 
 		addSeriesLabel('daily', dayMetSeries.metadata);
 		addSeriesLabel('daily', etaSeries.metadata);
+		if (nwisStreamFlowDataSeries) {
+			addSeriesLabel('daily', nwisStreamFlowDataSeries.metadata);
+		}
 	},
 
 	/*
 	daymet comes in daily
 	eta comes in monthly
+	(optional) nwisStreamFlowData comes in daily
 	Presume both series' data arrays are sorted in order of ascending date.
 
 	Every month-row must have an eta value as-is
@@ -196,12 +232,15 @@ NWC.util.DataSeriesStore = function () {
 	self.updateMonthlyHucSeries = function (nameToSeriesMap) {
 		var monthlyTable = [],
 		etaIndex = 0,
+		nwisDataIndex = 0,
 		etaForCurrentMonth = NaN,
-		dayMetSeries = nameToSeriesMap.dayMet,
 		monthlyAccumulation = 0,
+		nwisMonthlyAccumulation = 0,
 		monthDateStr = '', //stored at the beginning of every month, used later once the totals have been accumulated for the month
 		endOfMonth, //stores the end of the current month of iteration
-		etaSeries = nameToSeriesMap.eta;
+		dayMetSeries = nameToSeriesMap.dayMet,
+		etaSeries = nameToSeriesMap.eta,
+		nwisStreamFlowDataSeries = nameToSeriesMap.nwisStreamFlowData;
 
 		dayMetSeries.data.each(function (dayMetRow) {
 			var dayMetDateStr = dayMetRow[0],
@@ -212,9 +251,23 @@ NWC.util.DataSeriesStore = function () {
 				monthDateStr = dayMetDateStr;
 			}
 			//this will have the effect of ignoring a missing value at the end of the month
+			//because Dec 31 for leap years is "padded" with a NaN value
 			if (dayMetValue) {
 				monthlyAccumulation = saferAdd(monthlyAccumulation, dayMetValue);				
 			}
+			
+			if (nwisStreamFlowDataSeries) {
+				var nwisRow = nwisStreamFlowDataSeries.data[nwisDataIndex];
+				var nwisDataValue = NaN;
+				if (nwisRow[0] === dayMetDateStr) {
+					nwisDataValue = nwisRow[1];
+					if (nwisDataValue) {
+						nwisMonthlyAccumulation = saferAdd(nwisMonthlyAccumulation, nwisDataValue);
+					}
+					nwisDataIndex++;
+				}
+			}
+			
 			if (dayMetDay === endOfMonth) {
 				//join the date, accumulation and the eta for last month
 				var etaRow = etaSeries.data[etaIndex];
@@ -235,10 +288,14 @@ NWC.util.DataSeriesStore = function () {
 				rowToAdd[columnIndices.date] = date;
 				rowToAdd[columnIndices.dayMet] = monthlyAccumulation;
 				rowToAdd[columnIndices.eta] = etaForCurrentMonth;
+				if (nwisStreamFlowDataSeries) {
+					rowToAdd[columnIndices.nwisStreamFlowData] = nwisMonthlyAccumulation;
+				}
 				monthlyTable.push(rowToAdd);
 
 				//reset for the next months
 				monthlyAccumulation = 0;
+				nwisMonthlyAccumulation = 0;
 				endOfMonth = undefined;
 			}
 		});
@@ -246,11 +303,15 @@ NWC.util.DataSeriesStore = function () {
 
 		addSeriesLabel('monthly', dayMetSeries.metadata);
 		addSeriesLabel('monthly', etaSeries.metadata);
+		if (nwisStreamFlowDataSeries) {
+			addSeriesLabel('monthly', nwisStreamFlowDataSeries.metadata);
+		}
 	},
 
 	/*
 	daymet comes in daily
 	eta comes in monthly
+	(optional) nwisStreamFlowData comes in daily
 	Presume both series' data arrays are sorted in order of ascending date.
 
 	Start accumulating dayMet records at the first full year (i.e. 01-01-yyyy)
@@ -268,15 +329,18 @@ NWC.util.DataSeriesStore = function () {
 	self.updateYearlyHucSeries = function (nameToSeriesMap) {
 		var yearlyTable = [],
 		etaIndex = 0,
+		nwisDataIndex = 0,
 		etaMonths = 0,
 		etaForCurrentMonth = NaN,
 		dayMetSeries = nameToSeriesMap.dayMet,
 		dayMetYearlyAccumulation = 0,
 		etaYearlyAccumulation = 0,
+		nwisYearlyAccumulation = 0,
 		monthDateStr = '', //stored at the beginning of every month, used to join monthly values
 		yearDateStr = '', //stored at the beginning of every year, used later once the totals have been accumulated for the year
 		endOfMonth, //stores the end of the current month of iteration
-		etaSeries = nameToSeriesMap.eta;
+		etaSeries = nameToSeriesMap.eta,
+		nwisStreamFlowDataSeries = nameToSeriesMap.nwisStreamFlowData;
 
 		dayMetSeries.data.each(function (dayMetRow) {
 			var dayMetDateStr = dayMetRow[0],
@@ -304,6 +368,19 @@ NWC.util.DataSeriesStore = function () {
 					//accumulate each daymet value for the entire year
 					dayMetYearlyAccumulation = saferAdd(dayMetYearlyAccumulation, dayMetValue);
 				}
+
+				if (nwisStreamFlowDataSeries) {
+					var nwisRow = nwisStreamFlowDataSeries.data[nwisDataIndex];
+					var nwisDataValue = NaN;
+					if (nwisRow[0] === dayMetDateStr) {
+						nwisDataValue = nwisRow[1];
+						if (nwisDataValue) {
+							nwisYearlyAccumulation = saferAdd(nwisYearlyAccumulation, nwisDataValue);
+						}
+						nwisDataIndex++;
+					}
+				}
+				
 				//if you hit the end of the month of dayMet values is true
 				if (dayMetDay === endOfMonth) {
 					//add to counter to indicate when you have processed 12 months
@@ -337,11 +414,15 @@ NWC.util.DataSeriesStore = function () {
 						rowToAdd[columnIndices.date] = date;
 						rowToAdd[columnIndices.dayMet] = dayMetYearlyAccumulation;
 						rowToAdd[columnIndices.eta] = etaYearlyAccumulation;
+						if (nwisStreamFlowDataSeries) {
+							rowToAdd[columnIndices.nwisStreamFlowData] = nwisYearlyAccumulation;
+						}
 						yearlyTable.push(rowToAdd);
 		
 						//reset for the next years
 						etaMonths = 0;
 						dayMetYearlyAccumulation = 0;
+						nwisYearlyAccumulation = 0;
 						etaYearlyAccumulation = 0;
 						endOfYear = undefined;						
 					}
@@ -352,6 +433,9 @@ NWC.util.DataSeriesStore = function () {
 
 		addSeriesLabel('yearly', dayMetSeries.metadata);
 		addSeriesLabel('yearly', etaSeries.metadata);
+		if (nwisStreamFlowDataSeries) {
+			addSeriesLabel('yearly', nwisStreamFlowDataSeries.metadata);
+		}
 	},
 
 	/*
@@ -361,6 +445,11 @@ NWC.util.DataSeriesStore = function () {
 	self.updateHucSeries = function (nameToSeriesMap) {
 		this.eta = nameToSeriesMap.eta;
 		this.dayMet = nameToSeriesMap.dayMet;
+		this.nwisStreamFlowData = nameToSeriesMap.nwisStreamFlowData;
+		
+		if (this.nwisStreamFlowData) {
+			this.trimNwisStreamFlowData(this.nwisStreamFlowData);
+		}
 
 		this.updateDailyHucSeries(nameToSeriesMap);
 		this.updateMonthlyHucSeries(nameToSeriesMap);
