@@ -186,6 +186,64 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 			expect(testView.hucPlotModel.get('timeScale')).toEqual('yearly');
 		});
 	});
+	
+	describe('Test for view initialized with the accumulated option and hucID with corresponding gage', function() {
+		beforeEach(function() {
+			var watershedGages = NWC.config.get('watershedGages');
+			watershedGages.parse([{"hucId" : "123456789123", "gageId" : "02372250"}])
+			testView = new NWC.view.WaterBudgetHucDataView({
+				hucId : '123456789123',
+				accumulated : true,
+				el : $testDiv
+			});
+		});
+
+		it('Expects that the context properties are set', function() {
+			expect(testView.context.showAdditionalDataButtons).toBe(true);
+			expect(testView.context.showAccumulatedButton).toBe(false);
+			expect(testView.context.showWaterUseButton).toBe(false);
+		});
+
+
+		it('Expect that when the huc feature has been loaded that only the compare button is enabled', function() {
+			expect($countiesButton.prop('disabled')).toBe(true);
+			expect($accumulatedButton.prop('disabled')).toBe(true);
+			expect($compareHucsButton.prop('disabled')).toBe(true);
+			hucFeatureLoadedDeferred.resolve();
+			expect($countiesButton.prop('disabled')).toBe(true);
+			expect($accumulatedButton.prop('disabled')).toBe(true);
+			expect($compareHucsButton.prop('disabled')).toBe(false);
+		});
+	});
+	
+	describe('Test for view initialized with the accumulated option and hucID with no corresponding gage', function() {
+		beforeEach(function() {
+			var watershedGages = NWC.config.get('watershedGages');
+			watershedGages.parse([{"hucId" : "123456789", "gageId" : "02372250"}])
+			testView = new NWC.view.WaterBudgetHucDataView({
+				hucId : '123456789123',
+				accumulated : true,
+				el : $testDiv
+			});
+		});
+
+		it('Expects that the context properties are set', function() {
+			expect(testView.context.showAdditionalDataButtons).toBe(true);
+			expect(testView.context.showAccumulatedButton).toBe(false);
+			expect(testView.context.showWaterUseButton).toBe(false);
+		});
+
+
+		it('Expect that when the huc feature has been loaded that only the compare button is enabled', function() {
+			expect($countiesButton.prop('disabled')).toBe(true);
+			expect($accumulatedButton.prop('disabled')).toBe(true);
+			expect($compareHucsButton.prop('disabled')).toBe(true);
+			hucFeatureLoadedDeferred.resolve();
+			expect($countiesButton.prop('disabled')).toBe(true);
+			expect($accumulatedButton.prop('disabled')).toBe(true);
+			expect($compareHucsButton.prop('disabled')).toBe(false);
+		});
+	});
 
 	describe('Tests for view created with a compareHucId', function() {
 		beforeEach(function() {

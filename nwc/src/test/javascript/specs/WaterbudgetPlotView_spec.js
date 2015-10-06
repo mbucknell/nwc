@@ -33,10 +33,10 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 
 		model = new NWC.model.WaterBudgetHucPlotModel();
 
-		testView = new NWC.view.WaterbudgetPlotView({
-			hucId : '123456',
-			model : model
-		});
+//		testView = new NWC.view.WaterbudgetPlotView({
+//			hucId : '123456',
+//			model : model
+//		});
 	});
 
 	afterEach(function() {
@@ -45,16 +45,39 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 	});
 
 	it('Expects the view to be initialized be retrieving the plot data and rendering the view', function() {
+		testView = new NWC.view.WaterbudgetPlotView({
+			hucId : '123456',
+			model : model
+		});
 		expect(NWC.view.BaseView.prototype.initialize).toHaveBeenCalled();
 		expect(NWC.view.WaterbudgetPlotView.prototype.getPlotData).toHaveBeenCalledWith('123456', null);
 		expect(NWC.view.WaterbudgetPlotView.prototype.plotData).toHaveBeenCalled();
 	});
 
 	it('Expects that $.ajax is called for each data source', function() {
+		testView = new NWC.view.WaterbudgetPlotView({
+			hucId : '123456',
+			model : model
+		});
 		expect(fakeServer.requests.length).toBe(2);
 	});
 
+	it('Expects that $.ajax is called for each data source including streamflow when accumulated', function() {
+		model.set('watershedAcres', 10);
+		testView = new NWC.view.WaterbudgetPlotView({
+			accumulated : true,
+			hucId : '123456',
+			gageId : '123456',
+			model : model
+		});
+		expect(fakeServer.requests.length).toBe(3);
+	});
+
 	it('Expects an update to the model to call plotData', function() {
+		testView = new NWC.view.WaterbudgetPlotView({
+			hucId : '123456',
+			model : model
+		});
 		expect(NWC.view.WaterbudgetPlotView.prototype.plotData.calls.length).toBe(1);
 		model.set('units', 'METRIC');
 		expect(NWC.view.WaterbudgetPlotView.prototype.plotData.calls.length).toBe(2);
@@ -63,6 +86,10 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 	});
 
 	it('Expects downloadEvapotranspiration to save to appropriate filename', function() {
+		testView = new NWC.view.WaterbudgetPlotView({
+			hucId : '123456',
+			model : model
+		});
 		spyOn(window, 'saveAs');
 		spyOn(window, 'Blob');
 		testView.dataSeriesStore = {
@@ -79,6 +106,10 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 	});
 
 	it('Expects downloadPrecipitation to save to appropriate filename', function() {
+		testView = new NWC.view.WaterbudgetPlotView({
+			hucId : '123456',
+			model : model
+		});
 		spyOn(window, 'saveAs');
 		spyOn(window, 'Blob');
 		testView.dataSeriesStore = {
