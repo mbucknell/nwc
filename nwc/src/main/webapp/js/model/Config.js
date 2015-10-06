@@ -110,7 +110,7 @@ NWC.model = NWC.model || {};
 			return this;
 		},
 		getGageId : function(hucId) {
-			return this.lookupByHucId[hucId].gageId;
+			return this.lookupByHucId[hucId] ? this.lookupByHucId[hucId].gageId : null;
 		}		
 	});
 
