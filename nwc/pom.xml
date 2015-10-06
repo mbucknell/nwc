@@ -227,11 +227,6 @@
             <groupId>gov.usgs.cida</groupId>
             <artifactId>dynamicProperties</artifactId>
         </dependency>
-	<dependency>
-		<groupId>gov.usgs.cida.simplehash</groupId>
-		<artifactId>simplehash</artifactId>
-		<version>0.1.2</version>
-	</dependency>
         <dependency>
             <groupId>gov.usgs.cida.jslibs</groupId>
             <artifactId>openlayers-raster-jar</artifactId>
@@ -280,11 +275,6 @@
             <artifactId>proxy-utils</artifactId>
         </dependency>
 	<dependency>
-		<groupId>org.apache.httpcomponents</groupId>
-		<artifactId>httpclient</artifactId>
-		<version>4.5</version>
-	</dependency>
-	<dependency>
 		<groupId>commons-codec</groupId>
 		<artifactId>commons-codec</artifactId>
 		<version>1.9</version>
@@ -292,7 +282,7 @@
 	<dependency>
 		<groupId>gov.usgs.cida.ajax_search_crawler_tools</groupId>
 		<artifactId>ajax_search_crawler_tools</artifactId>
-		<version>0.1.1</version>
+		<version>0.1.2-SNAPSHOT</version>
 	</dependency>
         <!-- ================================================================== -->
                 
