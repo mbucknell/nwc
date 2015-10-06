@@ -63,7 +63,7 @@
         <filter-class>gov.usgs.cida.ajax_search_crawler_tools.SearchCrawlerUglyUrlFilter</filter-class>
         <init-param>
             <param-name>search-crawler-servicer</param-name>
-            <param-value>gov.usgs.cida.nwc.servlet.NWCSearchCrawlerServicer</param-value>
+            <param-value>gov.usgs.cida.ajax_search_crawler_tools.servicer.SHA1SkeletonResourceServicer</param-value>
         </init-param>
     </filter>
     <filter-mapping>
