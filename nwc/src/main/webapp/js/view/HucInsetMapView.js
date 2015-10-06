@@ -41,8 +41,10 @@ NWC.view = NWC.view || {};
 			var hucLoadedDeferred = $.Deferred();
 
 			this.hucId = options.hucId;
+			var gageId = options.gageId ? options.gageId : null;
 			this.context = {
-				hucId : this.hucId
+				hucId : this.hucId,
+				gageId : gageId
 			};
 
 			//Create map and layers.
@@ -70,7 +72,6 @@ NWC.view = NWC.view || {};
 				scope : this
 			});
 			
-			var gageId = options.gageId ? options.gageId : null;
 			if (gageId) {
 				this.streamflowGageConfig = NWC.config.get('streamflow').gage.attributes;
 				this.gageLayer = NWC.util.mapUtils.createGageFeatureLayer(
