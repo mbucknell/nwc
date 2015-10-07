@@ -221,7 +221,7 @@
 	<dependency>
 		<groupId>gov.usgs.cida.nwc</groupId>
 		<artifactId>search-engine-files</artifactId>
-		<version>1.0.8-SNAPSHOT</version>
+		<version>1.0.8</version>
 	</dependency>
         <dependency>
             <groupId>gov.usgs.cida</groupId>
