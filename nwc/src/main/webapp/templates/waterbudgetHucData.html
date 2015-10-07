@@ -10,23 +10,21 @@
 		</div>
 		<div class="row" id="wateruse"></div>		
 		<div class="row">
-			<div class="col-md-6 col-md-push-6">
+			<div class="spacer col-md-6 col-md-push-6">
 				{{#if showAdditionalDataButtons}}
-				<div class="row spacer">
 					{{#if showAccumulatedButton}}
-					<div class="row">
+					<div>
 						<button id="accumulated-button" class="btn btn-primary" disabled>Show Accumulated Water Budget <span class="glyphicon glyphicon-arrow-right"></span></button>
 					</div>
 					{{/if}}
-					<div class="row spacer">
+					<div class="spacer">
 						<button id="compare-hucs-button" class="btn btn-primary" disabled>Select Watershed to Compare <span class="glyphicon glyphicon-arrow-right"></span></button>
 					</div>
 					{{#if showWaterUseButton}}
-					<div class="row spacer">
+					<div class="spacer">
 						<button id="counties-button" class="btn btn-primary" disabled>Plot County Water Use Data <span class="glyphicon glyphicon-arrow-down"></span></button>
 					</div>
 					{{/if}}
-				</div>
 				<div class="spacer" id="county-selection-div"></div>
 				{{/if}}
 			</div>
