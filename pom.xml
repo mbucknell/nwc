@@ -142,7 +142,6 @@
 	
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>3.2.2.RELEASE</spring.version>
         <warName>nwc</warName>
         <!-- where to extract webjars to -->
         <webjars.base>target/nwc/js/webjars</webjars.base>
@@ -158,15 +157,15 @@
         <thirdParty.libs>${thirdParty.base}/${mavenCruft}/gov.usgs.cida.jslibs</thirdParty.libs>
                 
         <!-- js lib versions -->
-        <jquery.version>1.11.1</jquery.version>
-        <bootstrap.version>3.3.2</bootstrap.version>
-		<select2.version>3.5.2</select2.version>
-		<backbone.version>1.1.2</backbone.version>
-		<underscore.version>1.6.0</underscore.version>
-		<handlebars.version>3.0.0</handlebars.version>
+        <jquery.version>1.11.3</jquery.version>
+        <bootstrap.version>3.3.5</bootstrap.version>
+		<select2.version>3.5.4</select2.version>
+		<backbone.version>1.2.1</backbone.version>
+		<underscore.version>1.8.3</underscore.version>
+		<handlebars.version>4.0.2</handlebars.version>
         <flotcharts.version>0.8.3</flotcharts.version>
         <openlayers.version>2.12</openlayers.version>
-        <fontawesome.version>4.0.3</fontawesome.version>
+        <fontawesome.version>4.4.0</fontawesome.version>
         <sugar.version>1.4.1</sugar.version>
         <jsts.version>0.14.0</jsts.version>
 		<dygraphs.version>1.1.1</dygraphs.version>
