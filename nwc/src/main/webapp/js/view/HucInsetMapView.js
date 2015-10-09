@@ -83,6 +83,8 @@ NWC.view = NWC.view || {};
 					featureadded : function(event) {
 						var lonlat = new OpenLayers.LonLat(event.feature.geometry.x, event.feature.geometry.y);
 						this.gageMarkerLayer.addMarker(new OpenLayers.Marker(lonlat));
+						$('#gage-name').html(event.feature.attributes.STANAME);
+						$('#drainage-area').html(event.feature.attributes.DRAIN_SQKM);
 					},
 					scope : this
 				});
