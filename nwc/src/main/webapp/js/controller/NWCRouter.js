@@ -27,7 +27,7 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 		'!waterbudget/acmap/huc/:huc' : 'waterbudgetAddAcHucMap',
 		'!streamflow-stats' : 'streamflowStats',
 		'!streamflow-stats/gage/:gageid' : 'streamflowStatsGageData',
-		'!streamflow-stats/huc/:huc/' : 'streamflowStatsHucData',
+		'!streamflow-stats/huc/:huc' : 'streamflowStatsHucData',
 		'!streamflow-stats/model-info' : 'streamflowStatsModeledInfo',
 		'!aquatic-biology' : 'aquaticBiology',
 		'!aquatic-biology/select-features' : 'aquaticBiologySelectFeatures',
