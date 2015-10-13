@@ -9,6 +9,9 @@ NWC.view = NWC.view || {};
 	NWC.view.WaterbudgetPlotView = NWC.view.BaseView.extend({
 
 		templateName : 'waterbudgetPlot',
+		
+		// This is resolved once the plot data has been loaded
+		hucDataLoadedPromise : undefined,
 
 		events : {
 			'click .download-evapotranspiration-btn' : 'downloadEvapotranspiration',
@@ -63,6 +66,7 @@ NWC.view = NWC.view || {};
 		getPlotData: function(huc, gage) {
 			var self = this;
 			var deferred = $.Deferred();
+			this.hucDataLoadedPromise = deferred.promise();
 			var dataSeries = {};
 			var getDataDeferreds = [];
 			//grab the sos sources that will be used to display the initial data
@@ -201,8 +205,6 @@ NWC.view = NWC.view || {};
 				NWC.util.Plotter.getPlot(self.$el.find('.waterbudget-plot'), self.$el.find('.waterbudget-legend'), values, labels, ylabel, title);
 			});
 		},
-
-		//Do we want a downloadStreamflow?
 
 		downloadEvapotranspiration : function() {
 			var blob = new Blob([this.dataSeriesStore.eta.toCSV()], {type:'text/csv'});

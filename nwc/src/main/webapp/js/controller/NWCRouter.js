@@ -21,11 +21,13 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 		'!waterbudget/huc/:huc' : 'waterbudgetHucData',
 		'!waterbudget/huc/:huc/county/:fips' : 'waterbudgetHucCountyData',
 		'!waterbudget/comparehucs/:hucX/:hucY' : 'waterbudgetCompareHucs',
+		'!waterbudget/accomparehucs/:hucX/:hucY' : 'waterbudgetCompareAcHucs',
 		'!waterbudget' : 'waterbudget',
 		'!waterbudget/map/huc/:huc' : 'waterbudgetAddHucMap',
+		'!waterbudget/acmap/huc/:huc' : 'waterbudgetAddAcHucMap',
 		'!streamflow-stats' : 'streamflowStats',
 		'!streamflow-stats/gage/:gageid' : 'streamflowStatsGageData',
-		'!streamflow-stats/huc/:huc' : 'streamflowStatsHucData',
+		'!streamflow-stats/huc/:huc/' : 'streamflowStatsHucData',
 		'!streamflow-stats/model-info' : 'streamflowStatsModeledInfo',
 		'!aquatic-biology' : 'aquaticBiology',
 		'!aquatic-biology/select-features' : 'aquaticBiologySelectFeatures',
@@ -53,10 +55,20 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 		});
 	},
 
+	waterbudgetAddAcHucMap : function(huc) {
+		this.showView(NWC.view.WaterBudgetMapView, {
+			accumulated : true,
+			mapDiv : 'hucSelectMap',
+			model : this.waterBudgetSelectMapModel,
+			hucId : huc
+		});
+	},
+
 	waterbudgetAccumulated : function(huc) {
 		this.showView(NWC.view.WaterBudgetHucDataView, {
 			accumulated : true,
 			hucId : huc,
+			model : this.waterBudgetSelectMapModel,
 			insetHucMapDiv : 'huc-inset'});
 	},
 
@@ -76,6 +88,14 @@ NWC.controller.NWCRouter = Backbone.Router.extend({
 
 	waterbudgetCompareHucs : function(hucX, hucY) {
 		this.showView(NWC.view.WaterBudgetHucDataView, {
+			hucId : hucX,
+			compareHucId : hucY
+		});
+	},
+
+	waterbudgetCompareAcHucs : function(hucX, hucY) {
+		this.showView(NWC.view.WaterBudgetHucDataView, {
+			accumulated : true,
 			hucId : hucX,
 			compareHucId : hucY
 		});
