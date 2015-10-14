@@ -23,9 +23,9 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	 * @constructs
 	 * @param {Object} options
 	 *	@prop {String} mapDiv
-	 *  @prop {Boolean} accumulated - true indicates accumulated, which indicates an
-	 *  		accumulated watershed comparison view will be triggered when a comparison
-	 *  		watershed is selected on this view.
+	 *	@prop {Boolean} accumulated - true indicates accumulated, which indicates an
+	 *			accumulated watershed comparison view will be triggered when a comparison
+	 *			watershed is selected on this view.
 	 *	@prop {NWC.model.WaterBudgetSelectMapModel} model
 	 *	@prop {String} hucId - Previously selected watershed
 	 */
