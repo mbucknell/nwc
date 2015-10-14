@@ -29,14 +29,16 @@ NWC.view = NWC.view || {};
 			var self = this;
 			this.hucId = options.hucId;
 			this.gageId = options.gageId ? options.gageId : null;
-			this.accumulated = options.accumulated ? options.accumulated : false;
+			var accumulated = options.accumulated ? options.accumulated : false;
 			
-			if (this.accumulated) {
+			if (accumulated) {
 				this.watershedVariables = NWC.config.get('accumulated').attributes.variables;
 			}
 			else {
 				this.watershedVariables = NWC.config.getWatershed(options.hucId).variables;
 			}
+			
+			this.compare = options.compare ? options.compare : false;
 
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 			this.getHucDataPromise = this.getPlotData(options.hucId, this.gageId).done(function() {
@@ -75,7 +77,18 @@ NWC.view = NWC.view || {};
 			var acres;
 			//for an accumulated view, there may or may not be a gage
 			if (gage) {
-				acres = self.model.get('watershedAcres');
+				/*	
+				 *	Since there is a gage, the value for related acres will be
+				 *	retrieved from the model.  So, set the model variable
+				 *	for acres depending on whether or not the instance is for a 
+				 *	comparison type of the WaterBudgetHucDataView.
+				 */ 
+				if (this.compare) {
+					acres = self.model.get('compareWatershedAcres');
+				}
+				else {
+					acres = self.model.get('watershedAcres');
+				}
 				if (0 != acres) {  //check with dave to see if this is possible
 					this.streamflowGageConfig = NWC.config.get('streamflow').gage.attributes.variables;
 					sosSources.nwisStreamFlowData = this.streamflowGageConfig.nwisStreamFlowData;
@@ -201,8 +214,6 @@ NWC.view = NWC.view || {};
 				NWC.util.Plotter.getPlot(self.$el.find('.waterbudget-plot'), self.$el.find('.waterbudget-legend'), values, labels, ylabel, title);
 			});
 		},
-
-		//Do we want a downloadStreamflow?
 
 		downloadEvapotranspiration : function() {
 			var blob = new Blob([this.dataSeriesStore.eta.toCSV()], {type:'text/csv'});

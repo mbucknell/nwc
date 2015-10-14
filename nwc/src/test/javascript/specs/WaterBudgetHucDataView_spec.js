@@ -245,6 +245,47 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 		});
 	});
 
+	describe('Tests for view created with a compareHucId and accumulated watershed', function() {
+		beforeEach(function() {
+			testView = new NWC.view.WaterBudgetHucDataView({
+				accumulated : true,
+				hucId : '123456789',
+				compareHucId : '232323232323',
+				el : $testDiv
+			});
+			hucFeatureLoadedDeferred.resolve();
+		});
+
+		it('Expects that the context properties are set appropriately', function() {
+			expect(testView.context.showAdditionalDataButtons).toBe(false);
+		});
+
+		it('Expects WaterBudgetPlotView to be called twice and that the view properties are defined', function() {
+			expect(NWC.view.WaterbudgetPlotView.calls.length).toBe(2);
+			expect(NWC.view.WaterbudgetPlotView.calls[0].args[0].hucId).toEqual('123456789');
+			expect(NWC.view.WaterbudgetPlotView.calls[1].args[0].hucId).toEqual('232323232323');
+			expect(testView.plotView).toBeDefined();
+			expect(testView.comparePlotView).toBeDefined();
+			expect(testView.countyWaterUseView).not.toBeDefined();
+		});
+
+		it('Expects HucInsetMapView to be called twice and that the view properties are defined', function() {
+			expect(NWC.view.HucInsetMapView.calls.length).toBe(2);
+			expect(NWC.view.HucInsetMapView.calls[0].args[0].hucId).toEqual('123456789');
+			expect(NWC.view.HucInsetMapView.calls[1].args[0].hucId).toEqual('232323232323');
+			expect(testView.hucInsetMapView).toBeDefined();
+			expect(testView.compareHucInsetMapView).toBeDefined();
+		});
+
+		it('Expects that when remove is called it is called on both the plotViews and the hucInsetMapViews', function() {
+			testView.remove();
+			expect(testView.plotView.remove).toHaveBeenCalled();
+			expect(testView.comparePlotView.remove).toHaveBeenCalled();
+			expect(testView.hucInsetMapView.remove).toHaveBeenCalled();
+			expect(testView.compareHucInsetMapView.remove).toHaveBeenCalled();
+		});
+	});
+
 	describe('Tests for view created with a compareHucId', function() {
 		beforeEach(function() {
 			testView = new NWC.view.WaterBudgetHucDataView({

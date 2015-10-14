@@ -449,6 +449,8 @@ NWC.util.DataSeriesStore = function () {
 		
 		if (this.nwisStreamFlowData) {
 			this.trimNwisStreamFlowData(this.nwisStreamFlowData);
+			if(this.nwisStreamFlowData.data.length === 0)
+				nameToSeriesMap.nwisStreamFlowData = null;
 		}
 
 		this.updateDailyHucSeries(nameToSeriesMap);

@@ -10,7 +10,8 @@ NWC.model.WaterBudgetHucPlotModel = Backbone.Model.extend({
 	defaults : {
 		units : 'usCustomary',
 		timeScale : 'monthly',
-		watershedAcres : null
+		watershedAcres : null,
+		compareWatershedAcres : null
 	}
 });
 

@@ -23,11 +23,16 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 	 * @constructs
 	 * @param {Object} options
 	 *	@prop {String} mapDiv
+	 *	@prop {Boolean} accumulated - true indicates accumulated, which indicates an
+	 *			accumulated watershed comparison view will be triggered when a comparison
+	 *			watershed is selected on this view.
 	 *	@prop {NWC.model.WaterBudgetSelectMapModel} model
 	 *	@prop {String} hucId - Previously selected watershed
 	 */
 	initialize : function(options) {
 		var self = this;
+		this.accumulated = options.accumulated ? options.accumulated : false;
+		
 		this.context = {
 			hucs : [{value : "none", display : "none"}],
 			featureToggles : NWC.config.get('featureToggles'),
@@ -101,6 +106,9 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 					}
 					else if (options.hucId === huc) {
 						this.showWarningDialog('The same watershed has been selected for comparison. Please select a different watershed');
+					}
+					else if (this.accumulated) {
+						this.router.navigate('#!waterbudget/accomparehucs/' + options.hucId + '/' + huc, {trigger : true});
 					}
 					else {
 						this.router.navigate('#!waterbudget/comparehucs/' + options.hucId + '/' + huc, {trigger : true});

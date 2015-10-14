@@ -6,6 +6,7 @@
 describe('Tests for NWC.view.WaterBudgetMapView', function() {
 	var addLayerSpy;
 	var addControlSpy;
+	var view;
 	beforeEach(function() {
 		addLayerSpy = jasmine.createSpy('addLayerSpy');
 		addControlSpy = jasmine.createSpy('addControlSpy');
@@ -18,10 +19,11 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 			};
 			this.model = new this.Model();
 		});
+		
+		view = new NWC.view.WaterBudgetMapView({accumulated : false});
 	});
 
 	it('Expects appropriate properties to be defined after instantiation', function() {
-		var view = new NWC.view.WaterBudgetMapView();
 
 		expect(NWC.view.BaseSelectMapView.prototype.initialize).toHaveBeenCalled();
 		expect(view.hucLayers).toBeDefined();
@@ -33,7 +35,6 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 	});
 
 	it('Expects that updates to the model\'s watershedLayer attribute updates the view', function() {
-		var view = new NWC.view.WaterBudgetMapView();
 
 		view.model.set('watershedLayer', 'huc8');
 		expect(view.hucLayers[1].layer.getVisibility()).toBe(true);
@@ -43,7 +44,6 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 	});
 
 	it('Expect that event handler calls to selectHucLayer update the models\'s watershedLayer attribute', function() {
-		var view = new NWC.view.WaterBudgetMapView();
 		
 		view.model.set('watershedLayer', 'huc8');
 		view.$el.html('<select class="huc-layers form-control">' +
@@ -55,7 +55,6 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 	});
 
 	it('Expects that updates to the model\'s gageLayer attribute updates the view', function() {
-		var view = new NWC.view.WaterBudgetMapView();
 
 		view.model.set('gageLayerOn', true);
 		expect(view.gageLayer.getVisibility()).toBe(true);
@@ -65,7 +64,6 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 	});
 
 	it('Expect that event handler calls to toggleGageLayer update the models\'s gageLayer attribute', function() {
-		var view = new NWC.view.WaterBudgetMapView();
 		
 		view.model.set('gageLayerOn', false);
 		view.toggleGageVisibility();
