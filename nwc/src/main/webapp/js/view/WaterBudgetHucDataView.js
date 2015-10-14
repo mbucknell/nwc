@@ -47,8 +47,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		this.context.showAdditionalDataButtons = !(this.compareHucId || this.fips);
 
 		//if accumulated view only show the compare button
-		//if huc_12 watershed and local view, show button for accumulated water budget
 		this.context.showWaterUseButton = !this.accumulated;
+		//if huc_12 watershed and local view, show button for accumulated water budget
 		this.context.showAccumulatedButton = (!this.accumulated) && (this.hucId.length === 12);
 
 		// call superclass initialize to do default initialize
@@ -57,8 +57,12 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 		this.setUpHucPlotModel();
 
-		// Create additional sub views as needed
+		/*	Create additional sub views as needed
+		*	There are four variations of how this view is used
+		*	and the sub views are adjusted accordingly
+		*/ 
 		$plotContainer = this.$('#huc-plot-container');
+		//	side by side comparison of an accumulated watershed
 		if (this.compareHucId && this.accumulated) {
 			var watershedGages = NWC.config.get('watershedGages');
 			this.gageId = watershedGages.getGageId(this.hucId);
@@ -82,36 +86,33 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 					el : self.$('#huc-plotview-div'),
 					model : self.hucPlotModel
 				});
+			});
 
-				/*	create the compare hucInsetmap view after the plot data has been retrieved
-				*	from previous view because watershedAcres is used to convert the plot data
-				*	and the compare hucInsetmap view will over-write the watershedAcres value
-				*	in the model for use in its plot
-				*/
-				self.plotView.hucDataLoadedPromise.done(function() {
-					self.compareHucInsetMapView = new NWC.view.HucInsetMapView({
-						el : self.$('.comparehuc-inset-map-div'),
-						accumulated : true,
-						hucId : self.compareHucId,
-						gageId : self.compareGageId,
-						model : self.hucPlotModel
-					});
-					
-					/*	create the compare plot view after watershedAcres has been updated
-					*	by the compare hucInsetMap view for the compare huc
-					*/ 
-					self.compareHucInsetMapView.hucFeatureLoadedPromise.done(function() {
-						self.comparePlotView = new NWC.view.WaterbudgetPlotView({
-							accumulated : true,
-							hucId : self.compareHucId,
-							gageId : self.compareGageId,
-							el : self.$('#compare-plotview-div'),
-							model : self.hucPlotModel
-						});
-					});
+			//	create the compare hucInsetmap view
+			self.compareHucInsetMapView = new NWC.view.HucInsetMapView({
+				el : self.$('.comparehuc-inset-map-div'),
+				accumulated : true,
+				compare : true,
+				hucId : self.compareHucId,
+				gageId : self.compareGageId,
+				model : self.hucPlotModel
+			});
+				
+			/*	create the compare plot view after watershedAcres has been updated
+			*	by the compare hucInsetMap feature
+			*/ 
+			self.compareHucInsetMapView.hucFeatureLoadedPromise.done(function() {
+				self.comparePlotView = new NWC.view.WaterbudgetPlotView({
+					accumulated : true,
+					compare : true,
+					hucId : self.compareHucId,
+					gageId : self.compareGageId,
+					el : self.$('#compare-plotview-div'),
+					model : self.hucPlotModel
 				});
 			});
 		}
+		// side by side comparison of a local watershed
 		else if (this.compareHucId) {
 			this.hucInsetMapView = new NWC.view.HucInsetMapView({
 				el : this.$('.huc-inset-map-div'),
@@ -136,6 +137,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				model : this.hucPlotModel
 			});
 		}
+		//	huc data view of an accumulated watershed
 		else if (this.accumulated) {
 			var watershedGages = NWC.config.get('watershedGages');
 			this.gageId = watershedGages.getGageId(this.hucId);
@@ -155,11 +157,10 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 					el : self.$('#huc-plot-container'),
 					model : self.hucPlotModel
 				});
-				self.plotView.hucDataLoadedPromise.done(function() {
-					self.$('#compare-hucs-button').prop('disabled', false);				
-				});				
+				self.$('#compare-hucs-button').prop('disabled', false);				
 			});			
 		}
+		//	huc data view of a local watershed
 		else {
 			this.hucInsetMapView = new NWC.view.HucInsetMapView({
 				el : this.$('.huc-inset-map-container'),

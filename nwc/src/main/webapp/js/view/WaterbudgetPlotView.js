@@ -9,9 +9,6 @@ NWC.view = NWC.view || {};
 	NWC.view.WaterbudgetPlotView = NWC.view.BaseView.extend({
 
 		templateName : 'waterbudgetPlot',
-		
-		// This is resolved once the plot data has been loaded
-		hucDataLoadedPromise : undefined,
 
 		events : {
 			'click .download-evapotranspiration-btn' : 'downloadEvapotranspiration',
@@ -32,14 +29,16 @@ NWC.view = NWC.view || {};
 			var self = this;
 			this.hucId = options.hucId;
 			this.gageId = options.gageId ? options.gageId : null;
-			this.accumulated = options.accumulated ? options.accumulated : false;
+			var accumulated = options.accumulated ? options.accumulated : false;
 			
-			if (this.accumulated) {
+			if (accumulated) {
 				this.watershedVariables = NWC.config.get('accumulated').attributes.variables;
 			}
 			else {
 				this.watershedVariables = NWC.config.getWatershed(options.hucId).variables;
 			}
+			
+			this.compare = options.compare ? options.compare : false;
 
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 			this.getHucDataPromise = this.getPlotData(options.hucId, this.gageId).done(function() {
@@ -66,7 +65,6 @@ NWC.view = NWC.view || {};
 		getPlotData: function(huc, gage) {
 			var self = this;
 			var deferred = $.Deferred();
-			this.hucDataLoadedPromise = deferred.promise();
 			var dataSeries = {};
 			var getDataDeferreds = [];
 			//grab the sos sources that will be used to display the initial data
@@ -79,7 +77,18 @@ NWC.view = NWC.view || {};
 			var acres;
 			//for an accumulated view, there may or may not be a gage
 			if (gage) {
-				acres = self.model.get('watershedAcres');
+				/*	
+				 *	Since there is a gage, the value for related acres will be
+				 *	retrieved from the model.  So, set the model variable
+				 *	for acres depending on whether or not the instance is for a 
+				 *	comparison type of the WaterBudgetHucDataView.
+				 */ 
+				if (this.compare) {
+					acres = self.model.get('compareWatershedAcres');
+				}
+				else {
+					acres = self.model.get('watershedAcres');
+				}
 				if (0 != acres) {  //check with dave to see if this is possible
 					this.streamflowGageConfig = NWC.config.get('streamflow').gage.attributes.variables;
 					sosSources.nwisStreamFlowData = this.streamflowGageConfig.nwisStreamFlowData;

@@ -11,7 +11,7 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 	var $customaryButton, $metricButton, $dailyButton, $monthlyButton;
 	var testView;
 	var server;
-	var hucFeatureLoadedDeferred, hucDataLoadedDeferred;
+	var hucFeatureLoadedDeferred;
 
 	beforeEach(function() {
 		CONFIG = {
@@ -43,10 +43,8 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 		
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
 
-		hucDataLoadedDeferred = $.Deferred();
 		spyOn(NWC.view, 'WaterbudgetPlotView').andReturn({
-			remove : jasmine.createSpy('waterbudgetPlotViewRemoveSpy'),
-			hucDataLoadedPromise : hucDataLoadedDeferred.promise()
+			remove : jasmine.createSpy('waterbudgetPlotViewRemoveSpy')
 		});
 
 		hucFeatureLoadedDeferred = $.Deferred();
@@ -212,7 +210,6 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 			expect($accumulatedButton.prop('disabled')).toBe(true);
 			expect($compareHucsButton.prop('disabled')).toBe(true);
 			hucFeatureLoadedDeferred.resolve();
-			hucDataLoadedDeferred.resolve();
 			expect($countiesButton.prop('disabled')).toBe(true);
 			expect($accumulatedButton.prop('disabled')).toBe(true);
 			expect($compareHucsButton.prop('disabled')).toBe(false);
@@ -242,7 +239,6 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 			expect($accumulatedButton.prop('disabled')).toBe(true);
 			expect($compareHucsButton.prop('disabled')).toBe(true);
 			hucFeatureLoadedDeferred.resolve();
-			hucDataLoadedDeferred.resolve();
 			expect($countiesButton.prop('disabled')).toBe(true);
 			expect($accumulatedButton.prop('disabled')).toBe(true);
 			expect($compareHucsButton.prop('disabled')).toBe(false);
@@ -258,7 +254,6 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 				el : $testDiv
 			});
 			hucFeatureLoadedDeferred.resolve();
-			hucDataLoadedDeferred.resolve();
 		});
 
 		it('Expects that the context properties are set appropriately', function() {

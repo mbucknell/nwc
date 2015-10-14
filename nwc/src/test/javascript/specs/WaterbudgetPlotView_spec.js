@@ -73,6 +73,18 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 		expect(fakeServer.requests.length).toBe(3);
 	});
 
+	it('Expects that $.ajax is called for each data source including streamflow when accumulated and a compare instance', function() {
+		model.set('compareWatershedAcres', 10);
+		testView = new NWC.view.WaterbudgetPlotView({
+			accumulated : true,
+			compare : true,
+			hucId : '123456',
+			gageId : '123456',
+			model : model
+		});
+		expect(fakeServer.requests.length).toBe(3);
+	});
+
 	it('Expects an update to the model to call plotData', function() {
 		testView = new NWC.view.WaterbudgetPlotView({
 			hucId : '123456',
