@@ -45,6 +45,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		this.fips = options.fips ? options.fips : '';
 
 		this.context.showAdditionalDataButtons = !(this.compareHucId || this.fips);
+		
+		this.context.featureToggles = NWC.config.get('featureToggles');
 
 		//if accumulated view only show the compare button
 		this.context.showWaterUseButton = !this.accumulated;
