@@ -80,7 +80,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			/*	create the plot view after watershedAcres has been updated
 			*	by the HucInsetMap feature
 			*/ 
-			this.hucInsetMapView.hucFeatureLoadedPromise.done(function() {
+			this.hucInsetMapView.gageFeatureLoadedPromise.done(function() {
 				self.plotView = new NWC.view.WaterbudgetPlotView({
 					accumulated : true,
 					hucId : self.hucId,
@@ -103,7 +103,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			/*	create the compare plot view after watershedAcres has been updated
 			*	by the compare hucInsetMap feature
 			*/ 
-			self.compareHucInsetMapView.hucFeatureLoadedPromise.done(function() {
+			self.compareHucInsetMapView.gageFeatureLoadedPromise.done(function() {
 				self.comparePlotView = new NWC.view.WaterbudgetPlotView({
 					accumulated : true,
 					compare : true,
@@ -151,7 +151,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				model : this.hucPlotModel
 			});
 			
-			this.hucInsetMapView.hucFeatureLoadedPromise.done(function() {
+			this.hucInsetMapView.gageFeatureLoadedPromise.done(function() {
 				self.plotView = new NWC.view.WaterbudgetPlotView({
 					accumulated : true,
 					hucId : self.hucId,
@@ -159,6 +159,9 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 					el : self.$('#huc-plot-container'),
 					model : self.hucPlotModel
 				});
+			});			
+			
+			this.hucInsetMapView.hucFeatureLoadedPromise.done(function() {
 				self.$('#compare-hucs-button').prop('disabled', false);				
 			});			
 		}

@@ -14,6 +14,7 @@ NWC.view = NWC.view || {};
 		// This  is resolved once the huc feature layer has been loaded and the hucLayer property
 		// contains the OpenLayer vector layer.
 		hucFeatureLoadedPromise : undefined,
+		gageFeatureLoadedPromise : undefined,
 		hucLayer : undefined,
 
 		/*
@@ -39,6 +40,7 @@ NWC.view = NWC.view || {};
 			var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
 			var mapControls = [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()];
 			var hucLoadedDeferred = $.Deferred();
+			var gageLoadedDeferred = $.Deferred();
 
 			this.hucId = options.hucId;
 			var gageId = options.gageId ? options.gageId : null;
@@ -49,6 +51,7 @@ NWC.view = NWC.view || {};
 
 			//Create map and layers.
 			this.hucFeatureLoadedPromise = hucLoadedDeferred.promise();
+			this.gageFeatureLoadedPromise = gageLoadedDeferred.promise();
 			this.map = NWC.util.mapUtils.createMap([baseLayer], mapControls);
 			
 			if (gageId) {
@@ -75,10 +78,15 @@ NWC.view = NWC.view || {};
 				this.gageMarkerLayer = new OpenLayers.Layer.Markers("Markers");
 				this.gageLayer.events.on({
 					featureadded : function(event) {
+						this.model.set(watershedAcres, 
+								NWC.util.Convert.squareKilometersToAcres(event.feature.attributes[watershedConfig.watershedAreaUnit]));
 						var lonlat = new OpenLayers.LonLat(event.feature.geometry.x, event.feature.geometry.y);
 						this.gageMarkerLayer.addMarker(new OpenLayers.Marker(lonlat));
 						this.$('#gage-name').html(event.feature.attributes.STANAME);
 						this.$('#drainage-area').html(event.feature.attributes.DRAIN_SQKM);
+					},
+					loadend : function(event) {
+						gageLoadedDeferred.resolve();
 					},
 					scope : this
 				});
@@ -96,7 +104,7 @@ NWC.view = NWC.view || {};
 				featureadded : function(event) {
 					this.hucName = event.feature.attributes[watershedConfig.name];
 					this.$('.huc-name').html(this.hucName);
-					this.model.set(watershedAcres, event.feature.attributes[watershedConfig.watershedAcres]);
+//					this.model.set(watershedAcres, event.feature.attributes[watershedConfig.watershedAcres]);
 				},
 				loadend : function(event) {
 					this.map.zoomToExtent(this.hucLayer.getDataExtent());

@@ -31,6 +31,9 @@ NWC.util = NWC.util || {};
     var acresToSquareKilometers = function(acres) {
         return acres * acresToSquareKilometersConversionFactor;
     };
+    var squareKilometersToAcres = function(km2) {
+        return km2 / acresToSquareKilometersConversionFactor;
+    };
 
     //conversion factor per http://en.wikipedia.org/wiki/Inch#Equivalence_to_other_units_of_length
     var mmToInchesConversionFactor = 0.03937;
@@ -80,6 +83,7 @@ NWC.util = NWC.util || {};
 		mgdToMmAcresPerDay: mgdToMmAcresPerDay,
 		squareMilesToAcres: squareMilesToAcres,
 		acresToSquareKilometers: acresToSquareKilometers,
+		squareKilometersToAcres: squareKilometersToAcres,
 		acresToSquareMeters: acresToSquareMeters,
 		mmToInches: mmToInches,
 		mgdToMillionCubicMetersPerYear: mgdToMillionCubicMetersPerYear,
