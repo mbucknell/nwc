@@ -104,7 +104,6 @@ NWC.view = NWC.view || {};
 				featureadded : function(event) {
 					this.hucName = event.feature.attributes[watershedConfig.name];
 					this.$('.huc-name').html(this.hucName);
-//					this.model.set(watershedAcres, event.feature.attributes[watershedConfig.watershedAcres]);
 				},
 				loadend : function(event) {
 					this.map.zoomToExtent(this.hucLayer.getDataExtent());
