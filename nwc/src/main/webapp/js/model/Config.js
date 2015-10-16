@@ -192,7 +192,7 @@ NWC.model = NWC.model || {};
 						namespace : 'WBD',
 						property : 'huc12',
 						name : 'name',
-						watershedAcres : 'areaacres',
+						watershedArea : 'DRAIN_SQKM',
 						selectDisplay : '12 Digit',
 						variables : {
 							dayMet : new NWC.model.SosVariable({
@@ -245,7 +245,7 @@ NWC.model = NWC.model || {};
 					namespace : 'WBD',
 					property : 'huc12',
 					name : 'name',
-					watershedAcres : 'areaacres', //should this be in variables?
+					watershedAreaUnit : 'DRAIN_SQKM',
 					selectDisplay : 'Accumulated',
 					variables : {
 						dayMet : new NWC.model.SosVariable({
