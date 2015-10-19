@@ -92,6 +92,9 @@ NWC.view = NWC.view || {};
 				});
 				this.map.addLayers([this.gageLayer, this.gageMarkerLayer]);
 			}
+			else {
+				gageLoadedDeferred.resolve();				
+			}
 
 			this.hucLayer = NWC.util.mapUtils.createHucFeatureLayer(
 				watershedConfig.namespace,
