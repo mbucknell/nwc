@@ -70,7 +70,7 @@ NWC.view.AquaticBiologyMapView = NWC.view.BaseSelectMapView.extend({
 			version: "1.1.0",
 			url: CONFIG.endpoint.geoserver + 'wfs',
 			featureType: 'SiteInfo',
-			featureNS: 'http://cida.usgs.gov/BioData',
+			featureNS: 'http://gov.usgs.cida/BioData',
 			srsName: 'EPSG:900913',
 			propertyNames: ['SiteNumber', 'SiteName', 'the_geom', 'DrainageAr']
 		});
