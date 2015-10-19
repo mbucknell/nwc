@@ -184,7 +184,7 @@ NWC.model = NWC.model || {};
 
 			return {
 				featureToggles : {
-					enableAccumulatedWaterBudget : false
+					enableAccumulatedWaterBudget : true
 				},
 				watershed : {
 					huc12 : new NWC.model.DataSourceModel({
