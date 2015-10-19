@@ -165,7 +165,7 @@ NWC.util.DataSeriesStore = function () {
 			dayMetValue = dayMetRow[1],
 			dayMetDay = getDayNumberFromDateString(dayMetDateStr);
 			
-			if (nwisStreamFlowDataSeries) {
+			if (nwisStreamFlowDataSeries && (nwisStreamFlowDataSeries.data.length > nwisDataIndex + 1)) {
 				var nwisRow = nwisStreamFlowDataSeries.data[nwisDataIndex];
 				var nwisDataValue = NaN;
 				if (nwisRow[0] === dayMetDateStr) {
@@ -256,7 +256,7 @@ NWC.util.DataSeriesStore = function () {
 				monthlyAccumulation = saferAdd(monthlyAccumulation, dayMetValue);				
 			}
 			
-			if (nwisStreamFlowDataSeries) {
+			if (nwisStreamFlowDataSeries && (nwisStreamFlowDataSeries.data.length > nwisDataIndex + 1)) {
 				var nwisRow = nwisStreamFlowDataSeries.data[nwisDataIndex];
 				var nwisDataValue = NaN;
 				if (nwisRow[0] === dayMetDateStr) {
@@ -369,7 +369,7 @@ NWC.util.DataSeriesStore = function () {
 					dayMetYearlyAccumulation = saferAdd(dayMetYearlyAccumulation, dayMetValue);
 				}
 
-				if (nwisStreamFlowDataSeries) {
+				if (nwisStreamFlowDataSeries && (nwisStreamFlowDataSeries.data.length > nwisDataIndex + 1)) {
 					var nwisRow = nwisStreamFlowDataSeries.data[nwisDataIndex];
 					var nwisDataValue = NaN;
 					if (nwisRow[0] === dayMetDateStr) {
