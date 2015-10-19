@@ -141,7 +141,7 @@ NWC.util.mapUtils = (function () {
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
 			featureType: layerName,
-			featureNS: "http://cida.usgs.gov/" + namespace,
+			featureNS: "http://gov.usgs.cida/" + namespace,
 			version: "1.1.0",
 			geometryName: "the_geom",
 			srsName : "EPSG:3857"
@@ -194,7 +194,7 @@ NWC.util.mapUtils = (function () {
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
 			featureType: layerName,
-			featureNS: "http://cida.usgs.gov/" + namespace,
+			featureNS: "http://gov.usgs.cida/" + namespace,
 			version: "1.1.0",
 			geometryName: "the_geom",
 			srsName : "EPSG:900913"
@@ -225,7 +225,7 @@ NWC.util.mapUtils = (function () {
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
 			featureType: layerName,
-			featureNS: "http://cida.usgs.gov/" + namespace,
+			featureNS: "http://gov.usgs.cida/" + namespace,
 			version: "1.1.0",
 			geometryName: "the_geom",
 			srsName : "EPSG:900913"
@@ -249,7 +249,7 @@ NWC.util.mapUtils = (function () {
 		var protocol = new OpenLayers.Protocol.WFS({
 			url : CONFIG.endpoint.geoserver + 'wfs',
 			featureType: layerName,
-			featureNS: "http://cida.usgs.gov/" + namespace,
+			featureNS: "http://gov.usgs.cida/" + namespace,
 			version: "1.1.0",
 			geometryName: "the_geom",
 			srsName : "EPSG:900913"
@@ -274,7 +274,7 @@ NWC.util.mapUtils = (function () {
 			version: '1.1.0',
 			url: CONFIG.endpoint.geoserver + 'wfs',
 			featureType: layerName,
-			featureNS: 'http://cida.usgs.gov/' + namespace,
+			featureNS: 'http://gov.usgs.cida/' + namespace,
 			geometryName: 'the_geom',
 			srsName: 'EPSG:900913'
 		});
