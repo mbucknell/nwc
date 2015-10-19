@@ -241,7 +241,7 @@ NWC.model = NWC.model || {};
 				},
 				//just a copy of huc12 watershed, need to update
 				accumulated : new NWC.model.DataSourceModel({
-					layerName : 'huc12',
+					layerName : 'huc12agg',
 					namespace : 'WBD',
 					property : 'huc12',
 					name : 'name',
