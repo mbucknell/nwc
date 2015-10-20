@@ -184,7 +184,7 @@ NWC.model = NWC.model || {};
 
 			return {
 				featureToggles : {
-					enableAccumulatedWaterBudget : false
+					enableAccumulatedWaterBudget : true
 				},
 				watershed : {
 					huc12 : new NWC.model.DataSourceModel({
@@ -257,7 +257,7 @@ NWC.model = NWC.model || {};
 							downloadMetadata: 'Data derived by sampling the DayMet precipitation variable to NHD+ Version II\n12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://daymet.ornl.gov/ http://cida.usgs.gov/gdp/\nhttp://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
 						}),
 						eta : new NWC.model.SosVariable({
-							observedProperty: 'MEAN_et',
+							observedProperty: 'et',
 							propertyLongName: 'Area Weighted Mean Actual Evapotranspiration',
 							units: NWC.util.Units.metric.normalizedWater.monthly,
 							dataset: 'HUC12_data',
