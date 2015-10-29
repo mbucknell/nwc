@@ -291,8 +291,8 @@ NWC.util.mapUtils = (function () {
 					fillOpacity: 0.4,
 					//Display County Name
 					label: '${name}',
-					fontSize: '2em',
-					fontWeight: 'bold',
+					fontSize: '1em',
+					fontWeight: 'normal',
 					labelOutlineColor: "white",
 					labelOutlineWidth: 1,
 					labelAlign: 'cm',
