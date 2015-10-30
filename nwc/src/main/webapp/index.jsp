@@ -3,7 +3,8 @@
 <html>
 	<head>
 		<%@include file="/jsp/USGSHead.jsp" %>
-		<meta name="fragment" content="!">	
+		<meta name="fragment" content="!">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 		<script type="text/javascript">
 			(function(){
 				window.CONFIG = {};
