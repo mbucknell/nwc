@@ -54,10 +54,10 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			CONFIG.endpoint.geoserver + 'NWC/wms',
 			{
 				LAYERS: gageConfig.namespace + ':' + gageConfig.layerName,
-				STYLES: 'blue_circle',
+				STYLES: 'gagesii_hucComp',
 				format: 'image/png',
 				transparent: true,
-				tiled: true
+				tiled: false
 			},
 			{
 				isBaseLayer: false,
@@ -70,7 +70,7 @@ NWC.view.WaterBudgetMapView = NWC.view.BaseSelectMapView.extend({
 			val.layer.addOptions({attribution: '<img src="' + self.legendUrl(val.layer.params.LAYERS, val.layer.params.STYLES[0]) + '"/>'});
 		});
 
-		this.gageLayer.addOptions({attribution: '<img src="' + self.legendUrl(this.gageLayer.params.LAYERS, 'blue_circle') + '"/>'});
+		this.gageLayer.addOptions({attribution: '<img src="' + self.legendUrl(this.gageLayer.params.LAYERS, 'gagesii_hucComp') + '"/>'});
 
 		this.legendControl = new OpenLayers.Control.Attribution();
 
