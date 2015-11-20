@@ -305,7 +305,7 @@ NWC.model = NWC.model || {};
 						}
 					}),
 					gage : new NWC.model.DataSourceModel({
-						layerName : 'gagesII',
+						layerName : 'gagesii_hucComp',
 						namespace : 'NWC',
 						variables : {
 							nwisStreamFlowData : {
