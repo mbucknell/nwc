@@ -100,120 +100,40 @@
                 </configuration>
             </plugin>
 			<plugin>
-				<groupId>com.github.searls</groupId>
-				<artifactId>jasmine-maven-plugin</artifactId>
-				<executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <keepServerAlive>true</keepServerAlive>
-                    <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
-                    <webDriverCapabilities>
-						<capability>
-							<name>phantomjs.binary.path</name>
-							<value>${phantomjs.binary}</value>
-						</capability>
-					</webDriverCapabilities>
-                    <jsSrcDir>${basedir}/src/main/webapp/js</jsSrcDir>
-                    <jsTestSrcDir>${basedir}/src/test/javascript</jsTestSrcDir>
-					<preloadSources>
-						<source>webjars/jquery.js</source>
-						<source>webjars/bootstrap.js</source>
-						<source>webjars/select2.js</source>
-						<source>webjars/sugar.min.js</source>
-						<source>webjars/underscore.js</source>
-						<source>webjars/backbone.js</source>
-						<source>webjars/handlebars.js</source>
-						<source>webjars/OpenLayers.js</source>
-						<source>webjars/javascript.util.js</source>	
-						<source>webjars/jsts.js</source>
-						<source>${basedir}/src/main/webapp/vendorlibs/FileSaver.js-master/FileSaver.js</source>
-					</preloadSources>
-					<sourceIncludes>
-						<include>utils/*.js</include>
-						<include>model/BaseSelectMapModel.js</include>
-						<include>model/*.js</include>
-						<include>view/BaseView.js</include>
-						<include>view/BaseSelectMapView.js</include>
-						<include>view/BaseDiscoveryTabView.js</include>
-						<include>view/WaterbudgetPlotView.js</include>
-						<include>view/CountyWaterUseView.js</include>
-						<include>view/WaterBudgetHucDataView.js</include>
-						<include>view/ProjectTabView.js</include>
-						<include>view/DataTabView.js</include>
-						<include>view/PublicationsTabView.js</include>
-						<include>view/StreamflowPlotView.js</include>
-						<include>**/*.js</include>
-					</sourceIncludes>
-					<sourceExcludes>
-						<include>utils/openLayersExtensions/**/*.js</include>
-						<include>init.js</include>
-					</sourceExcludes>
-					<specExcludes>
-						<include>old_specs/*.js</include>
-					</specExcludes>
-				</configuration>		
-			</plugin>
-			<plugin>
-                <groupId>com.github.timurstrekalov</groupId>
-                <artifactId>saga-maven-plugin</artifactId>
-                <version>1.5.3</version>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
 				<executions>
 					<execution>
+						<id>install node and npm</id>
 						<goals>
-							<goal>coverage</goal>
+							<goal>install-node-and-npm</goal>
 						</goals>
+						<configuration>
+							<nodeVersion>v4.2.4</nodeVersion>
+							<npmVersion>2.14.12</npmVersion>
+						</configuration>
 					</execution>
-				</executions> 
-                <configuration>
-                    <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
-                    <outputDir>${project.build.directory}/coverage</outputDir>
-                    <noInstrumentPatterns>
-                        <pattern>.*/.+_spec\.js</pattern>
-						<pattern>.*/client/*\.js</pattern>
-						<pattern>.*/openLayersExtensions/*/*\.js</pattern>
-						<pattern>.*/sinon.+\.js</pattern>
-						<!-- couldn't figure out how to exclude all webjars so doing them individually -->
-						<pattern>.*/jquery.js</pattern>
-						<pattern>.*/bootstrap.js</pattern>
-						<pattern>.*/select2.js</pattern>
-						<pattern>.*/sugar.min.js</pattern>
-						<pattern>.*/underscore.js</pattern>
-						<pattern>.*/backbone.js</pattern>
-						<pattern>.*/handlebars.js</pattern>
-						<pattern>.*/OpenLayers.js</pattern>
-						<pattern>.*/FileSaver.js</pattern>
-						<pattern>.*/javascript.util.js</pattern>
-						<pattern>.*/jsts.js</pattern>
-						<!-- Add patterns for files that don't need to be analyzed such as library files -->
-                    </noInstrumentPatterns>
-                </configuration>
-            </plugin>
-			<plugin>
-				<groupId>com.google.code.maven-replacer-plugin</groupId>
-				<artifactId>replacer</artifactId>
-				<version>1.5.3</version>
-				<executions>
 					<execution>
-						<phase>verify</phase>
+						<id>npm install</id>
 						<goals>
-							<goal>replace</goal>
+							<goal>npm</goal>
 						</goals>
+						<configuration>
+							<arguments>install</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>javascript tests</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<phase>test</phase>
+						<configuration>
+							<arguments>test</arguments>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<file>${project.build.directory}/coverage/total-coverage.dat</file>
-					<outputFile>${project.build.directory}/jasmine/total-coverage.dat</outputFile>
-					<regex>false</regex>
-					<token>src/</token>
-					<value>${project.basedir}/src/main/webapp/js/</value>
-				</configuration>
-			</plugin> 
+			</plugin>
         </plugins>
         <finalName>${warName}</finalName>
     </build>

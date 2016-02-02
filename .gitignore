@@ -11,3 +11,6 @@ nbactions.xml
 .DS_Store
 /nwc/phantomjsdriver.log
 phantomjsdriver.log
+/nwc/node/
+/nwc/node_modules/
+/nwc/etc/
