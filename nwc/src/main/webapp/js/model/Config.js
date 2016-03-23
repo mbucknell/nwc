@@ -111,7 +111,7 @@ NWC.model = NWC.model || {};
 		},
 		getGageId : function(hucId) {
 			return this.lookupByHucId[hucId] ? this.lookupByHucId[hucId].gageId : null;
-		}		
+		}
 	});
 
 	NWC.model.SciencebaseUrlFragmentModel = Backbone.Model.extend({
@@ -192,6 +192,7 @@ NWC.model = NWC.model || {};
 						namespace : 'WBD',
 						property : 'huc12',
 						name : 'name',
+						drainageArea : 'areasqkm',
 						watershedArea : 'DRAIN_SQKM',
 						selectDisplay : '12 Digit',
 						variables : {
@@ -218,6 +219,7 @@ NWC.model = NWC.model || {};
 						namespace : 'WBD',
 						property : 'huc8',
 						name : 'name',
+						drainageArea : 'areasqkm',
 						selectDisplay : '8 Digit',
 						variables : {
 							dayMet : new NWC.model.SosVariable({
@@ -245,6 +247,7 @@ NWC.model = NWC.model || {};
 					namespace : 'WBD',
 					property : 'huc12',
 					name : 'name',
+					drainageArea : 'areasqkm',
 					watershedAreaUnit : 'DRAIN_SQKM',
 					selectDisplay : 'Accumulated',
 					variables : {

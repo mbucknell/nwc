@@ -8,6 +8,11 @@
 				<div class="huc-id">{{ hucId }}</div>
 				<h5>Watershed Name</h5>
 				<div class="huc-name"></div>
+				{{#if isHuc12}}
+					<h5>Drainage Area (km<sup>2</sup>)</h5>
+					<div>Local Incremental - <span class="local-drainage-area"></span></div>
+					<div>Total Upstream - <span class="total-upstream-drainage-area"></span></div>
+				{{/if}}
 			</div>
 		{{#if gageId}}
 			<div class="col-sm-6">

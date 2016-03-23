@@ -35,7 +35,8 @@ NWC.view = NWC.view || {};
 
 			this.context = {
 				hucId : hucId,
-				gageId : gageId
+				gageId : gageId,
+				isHuc12 : hucId.length === 12
 			};
 
 			var hucLoadedDeferred = $.Deferred();
@@ -102,7 +103,9 @@ NWC.view = NWC.view || {};
 			hucLayer.events.on({
 				featureadded : function(event) {
 					var hucName = event.feature.attributes[watershedConfig.name];
+					var drainage = event.feature.attributes[watershedConfig.drainageArea]
 					this.$('.huc-name').html(hucName);
+					this.$('.local-drainage-area').html(drainage);
 				},
 				loadend : function(event) {
 					if (!accumulated) {
@@ -114,29 +117,36 @@ NWC.view = NWC.view || {};
 			});
 			map.addLayer(hucLayer);
 
-			achucLayer = NWC.util.mapUtils.createHucFeatureLayer(
-				acWatershedConfig.namespace,
-				acWatershedConfig.layerName,
-				acWatershedConfig.property,
-				[hucId],
-				achucStyle
-			);
+			if (this.context.isHuc12) {
+				achucLayer = NWC.util.mapUtils.createHucFeatureLayer(
+					acWatershedConfig.namespace,
+					acWatershedConfig.layerName,
+					acWatershedConfig.property,
+					[hucId],
+					achucStyle
+				);
 
-			achucLayer.events.on({
-				featureadded : function(event) {
-					var hucName = event.feature.attributes[acWatershedConfig.name];
-					this.$('.huc-name').html(hucName);
-				},
-				loadend : function(event) {
-					if (accumulated) {
-						map.zoomToExtent(achucLayer.getDataExtent());
-					}
-					achucLoadedDeferred.resolve();
-				},
-				scope : this
-			});
+				achucLayer.events.on({
+					featureadded : function(event) {
+						var hucName = event.feature.attributes[acWatershedConfig.name];
+						var drainage = event.feature.attributes[acWatershedConfig.drainageArea];
+						this.$('.huc-name').html(hucName);
+						this.$('.total-upstream-drainage-area').html(drainage);
+					},
+					loadend : function(event) {
+						if (accumulated) {
+							map.zoomToExtent(achucLayer.getDataExtent());
+						}
+						achucLoadedDeferred.resolve();
+					},
+					scope : this
+				});
 
-			map.addLayer(achucLayer);
+				map.addLayer(achucLayer);
+			}
+			else {
+				achucLoadedDeferred.resolve();
+			}
 
 
 			this.featureLoadedPromise.done(function() {
