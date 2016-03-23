@@ -18,6 +18,7 @@ NWC.view = NWC.view || {};
 		 *     @prop {String} hucId
 		 *     @prop {String} gageId (optional)
 		 *     @prop {Boolean} accumulated - false indicates if this is local watershed, true indicates accumulated.
+		 *     @prop {Boolean} compare - True if this is the comparision inset map view
 		 *     @prop {WaterBudgetHucPlotModel} model - Used to set the watershed acres
 		 */
 		initialize : function(options) {

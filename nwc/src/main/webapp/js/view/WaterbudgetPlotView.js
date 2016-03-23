@@ -22,7 +22,8 @@ NWC.view = NWC.view || {};
 		 *      @prop {WaterBudgetHucPlotModel} model - Used to set the units and timeScaled of the plot.t
 		 *      @prop {String} gageId (optional)
 		 *      @prop {Boolean} accumulated - false indicates if this is local watershed, true indicates accumulated.
-		 *		@prop {WaterBudgetHucPlotModel} model - Used to get the watershed acres 
+		 *      @prop {Boolean} compare - True if this plot should use compareWatershedAcres rather than watershedAcres
+		 *		@prop {WaterBudgetHucPlotModel} model - Used to get the watershed acres
 		 * @returns {undefined}
 		 */
 		initialize : function(options) {
@@ -30,14 +31,14 @@ NWC.view = NWC.view || {};
 			this.hucId = options.hucId;
 			this.gageId = options.gageId ? options.gageId : null;
 			var accumulated = options.accumulated ? options.accumulated : false;
-			
+
 			if (accumulated) {
 				this.watershedVariables = NWC.config.get('accumulated').attributes.variables;
 			}
 			else {
 				this.watershedVariables = NWC.config.getWatershed(options.hucId).variables;
 			}
-			
+
 			this.compare = options.compare ? options.compare : false;
 
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
@@ -54,7 +55,7 @@ NWC.view = NWC.view || {};
 		* This makes a Web service call to get huc data and transform it into a data series object.
 		* This will also make a web service call to get streamflow data if it is created as an
 		* accumulated type of view from the WaterBudgetHucDataView and there is an associated gage
-		* with the selected watershed. 
+		* with the selected watershed.
 		*
 		* @param {String} huc 12 digit identifier for the hydrologic unit
 		* @param {String} gageId (optional) identifier for the streamflow gage
@@ -73,16 +74,16 @@ NWC.view = NWC.view || {};
 				eta : this.watershedVariables.eta,
 				dayMet : this.watershedVariables.dayMet
 			};
-			
+
 			var acres;
 			//for an accumulated view, there may or may not be a gage
 			if (gage) {
-				/*	
+				/*
 				 *	Since there is a gage, the value for related acres will be
 				 *	retrieved from the model.  So, set the model variable
-				 *	for acres depending on whether or not the instance is for a 
+				 *	for acres depending on whether or not the instance is for a
 				 *	comparison type of the WaterBudgetHucDataView.
-				 */ 
+				 */
 				if (this.compare) {
 					acres = self.model.get('compareWatershedAcres');
 				}
@@ -99,11 +100,11 @@ NWC.view = NWC.view || {};
 
 			Object.keys(sosSources, function (sourceId, source) {
 				var d = $.Deferred();
-				
+
 				dataSeries[sourceId] = NWC.util.DataSeries.newSeries();
 				getDataDeferreds.push(d);
-				
-				if (sourceId === 'nwisStreamFlowData') {					
+
+				if (sourceId === 'nwisStreamFlowData') {
 					var startDate = '1838-01-01';
 					var parseDateStr = function(dateStr){
 						var tokens = dateStr.split('T');
@@ -180,7 +181,7 @@ NWC.view = NWC.view || {};
 							alert(errorMessage);
 							d.reject(errorMessage);
 						}
-					});	
+					});
 				}
 			});
 
@@ -197,7 +198,7 @@ NWC.view = NWC.view || {};
 		/**
 		 *	Update the plot with the current dataSeriesStore and model.
 		 *	If this is an accumulated type of view from the WaterBudgetHucDataView and there is
-		 *	an associated gage with the selected watershed, then streamflow will also be plotted. 
+		 *	an associated gage with the selected watershed, then streamflow will also be plotted.
 		 */
 		plotData : function() {
 			var self = this;
