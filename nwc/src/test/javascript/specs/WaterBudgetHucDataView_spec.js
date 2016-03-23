@@ -271,7 +271,6 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 				{"hucId" : "123456789012", "gageId" : "02372250"},
 				{"hucId" : "987654321098", "gageId" : "02372251"}
 			]);
-			NWC.config.set('watershedGages', watershedGages);
 			testView = new NWC.view.WaterBudgetHucDataView({
 				accumulated : true,
 				hucId : '123456789012',
