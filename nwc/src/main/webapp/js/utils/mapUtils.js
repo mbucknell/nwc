@@ -134,7 +134,7 @@ NWC.util.mapUtils = (function () {
 	 * @param {OpenLayers.StyleMap} styleMap - optional style map for the feature layer.
 	 * @returns OpenLayers.Layer.Vector with hucs.
 	 */
-	that.createHucFeatureLayer = function(namespace, layerName, property, hucs, styleMap) {
+	that.createHucFeatureLayer = function(namespace, layerName, property, hucs, style) {
 		var filter;
 		var hucFilters = [];
 		var hucLayer;
@@ -146,13 +146,11 @@ NWC.util.mapUtils = (function () {
 			geometryName: "the_geom",
 			srsName : "EPSG:3857"
 		});
-		var style = styleMap ? styleMap : new OpenLayers.StyleMap({
+		var style = style ? style : {
 				strokeWidth: 2,
-				strokeColor: "black",
-				fillOpacity: 0,
-				graphicOpacity: 1,
-				fill: false
-			});
+				strokeColor: "#000000",
+				fill : false
+			};
 
 		if (hucs.length === 1) {
 			filter = new OpenLayers.Filter.Comparison({
@@ -178,7 +176,7 @@ NWC.util.mapUtils = (function () {
 		hucLayer = new OpenLayers.Layer.Vector("WFS", {
 			strategies: [new OpenLayers.Strategy.Fixed()],
 			protocol: protocol,
-			styleMap: style,
+			style: style,
 			filter:filter
 		});
 		return hucLayer;

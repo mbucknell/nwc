@@ -45,7 +45,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		this.fips = options.fips ? options.fips : '';
 
 		this.context.showAdditionalDataButtons = !(this.compareHucId || this.fips);
-		
+
 		this.context.featureToggles = NWC.config.get('featureToggles');
 
 		//if accumulated view only show the compare button
@@ -62,7 +62,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		/*	Create additional sub views as needed
 		*	There are four variations of how this view is used
 		*	and the sub views are adjusted accordingly
-		*/ 
+		*/
 		$plotContainer = this.$('#huc-plot-container');
 		//	side by side comparison of an accumulated watershed
 		if (this.compareHucId && this.accumulated) {
@@ -76,11 +76,11 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				gageId : this.gageId,
 				model : this.hucPlotModel
 			});
-			
+
 			/*	create the plot view after watershedAcres has been updated
 			*	by the HucInsetMap feature
-			*/ 
-			this.hucInsetMapView.gageFeatureLoadedPromise.done(function() {
+			*/
+			this.hucInsetMapView.featureLoadedPromise.done(function() {
 				self.plotView = new NWC.view.WaterbudgetPlotView({
 					accumulated : true,
 					hucId : self.hucId,
@@ -99,11 +99,11 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				gageId : self.compareGageId,
 				model : self.hucPlotModel
 			});
-				
+
 			/*	create the compare plot view after watershedAcres has been updated
 			*	by the compare hucInsetMap feature
-			*/ 
-			self.compareHucInsetMapView.gageFeatureLoadedPromise.done(function() {
+			*/
+			self.compareHucInsetMapView.featureLoadedPromise.done(function() {
 				self.comparePlotView = new NWC.view.WaterbudgetPlotView({
 					accumulated : true,
 					compare : true,
@@ -150,8 +150,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				gageId : this.gageId,
 				model : this.hucPlotModel
 			});
-			
-			this.hucInsetMapView.gageFeatureLoadedPromise.done(function() {
+
+			this.hucInsetMapView.featureLoadedPromise.done(function() {
 				self.plotView = new NWC.view.WaterbudgetPlotView({
 					accumulated : true,
 					hucId : self.hucId,
@@ -159,11 +159,11 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 					el : self.$('#huc-plot-container'),
 					model : self.hucPlotModel
 				});
-			});			
-			
-			this.hucInsetMapView.hucFeatureLoadedPromise.done(function() {
-				self.$('#compare-hucs-button').prop('disabled', false);				
-			});			
+			});
+
+			this.hucInsetMapView.featureLoadedPromise.done(function() {
+				self.$('#compare-hucs-button').prop('disabled', false);
+			});
 		}
 		//	huc data view of a local watershed
 		else {
@@ -172,7 +172,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				hucId : this.hucId,
 				model : this.hucPlotModel
 			});
-			this.hucInsetMapView.hucFeatureLoadedPromise.done(function() {
+			this.hucInsetMapView.featureLoadedPromise.done(function() {
 				self.$('#accumulated-button').prop('disabled', false);
 				self.$('#counties-button').prop('disabled', false);
 				self.$('#compare-hucs-button').prop('disabled', false);
@@ -225,10 +225,10 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 	goToAddHucMapPage : function() {
 		if (this.accumulated) {
-			this.router.navigate('#!waterbudget/acmap/huc/' + this.hucId, {trigger: true});			
+			this.router.navigate('#!waterbudget/acmap/huc/' + this.hucId, {trigger: true});
 		}
 		else {
-			this.router.navigate('#!waterbudget/map/huc/' + this.hucId, {trigger: true});			
+			this.router.navigate('#!waterbudget/map/huc/' + this.hucId, {trigger: true});
 		}
 	},
 

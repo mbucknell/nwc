@@ -11,12 +11,6 @@ NWC.view = NWC.view || {};
 
 		templateName : 'hucInsetMap',
 
-		// This  is resolved once the huc feature layer has been loaded and the hucLayer property
-		// contains the OpenLayer vector layer.
-		hucFeatureLoadedPromise : undefined,
-		gageFeatureLoadedPromise : undefined,
-		hucLayer : undefined,
-
 		/*
 		 * @constucts
 		 * @param {Object} options
@@ -24,64 +18,65 @@ NWC.view = NWC.view || {};
 		 *     @prop {String} hucId
 		 *     @prop {String} gageId (optional)
 		 *     @prop {Boolean} accumulated - false indicates if this is local watershed, true indicates accumulated.
-		 *     @prop {WaterBudgetHucPlotModel} model - Used to set the watershed acres 
+		 *     @prop {WaterBudgetHucPlotModel} model - Used to set the watershed acres
 		 */
 		initialize : function(options) {
 			var self = this;
+
 			var accumulated = options.accumulated ? options.accumulated : false;
-			var watershedConfig;
-			if (accumulated) {
-				watershedConfig = NWC.config.get('accumulated').attributes;				
-			}
-			else {
-				watershedConfig = NWC.config.getWatershed(options.hucId);
-			}
-
-			var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
-			var mapControls = [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()];
-			var hucLoadedDeferred = $.Deferred();
-			var gageLoadedDeferred = $.Deferred();
-
-			this.hucId = options.hucId;
+			var watershedAcres = options.compare ? 'compareWatershedAcres' : 'watershedAcres';
 			var gageId = options.gageId ? options.gageId : null;
+			var hucId = options.hucId;
+
+			var watershedConfig = NWC.config.getWatershed(options.hucId);
+			var acWatershedConfig = NWC.config.get('accumulated').attributes;
+			var streamflowGageConfig;
+
 			this.context = {
-				hucId : this.hucId,
+				hucId : hucId,
 				gageId : gageId
 			};
 
-			//Create map and layers.
-			this.hucFeatureLoadedPromise = hucLoadedDeferred.promise();
-			this.gageFeatureLoadedPromise = gageLoadedDeferred.promise();
-			this.map = NWC.util.mapUtils.createMap([baseLayer], mapControls);
-			
+			var hucLoadedDeferred = $.Deferred();
+			var achucLoadedDeferred = $.Deferred();
+			var gageLoadedDeferred = $.Deferred();
+
+			var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
+			var mapControls = [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()];
+			var map = NWC.util.mapUtils.createMap([baseLayer], mapControls);
+
+			var gageLayer, gageMarkerLayer, hucLayer, achucLayer;
+
+			var altHucStyle = {
+				strokeWidth: 2,
+				strokeColor: "#000000",
+				strokeOpacity : .6,
+				fillOpacity: .2,
+				fillColor : "#000000",
+				fill: true
+			};
+			var hucStyle = accumulated ? altHucStyle : null;
+			var achucStyle = accumulated ? null : altHucStyle;
+
+			// Load vector layers
+			this.featureLoadedPromise = $.when(hucLoadedDeferred, achucLoadedDeferred, gageLoadedDeferred);
+
 			if (gageId) {
-				var compare = options.compare ? options.compare : false;
-				var watershedAcres;
-				/*	
-				 *	Since there is a gage, the value for related acres will be
-				 *	retrieved from the huc layer below.  So, set the model variable
-				 *	for acres depending on whether or not the instance is for a 
-				 *	comparison type of the WaterBudgetHucDataView.
-				 */ 
-				if (compare) {
-					watershedAcres = 'compareWatershedAcres';
-				}
-				else {
-					watershedAcres = 'watershedAcres';
-				}
-				
-				this.streamflowGageConfig = NWC.config.get('streamflow').gage.attributes;
-				this.gageLayer = NWC.util.mapUtils.createGageFeatureLayer(
-						this.streamflowGageConfig.namespace,
-						this.streamflowGageConfig.layerName,
+				streamflowGageConfig = NWC.config.get('streamflow').gage.attributes;
+				gageLayer = NWC.util.mapUtils.createGageFeatureLayer(
+						streamflowGageConfig.namespace,
+						streamflowGageConfig.layerName,
 						gageId);
-				this.gageMarkerLayer = new OpenLayers.Layer.Markers("Markers");
-				this.gageLayer.events.on({
+				gageMarkerLayer = new OpenLayers.Layer.Markers("Markers");
+				gageLayer.events.on({
 					featureadded : function(event) {
-						this.model.set(watershedAcres, 
-								NWC.util.Convert.squareKilometersToAcres(event.feature.attributes[watershedConfig.watershedAreaUnit]));
 						var lonlat = new OpenLayers.LonLat(event.feature.geometry.x, event.feature.geometry.y);
-						this.gageMarkerLayer.addMarker(new OpenLayers.Marker(lonlat));
+
+						this.model.set(watershedAcres,
+								NWC.util.Convert.squareKilometersToAcres(event.feature.attributes[watershedConfig.watershedAreaUnit]));
+
+						gageMarkerLayer.addMarker(new OpenLayers.Marker(lonlat));
+
 						this.$('#gage-name').html(event.feature.attributes.STANAME);
 						this.$('#drainage-area').html(event.feature.attributes.DRAIN_SQKM);
 					},
@@ -90,36 +85,66 @@ NWC.view = NWC.view || {};
 					},
 					scope : this
 				});
-				this.map.addLayers([this.gageLayer, this.gageMarkerLayer]);
+				map.addLayers([gageLayer, gageMarkerLayer]);
 			}
 			else {
-				gageLoadedDeferred.resolve();				
+				gageLoadedDeferred.resolve();
 			}
 
-			this.hucLayer = NWC.util.mapUtils.createHucFeatureLayer(
+			hucLayer = NWC.util.mapUtils.createHucFeatureLayer(
 				watershedConfig.namespace,
 				watershedConfig.layerName,
 				watershedConfig.property,
-				[this.hucId]
+				[hucId],
+				hucStyle
 			);
-
-			this.hucLayer.events.on({
+			hucLayer.events.on({
 				featureadded : function(event) {
-					this.hucName = event.feature.attributes[watershedConfig.name];
-					this.$('.huc-name').html(this.hucName);
+					var hucName = event.feature.attributes[watershedConfig.name];
+					this.$('.huc-name').html(hucName);
 				},
 				loadend : function(event) {
-					this.map.zoomToExtent(this.hucLayer.getDataExtent());
-					this.$('.huc-loading-indicator').hide();
+					if (!accumulated) {
+						map.zoomToExtent(hucLayer.getDataExtent());
+					}
 					hucLoadedDeferred.resolve();
 				},
 				scope : this
 			});
+			map.addLayer(hucLayer);
 
-			this.map.addLayer(this.hucLayer);
+			achucLayer = NWC.util.mapUtils.createHucFeatureLayer(
+				acWatershedConfig.namespace,
+				acWatershedConfig.layerName,
+				acWatershedConfig.property,
+				[hucId],
+				achucStyle
+			);
 
+			achucLayer.events.on({
+				featureadded : function(event) {
+					var hucName = event.feature.attributes[acWatershedConfig.name];
+					this.$('.huc-name').html(hucName);
+				},
+				loadend : function(event) {
+					if (accumulated) {
+						map.zoomToExtent(achucLayer.getDataExtent());
+					}
+					achucLoadedDeferred.resolve();
+				},
+				scope : this
+			});
+
+			map.addLayer(achucLayer);
+
+
+			this.featureLoadedPromise.done(function() {
+				self.$('.huc-loading-indicator').hide();
+			});
+
+			// Render the template and the map
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
-			this.map.render('huc-inset-' + this.hucId);
+			map.render('huc-inset-' + hucId);
 		}
 	});
 }());
