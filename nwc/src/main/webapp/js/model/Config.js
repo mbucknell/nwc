@@ -111,7 +111,7 @@ NWC.model = NWC.model || {};
 		},
 		getGageId : function(hucId) {
 			return this.lookupByHucId[hucId] ? this.lookupByHucId[hucId].gageId : null;
-		}		
+		}
 	});
 
 	NWC.model.SciencebaseUrlFragmentModel = Backbone.Model.extend({
@@ -192,6 +192,7 @@ NWC.model = NWC.model || {};
 						namespace : 'WBD',
 						property : 'huc12',
 						name : 'name',
+						drainageArea : 'areasqkm',
 						watershedArea : 'DRAIN_SQKM',
 						selectDisplay : '12 Digit',
 						variables : {
@@ -218,6 +219,7 @@ NWC.model = NWC.model || {};
 						namespace : 'WBD',
 						property : 'huc8',
 						name : 'name',
+						drainageArea : 'areasqkm',
 						selectDisplay : '8 Digit',
 						variables : {
 							dayMet : new NWC.model.SosVariable({
@@ -245,12 +247,13 @@ NWC.model = NWC.model || {};
 					namespace : 'WBD',
 					property : 'huc12',
 					name : 'name',
+					drainageArea : 'areasqkm',
 					watershedAreaUnit : 'DRAIN_SQKM',
 					selectDisplay : 'Accumulated',
 					variables : {
 						dayMet : new NWC.model.SosVariable({
 							observedProperty: 'prcp',
-							propertyLongName: 'Area Weighted Mean Precipitation',
+							propertyLongName: 'Area Weighted Mean Precipitation (Over Hydrologic Unit Code Watershed)',
 							units: NWC.util.Units.metric.normalizedWater.daily,
 							dataset: 'HUC12_data',
 							fileName: 'HUC12_daymet_agg.nc',
@@ -258,7 +261,7 @@ NWC.model = NWC.model || {};
 						}),
 						eta : new NWC.model.SosVariable({
 							observedProperty: 'et',
-							propertyLongName: 'Area Weighted Mean Actual Evapotranspiration',
+							propertyLongName: 'Area Weighted Mean Actual Evapotranspiration (Over Hydrologic Unit Code Watershed)',
 							units: NWC.util.Units.metric.normalizedWater.monthly,
 							dataset: 'HUC12_data',
 							fileName: 'HUC12_eta_agg.nc',

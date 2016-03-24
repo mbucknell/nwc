@@ -11,7 +11,7 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 	var $customaryButton, $metricButton, $dailyButton, $monthlyButton;
 	var testView;
 	var server;
-	var hucFeatureLoadedDeferred, gageFeatureLoadedDeferred;
+	var featureLoadedDeferred;
 
 	beforeEach(function() {
 		CONFIG = {
@@ -40,20 +40,14 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 		$countiesButton = $('#counties-button');
 		$accumulatedButton = $('#accumulated-button');
 		$compareHucsButton = $('#compare-hucs-button');
-		
+
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
 
 		spyOn(NWC.view, 'WaterbudgetPlotView').andReturn({
 			remove : jasmine.createSpy('waterbudgetPlotViewRemoveSpy')
 		});
 
-		hucFeatureLoadedDeferred = $.Deferred();
-		gageFeatureLoadedDeferred = $.Deferred();
-		spyOn(NWC.view, 'HucInsetMapView').andReturn({
-			remove : jasmine.createSpy('waterBudgetHucInsetMapSpy'),
-			gageFeatureLoadedPromise : hucFeatureLoadedDeferred.promise(),
-			hucFeatureLoadedPromise : hucFeatureLoadedDeferred.promise()
-		});
+		featureLoadedDeferred = $.Deferred();
 
 		spyOn(NWC.view, 'CountyWaterUseView').andReturn({
 			remove : jasmine.createSpy('countyWaterUsePlotViewRemoveSpy')
@@ -70,6 +64,10 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 
 	describe('Test for view initialized only with a hucId', function() {
 		beforeEach(function() {
+			spyOn(NWC.view, 'HucInsetMapView').andReturn({
+				remove : jasmine.createSpy('waterBudgetHucInsetMapSpy'),
+				featureLoadedPromise : featureLoadedDeferred.promise()
+			});
 			testView = new NWC.view.WaterBudgetHucDataView({
 				hucId : '123456789',
 				el : $testDiv
@@ -113,7 +111,7 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 		it('Expect that when the huc feature has been loaded that the counties button and compare hucs buttons are enabled', function() {
 			expect($countiesButton.prop('disabled')).toBe(true);
 			expect($compareHucsButton.prop('disabled')).toBe(true);
-			hucFeatureLoadedDeferred.resolve();
+			featureLoadedDeferred.resolve();
 			expect($countiesButton.prop('disabled')).toBe(false);
 			expect($compareHucsButton.prop('disabled')).toBe(false);
 		});
@@ -180,7 +178,7 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 				target : { value : 'monthly'}
 			});
 			expect(testView.hucPlotModel.get('timeScale')).toEqual('monthly');
-			
+
 			testView.changeTimeScale({
 				preventDefault : preventSpy,
 				target : { value : 'yearly'}
@@ -188,11 +186,15 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 			expect(testView.hucPlotModel.get('timeScale')).toEqual('yearly');
 		});
 	});
-	
+
 	describe('Test for view initialized with the accumulated option and hucID with corresponding gage', function() {
 		beforeEach(function() {
+			spyOn(NWC.view, 'HucInsetMapView').andReturn({
+				remove : jasmine.createSpy('waterBudgetHucInsetMapSpy'),
+				featureLoadedPromise : featureLoadedDeferred.promise()
+			});
 			var watershedGages = NWC.config.get('watershedGages');
-			watershedGages.parse([{"hucId" : "123456789123", "gageId" : "02372250"}])
+			watershedGages.parse([{"hucId" : "123456789123", "gageId" : "02372250"}]);
 			testView = new NWC.view.WaterBudgetHucDataView({
 				hucId : '123456789123',
 				accumulated : true,
@@ -211,18 +213,24 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 			expect($countiesButton.prop('disabled')).toBe(true);
 			expect($accumulatedButton.prop('disabled')).toBe(true);
 			expect($compareHucsButton.prop('disabled')).toBe(true);
-			gageFeatureLoadedDeferred.resolve();
-			hucFeatureLoadedDeferred.resolve();
+			featureLoadedDeferred.resolve();
 			expect($countiesButton.prop('disabled')).toBe(true);
 			expect($accumulatedButton.prop('disabled')).toBe(true);
 			expect($compareHucsButton.prop('disabled')).toBe(false);
 		});
 	});
-	
+
 	describe('Test for view initialized with the accumulated option and hucID with no corresponding gage', function() {
 		beforeEach(function() {
+			spyOn(NWC.view, 'HucInsetMapView').andReturn({
+				remove : jasmine.createSpy('waterBudgetHucInsetMapSpy'),
+				featureLoadedPromise : featureLoadedDeferred.promise()
+			});
 			var watershedGages = NWC.config.get('watershedGages');
-			watershedGages.parse([{"hucId" : "123456789", "gageId" : "02372250"}])
+			watershedGages.parse([
+				{"hucId" : "123456789012", "gageId" : "02372250"},
+				{"hucId" : "987654321098", "gageId" : "02372250"}
+					]);
 			testView = new NWC.view.WaterBudgetHucDataView({
 				hucId : '123456789123',
 				accumulated : true,
@@ -241,8 +249,7 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 			expect($countiesButton.prop('disabled')).toBe(true);
 			expect($accumulatedButton.prop('disabled')).toBe(true);
 			expect($compareHucsButton.prop('disabled')).toBe(true);
-			gageFeatureLoadedDeferred.resolve();
-			hucFeatureLoadedDeferred.resolve();
+			featureLoadedDeferred.resolve();
 			expect($countiesButton.prop('disabled')).toBe(true);
 			expect($accumulatedButton.prop('disabled')).toBe(true);
 			expect($compareHucsButton.prop('disabled')).toBe(false);
@@ -251,14 +258,25 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 
 	describe('Tests for view created with a compareHucId and accumulated watershed', function() {
 		beforeEach(function() {
+			spyOn(NWC.view, 'HucInsetMapView').andReturn({
+				remove : jasmine.createSpy('waterBudgetHucInsetMapSpy'),
+				featureLoadedPromise : {
+					done : function(fnc) {
+						fnc();
+					}
+				}
+			});
+			var watershedGages = NWC.config.get('watershedGages');
+			watershedGages.parse([
+				{"hucId" : "123456789012", "gageId" : "02372250"},
+				{"hucId" : "987654321098", "gageId" : "02372251"}
+			]);
 			testView = new NWC.view.WaterBudgetHucDataView({
 				accumulated : true,
-				hucId : '123456789',
-				compareHucId : '232323232323',
+				hucId : '123456789012',
+				compareHucId : '987654321098',
 				el : $testDiv
 			});
-			gageFeatureLoadedDeferred.resolve();
-			hucFeatureLoadedDeferred.resolve();
 		});
 
 		it('Expects that the context properties are set appropriately', function() {
@@ -267,8 +285,8 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 
 		it('Expects WaterBudgetPlotView to be called twice and that the view properties are defined', function() {
 			expect(NWC.view.WaterbudgetPlotView.calls.length).toBe(2);
-			expect(NWC.view.WaterbudgetPlotView.calls[0].args[0].hucId).toEqual('123456789');
-			expect(NWC.view.WaterbudgetPlotView.calls[1].args[0].hucId).toEqual('232323232323');
+			expect(NWC.view.WaterbudgetPlotView.calls[0].args[0].hucId).toEqual('123456789012');
+			expect(NWC.view.WaterbudgetPlotView.calls[1].args[0].hucId).toEqual('987654321098');
 			expect(testView.plotView).toBeDefined();
 			expect(testView.comparePlotView).toBeDefined();
 			expect(testView.countyWaterUseView).not.toBeDefined();
@@ -276,8 +294,8 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 
 		it('Expects HucInsetMapView to be called twice and that the view properties are defined', function() {
 			expect(NWC.view.HucInsetMapView.calls.length).toBe(2);
-			expect(NWC.view.HucInsetMapView.calls[0].args[0].hucId).toEqual('123456789');
-			expect(NWC.view.HucInsetMapView.calls[1].args[0].hucId).toEqual('232323232323');
+			expect(NWC.view.HucInsetMapView.calls[0].args[0].hucId).toEqual('123456789012');
+			expect(NWC.view.HucInsetMapView.calls[1].args[0].hucId).toEqual('987654321098');
 			expect(testView.hucInsetMapView).toBeDefined();
 			expect(testView.compareHucInsetMapView).toBeDefined();
 		});
@@ -293,8 +311,16 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 
 	describe('Tests for view created with a compareHucId', function() {
 		beforeEach(function() {
+			spyOn(NWC.view, 'HucInsetMapView').andReturn({
+				remove : jasmine.createSpy('waterBudgetHucInsetMapSpy'),
+				featureLoadedPromise : {
+					done : function(fnc) {
+						fnc();
+					}
+				}
+			});
 			testView = new NWC.view.WaterBudgetHucDataView({
-				hucId : '123456789',
+				hucId : '123456789012',
 				compareHucId : '232323232323',
 				el : $testDiv
 			});
@@ -306,7 +332,7 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 
 		it('Expects WaterBudgetPlotView to be called twice and that the view properties are defined', function() {
 			expect(NWC.view.WaterbudgetPlotView.calls.length).toBe(2);
-			expect(NWC.view.WaterbudgetPlotView.calls[0].args[0].hucId).toEqual('123456789');
+			expect(NWC.view.WaterbudgetPlotView.calls[0].args[0].hucId).toEqual('123456789012');
 			expect(NWC.view.WaterbudgetPlotView.calls[1].args[0].hucId).toEqual('232323232323');
 			expect(testView.plotView).toBeDefined();
 			expect(testView.comparePlotView).toBeDefined();
@@ -315,7 +341,7 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 
 		it('Expects HucInsetMapView to be called twice and that the view properties are defined', function() {
 			expect(NWC.view.HucInsetMapView.calls.length).toBe(2);
-			expect(NWC.view.HucInsetMapView.calls[0].args[0].hucId).toEqual('123456789');
+			expect(NWC.view.HucInsetMapView.calls[0].args[0].hucId).toEqual('123456789012');
 			expect(NWC.view.HucInsetMapView.calls[1].args[0].hucId).toEqual('232323232323');
 			expect(testView.hucInsetMapView).toBeDefined();
 			expect(testView.compareHucInsetMapView).toBeDefined();
@@ -332,6 +358,14 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 
 	describe('Tests for view created with a fips', function() {
 		beforeEach(function() {
+			spyOn(NWC.view, 'HucInsetMapView').andReturn({
+				remove : jasmine.createSpy('waterBudgetHucInsetMapSpy'),
+				featureLoadedPromise : {
+					done : function(fnc) {
+						fnc();
+					}
+				}
+			});
 			testView = new NWC.view.WaterBudgetHucDataView({
 				hucId : '123456789',
 				fips : '9876',
