@@ -53,7 +53,7 @@ NWC.view = NWC.view || {};
 			var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
 			var mapControls = [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()];
 
-			var gageLayer, gageMarkerLayer, hucLayer, achucLayer;
+			var gageLayer, gageMarkerLayer;
 
 			this.hucStyle = accumulated ? ALT_HUC_STYLE : HUC_STYLE;
 			this.achucStyle = accumulated ? HUC_STYLE : ALT_HUC_STYLE;
@@ -99,14 +99,14 @@ NWC.view = NWC.view || {};
 				gageLoadedDeferred.resolve();
 			}
 
-			hucLayer = NWC.util.mapUtils.createHucFeatureLayer(
+			this.hucLayer = NWC.util.mapUtils.createHucFeatureLayer(
 				watershedConfig.namespace,
 				watershedConfig.layerName,
 				watershedConfig.property,
 				[hucId],
 				this.hucStyle
 			);
-			hucLayer.events.on({
+			this.hucLayer.events.on({
 				featureadded : function(event) {
 					var hucName = event.feature.attributes[watershedConfig.name];
 					var drainage = event.feature.attributes[watershedConfig.drainageArea];
@@ -115,7 +115,7 @@ NWC.view = NWC.view || {};
 				},
 				loadend : function(event) {
 					if (!accumulated) {
-						this.map.zoomToExtent(hucLayer.getDataExtent());
+						this.map.zoomToExtent(this.hucLayer.getDataExtent());
 					}
 					hucLoadedDeferred.resolve();
 				},
@@ -123,7 +123,7 @@ NWC.view = NWC.view || {};
 			});
 
 			if (this.context.isHuc12) {
-				achucLayer = NWC.util.mapUtils.createHucFeatureLayer(
+				this.achucLayer = NWC.util.mapUtils.createHucFeatureLayer(
 					acWatershedConfig.namespace,
 					acWatershedConfig.layerName,
 					acWatershedConfig.property,
@@ -131,7 +131,7 @@ NWC.view = NWC.view || {};
 					this.achucStyle
 				);
 
-				achucLayer.events.on({
+				this.achucLayer.events.on({
 					featureadded : function(event) {
 						var hucName = event.feature.attributes[acWatershedConfig.name];
 						var drainage = event.feature.attributes[acWatershedConfig.drainageArea];
@@ -140,7 +140,7 @@ NWC.view = NWC.view || {};
 					},
 					loadend : function(event) {
 						if (accumulated) {
-							this.map.zoomToExtent(achucLayer.getDataExtent());
+							this.map.zoomToExtent(this.achucLayer.getDataExtent());
 						}
 						achucLoadedDeferred.resolve();
 					},
@@ -152,15 +152,15 @@ NWC.view = NWC.view || {};
 			}
 
 			// Add the layer for the page's watershed last
-			if (accumulated && (achucLayer)) {
-				this.map.addLayer(hucLayer);
-				this.map.addLayer(achucLayer);
+			if (accumulated && (this.achucLayer)) {
+				this.map.addLayer(this.hucLayer);
+				this.map.addLayer(this.achucLayer);
 			}
 			else {
-				if (achucLayer) {
-					this.map.addLayer(achucLayer);
+				if (this.achucLayer) {
+					this.map.addLayer(this.achucLayer);
 				}
-				this.map.addLayer(hucLayer);
+				this.map.addLayer(this.hucLayer);
 			}
 
 			this.featureLoadedPromise.done(function() {
