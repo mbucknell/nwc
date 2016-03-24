@@ -58,7 +58,7 @@ NWC.view = NWC.view || {};
 		* with the selected watershed.
 		*
 		* @param {String} huc 12 digit identifier for the hydrologic unit
-		* @param {String} gageId (optional) identifier for the streamflow gage
+		* @param {String} gage (optional) identifier for the streamflow gage
 		* @returns a resolved promise when both ETA and DAYMET data has been retrieved and the dataSeriesStore updated. If
 		*      either call fails the promise will be rejected with either one or two error messages. The datasSeriesStore object will
 		*      contain the data for any successful calls

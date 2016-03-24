@@ -2,8 +2,8 @@
 	<div class="spacer_down ">
 		<h4 class="huc-loading-indicator">Loading huc data <i class="fa fa-spinner fa-spin"></i></h4>
 		<h4>Precipitation and Evapotranspiration for the Selected Watershed</h4>
-		<div class="row">
-			<div class="col-sm-6">
+		<div class="col-md-4">
+			<div>
 				<h5>Hydrologic Unit Code</h5>
 				<div class="huc-id">{{ hucId }}</div>
 				<h5>Watershed Name</h5>
@@ -15,7 +15,7 @@
 				{{/if}}
 			</div>
 		{{#if gageId}}
-			<div class="col-sm-6">
+			<div>
 				<h5>Gage ID</h5>
 				<div id="gage-id">{{ gageId }}</div>
 				<div>
@@ -31,7 +31,7 @@
 			</div>
 		{{/if}}
 	</div>
-	<div class="spacer_down spacer">
+	<div class="col-md-8 spacer_down spacer">
 		<div id="huc-inset-{{ hucId }}" class="inset-map"></div>
 		{{#if isHuc12}}
 			<div class="inset-legend-container">
