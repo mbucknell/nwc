@@ -253,7 +253,7 @@ NWC.model = NWC.model || {};
 					variables : {
 						dayMet : new NWC.model.SosVariable({
 							observedProperty: 'prcp',
-							propertyLongName: 'Area Weighted Mean Precipitation',
+							propertyLongName: 'Area Weighted Mean Precipitation (Over Hydrologic Unit Code Watershed)',
 							units: NWC.util.Units.metric.normalizedWater.daily,
 							dataset: 'HUC12_data',
 							fileName: 'huc12_daymet_agg.nc',
@@ -261,7 +261,7 @@ NWC.model = NWC.model || {};
 						}),
 						eta : new NWC.model.SosVariable({
 							observedProperty: 'et',
-							propertyLongName: 'Area Weighted Mean Actual Evapotranspiration',
+							propertyLongName: 'Area Weighted Mean Actual Evapotranspiration (Over Hydrologic Unit Code Watershed)',
 							units: NWC.util.Units.metric.normalizedWater.monthly,
 							dataset: 'HUC12_data',
 							fileName: 'huc12_eta_agg.nc',

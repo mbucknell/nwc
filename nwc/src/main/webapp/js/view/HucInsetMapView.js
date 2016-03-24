@@ -81,7 +81,7 @@ NWC.view = NWC.view || {};
 						var lonlat = new OpenLayers.LonLat(event.feature.geometry.x, event.feature.geometry.y);
 
 						this.model.set(watershedAcres,
-								NWC.util.Convert.squareKilometersToAcres(event.feature.attributes[watershedConfig.watershedAreaUnit]));
+								NWC.util.Convert.squareKilometersToAcres(event.feature.attributes[acWatershedConfig.watershedAreaUnit]));
 
 						gageMarkerLayer.addMarker(new OpenLayers.Marker(lonlat));
 
