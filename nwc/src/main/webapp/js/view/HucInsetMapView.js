@@ -40,6 +40,7 @@ NWC.view = NWC.view || {};
 			var accumulated = options.accumulated ? options.accumulated : false;
 			var watershedAcres = options.compare ? 'compareWatershedAcres' : 'watershedAcres';
 			var gageId = options.gageId ? options.gageId : null;
+			var hucId = options.hucId;
 
 			var watershedConfig = NWC.config.getWatershed(options.hucId);
 			var acWatershedConfig = NWC.config.get('accumulated').attributes;
@@ -54,14 +55,13 @@ NWC.view = NWC.view || {};
 
 			var gageLayer, gageMarkerLayer, hucLayer, achucLayer;
 
-			this.hucId = options.hucId;
 			this.hucStyle = accumulated ? ALT_HUC_STYLE : HUC_STYLE;
 			this.achucStyle = accumulated ? HUC_STYLE : ALT_HUC_STYLE;
 
 			this.context = {
-				hucId : this.hucId,
+				hucId : hucId,
 				gageId : gageId,
-				isHuc12 : this.hucId.length === 12
+				isHuc12 : hucId.length === 12
 			};
 
 			this.map = NWC.util.mapUtils.createMap([baseLayer], mapControls);
@@ -103,13 +103,13 @@ NWC.view = NWC.view || {};
 				watershedConfig.namespace,
 				watershedConfig.layerName,
 				watershedConfig.property,
-				[this.hucId],
+				[hucId],
 				this.hucStyle
 			);
 			hucLayer.events.on({
 				featureadded : function(event) {
 					var hucName = event.feature.attributes[watershedConfig.name];
-					var drainage = event.feature.attributes[watershedConfig.drainageArea]
+					var drainage = event.feature.attributes[watershedConfig.drainageArea];
 					this.$('.huc-name').html(hucName);
 					this.$('.local-drainage-area').html(drainage);
 				},
@@ -127,7 +127,7 @@ NWC.view = NWC.view || {};
 					acWatershedConfig.namespace,
 					acWatershedConfig.layerName,
 					acWatershedConfig.property,
-					[this.hucId],
+					[hucId],
 					this.achucStyle
 				);
 
@@ -176,18 +176,21 @@ NWC.view = NWC.view || {};
 				'opacity': this.hucStyle.strokeOpacity ,
 				'color' : this.hucStyle.strokeColor,
 				'font-size': '20px'
-			}
+			};
 			var achucLegendStyle = {
 				'opacity': this.achucStyle.strokeOpacity ,
 				'color' : this.achucStyle.strokeColor,
 				'font-size': '20px'
-			}
+			};
 
 			NWC.view.BaseView.prototype.render.apply(this, arguments);
-			this.map.render('huc-inset-' + this.hucId);
+			this.map.render('huc-inset-' + this.context.hucId);
 
 			this.$('.huc-legend span').css(hucLegendStyle);
 			this.$('.achuc-legend span').css(achucLegendStyle);
+			if (!this.context.gageId) {
+				this.$('.gage-legend').hide();
+			}
 
 			return this;
 		}
