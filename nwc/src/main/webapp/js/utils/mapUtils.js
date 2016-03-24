@@ -131,7 +131,7 @@ NWC.util.mapUtils = (function () {
 
 	/*
 	 * @param {Array of String} hucs - to create in the feature layer. assuming all the same type.
-	 * @param {OpenLayers.StyleMap} styleMap - optional style map for the feature layer.
+	 * @param {Object} style - optional style for the feature layer.
 	 * @returns OpenLayers.Layer.Vector with hucs.
 	 */
 	that.createHucFeatureLayer = function(namespace, layerName, property, hucs, style) {
@@ -146,7 +146,7 @@ NWC.util.mapUtils = (function () {
 			geometryName: "the_geom",
 			srsName : "EPSG:3857"
 		});
-		var style = style ? style : {
+		var layerStyle = style ? style : {
 				strokeWidth: 2,
 				strokeColor: "#000000",
 				fill : false
@@ -176,7 +176,7 @@ NWC.util.mapUtils = (function () {
 		hucLayer = new OpenLayers.Layer.Vector("WFS", {
 			strategies: [new OpenLayers.Strategy.Fixed()],
 			protocol: protocol,
-			style: style,
+			style: layerStyle,
 			filter:filter
 		});
 		return hucLayer;
