@@ -33,5 +33,11 @@
 	</div>
 	<div class="spacer_down spacer">
 		<div id="huc-inset-{{ hucId }}" class="inset-map"></div>
+		{{#if isHuc12}}
+			<div class="inset-legend-container">
+				<div class="huc-legend">Local Incremental Watershed:&nbsp;&nbsp;<span>_</span></div>
+				<div class="achuc-legend">Total Accumulated Watershed:&nbsp;&nbsp;<span>_</span></div>
+			</div>
+		{{/if}}
 	</div>
 </div>

@@ -120,6 +120,11 @@ h5, h6 {
 	border-style: solid;
 	border-width:1px;
 }
+.inset-legend-container span {
+	position: relative;
+	top : -4px;
+	line-height : 1px;
+}
 
 #statistics-calculation-div {
 	margin-top : 20px;

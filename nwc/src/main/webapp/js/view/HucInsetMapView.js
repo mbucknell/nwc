@@ -7,6 +7,19 @@ NWC.view = NWC.view || {};
 (function() {
 	"use strict";
 
+	var HUC_STYLE = {
+		strokeWidth: 2,
+		strokeColor: "#000000",
+		fill : false
+	};
+	var ALT_HUC_STYLE = {
+		strokeWidth: 2,
+		strokeColor: "#FF0000",
+		strokeOpacity : 1,
+		fill: false
+	};
+
+
 	NWC.view.HucInsetMapView = NWC.view.BaseView.extend({
 
 		templateName : 'hucInsetMap',
@@ -27,17 +40,10 @@ NWC.view = NWC.view || {};
 			var accumulated = options.accumulated ? options.accumulated : false;
 			var watershedAcres = options.compare ? 'compareWatershedAcres' : 'watershedAcres';
 			var gageId = options.gageId ? options.gageId : null;
-			var hucId = options.hucId;
 
 			var watershedConfig = NWC.config.getWatershed(options.hucId);
 			var acWatershedConfig = NWC.config.get('accumulated').attributes;
 			var streamflowGageConfig;
-
-			this.context = {
-				hucId : hucId,
-				gageId : gageId,
-				isHuc12 : hucId.length === 12
-			};
 
 			var hucLoadedDeferred = $.Deferred();
 			var achucLoadedDeferred = $.Deferred();
@@ -45,20 +51,20 @@ NWC.view = NWC.view || {};
 
 			var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
 			var mapControls = [new OpenLayers.Control.Zoom(), new OpenLayers.Control.Navigation()];
-			var map = NWC.util.mapUtils.createMap([baseLayer], mapControls);
 
 			var gageLayer, gageMarkerLayer, hucLayer, achucLayer;
 
-			var altHucStyle = {
-				strokeWidth: 2,
-				strokeColor: "#000000",
-				strokeOpacity : .6,
-				fillOpacity: .2,
-				fillColor : "#000000",
-				fill: true
+			this.hucId = options.hucId;
+			this.hucStyle = accumulated ? ALT_HUC_STYLE : HUC_STYLE;
+			this.achucStyle = accumulated ? HUC_STYLE : ALT_HUC_STYLE;
+
+			this.context = {
+				hucId : this.hucId,
+				gageId : gageId,
+				isHuc12 : this.hucId.length === 12
 			};
-			var hucStyle = accumulated ? altHucStyle : null;
-			var achucStyle = accumulated ? null : altHucStyle;
+
+			this.map = NWC.util.mapUtils.createMap([baseLayer], mapControls);
 
 			// Load vector layers
 			this.featureLoadedPromise = $.when(hucLoadedDeferred, achucLoadedDeferred, gageLoadedDeferred);
@@ -87,7 +93,7 @@ NWC.view = NWC.view || {};
 					},
 					scope : this
 				});
-				map.addLayers([gageLayer, gageMarkerLayer]);
+				this.map.addLayers([gageLayer, gageMarkerLayer]);
 			}
 			else {
 				gageLoadedDeferred.resolve();
@@ -97,8 +103,8 @@ NWC.view = NWC.view || {};
 				watershedConfig.namespace,
 				watershedConfig.layerName,
 				watershedConfig.property,
-				[hucId],
-				hucStyle
+				[this.hucId],
+				this.hucStyle
 			);
 			hucLayer.events.on({
 				featureadded : function(event) {
@@ -109,21 +115,20 @@ NWC.view = NWC.view || {};
 				},
 				loadend : function(event) {
 					if (!accumulated) {
-						map.zoomToExtent(hucLayer.getDataExtent());
+						this.map.zoomToExtent(hucLayer.getDataExtent());
 					}
 					hucLoadedDeferred.resolve();
 				},
 				scope : this
 			});
-			map.addLayer(hucLayer);
 
 			if (this.context.isHuc12) {
 				achucLayer = NWC.util.mapUtils.createHucFeatureLayer(
 					acWatershedConfig.namespace,
 					acWatershedConfig.layerName,
 					acWatershedConfig.property,
-					[hucId],
-					achucStyle
+					[this.hucId],
+					this.achucStyle
 				);
 
 				achucLayer.events.on({
@@ -135,27 +140,56 @@ NWC.view = NWC.view || {};
 					},
 					loadend : function(event) {
 						if (accumulated) {
-							map.zoomToExtent(achucLayer.getDataExtent());
+							this.map.zoomToExtent(achucLayer.getDataExtent());
 						}
 						achucLoadedDeferred.resolve();
 					},
 					scope : this
 				});
-
-				map.addLayer(achucLayer);
 			}
 			else {
 				achucLoadedDeferred.resolve();
 			}
 
+			// Add the layer for the page's watershed last
+			if (accumulated && (achucLayer)) {
+				this.map.addLayer(hucLayer);
+				this.map.addLayer(achucLayer);
+			}
+			else {
+				if (achucLayer) {
+					this.map.addLayer(achucLayer);
+				}
+				this.map.addLayer(hucLayer);
+			}
 
 			this.featureLoadedPromise.done(function() {
 				self.$('.huc-loading-indicator').hide();
 			});
 
-			// Render the template and the map
+			// Finish initialization which also renders the view
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
-			map.render('huc-inset-' + hucId);
+		},
+
+		render : function() {
+			var hucLegendStyle = {
+				'opacity': this.hucStyle.strokeOpacity ,
+				'color' : this.hucStyle.strokeColor,
+				'font-size': '20px'
+			}
+			var achucLegendStyle = {
+				'opacity': this.achucStyle.strokeOpacity ,
+				'color' : this.achucStyle.strokeColor,
+				'font-size': '20px'
+			}
+
+			NWC.view.BaseView.prototype.render.apply(this, arguments);
+			this.map.render('huc-inset-' + this.hucId);
+
+			this.$('.huc-legend span').css(hucLegendStyle);
+			this.$('.achuc-legend span').css(achucLegendStyle);
+
+			return this;
 		}
 	});
 }());
