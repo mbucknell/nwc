@@ -145,7 +145,7 @@ NWC.view = NWC.view || {};
 							else {
 								thisDataSeries.data = dataTable;
 								thisDataSeries.metadata.seriesLabels.push({
-									seriesName : 'Observed Streamflow',
+									seriesName : 'Gaged Streamflow (Per Unit Drainage Area)',
 									seriesUnits : NWC.util.Units.usCustomary.streamflow.daily
 								});
 								d.resolve();
