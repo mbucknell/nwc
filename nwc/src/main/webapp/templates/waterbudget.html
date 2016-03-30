@@ -14,12 +14,14 @@
 					</em>
 					{{else}}
 					<em>
-						Discover and access precipitation and evapotranspiration data for watersheds and counties.
+						Discover and access precipitation, evapotranspiration, and streamflow data for watersheds.
 						<ol>	
-							<li>Zoom to a your location of interest.</li>
-							<li>Turn on the watersheds map layer.</li>
-							<li>Select a watershed of interest.</li>
+							<li>Zoom to a your location of interest on the map.</li>
+							<li>Use the stream gage layer to find locations with available streamflow.</li>
+							<li>Turn on 8 or 12 Digit HUC watershed layer. Streamflow is available for 12 digit only.</li>
+							<li>Click a watershed on the map to see its water budget and additional options.</li>
 							<li>Water use data for counties intersecting the watershed are available on the next page.</li>
+							<li>Streamflow is only available for 12 Digit HUC watersheds with a gage near their outlet.</li>
 						</ol>
 					</em>
 					{{/if}}
@@ -41,7 +43,7 @@
 		{{#if featureToggles.enableAccumulatedWaterBudget}}
 		<div class="row col-xs-12 pacer">
 			<a id="toggle-gage-layer" class="btn btn-primary" data-toggle="button">Turn Gages <span id="toggle-gage-layer-span">On</span></a>
-			<span>Observed runoff will be shown for watersheds containing a gage as shown by this layer.</span>
+			<span>Gaged streamflow will be shown on the accumulated waterbudget page of 12 Digit HUC watersheds containing a gage as shown by this layer.</span>
 		</div>
 		{{/if}}
 		<div class="row">
