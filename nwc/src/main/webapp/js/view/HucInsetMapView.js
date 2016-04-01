@@ -109,9 +109,9 @@ NWC.view = NWC.view || {};
 			this.hucLayer.events.on({
 				featureadded : function(event) {
 					var hucName = event.feature.attributes[watershedConfig.name];
-					var drainage = event.feature.attributes[watershedConfig.drainageArea];
+					var drainage = parseFloat(event.feature.attributes[watershedConfig.drainageArea]);
 					this.$('.huc-name').html(hucName);
-					this.$('.local-drainage-area').html(drainage);
+					this.$('.local-drainage-area').html(drainage.toFixed(2));
 				},
 				loadend : function(event) {
 					if (!accumulated) {
@@ -134,9 +134,9 @@ NWC.view = NWC.view || {};
 				this.achucLayer.events.on({
 					featureadded : function(event) {
 						var hucName = event.feature.attributes[acWatershedConfig.name];
-						var drainage = event.feature.attributes[acWatershedConfig.drainageArea];
+						var drainage = parseFloat(event.feature.attributes[acWatershedConfig.drainageArea]);
 						this.$('.huc-name').html(hucName);
-						this.$('.total-upstream-drainage-area').html(drainage);
+						this.$('.total-upstream-drainage-area').html(drainage.toFixed(2));
 					},
 					loadend : function(event) {
 						if (accumulated) {
