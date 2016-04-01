@@ -24,7 +24,7 @@ This repository houses the [National Water Census data portal.](http://cida.usgs
     <Environment name="nwc.endpoint.wps" value="http://path_to_watersmart_wps_process_service" type="java.lang.String" override="true"/>
     <Environment name="nwc.endpoint.nwis" value="http://waterservices.usgs.gov/nwis/site/" type="java.lang.String" override="true"/>
 	<Environment name="nwc.endpoint.nwis.streamflow" value="http://waterservices.usgs.gov/nwis/dv/" type="java.lang.String" override="true"/>
-	<Environment name="nwc.endpoint.searchService" value="http://txpub.usgs.gov/DSS/search_api/1.0/dataService/dataService.ashx/search" type="java.lang.String" override="true"/>
+	<Environment name="nwc.endpoint.searchService" value="http://txpub.usgs.gov/DSS/search_api/1.1/dataService/dataService.ashx/search" type="java.lang.String" override="true"/>
     <Environment name="nwc.endpoint.sciencebase" override="true" type="java.lang.String" value="https://www.sciencebase.gov"/>
 </Context>
 ```
