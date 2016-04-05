@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>nwc-parent</artifactId>
 		<groupId>gov.usgs.cida.nwc</groupId>
-		<version>1.0.13-SNAPSHOT</version>
+		<version>1.0.13</version>
 	</parent>
     <packaging>war</packaging>
 	
