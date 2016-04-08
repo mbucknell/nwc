@@ -134,9 +134,9 @@ NWC.util = NWC.util || {};
 					'short': "in",
 					'long': "inches"
 				},
-				daily: "in per day",
-				monthly: "in per month",
-				yearly: "in per year",
+				daily: "inches per day",
+				monthly: "inches per month",
+				yearly: "inches per year",
 				conversionFromBase: NWC.util.Convert.mmToInches,
 				precision: 6
 			},
