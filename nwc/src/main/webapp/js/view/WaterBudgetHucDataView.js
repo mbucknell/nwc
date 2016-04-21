@@ -52,6 +52,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		var readyToLoadPlotView, readyToLoadComparePlotView;
 
 		this.hucId = options.hucId;
+		this.accumulated = accumulated;
 
 		this.context = {
 			showAdditionalDataButtons : !(compareHucId || fips),
