@@ -118,6 +118,11 @@ h5, h6 {
 #waterbudget-huc-data-container .info-buttons .button-div {
 	display: inline-block;
 }
+@media (max-width : 767px) {
+	#time-scale-btn-group {
+		padding-top : 80px;
+	}
+}
 .inset-map {
 	height : 300px;
 	width: 300px;
