@@ -61,6 +61,7 @@ NWC.view = NWC.view || {};
 			this.context = {
 				hucId : hucId,
 				gageId : gageId,
+				accumulated : accumulated,
 				isHuc12 : hucId.length === 12
 			};
 

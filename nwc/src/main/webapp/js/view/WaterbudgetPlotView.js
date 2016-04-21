@@ -30,9 +30,9 @@ NWC.view = NWC.view || {};
 			var self = this;
 			this.hucId = options.hucId;
 			this.gageId = options.gageId ? options.gageId : null;
-			var accumulated = options.accumulated ? options.accumulated : false;
+			this.accumulated = options.accumulated ? options.accumulated : false;
 
-			if (accumulated) {
+			if (this.accumulated) {
 				this.watershedVariables = NWC.config.get('accumulated').attributes.variables;
 			}
 			else {
@@ -90,7 +90,7 @@ NWC.view = NWC.view || {};
 				else {
 					acres = self.model.get('watershedAcres');
 				}
-				if (0 != acres) {  //check with dave to see if this is possible
+				if (0 !== acres) {
 					this.streamflowGageConfig = NWC.config.get('streamflow').gage.attributes.variables;
 					sosSources.nwisStreamFlowData = this.streamflowGageConfig.nwisStreamFlowData;
 				}
@@ -210,7 +210,7 @@ NWC.view = NWC.view || {};
 				var values = self.dataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
 				var labels = self.dataSeriesStore[plotTimeDensity].getSeriesLabelsAs(measurementSystem, normalization, plotTimeDensity);
 				var ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
-				var title = 'HUC ' + self.hucId;
+				var title = ((self.accumulated) ? 'Total Accumulated' : 'Local Incremental') + ' HUC ' + self.hucId;
 
 				NWC.util.Plotter.getPlot(self.$el.find('.waterbudget-plot'), self.$el.find('.waterbudget-legend'), values, labels, ylabel, title);
 			});

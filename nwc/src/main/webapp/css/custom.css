@@ -180,8 +180,11 @@ select[readonly],
 textarea[readonly] {
     cursor: text !important;
 }
-
-.waterbudget-legend, .plot-legend {
+.waterbudget-legend {
+	padding-top : 5px;
+	height: 100px;
+}
+.plot-legend {
 	height: 55px;
 }
 

@@ -46,12 +46,13 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		var watershedGages = NWC.config.get('watershedGages');
 		var gageId = accumulated ? watershedGages.getGageId(options.hucId) : '';
 		var compareGageId = compareHucId ? watershedGages.getGageId(compareHucId) : '';
-		var $hucInsetMapContainer;
+		var $hucInsetMapContainer, $hucPlotContainer;
 
 		// These will be promises that will be resolved when it's ok to initialize the plot view
 		var readyToLoadPlotView, readyToLoadComparePlotView;
 
 		this.hucId = options.hucId;
+		this.accumulated = accumulated;
 
 		this.context = {
 			showAdditionalDataButtons : !(compareHucId || fips),
@@ -72,7 +73,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		*/
 		$plotContainer = this.$('#huc-plot-container');
 		$hucInsetMapContainer = (compareHucId) ? this.$('.huc-inset-map-div') : this.$('.huc-inset-map-container');
-		
+		$hucPlotContainer = (compareHucId) ? this.$('#huc-plotview-div') : this.$('#huc-plot-container');
+
 		// Render the huc inset map view and plotView
 		this.hucInsetMapView = new NWC.view.HucInsetMapView({
 			el : $hucInsetMapContainer,
@@ -90,7 +92,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				compare : false,
 				hucId : self.hucId,
 				gageId : gageId,
-				el : self.$('#huc-plotview-div'),
+				el : $hucPlotContainer,
 				model : self.hucPlotModel
 			});
 		});
