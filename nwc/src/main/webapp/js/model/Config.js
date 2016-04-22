@@ -202,7 +202,7 @@ NWC.model = NWC.model || {};
 								units: NWC.util.Units.metric.normalizedWater.daily,
 								dataset: 'HUC12_data',
 								fileName: 'HUC12_daymet.nc',
-								downloadMetadata: 'Data derived by sampling the DayMet precipitation variable to NHD+ Version II\n12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://daymet.ornl.gov/ http://cida.usgs.gov/gdp/\nhttp://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
+								downloadMetadata: 'Data derived by sampling the DayMet precipitation variable to Watershed Boundary Dataset\n12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://daymet.ornl.gov/ http://cida.usgs.gov/gdp/\nhttp://nhd.usgs.gov/wbd.html'
 							}),
 							eta : new NWC.model.SosVariable({
 								observedProperty: 'et',
@@ -210,7 +210,7 @@ NWC.model = NWC.model || {};
 								units: NWC.util.Units.metric.normalizedWater.monthly,
 								dataset: 'HUC12_data',
 								fileName: 'HUC12_eta.nc',
-								downloadMetadata: 'Data derived by sampling the SSEBop Actual Evapotranspiration dataset to NHD+\nVersion II 12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly\nhttp://cida.usgs.gov/gdp/ http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
+								downloadMetadata: 'Data derived by sampling the SSEBop Actual Evapotranspiration dataset to Watershed\nBoundary Dataset 12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly\nhttp://cida.usgs.gov/gdp/ http://nhd.usgs.gov/wbd.html'
 							})
 						}
 					}),
@@ -228,7 +228,7 @@ NWC.model = NWC.model || {};
 								units: NWC.util.Units.metric.normalizedWater.daily,
 								dataset: 'HUC08_data',
 								fileName: 'HUC08_daymet.nc',
-								downloadMetadata: 'Data derived by sampling the DayMet precipitation variable to NHD+ Version II\n8-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://daymet.ornl.gov/ http://cida.usgs.gov/gdp/\nhttp://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
+								downloadMetadata: 'Data derived by sampling the DayMet precipitation variable to Watershed Boundary Dataset\n8-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://daymet.ornl.gov/ http://cida.usgs.gov/gdp/\nhttp://nhd.usgs.gov/wbd.html'
 							}),
 							eta : new NWC.model.SosVariable({
 								observedProperty: 'et',
@@ -236,7 +236,7 @@ NWC.model = NWC.model || {};
 								units: NWC.util.Units.metric.normalizedWater.monthly,
 								dataset: 'HUC08_data',
 								fileName: 'HUC08_eta.nc',
-								downloadMetadata: 'Data derived by sampling the SSEBop Actual Evapotranspiration dataset to NHD+\nVersion II 8-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly\nhttp://cida.usgs.gov/gdp/ http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
+								downloadMetadata: 'Data derived by sampling the SSEBop Actual Evapotranspiration dataset to Watershed\nBoundary Dataset 8-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly\nhttp://cida.usgs.gov/gdp/ http://nhd.usgs.gov/wbd.html'
 							})
 						}
 					})
@@ -257,7 +257,7 @@ NWC.model = NWC.model || {};
 							units: NWC.util.Units.metric.normalizedWater.daily,
 							dataset: 'HUC12_data',
 							fileName: 'HUC12_daymet_agg.nc',
-							downloadMetadata: 'Data derived by sampling the DayMet precipitation variable to NHD+ Version II\n12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://daymet.ornl.gov/ http://cida.usgs.gov/gdp/\nhttp://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
+							downloadMetadata: 'Data derived by sampling the DayMet precipitation variable to Watershed Boundary Dataset\n12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://daymet.ornl.gov/ http://cida.usgs.gov/gdp/\nhttp://nhd.usgs.gov/wbd.html'
 						}),
 						eta : new NWC.model.SosVariable({
 							observedProperty: 'et',
@@ -265,7 +265,7 @@ NWC.model = NWC.model || {};
 							units: NWC.util.Units.metric.normalizedWater.monthly,
 							dataset: 'HUC12_data',
 							fileName: 'HUC12_eta_agg.nc',
-							downloadMetadata: 'Data derived by sampling the SSEBop Actual Evapotranspiration dataset to NHD+\nVersion II 12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly\nhttp://cida.usgs.gov/gdp/ http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php'
+							downloadMetadata: 'Data derived by sampling the SSEBop Actual Evapotranspiration dataset to Watershed\nBoundary Dataset 12-digit Hydrologic Unit Code Watersheds using the Geo Data Portal.\nhttp://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly\nhttp://cida.usgs.gov/gdp/ http://nhd.usgs.gov/wbd.html'
 						})
 					}
 				}),
