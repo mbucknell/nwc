@@ -90,7 +90,7 @@ NWC.util.mapUtils = (function () {
 
 	that.transformWGS84ToMercator = function(lonLat) {
 		return lonLat.transform(that.WGS84_GEOGRAPHIC, that.WGS84_GOOGLE_MERCATOR);
-	}
+	};
 
 	that.createMap = function(layers, controls) {
 		var maxExtent = that.transformWGS84ToMercator(new OpenLayers.Bounds(-179.0, 10.0, -42.0, 75.0));
@@ -303,6 +303,24 @@ NWC.util.mapUtils = (function () {
 		return intersectingCountiesLayer;
 	};
 
+	that.createFlowlinesLayer = function() {
+		return new OpenLayers.Layer.WMS('NHDPlus Flowlines',
+			CONFIG.endpoint.direct.flowlinesgeoserver + 'service/wms',
+			{
+				layers : 'nhdplus:nhdflowline_network',
+				transparent : true,
+				srs : 'EPSG:900913'
+			},
+			{
+				displayInLayerSwitcher : true,
+				visibility : true,
+				isBaseLayer : false,
+				tiled : true,
+				opacity : 0.6
+			}
+		);
+	};
+/*
 	that.addFlowLinesToMap = function(map) {
 		var streamOrderClipValues = [
 			7, // 0
@@ -378,7 +396,7 @@ NWC.util.mapUtils = (function () {
 		// add the special raster layer to the map viewport
 		map.addLayer(flowlineRaster);
 	};
-
+*/
 	return that;
 }());
 

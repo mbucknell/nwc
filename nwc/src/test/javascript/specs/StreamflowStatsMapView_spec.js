@@ -1,10 +1,21 @@
+/* jslint browser */
+/* global jasmine, spyOn, expect */
+/* global NWC */
+
 describe('Test for NWC.view.StreamflowStatsMapView', function() {
-	var addLayerSpy;
+	"use strict";
+	var addLayersSpy, addLayerSpy;
 	var addControlSpy;
 	var thisTemplate;
 	var view;
 
 	beforeEach(function() {
+		window.CONFIG = {
+			endpoint : {
+				geoserver : 'http://fakeserver.com'
+			}
+		};
+
 		$('body').append('<div id="test-div"></div');
 		$('#test-div').append('<div id="stream-gage-filters-div"><span id="filter-label"></span>' +
 			'<a data-value="default">Default</a>' +
@@ -14,12 +25,14 @@ describe('Test for NWC.view.StreamflowStatsMapView', function() {
 			'</div>'
 		);
 		thisTemplate = jasmine.createSpy('thisTemplate');
+		addLayersSpy = jasmine.createSpy('addLayersSpy');
 		addLayerSpy = jasmine.createSpy('addLayerSpy');
 		addControlSpy = jasmine.createSpy('addControlSpy');
-		spyOn(NWC.util.mapUtils, 'addFlowLinesToMap');
+		spyOn(NWC.util.mapUtils, 'createFlowlinesLayer');
 		spyOn(NWC.view.BaseSelectMapView.prototype, 'initialize').andCallFake(function() {
 			this.map = {
-				addLayers : addLayerSpy,
+				addLayers : addLayersSpy,
+				addLayer : addLayerSpy,
 				addControl : addControlSpy,
 				updateSize : jasmine.createSpy('updateSizeSpy')
 			};

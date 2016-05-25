@@ -1,20 +1,21 @@
+/* jslint browser: true */
+/* global jasmine, spyOn, expect */
+/* global NWC */
+
 describe('Tests for NWC.view.BaseSelectMapView', function() {
+	"use strict";
 
 	var selectControl, mapSpy, NewView, template;
 	var $selectButton, $panButton, $zoomButton;
 	var $selectInfo, $panInfo, $zoomInfo;
 
 	beforeEach(function() {
-		CONFIG = {
+		window.CONFIG = {
 			endpoint : {
 				geoserver : 'http://fakeserver.com'
 			}
 		};
 
-		search_api = {
-			on : jasmine.createSpy('search_api.onSpy'),
-			setOpts : jasmine.createSpy('search_api.setOptsSpy')
-		};
 		template = jasmine.createSpy('thisTemplate');
 
 		var templateHtml = '<button id="select-button" value="select"></button>' +
@@ -48,7 +49,6 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 		};
 
 		//mock methods that are used from NWC.util.mapUtils
-		spyOn(NWC.util.mapUtils, 'addFlowLinesToMap');
 		spyOn(NWC.util.mapUtils, 'createMap').andReturn(mapSpy);
 		spyOn(NWC.util.mapUtils, 'createAllBaseLayers').andReturn([]);
 

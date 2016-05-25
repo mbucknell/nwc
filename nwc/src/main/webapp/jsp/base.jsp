@@ -46,6 +46,7 @@
     request.setAttribute("jstsVersion", props.get("jsts.version"));
 
     request.setAttribute("directGeoserverEndpoint", props.get("nwc.endpoint.geoserver"));
+	request.setAttribute("directGeoserverFlowlinesEndpoint", props.get("nwc.endpoint.flowlines.geoserver"));
     request.setAttribute("directThreddsEndpoint", props.get("nwc.endpoint.thredds"));
     request.setAttribute("directWpsEndpoint", props.get("nwc.endpoint.wps"));
     request.setAttribute("directNwisEndpoint", props.get("nwc.endpoint.nwis"));
