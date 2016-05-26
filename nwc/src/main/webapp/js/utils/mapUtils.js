@@ -90,7 +90,7 @@ NWC.util.mapUtils = (function () {
 
 	that.transformWGS84ToMercator = function(lonLat) {
 		return lonLat.transform(that.WGS84_GEOGRAPHIC, that.WGS84_GOOGLE_MERCATOR);
-	}
+	};
 
 	that.createMap = function(layers, controls) {
 		var maxExtent = that.transformWGS84ToMercator(new OpenLayers.Bounds(-179.0, 10.0, -42.0, 75.0));
@@ -303,80 +303,22 @@ NWC.util.mapUtils = (function () {
 		return intersectingCountiesLayer;
 	};
 
-	that.addFlowLinesToMap = function(map) {
-		var streamOrderClipValues = [
-			7, // 0
-			7,
-			7,
-			6,
-			6,
-			6, // 5
-			5,
-			5,
-			5,
-			4,
-			4, // 10
-			4,
-			3,
-			3,
-			3,
-			2, // 15
-			2,
-			2,
-			1,
-			1,
-			1 // 20
-		];
-		var streamOrderClipValue = 0;
-		var flowlineAboveClipPixel;
-		var createFlowlineColor = function(r,g,b,a) {
-			flowlineAboveClipPixel = (a & 0xff) << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff);
-		};
-		createFlowlineColor(100,100,255,255);
-		streamOrderClipValue = streamOrderClipValues[map.zoom];
-
-		map.events.register(
-			'zoomend',
-			map,
-			function() {
-				streamOrderClipValue = streamOrderClipValues[map.zoom];
+	that.createFlowlinesLayer = function() {
+		return new OpenLayers.Layer.WMS('NHDPlus Flowlines',
+			CONFIG.endpoint.direct.flowlinesgeoserver + 'service/wms',
+			{
+				layers : 'nhdplus:nhdflowline_network',
+				transparent : true,
+				srs : 'EPSG:900913'
 			},
-			true
-		);
-
-		// define per-pixel operation
-		var flowlineClipOperation = OpenLayers.Raster.Operation.create(function(pixel) {
-			if (pixel >> 24 === 0) { return 0; }
-			var value = pixel & 0x00ffffff;
-			if (value >= streamOrderClipValue && value < 0x00ffffff) {
-				return flowlineAboveClipPixel;
-			} else {
-				return 0;
+			{
+				displayInLayerSwitcher : true,
+				visibility : true,
+				isBaseLayer : false,
+				tiled : true,
+				opacity : 0.6
 			}
-		});
-
-		var flowlinesWMSData = new OpenLayers.Layer.FlowlinesData(
-			"Flowline WMS (Data)",
-			CONFIG.endpoint.geoserver + 'gwc/service/wms'
 		);
-		map.addLayer(flowlinesWMSData);
-
-		// source canvas (writes WMS tiles to canvas for reading)
-		var flowlineComposite = OpenLayers.Raster.Composite.fromLayer(flowlinesWMSData, {int32: true});
-
-		// filter source data through per-pixel operation
-		var flowlineClipOperationData = flowlineClipOperation(flowlineComposite);
-
-		var flowLayerName = "NHD Flowlines"
-		var flowlineRaster = new OpenLayers.Layer.Raster({
-			name: flowLayerName,
-			data: flowlineClipOperationData,
-			isBaseLayer: false,
-			visibility : true
-		});
-
-		// add the special raster layer to the map viewport
-		map.addLayer(flowlineRaster);
 	};
 
 	return that;

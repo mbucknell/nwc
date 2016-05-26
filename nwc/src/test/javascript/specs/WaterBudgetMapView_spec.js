@@ -1,25 +1,32 @@
+/* jslint browser: true */
+
 /*global jasmine*/
 /*global spyOn*/
 /*global NWC*/
 /*global expect*/
+/*global _ */
 
 describe('Tests for NWC.view.WaterBudgetMapView', function() {
+	"use strict";
+
 	var addLayerSpy;
+	var addLayersSpy;
 	var addControlSpy;
 	var view;
 	beforeEach(function() {
 		addLayerSpy = jasmine.createSpy('addLayerSpy');
+		addLayersSpy = jasmine.createSpy('addLayersSpy');
 		addControlSpy = jasmine.createSpy('addControlSpy');
-		 spyOn(NWC.util.mapUtils, 'addFlowLinesToMap');
+		spyOn(NWC.util.mapUtils, 'createFlowlinesLayer');
 		spyOn(NWC.view.BaseSelectMapView.prototype, 'initialize').andCallFake(function() {
 			this.map = {
 				addLayer : addLayerSpy,
-				addLayers : addLayerSpy,
-				addControl : addControlSpy,
+				addLayers : addLayersSpy,
+				addControl : addControlSpy
 			};
 			this.model = new this.Model();
 		});
-		
+
 		view = new NWC.view.WaterBudgetMapView({accumulated : false});
 	});
 
@@ -28,7 +35,7 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 		expect(NWC.view.BaseSelectMapView.prototype.initialize).toHaveBeenCalled();
 		expect(view.hucLayers).toBeDefined();
 		expect(view.gageLayer).toBeDefined();
-		expect(addLayerSpy).toHaveBeenCalledWith(_.pluck(view.hucLayers, 'layer'));
+		expect(addLayersSpy).toHaveBeenCalledWith(_.pluck(view.hucLayers, 'layer'));
 		expect(addLayerSpy).toHaveBeenCalledWith(view.gageLayer);
 		expect(view.selectControl).toBeDefined();
 		expect(view.context.hucId).not.toBeDefined();
@@ -44,7 +51,7 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 	});
 
 	it('Expect that event handler calls to selectHucLayer update the models\'s watershedLayer attribute', function() {
-		
+
 		view.model.set('watershedLayer', 'huc8');
 		view.$el.html('<select class="huc-layers form-control">' +
 				'<option value="huc_12" selected>huc_12</option>' +
@@ -64,7 +71,7 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 	});
 
 	it('Expect that event handler calls to toggleGageLayer update the models\'s gageLayer attribute', function() {
-		
+
 		view.model.set('gageLayerOn', false);
 		view.toggleGageVisibility();
 		expect(view.model.get('gageLayerOn')).toBe(true);

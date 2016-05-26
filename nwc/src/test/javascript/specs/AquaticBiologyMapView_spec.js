@@ -1,15 +1,21 @@
+/* jslint browser: true */
+/* global jasmine, spyOn, expect */
+/* global NWC */
+
 describe('Tests for NWC.view.AquaticBiologyMapView', function() {
+	"use strict";
 
 	var addLayersSpy;
+	var addLayerSpy;
 	var featuresModel;
 	var eventSpyObj;
 	var thisTemplate;
 	var view;
 
-	var $gageLayerButton, $hucLayerButton, $observedInfo, $modeledInfo
+	var $gageLayerButton, $hucLayerButton, $observedInfo, $modeledInfo;
 
 	beforeEach(function() {
-		CONFIG = {
+		window.CONFIG = {
 			endpoint : {
 				geoserver : 'http://fakeserver.com'
 			}
@@ -17,19 +23,21 @@ describe('Tests for NWC.view.AquaticBiologyMapView', function() {
 
 		thisTemplate = jasmine.createSpy();
 
-		templateHtml = '<div id="map-div"></div>' +
+		var templateHtml = '<div id="map-div"></div>' +
 			'<button id="gage-layer-button"></button>' +
 			'<button id="huc-layer-button"></button>' +
 			'<span id="streamflow-observed-info"></span>' +
-			'<span id="modeled-streamflow-info"></span>'
+			'<span id="modeled-streamflow-info"></span>';
 		$('body').append('<div id="test-div"></div>');
 		$('#test-div').append(templateHtml);
 
 		addLayersSpy = jasmine.createSpy('addLayerSpy');
-		spyOn(NWC.util.mapUtils, 'addFlowLinesToMap');
+		addLayerSpy = jasmine.createSpy('addLayerSpy');
+		spyOn(NWC.util.mapUtils, 'createFlowlinesLayer');
 		spyOn(NWC.view.BaseSelectMapView.prototype, 'initialize').andCallFake(function() {
 			this.map = {
 				addLayers : addLayersSpy,
+				addLayer : addLayerSpy,
 				updateSize : jasmine.createSpy('updateSizeSpy')
 			};
 		});

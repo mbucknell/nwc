@@ -23,6 +23,7 @@
 				CONFIG.endpoint.searchService = '${searchServiceEndpoint}';
 				
 				CONFIG.endpoint.direct.geoserver = '${directGeoserverEndpoint}';
+				CONFIG.endpoint.direct.flowlinesgeoserver = '${directGeoserverFlowlinesEndpoint}';
 				CONFIG.endpoint.direct.thredds = '${directThreddsEndpoint}';
 				CONFIG.endpoint.direct.wps = '${directWpsEndpoint}';
 				CONFIG.endpoint.direct.nwis = '${directNwisEndpoint}';
@@ -102,15 +103,6 @@
 		<script type="text/javascript" src="vendorlibs/flot-plugins/jquery.flot.axislabels.js"></script>
 		<script type="text/javascript" src="vendorlibs/FileSaver.js-master/FileSaver.js"></script>
 		
-		<!-- order is important -->
-		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster.js"></script>
-		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Layer/Raster.js"></script>
-		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Grid.js"></script>	
-		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Composite.js"></script>
-		<script type="text/javascript" src="gov.usgs.cida.jslibs/openlayers/extension/Raster/Operation.js"></script>
-		<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesData.js"></script>
-<!--	<script type="text/javascript" src="js/utils/openLayersExtensions/FlowlineLayer/FlowlinesRaster.js"></script>
--->
 		<script type="text/javascript" src="js/utils/templateLoader<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/jqueryUtils<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/Conversion<%= resourceSuffix %>.js"></script>
