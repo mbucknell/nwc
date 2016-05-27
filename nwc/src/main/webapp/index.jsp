@@ -23,7 +23,6 @@
 				CONFIG.endpoint.searchService = '${searchServiceEndpoint}';
 				
 				CONFIG.endpoint.direct.geoserver = '${directGeoserverEndpoint}';
-				CONFIG.endpoint.direct.flowlinesgeoserver = '${directGeoserverFlowlinesEndpoint}';
 				CONFIG.endpoint.direct.thredds = '${directThreddsEndpoint}';
 				CONFIG.endpoint.direct.wps = '${directWpsEndpoint}';
 				CONFIG.endpoint.direct.nwis = '${directNwisEndpoint}';

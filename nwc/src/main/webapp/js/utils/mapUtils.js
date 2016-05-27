@@ -305,7 +305,7 @@ NWC.util.mapUtils = (function () {
 
 	that.createFlowlinesLayer = function() {
 		return new OpenLayers.Layer.WMS('NHDPlus Flowlines',
-			CONFIG.endpoint.direct.flowlinesgeoserver + 'service/wms',
+			CONFIG.endpoint.geoserver + 'nhdplus/wms',
 			{
 				layers : 'nhdplus:nhdflowline_network',
 				transparent : true,
