@@ -89,7 +89,7 @@ NWC.view = NWC.view || {};
 			var hucProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(this.hucLayer, {
 				url : CONFIG.endpoint.geoserver + "wfs",
 				srsName : "EPSG:3857",
-				propertyNames : ["huc12","drain_sqkm", "hu_12_name"]
+				propertyNames : ["huc12","areasqkm", "hu_12_name"]
 			});
 
 			var featureTypeIsVisible = function(featureType) {
@@ -173,7 +173,7 @@ NWC.view = NWC.view || {};
 					});
 									//Hydrologic model results are not valid for watersheds > 2000 km2, so only populate list with those < 2000 km2
 									var filteredHucFeatures = hucFeatures.filter(function(n){
-										return n.attributes.drain_sqkm < 2000;
+										return n.attributes.areasqkm< 2000;
 									});
 					this.aquaticBiologyFeaturesModel.set({
 						sites : siteFeatures,

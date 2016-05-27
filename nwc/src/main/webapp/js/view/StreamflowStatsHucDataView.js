@@ -75,7 +75,7 @@ NWC.view = NWC.view || {};
 					this.map.zoomToExtent(this.hucLayer.getDataExtent());
 
 					$('#huc-name').html(this.hucName);
-					$('#huc-drainage-area').html(event.feature.attributes.drain_sqkm);
+					$('#huc-drainage-area').html(event.feature.attributes.areasqkm);
 				},
 				loadend: function(event) {
 					$('#loading-indicator').hide();
