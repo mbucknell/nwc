@@ -55,10 +55,9 @@ NWC.view = NWC.view || {};
 			var gageConfig = NWC.config.get('streamflow').gage.attributes;
 			this.gageLayer = new OpenLayers.Layer.WMS(
 				"Gage Location",
-				CONFIG.endpoint.geoserver + 'NWC/wms',
+				CONFIG.endpoint.geoserver + 'gwc/service/wms',
 				{
 					LAYERS: gageConfig.namespace + ':' + gageConfig.layerName,
-					STYLES: 'gagesii_hucComp',
 					format: 'image/png',
 					transparent: true,
 					tiled: false
