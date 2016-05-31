@@ -40,7 +40,7 @@ NWC.view = NWC.view || {};
 			);
 			this.gageFeatureLayer = new OpenLayers.Layer.WMS(
 				"Gage Location",
-				CONFIG.endpoint.geoserver + 'NWC/wms',
+				CONFIG.endpoint.geoserver + 'gwc/service/wms',
 				{
 					LAYERS: "NWC:gagesII",
 					STYLES: 'blue_circle',
@@ -64,8 +64,8 @@ NWC.view = NWC.view || {};
 				},
 				{
 					opacity: 0.6,
-									tiled: true,
-									isBaseLayer : false,
+					tiled: true,
+					isBaseLayer : false,
 					displayInLayerSwitcher : false,
 					visibility : false
 				}

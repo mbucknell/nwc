@@ -118,11 +118,10 @@ NWC.util.mapUtils = (function () {
 
 	that.createHucLayer = function(namespace, layerName, config) {
 		return new OpenLayers.Layer.WMS('National WBD Snapshot',
-			CONFIG.endpoint.geoserver + 'ows?',
+			CONFIG.endpoint.geoserver + 'gwc/service/wms',
 			{
 				layers: namespace + ':' + layerName,
 				transparent: true,
-				styles: ['polygon'],
 				tiled: true
 			},
 			$.extend({}, that.defaultWorkflowLayerProperties, config)
