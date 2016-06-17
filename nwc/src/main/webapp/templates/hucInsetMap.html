@@ -36,9 +36,10 @@
 		<div id="huc-inset-{{ hucId }}" class="inset-map"></div>
 		{{#if isHuc12}}
 			<div class="inset-legend-container">
-				<div class="huc-legend">Local Incremental Watershed:&nbsp;&nbsp;<span>_</span></div>
-				<div class="achuc-legend">Total Accumulated Watershed:&nbsp;&nbsp;<span>_</span></div>
-				<div class="gage-legend">NWIS Gage:&nbsp;&nbsp;<img src="webjars/openlayers/2.12/img/marker.png" />
+				<div class="huc-legend">Local Incremental Watershed:&nbsp;&nbsp;<span class="line-legend">_</span></div>
+				<div class="achuc-legend">Total Accumulated Watershed:&nbsp;&nbsp;<span class="line-legend">_</span></div>
+				<div class="gage-legend">NWIS Gage:&nbsp;&nbsp;<img src="webjars/openlayers/2.12/img/marker.png" /></div>
+				<div class="modeled-huc-legend" >Modeled Streamflow:&nbsp&nbsp<div class="block-legend"></div></div>
 			</div>
 		{{/if}}
 	</div>

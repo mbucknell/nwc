@@ -18,6 +18,13 @@ NWC.view = NWC.view || {};
 		strokeOpacity : 1,
 		fill: false
 	};
+	var MODELED_HUC_STYLE = {
+		strokeWidth : 2,
+		strokeColor : '#000000',
+		strokeOpacity : .5,
+		fillOpacity : .1,
+		fillColor : '#000000'
+	};
 
 
 	NWC.view.HucInsetMapView = NWC.view.BaseView.extend({
@@ -44,10 +51,11 @@ NWC.view = NWC.view || {};
 
 			var watershedConfig = NWC.config.getWatershed(options.hucId);
 			var acWatershedConfig = NWC.config.get('accumulated').attributes;
-			var streamflowGageConfig;
+			var hucStreamflowConfig = NWC.config.get('streamflow').huc12.attributes;
 
 			var hucLoadedDeferred = $.Deferred();
 			var achucLoadedDeferred = $.Deferred();
+			var modeledHucLoadedDeferred = $.Deferred();
 			var gageLoadedDeferred = $.Deferred();
 
 			var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
@@ -68,7 +76,16 @@ NWC.view = NWC.view || {};
 			this.map = NWC.util.mapUtils.createMap([baseLayer], mapControls);
 
 			// Load vector layers
-			this.featureLoadedPromise = $.when(hucLoadedDeferred, achucLoadedDeferred, gageLoadedDeferred);
+			this.featureLoadedPromise = $.Deferred();
+			$.when(hucLoadedDeferred, achucLoadedDeferred, gageLoadedDeferred, modeledHucLoadedDeferred).done(function(d1, d2, d3, d4) {
+				var result = {};
+				$.each(arguments, function(arg) {
+					if (arg) {
+						$.extend(result, arg);
+					}
+				});
+				self.featureLoadedPromise.resolve(result);
+			});
 
 			if (gageId) {
 				streamflowGageConfig = NWC.config.get('streamflow').gage.attributes;
@@ -147,12 +164,35 @@ NWC.view = NWC.view || {};
 					},
 					scope : this
 				});
+
+				this.modeledHucLayer = NWC.util.mapUtils.createHucSEBasinFeatureLayer(
+					hucStreamflowConfig.namespace,
+					hucStreamflowConfig.accumulatedLayerName,
+					hucId,
+					MODELED_HUC_STYLE);
+				this.modeledHucLayer.events.on({
+					featureadded : function(event) {
+						var $modeledLegend = self.$('.modeled-huc-legend');
+						$modeledLegend.find('div').css({
+							backgroundColor : MODELED_HUC_STYLE.fillColor,
+							opacity : MODELED_HUC_STYLE.fillOpacity
+						});
+						$modeledLegend.show();
+					},
+					loadend : function(event) {
+						modeledHucLoadedDeferred.resolve({hasModeledStreamFlow : event.object.features.length > 0});
+					}
+				});
 			}
 			else {
 				achucLoadedDeferred.resolve();
+				modeledHucLoadedDeferred .resolve();
 			}
 
 			// Add the layer for the page's watershed last
+			if (this.modeledHucLayer) {
+				this.map.addLayer(this.modeledHucLayer);
+			}
 			if (accumulated && (this.achucLayer)) {
 				this.map.addLayer(this.hucLayer);
 				this.map.addLayer(this.achucLayer);

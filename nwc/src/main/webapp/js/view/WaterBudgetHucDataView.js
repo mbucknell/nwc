@@ -30,7 +30,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	 * @param {Object} options
 	 *     @prop {Jquery.Element} el - Container where this view will be rendered
 	 *     @prop {Backbone.Router} router
-	 *     @prop {Boolean} accumulated - false indicates if this is local watershed, true indicates accumulated.
+	 *     @prop {Boolean} accumulated - false indicates this is local watershed, true indicates accumulated.
 	 *     @prop {String} hucId - Id of the huc for which information should be shown.
 	 *     @prop {String} compareHucId (optional) - Huc Id used for second plot to compare to first.
 	 *     @prop {String} fips (optional) - If specified, water use data for the county with fips will be shown.
