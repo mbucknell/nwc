@@ -86,7 +86,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		});
 
 		readyToLoadPlotView = accumulated ? this.hucInsetMapView.featureLoadedPromise : $.Deferred().resolve();
-		readyToLoadPlotView.done(function() {
+		readyToLoadPlotView.done(function(status) {
 			self.plotView = new NWC.view.WaterbudgetPlotView({
 				accumulated : accumulated,
 				compare : false,

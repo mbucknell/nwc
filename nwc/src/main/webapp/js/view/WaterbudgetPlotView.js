@@ -42,11 +42,11 @@ NWC.view = NWC.view || {};
 			this.compare = options.compare ? options.compare : false;
 
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
-			this.getHucDataPromise = this.getPlotData(options.hucId, this.gageId).done(function() {
+			this.getPlotData(options.hucId, this.gageId).done(function() {
 				self.$el.find('.download-btn-container button').prop('disabled', false);
+				self.plotData.bind(self)();
 			});
 
-			this.plotData();
 			// Set up model change events
 			this.listenTo(this.model, 'change', this.plotData);
 		},
@@ -68,6 +68,7 @@ NWC.view = NWC.view || {};
 			var deferred = $.Deferred();
 			var dataSeries = {};
 			var getDataDeferreds = [];
+
 			//grab the sos sources that will be used to display the initial data
 			//series. ignore other data sources that the user can add later.
 			var sosSources = {
@@ -75,8 +76,51 @@ NWC.view = NWC.view || {};
 				dayMet : this.watershedVariables.dayMet
 			};
 
+			// Used when retrieving streamflow data when there is a gage defined
 			var acres;
-			//for an accumulated view, there may or may not be a gage
+			var convertCfsToMmd = function(value) {
+				return NWC.util.Convert.cfsToMmd(value, acres);
+			};
+			var convertTimeToDateStr = function(str) {
+				var tokens = str.split('T');
+				var newDateStr = tokens[0].replace(/-/g, '/');
+				newDateStr = newDateStr.trim();
+				return newDateStr;
+			};
+			var streamflowDeferred;
+
+			this.dataSeriesStore = new NWC.util.DataSeriesStore();
+
+			Object.keys(sosSources, function (sourceId, source) {
+				var d = $.Deferred();
+
+				getDataDeferreds.push(d);
+
+				$.ajax({
+					url : source.getSosUrl(huc),
+					dataType : "xml",
+					success : function(data) {
+						var thisDataSeries = NWC.util.DataSeries.newSeries();
+						var parsedValues = NWC.util.SosResponseFormatter.formatSosResponse(data);
+
+						thisDataSeries.metadata.seriesLabels.push({
+							seriesName: source.get('propertyLongName'),
+							seriesUnits: source.get('units')
+						});
+						thisDataSeries.metadata.downloadHeader = source.get('downloadMetadata');
+						thisDataSeries.data = parsedValues;
+
+						dataSeries[sourceId] = thisDataSeries;
+						d.resolve();
+					},
+					error : function() {
+						var errorMessage = 'Error retrieving time series data for ' + this.sourceId;
+						alert(errorMessage);
+						d.reject(errorMessage);
+					}
+				});
+			});
+
 			if (gage) {
 				/*
 				 *	Since there is a gage, the value for related acres will be
@@ -91,99 +135,32 @@ NWC.view = NWC.view || {};
 					acres = self.model.get('watershedAcres');
 				}
 				if (0 !== acres) {
-					this.streamflowGageConfig = NWC.config.get('streamflow').gage.attributes.variables;
-					sosSources.nwisStreamFlowData = this.streamflowGageConfig.nwisStreamFlowData;
+					streamflowDeferred = $.Deferred();
+					getDataDeferreds.push(streamflowDeferred);
+					NWC.util.fetchMeasuredStreamflowData({
+						gage : gage,
+						startDate : '1838-01-01',
+						convertDateStrFnc : convertTimeToDateStr,
+						conversionFnc : convertCfsToMmd
+					})
+						.done(function(dataTable) {
+							var thisDataSeries = NWC.util.DataSeries.newSeries();
+							thisDataSeries.data = dataTable;
+							thisDataSeries.metadata.seriesLabels.push({
+								seriesName : 'Gaged Streamflow (Per Unit Drainage Area)',
+								seriesUnits : NWC.util.Units.usCustomary.streamflow.daily
+							});
+							dataSeries.nwisStreamFlowData = thisDataSeries;
+							streamflowDeferred.resolve();
+						})
+						.fail(function() {
+							var errorMessage = 'Error retrieving time series data for nwisStreamFlowData';
+							alert(errorMessage);
+							streamflowDeferred.reject(errorMessage);
+						});
 				}
 			}
 
-			this.dataSeriesStore = new NWC.util.DataSeriesStore();
-
-			Object.keys(sosSources, function (sourceId, source) {
-				var d = $.Deferred();
-
-				dataSeries[sourceId] = NWC.util.DataSeries.newSeries();
-				getDataDeferreds.push(d);
-
-				if (sourceId === 'nwisStreamFlowData') {
-					var startDate = '1838-01-01';
-					var parseDateStr = function(dateStr){
-						var tokens = dateStr.split('T');
-						var newDateStr = tokens[0].replace(/-/g, '/');
-						newDateStr = newDateStr.trim();
-					  return newDateStr;
-					};
-
-					$.ajax({
-						url : CONFIG.endpoint.nwisStreamflow,
-						data : $.extend({}, self.streamflowGageConfig.nwisStreamFlowData.queryParams, {
-							sites : gage,
-							startDT : startDate,
-						}),
-						method : 'GET',
-						success : function(response) {
-							var dataTable = [];
-							var thisDataSeries = dataSeries[sourceId];
-
-							NWC.util.findXMLNamespaceTags($(response), 'ns1:value').each(function() {
-								var row = [];
-								var value = parseFloat($(this).text());
-								if (-999999 === value) {
-									value = Number.NaN;
-								}
-								else {
-									value = NWC.util.Convert.cfsToMmd(value, acres)
-								}
-								row.push(parseDateStr($(this).attr('dateTime')));
-								row.push(value);
-								dataTable.push(row);
-							});
-
-							if (dataTable.length === 0) {
-								var errorMessage = 'No data available to plot ' + self.sourceId;
-								console.log(errorMessage);
-							}
-							else {
-								thisDataSeries.data = dataTable;
-								thisDataSeries.metadata.seriesLabels.push({
-									seriesName : 'Gaged Streamflow (Per Unit Drainage Area)',
-									seriesUnits : NWC.util.Units.usCustomary.streamflow.daily
-								});
-								d.resolve();
-							}
-						},
-						error : function(jqXHR, textStatus) {
-							var errorMessage = 'Error retrieving time series data for ' + self.sourceId;
-							alert(errorMessage);
-							d.reject(errorMessage);
-						}
-					});
-				}
-				else {
-					$.ajax({
-						url : source.getSosUrl(huc),
-						dataType : "xml",
-						success : function(data, textStatus, jqXHR) {
-							var parsedValues = NWC.util.SosResponseFormatter.formatSosResponse(data);
-							var thisDataSeries = dataSeries[sourceId];
-
-							thisDataSeries.metadata.seriesLabels.push({
-								seriesName: source.get('propertyLongName'),
-								seriesUnits: source.get('units')
-							});
-
-							thisDataSeries.metadata.downloadHeader = source.get('downloadMetadata');
-							thisDataSeries.data = parsedValues;
-
-							d.resolve();
-						},
-						error : function() {
-							var errorMessage = 'Error retrieving time series data for ' + this.sourceId;
-							alert(errorMessage);
-							d.reject(errorMessage);
-						}
-					});
-				}
-			});
 
 			$.when.apply(null, getDataDeferreds).done(function() {
 				self.dataSeriesStore.updateHucSeries(dataSeries);
@@ -201,19 +178,16 @@ NWC.view = NWC.view || {};
 		 *	an associated gage with the selected watershed, then streamflow will also be plotted.
 		 */
 		plotData : function() {
-			var self = this;
-			this.getHucDataPromise.done(function() {
-				var normalization = 'normalizedWater';
-				var plotTimeDensity  = self.model.get('timeScale');
-				var measurementSystem =  self.model.get('units');
+			var normalization = 'normalizedWater';
+			var plotTimeDensity  = this.model.get('timeScale');
+			var measurementSystem =  this.model.get('units');
 
-				var values = self.dataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
-				var labels = self.dataSeriesStore[plotTimeDensity].getSeriesLabelsAs(measurementSystem, normalization, plotTimeDensity);
-				var ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
-				var title = ((self.accumulated) ? 'Total Accumulated' : 'Local Incremental') + ' HUC ' + self.hucId;
+			var values = this.dataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
+			var labels = this.dataSeriesStore[plotTimeDensity].getSeriesLabelsAs(measurementSystem, normalization, plotTimeDensity);
+			var ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
+			var title = ((this.accumulated) ? 'Total Accumulated' : 'Local Incremental') + ' HUC ' + this.hucId;
 
-				NWC.util.Plotter.getPlot(self.$el.find('.waterbudget-plot'), self.$el.find('.waterbudget-legend'), values, labels, ylabel, title);
-			});
+			NWC.util.Plotter.getPlot(this.$el.find('.waterbudget-plot'), this.$el.find('.waterbudget-legend'), values, labels, ylabel, title);
 		},
 
 		downloadEvapotranspiration : function() {

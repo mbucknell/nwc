@@ -1,8 +1,13 @@
+/* jslint browser: true */
+/* global _ */
+/* global NaN */
+
 var NWC = NWC || {};
 
 NWC.util = NWC.util || {};
 
 NWC.util.DataSeries = function () {
+	"use strict";
 	return {
 		newSeries : function() {
 			var createSeriesLabel = function (metadata) {
@@ -53,7 +58,7 @@ NWC.util.DataSeries = function () {
 						return createSeriesLabel(seriesMetadata);
 					});
 				}
-			}
+			};
 		}
 	};
 }();
@@ -119,16 +124,17 @@ NWC.util.DataSeriesStore = function () {
 
 	/*	If we have a streamflow series, trim any entries that may be present
 	 *	that precede the first dayMet series entry and follow the last dayMet
-	 *	series entry. At some point, we may want to include all streamflow 
+	 *	series entry. At some point, we may want to include all streamflow
 	 *	on the plot.
-	*/	
+	*/
 	self.trimNwisStreamFlowData = function (nwisSeries) {
-		var dayMetSeriesStartDate = this.dayMet.data[0][0];
-		var total = _.size(self.dayMet.data);
-		var dayMetSeriesEndDate = self.dayMet.data[_.size(self.dayMet.data)-1][0];
+		var dayMetSeriesStartDate = Date.create(this.dayMet.data[0][0]).utc();
+		var dayMetSeriesEndDate = Date.create(self.dayMet.data[_.size(self.dayMet.data)-1][0]).utc();
+
 		nwisSeries.data = _.filter(nwisSeries.data, function (entry) {
-			return ((entry[0] >= dayMetSeriesStartDate) &&
-					(entry[0] <= dayMetSeriesEndDate));
+			var date = Date.create(entry[0]).utc();
+			return ((date >= dayMetSeriesStartDate) &&
+					(date <= dayMetSeriesEndDate));
 		});
 	};
 
@@ -164,7 +170,7 @@ NWC.util.DataSeriesStore = function () {
 			var dayMetDateStr = dayMetRow[0],
 			dayMetValue = dayMetRow[1],
 			dayMetDay = getDayNumberFromDateString(dayMetDateStr);
-			
+
 			if (nwisStreamFlowDataSeries && (nwisStreamFlowDataSeries.data.length > nwisDataIndex + 1)) {
 				var nwisRow = nwisStreamFlowDataSeries.data[nwisDataIndex];
 				var nwisDataValue = NaN;
@@ -173,7 +179,7 @@ NWC.util.DataSeriesStore = function () {
 					nwisDataIndex++;
 				}
 			}
-			
+
 			//if looking at the first day of a month
 			if (1 === dayMetDay) {
 				var etaRow = etaSeries.data[etaIndex];
@@ -226,7 +232,7 @@ NWC.util.DataSeriesStore = function () {
 	If the first day of a month has daymet values, daymet values will be present for every day of a month,
 	except if the month in question is the last month in the period of record, in which case it might not have daymet values
 	for every day of the month. If there is not a complete set of daily values for the last month, omit the month.
-	
+
 	One exception to the previous rule is to ignore the case where only the last value of a month is not present.
 	*/
 	self.updateMonthlyHucSeries = function (nameToSeriesMap) {
@@ -253,9 +259,9 @@ NWC.util.DataSeriesStore = function () {
 			//this will have the effect of ignoring a missing value at the end of the month
 			//because Dec 31 for leap years is "padded" with a NaN value
 			if (dayMetValue) {
-				monthlyAccumulation = saferAdd(monthlyAccumulation, dayMetValue);				
+				monthlyAccumulation = saferAdd(monthlyAccumulation, dayMetValue);
 			}
-			
+
 			if (nwisStreamFlowDataSeries && (nwisStreamFlowDataSeries.data.length > nwisDataIndex + 1)) {
 				var nwisRow = nwisStreamFlowDataSeries.data[nwisDataIndex];
 				var nwisDataValue = NaN;
@@ -267,7 +273,7 @@ NWC.util.DataSeriesStore = function () {
 					nwisDataIndex++;
 				}
 			}
-			
+
 			if (dayMetDay === endOfMonth) {
 				//join the date, accumulation and the eta for last month
 				var etaRow = etaSeries.data[etaIndex];
@@ -318,12 +324,12 @@ NWC.util.DataSeriesStore = function () {
 	On the last day of the month, see if there is a corresponding eta record.
 	If there is an eta record, accumulate the value.
 	If there are 12 months of dayMet values, put the accumulated value in the
-	dayMet value for that year-row and put the accumulated eta value in the eta value for that year-row.  
+	dayMet value for that year-row and put the accumulated eta value in the eta value for that year-row.
 
 	If the first day of a month has daymet values, daymet values will be present for every day of a month,
 	except if the month in question is the last month in the period of record, in which case it might not have daymet values
 	for every day of the month. If there is not a complete set of daily values for the last month, omit the month.
-	
+
 	One exception to the previous rule is to ignore the case where only the last value of a month is not present.
 	*/
 	self.updateYearlyHucSeries = function (nameToSeriesMap) {
@@ -347,7 +353,7 @@ NWC.util.DataSeriesStore = function () {
 			dayMetValue = dayMetRow[1],
 			dayMetDay = getDayNumberFromDateString(dayMetDateStr);
 			dayMetMonth = getMonthNumberFromDateString(dayMetDateStr);
-			//if first time through or new month is true 
+			//if first time through or new month is true
 			if (undefined === endOfMonth) {
 				endOfMonth = Date.create(dayMetDateStr).utc().daysInMonth();
 				monthDateStr = dayMetDateStr;
@@ -357,12 +363,12 @@ NWC.util.DataSeriesStore = function () {
 					yearDateStr = dayMetDateStr;
 				}
 				//if first time through but not beginning of year is true
-				else if (0 == etaMonths) {
+				else if (0 === etaMonths) {
 					endOfMonth = undefined;
 				}
 			}
-			//if first time through but not beginning of year is true skip until beginning of year			
-			if (undefined != endOfMonth) {
+			//if first time through but not beginning of year is true skip until beginning of year
+			if (undefined !== endOfMonth) {
 				//this will have effect of ignoring a missing value at the end of the month
 				if (dayMetValue) {
 					//accumulate each daymet value for the entire year
@@ -380,7 +386,7 @@ NWC.util.DataSeriesStore = function () {
 						nwisDataIndex++;
 					}
 				}
-				
+
 				//if you hit the end of the month of dayMet values is true
 				if (dayMetDay === endOfMonth) {
 					//add to counter to indicate when you have processed 12 months
@@ -405,7 +411,7 @@ NWC.util.DataSeriesStore = function () {
 					//accumulate the monthly eta value
 					etaYearlyAccumulation = saferAdd(etaYearlyAccumulation, etaForCurrentMonth);
 					//reset the days in month indicator to start new month
-					endOfMonth = undefined;						
+					endOfMonth = undefined;
 
 					//if 12 months of daymet values have been accumulated
 					if (etaMonths == 12) {
@@ -418,13 +424,13 @@ NWC.util.DataSeriesStore = function () {
 							rowToAdd[columnIndices.nwisStreamFlowData] = nwisYearlyAccumulation;
 						}
 						yearlyTable.push(rowToAdd);
-		
+
 						//reset for the next years
 						etaMonths = 0;
 						dayMetYearlyAccumulation = 0;
 						nwisYearlyAccumulation = 0;
 						etaYearlyAccumulation = 0;
-						endOfYear = undefined;						
+						endOfYear = undefined;
 					}
 				}
 			}
@@ -446,7 +452,7 @@ NWC.util.DataSeriesStore = function () {
 		this.eta = nameToSeriesMap.eta;
 		this.dayMet = nameToSeriesMap.dayMet;
 		this.nwisStreamFlowData = nameToSeriesMap.nwisStreamFlowData;
-		
+
 		if (this.nwisStreamFlowData) {
 			this.trimNwisStreamFlowData(this.nwisStreamFlowData);
 			if(this.nwisStreamFlowData.data.length === 0)

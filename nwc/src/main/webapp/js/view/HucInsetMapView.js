@@ -52,6 +52,7 @@ NWC.view = NWC.view || {};
 			var watershedConfig = NWC.config.getWatershed(options.hucId);
 			var acWatershedConfig = NWC.config.get('accumulated').attributes;
 			var hucStreamflowConfig = NWC.config.get('streamflow').huc12.attributes;
+			var streamflowGageConfig;
 
 			var hucLoadedDeferred = $.Deferred();
 			var achucLoadedDeferred = $.Deferred();
