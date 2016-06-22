@@ -76,7 +76,6 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 		testView.render();
 		expect(NWC.view.BaseView.prototype.render).toHaveBeenCalled();
 		expect(renderSpy).toHaveBeenCalledWith('inset-map-div');
-		expect(NWC.view.StreamflowPlotView).toHaveBeenCalled();
 	});
 
 	it('Expects getStats to call getHucStats and resolves the deferred when data is retrieved', function() {
@@ -125,7 +124,7 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 
 		it('Expects that an ajax call is made to retrieve the data', function() {
 			requestCount = server.requests.length;
-			testView.getDataSeries();
+			testView.fetchDataSeries();
 			expect(server.requests.length).toEqual(requestCount + 1);
 			expect(server.requests[requestCount].url).toContain('http://fakesos.org');
 			expect(server.requests[requestCount].url).toContain('offering=123456789012');
@@ -150,9 +149,6 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 			testView.plotStreamFlowData(ev);
 			expect(testView.streamflowPlotViewLeft.plotStreamflowData).toHaveBeenCalled();
 			expect(testView.streamflowPlotViewLeft.plotStreamflowData.calls[0].args[0]).toMatch('Huc 12');
-			plotStreamflowDataDeferred.resolve(ds);
-
-			expect(testView.dataSeries).toEqual(ds);
 		});
 	});
 });
