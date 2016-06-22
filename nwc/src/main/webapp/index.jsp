@@ -118,6 +118,7 @@
 		<script type="text/javascript" src="js/utils/hucCountiesIntersector<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/numberFormat<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/fetchMeasuredStreamflowData<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/utils/fetchModeledStreamflowData<%= resourceSuffix %>.js"></script>
 
 		<script type="text/javascript" src="js/model/Config<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/model/BaseSelectMapModel<%= resourceSuffix %>.js"></script>

@@ -226,13 +226,6 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 	},
 
 	/*
-	 * @returns Jquery promise which is resolved if getDataSeries() returns successfully in init.
-	 */
-	getDataSeriesPromise : function() {
-		return this.dataSeriesLoaded.promise();
-	},
-
-	/*
 	 * @returns Jquery promise which is resolved with the data series if it is successfully retrieved. If
 	 * unsuccessful is is rejected and forwards on the text response of the bad request
 	 */
@@ -265,6 +258,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 				}
 			})
 			.fail(function(textStatus) {
+				alert('Retrieve data for the plot has failed with error: ' + textStatus);
 				fetchDeferred.reject(textStatus);
 			});
 
@@ -288,12 +282,8 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 		});
 
 		this.$el.find('.show-plot-btn').hide();
-		this.streamflowPlotViewLeft.plotStreamflowData(plotTitle).fail(function(args) {
-			alert('Retrieving data for this plot failed with error: ' + args[0]);
-		});
-		this.streamflowPlotViewRight.plotStreamflowData(plotTitle).fail(function(args) {
-			alert('Retrieving data for this plot failed with error: ' + args[0]);
-		});
+		this.streamflowPlotViewLeft.plotStreamflowData(plotTitle);
+		this.streamflowPlotViewRight.plotStreamflowData(plotTitle);
 	},
 
 	remove : function() {
