@@ -19,9 +19,9 @@ NWC.view = NWC.view || {};
 		fill: false
 	};
 	var MODELED_HUC_STYLE = {
-		strokeWidth : 2,
+		strokeWidth : 1,
 		strokeColor : '#000000',
-		strokeOpacity : .5,
+		strokeOpacity : 0,
 		fillOpacity : .1,
 		fillColor : '#000000'
 	};
@@ -166,32 +166,37 @@ NWC.view = NWC.view || {};
 					scope : this
 				});
 
-				this.modeledHucLayer = NWC.util.mapUtils.createHucSEBasinFeatureLayer(
-					hucStreamflowConfig.namespace,
-					hucStreamflowConfig.accumulatedLayerName,
-					hucId,
-					MODELED_HUC_STYLE);
-				this.modeledHucLayer.events.on({
-					beforefeatureadded : function(event) {
-						if (event.feature.attributes.drain_sqkm > 2000) {
-							console.log('Model results are not valid for watershed this large.');
-							return false;
-						}
-					},
-					featureadded : function(event) {
-						var $modeledLegend = this.$('.modeled-huc-legend');
-						this.model.set('modeledWatershedAcres', NWC.util.Convert.squareKilometersToAcres(event.feature.attributes.drain_sqkm));
-						$modeledLegend.find('div').css({
-							backgroundColor : MODELED_HUC_STYLE.fillColor,
-							opacity : MODELED_HUC_STYLE.fillOpacity
-						});
-						$modeledLegend.show();
-					},
-					loadend : function(event) {
-						modeledHucLoadedDeferred.resolve({hasModeledStreamflow : event.object.features.length > 0});
-					},
-					scope : this
-				});
+				if (accumulated) {
+					this.modeledHucLayer = NWC.util.mapUtils.createHucSEBasinFeatureLayer(
+						hucStreamflowConfig.namespace,
+						hucStreamflowConfig.accumulatedLayerName,
+						hucId,
+						MODELED_HUC_STYLE);
+					this.modeledHucLayer.events.on({
+						beforefeatureadded : function(event) {
+							if (event.feature.attributes.drain_sqkm > 2000) {
+								console.log('Model results are not valid for watershed this large.');
+								return false;
+							}
+						},
+						featureadded : function(event) {
+							var $modeledLegend = this.$('.modeled-huc-legend');
+							this.model.set('modeledWatershedAcres', NWC.util.Convert.squareKilometersToAcres(event.feature.attributes.drain_sqkm));
+							$modeledLegend.find('div').css({
+								backgroundColor : MODELED_HUC_STYLE.fillColor,
+								opacity : MODELED_HUC_STYLE.fillOpacity
+							});
+							$modeledLegend.show();
+						},
+						loadend : function(event) {
+							modeledHucLoadedDeferred.resolve({hasModeledStreamflow : event.object.features.length > 0});
+						},
+						scope : this
+					});
+				}
+				else {
+					modeledHucLoadedDeferred.resolve();
+				}
 			}
 			else {
 				achucLoadedDeferred.resolve();

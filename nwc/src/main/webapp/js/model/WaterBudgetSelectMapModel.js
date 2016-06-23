@@ -11,7 +11,8 @@ NWC.model.WaterBudgetSelectMapModel = NWC.model.BaseSelectMapModel.extend({
 	defaults : function() {
 		return $.extend({
 			watershedLayer : "none",
-			gageLayerOn : false
+			gageLayerOn : false,
+			modeledHucLayerOn : false
 		}, NWC.model.BaseSelectMapModel.prototype.defaults);
 	}
 });
