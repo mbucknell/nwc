@@ -53,8 +53,8 @@ NWC.util.fetchMeasuredStreamflowData = function(options) {
 				if (-999999 === value) {
 					value = Number.NaN;
 				}
-				else if (options.conversionFnc) {
-					value = options.conversionFnc(value);
+				else if (options.convertValueFnc) {
+					value = options.convertValueFnc(value);
 				}
 				dataTable.push([date, value]);
 			});

@@ -80,7 +80,7 @@ NWC.view = NWC.view || {};
 			this.featureLoadedPromise = $.Deferred();
 			$.when(hucLoadedDeferred, achucLoadedDeferred, gageLoadedDeferred, modeledHucLoadedDeferred).done(function(d1, d2, d3, d4) {
 				var result = {};
-				$.each(arguments, function(arg) {
+				$.each(arguments, function(index, arg) {
 					if (arg) {
 						$.extend(result, arg);
 					}
@@ -172,8 +172,15 @@ NWC.view = NWC.view || {};
 					hucId,
 					MODELED_HUC_STYLE);
 				this.modeledHucLayer.events.on({
+					beforefeatureadded : function(event) {
+						if (event.feature.attributes.drain_sqkm > 2000) {
+							console.log('Model results are not valid for watershed this large.');
+							return false;
+						}
+					},
 					featureadded : function(event) {
-						var $modeledLegend = self.$('.modeled-huc-legend');
+						var $modeledLegend = this.$('.modeled-huc-legend');
+						this.model.set('modeledWatershedAcres', NWC.util.Convert.squareKilometersToAcres(event.feature.attributes.drain_sqkm));
 						$modeledLegend.find('div').css({
 							backgroundColor : MODELED_HUC_STYLE.fillColor,
 							opacity : MODELED_HUC_STYLE.fillOpacity
@@ -181,13 +188,14 @@ NWC.view = NWC.view || {};
 						$modeledLegend.show();
 					},
 					loadend : function(event) {
-						modeledHucLoadedDeferred.resolve({hasModeledStreamFlow : event.object.features.length > 0});
-					}
+						modeledHucLoadedDeferred.resolve({hasModeledStreamflow : event.object.features.length > 0});
+					},
+					scope : this
 				});
 			}
 			else {
 				achucLoadedDeferred.resolve();
-				modeledHucLoadedDeferred .resolve();
+				modeledHucLoadedDeferred.resolve();
 			}
 
 			// Add the layer for the page's watershed last

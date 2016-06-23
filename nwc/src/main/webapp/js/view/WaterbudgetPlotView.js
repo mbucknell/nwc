@@ -23,6 +23,7 @@ NWC.view = NWC.view || {};
 		 *      @prop {String} gageId (optional)
 		 *      @prop {Boolean} accumulated - false indicates if this is local watershed, true indicates accumulated.
 		 *      @prop {Boolean} compare - True if this plot should use compareWatershedAcres rather than watershedAcres
+		 *      @prop {Boolean} hasModeledStreamflow - True if this huc has modeled streamflow data available.
 		 *		@prop {WaterBudgetHucPlotModel} model - Used to get the watershed acres
 		 * @returns {undefined}
 		 */
@@ -42,7 +43,7 @@ NWC.view = NWC.view || {};
 			this.compare = options.compare ? options.compare : false;
 
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
-			this.getPlotData(options.hucId, this.gageId).done(function() {
+			this.getPlotData(options.hucId, this.gageId, options.hasModeledStreamflow).done(function() {
 				self.$el.find('.download-btn-container button').prop('disabled', false);
 				self.plotData.bind(self)();
 			});
@@ -59,11 +60,12 @@ NWC.view = NWC.view || {};
 		*
 		* @param {String} huc 12 digit identifier for the hydrologic unit
 		* @param {String} gage (optional) identifier for the streamflow gage
+		* @param {Boolean} hasModeledStreamflow
 		* @returns a resolved promise when both ETA and DAYMET data has been retrieved and the dataSeriesStore updated. If
 		*      either call fails the promise will be rejected with either one or two error messages. The datasSeriesStore object will
 		*      contain the data for any successful calls
 		*/
-		getPlotData: function(huc, gage) {
+		getPlotData: function(huc, gage, hasModeledStreamflow) {
 			var self = this;
 			var deferred = $.Deferred();
 			var dataSeries = {};
@@ -88,6 +90,7 @@ NWC.view = NWC.view || {};
 				return newDateStr;
 			};
 			var streamflowDeferred;
+			var modeledStreamflowDeferred;
 
 			this.dataSeriesStore = new NWC.util.DataSeriesStore();
 
@@ -129,26 +132,27 @@ NWC.view = NWC.view || {};
 				 *	comparison type of the WaterBudgetHucDataView.
 				 */
 				if (this.compare) {
-					acres = self.model.get('compareWatershedAcres');
+					acres = this.model.get('compareWatershedAcres');
 				}
 				else {
-					acres = self.model.get('watershedAcres');
+					acres = this.model.get('watershedAcres');
 				}
 				if (0 !== acres) {
+					console.log('acres for measured streamflow is ' + acres);
 					streamflowDeferred = $.Deferred();
 					getDataDeferreds.push(streamflowDeferred);
 					NWC.util.fetchMeasuredStreamflowData({
 						gage : gage,
 						startDate : '1838-01-01',
 						convertDateStrFnc : convertTimeToDateStr,
-						conversionFnc : convertCfsToMmd
+						convertValueFnc : convertCfsToMmd
 					})
 						.done(function(dataTable) {
 							var thisDataSeries = NWC.util.DataSeries.newSeries();
 							thisDataSeries.data = dataTable;
 							thisDataSeries.metadata.seriesLabels.push({
 								seriesName : 'Gaged Streamflow (Per Unit Drainage Area)',
-								seriesUnits : NWC.util.Units.usCustomary.streamflow.daily
+								seriesUnits : ''
 							});
 							dataSeries.nwisStreamFlowData = thisDataSeries;
 							streamflowDeferred.resolve();
@@ -161,6 +165,35 @@ NWC.view = NWC.view || {};
 				}
 			}
 
+			if (hasModeledStreamflow) {
+				acres = this.model.get('modeledWatershedAcres');
+
+				if (acres !== 0 ) {
+					console.log('Acres for modeled streamflow is ' + acres);
+					modeledStreamflowDeferred = $.Deferred();
+					getDataDeferreds.push(modeledStreamflowDeferred);
+					NWC.util.fetchModeledStreamflowData({
+						hucId : huc,
+						convertDateStrFnc : convertTimeToDateStr,
+						convertValueFnc : convertCfsToMmd
+					})
+						.done(function(dataTable) {
+							var thisDataSeries = NWC.util.DataSeries.newSeries();
+							thisDataSeries.data = dataTable;
+							thisDataSeries.metadata.seriesLabels.push({
+								seriesName : 'Modeled Streamflow (Per Unit Drainage Area)',
+								seriesUnits : ''
+							});
+							dataSeries.modeledStreamflowData = thisDataSeries;
+							modeledStreamflowDeferred.resolve();
+						})
+						.fail(function() {
+							var errorMessage = 'Error retrieving time series data for modeledStreamflowData';
+							alert(errorMessage);
+							modeledStreamflowDeferred.reject(errorMessage);
+						});
+				}
+			}
 
 			$.when.apply(null, getDataDeferreds).done(function() {
 				self.dataSeriesStore.updateHucSeries(dataSeries);

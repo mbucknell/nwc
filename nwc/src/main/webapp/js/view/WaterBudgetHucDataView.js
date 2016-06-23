@@ -92,6 +92,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				compare : false,
 				hucId : self.hucId,
 				gageId : gageId,
+				hasModeledStreamflow : (Object.has(status, 'hasModeledStreamflow')) ? status.hasModeledStreamflow : false,
 				el : $hucPlotContainer,
 				model : self.hucPlotModel
 			});
@@ -113,10 +114,11 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				model : self.hucPlotModel
 			});
 			readyToLoadComparePlotView = accumulated ? this.compareHucInsetMapView.featureLoadedPromise : $.Deferred().resolve();
-			readyToLoadComparePlotView.done(function() {
+			readyToLoadComparePlotView.done(function(status) {
 				self.comparePlotView = new NWC.view.WaterbudgetPlotView({
 					accumulated : accumulated,
 					compare : true,
+					hasModeledStreamflow : (Object.has(status, 'hasModeledStreamflow')) ? status.hasModeledStreamflow : false,
 					hucId : compareHucId,
 					gageId : compareGageId,
 					el : self.$('#compare-plotview-div'),
