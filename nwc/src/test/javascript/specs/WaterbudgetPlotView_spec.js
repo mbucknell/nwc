@@ -45,7 +45,7 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 			model : model
 		});
 		expect(NWC.view.BaseView.prototype.initialize).toHaveBeenCalled();
-		expect(NWC.view.WaterbudgetPlotView.prototype.getPlotData).toHaveBeenCalledWith('123456', null);
+		expect(NWC.view.WaterbudgetPlotView.prototype.getPlotData).toHaveBeenCalledWith('123456', null, undefined);
 	});
 
 	it('Expects that $.ajax is called for each data source', function() {

@@ -1,3 +1,6 @@
+/* global expect */
+/* global NWC */
+
 describe('DataSeriesStore', function(){
     var DataSeries = NWC.util.DataSeries;
     var DataSeriesStore = new NWC.util.DataSeriesStore();
@@ -48,16 +51,10 @@ describe('DataSeriesStore', function(){
     var dss = DataSeriesStore;
     dss.updateHucSeries(nameToSeriesMap);
     //give functions inside describe block access to the test data via closure
-    var dayMetIndex = DataSeriesStore.getIndexOfColumnNamed('dayMet');
-    var etaIndex = DataSeriesStore.getIndexOfColumnNamed('eta');
-    var dateIndex = DataSeriesStore.getIndexOfColumnNamed('date');
+	var dateIndex = 0;
+	var dayMetIndex = 1;
+    var etaIndex = 2;
 
-    beforeEach(function (){
-        dss = dss;  //TODO[Sibley] Weird Assignment. Why are we doing this?
-        nameToSeriesMap=nameToSeriesMap;
-        dateRangeStart = dateRangeStart;
-        dateRangeEnd = dateRangeEnd;
-    });
     describe('DataSeriesStore.updateYearlyHucSeries', function(){
         it('should include the correct number of years', function(){
             expect(dss.yearly.data.length).toBe(yearsInDateRange-1);
@@ -65,14 +62,12 @@ describe('DataSeriesStore', function(){
         it('should correctly sum all the daily daymet values for a year and place them in the daymet value for that year', function(){
             //presuming all days in the test data have the same value and not a leap year.
             var sum = dayMetValue * 365;
-            var dayMetIndex = DataSeriesStore.getIndexOfColumnNamed('dayMet');
             var secondYearsAccumulatedDaymet = dss.yearly.data[etaOffsetInMonths][dayMetIndex];
             expect(secondYearsAccumulatedDaymet).toBe(sum);
         });
         it('should correctly sum all the daily daymet values for a leap year and place them in the daymet value for that year', function(){
             //presuming all days in the test data have the same value and is a leap year.
             var sum = dayMetValue * 366;
-            var dayMetIndex = DataSeriesStore.getIndexOfColumnNamed('dayMet');
             var firstYearsAccumulatedDaymet = dss.yearly.data[0][dayMetIndex];
             expect(firstYearsAccumulatedDaymet).toBe(sum);
         });
@@ -89,7 +84,6 @@ describe('DataSeriesStore', function(){
         it('should correctly sum all the daily daymet values in a month and place them in the daymet value for that month', function(){
             //presuming all days in the test data have the same value.
             var sum = dayMetValue * etaDateRangeStart.daysInMonth();
-            var dayMetIndex = DataSeriesStore.getIndexOfColumnNamed('dayMet');
             var secondMonthsAccumulatedDaymet = dss.monthly.data[etaOffsetInMonths][dayMetIndex];
             expect(secondMonthsAccumulatedDaymet).toBe(sum);
         });
@@ -119,13 +113,13 @@ describe('DataSeriesStore', function(){
                 return isNaN(etaForDay);
             };
             firstMonthsDays.each(function(dayRow, index){
-               expect(etaForADayIsNaN(dayRow)).toBe(true); 
+               expect(etaForADayIsNaN(dayRow)).toBe(true);
             });
         });
         var numDaysInFirstMonthWithEtaData = etaDateRangeStart.daysInMonth();
         var numDaysBetweenStartOfDataAndStartOfEtaData = etaDateRangeStart.daysSince(dateRangeStart);
 
-        it('if eta data is present for a month, it should divide the monthly eta value ' + 
+        it('if eta data is present for a month, it should divide the monthly eta value ' +
             'by the number of days in the month and place that value in each day-row of the month', function(){
 
            var expectedDailyEtaValue = etaDefaultValue / numDaysInFirstMonthWithEtaData;
@@ -143,7 +137,7 @@ describe('DataSeriesStore', function(){
             //test before the daymet values start
             var numDaysInMonthBeforeEtaData = dateRangeStart.daysInMonth();
             var monthBeforeEtaData = dss.daily.data.from(0).to(numDaysInMonthBeforeEtaData);
-            
+
             monthBeforeEtaData.each(assertNanEta);
             //and test after the daymet values end
             var numDaysInMonthAfterEtaData = Date.create(etaDateRangeStart).utc().addMonths(1).daysInMonth();
