@@ -37,6 +37,7 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 		expect(view.gageLayer).toBeDefined();
 		expect(addLayersSpy).toHaveBeenCalledWith(_.pluck(view.hucLayers, 'layer'));
 		expect(addLayerSpy).toHaveBeenCalledWith(view.gageLayer);
+		expect(addLayerSpy).toHaveBeenCalledWith(view.modeledHucLayer);
 		expect(view.selectControl).toBeDefined();
 		expect(view.context.hucId).not.toBeDefined();
 	});
@@ -62,7 +63,6 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 	});
 
 	it('Expects that updates to the model\'s gageLayer attribute updates the view', function() {
-
 		view.model.set('gageLayerOn', true);
 		expect(view.gageLayer.getVisibility()).toBe(true);
 
@@ -71,12 +71,27 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 	});
 
 	it('Expect that event handler calls to toggleGageLayer update the models\'s gageLayer attribute', function() {
-
 		view.model.set('gageLayerOn', false);
 		view.toggleGageVisibility();
 		expect(view.model.get('gageLayerOn')).toBe(true);
 		view.model.set('gageLayerOn', false);
 		expect(view.model.get('gageLayerOn')).toBe(false);
+	});
+
+	it('Expects that updates to the model\'s modeledHucLayerOn attribute updates the view', function() {
+		view.model.set('modeledHucLayerOn', true);
+		expect(view.modeledHucLayer.getVisibility()).toBe(true);
+
+		view.model.set('modeledHucLayerOn', false);
+		expect(view.modeledHucLayer.getVisibility()).toBe(false);
+	});
+
+	it('Expect that event handler calls to toggleModeledHucLayer update the models\'s modeledHucLayerOn attribute', function() {
+		view.model.set('modeledHucLayerOn', false);
+		view.toggleModeledHucVisibility();
+		expect(view.model.get('modeledHucLayerOn')).toBe(true);
+		view.model.set('modeledHucLayerOn', false);
+		expect(view.model.get('modeledHucLayerOn')).toBe(false);
 	});
 
 });

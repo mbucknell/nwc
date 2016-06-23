@@ -43,7 +43,7 @@ describe('DataSeriesStore', function(){
     etaDataSeries.data = etaData;
     etaDataSeries.metadata.seriesLabels.push('mm ppt');
 
-    var nameToSeriesMap = {
+	var nameToSeriesMap = {
         dayMet: dayMetDataSeries,
         eta: etaDataSeries
     };
@@ -54,6 +54,7 @@ describe('DataSeriesStore', function(){
 	var dateIndex = 0;
 	var dayMetIndex = 1;
     var etaIndex = 2;
+	var nwisIndex = 3;
 
     describe('DataSeriesStore.updateYearlyHucSeries', function(){
         it('should include the correct number of years', function(){
