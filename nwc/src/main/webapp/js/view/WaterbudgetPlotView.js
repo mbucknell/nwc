@@ -174,7 +174,6 @@ NWC.view = NWC.view || {};
 					getDataDeferreds.push(modeledStreamflowDeferred);
 					NWC.util.fetchModeledStreamflowData({
 						hucId : huc,
-						convertDateStrFnc : convertTimeToDateStr,
 						convertValueFnc : convertCfsToMmd
 					})
 						.done(function(dataTable) {

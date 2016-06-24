@@ -9,7 +9,7 @@ NWC.util = NWC.util || {};
 /*
  * @param {Object} options
  *		@prop {String} hucId - ID of huc that we want modeled streamflow data
- *		@prop {Function} convertDateStrFnc (optional) - function takes the date string and returns an object representing
+ *		@prop {Function} convertDateStrFnc (optional) - function takes the date string (YYYY-MM-DD) and returns an object representing
  *			the date. If not passed in the string is passed back as it is read from the service.
  *		@prop {Function} convertValueFnc (optional) - function takes a number and returns a number.
  *			Will be applied to each data value returned from the service. If not defined, the value is passed back as is

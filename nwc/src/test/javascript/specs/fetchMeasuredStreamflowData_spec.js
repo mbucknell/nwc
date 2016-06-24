@@ -5,6 +5,7 @@
 /* global CONFIG */
 
 describe('fetchMeasuredStreamflowData', function() {
+	"use strict";
 	var fakeServer;
 	var successSpy, failSpy;
 
