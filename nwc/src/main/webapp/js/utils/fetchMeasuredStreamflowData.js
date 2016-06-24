@@ -17,7 +17,7 @@ NWC.util = NWC.util || {};
  *			Will be applied to each data value returned from the service. If not defined, the value is passed back as is
  *	@returns Jquery.Promise
  *		@resolve - returns an array of measured streamflow. Each element in the array is a two element
- *			array where the first element is the UTC date string, the second element is the data. Note
+ *			array where the first element is the UTC date string, the second element is a numeric value. Note
  *			that the array could be empty.
  *		@reject - Returns a string describing the error.
  */
