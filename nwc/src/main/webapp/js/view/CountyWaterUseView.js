@@ -159,7 +159,7 @@ NWC.view = NWC.view || {};
 			var chartLegendDivEl = this.$el.find('#waterUsageLegend');
 
 			var plotNormalization = this.countyPlotModel.get('plotType');
-			var measurementSystem =  this.countyPlotModel.get('units');;
+			var measurementSystem =  this.countyPlotModel.get('units');
 			var plotTimeDensity  = 'daily';
 			var normalizationFn = NWC.util.Convert.noop;
 

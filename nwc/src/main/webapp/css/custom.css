@@ -199,6 +199,10 @@ textarea[readonly] {
 	height: 55px;
 }
 
+.download-upstream-eta-container span, .download-upstream-daymet-container span {
+	display: none;
+}
+
 .streamflow-plot-container
 #gageList tr.gage-selected {
     background-color: #FFCC00;

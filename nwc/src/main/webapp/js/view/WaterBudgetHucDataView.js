@@ -40,13 +40,13 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		var $plotContainer;
 
 		var accumulated = options.accumulated ? options.accumulated : false;
-		var compareHucId = options.compareHucId ? options.compareHucId :'';
+		var compareHucId = options.compareHucId ? options.compareHucId : '';
 		var fips = options.fips ? options.fips : '';
 
 		var watershedGages = NWC.config.get('watershedGages');
 		var gageId = accumulated ? watershedGages.getGageId(options.hucId) : '';
 		var compareGageId = compareHucId ? watershedGages.getGageId(compareHucId) : '';
-		var $hucInsetMapContainer, $hucPlotContainer;
+		var $hucInsetMapContainer, $hucPlotContainer, $hucDownloadContainer;
 
 		// These will be promises that will be resolved when it's ok to initialize the plot view
 		var readyToLoadPlotView, readyToLoadComparePlotView;
@@ -74,6 +74,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		$plotContainer = this.$('#huc-plot-container');
 		$hucInsetMapContainer = (compareHucId) ? this.$('.huc-inset-map-div') : this.$('.huc-inset-map-container');
 		$hucPlotContainer = (compareHucId) ? this.$('#huc-plotview-div') : this.$('#huc-plot-container');
+		$hucDownloadContainer = (compareHucId) ? this.$('.download-container') : this.$('.huc1-download-container');
 
 		// Render the huc inset map view and plotView
 		this.hucInsetMapView = new NWC.view.HucInsetMapView({
@@ -85,6 +86,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			model : this.hucPlotModel
 		});
 
+
 		readyToLoadPlotView = accumulated ? this.hucInsetMapView.featureLoadedPromise : $.Deferred().resolve();
 		readyToLoadPlotView.done(function(status) {
 			self.plotView = new NWC.view.WaterbudgetPlotView({
@@ -92,10 +94,18 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				compare : false,
 				hucId : self.hucId,
 				gageId : gageId,
-				hasModeledStreamflow : (Object.has(status, 'hasModeledStreamflow')) ? status.hasModeledStreamflow : false,
 				el : $hucPlotContainer,
 				model : self.hucPlotModel
 			});
+
+			if (this.hucId.length === 12) {
+				self.downloadUpstreamView = new WaterbudgetDownloadUpstreamView({
+					el : $hucDownloadContainer,
+					hucdId : self.hucId,
+					model : self.model.get('hucData')
+				});
+		};
+
 		});
 
 		this.hucInsetMapView.featureLoadedPromise.done(function() {
@@ -103,6 +113,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			self.$('#counties-button').prop('disabled', accumulated);
 			self.$('#compare-hucs-button').prop('disabled', false);
 		});
+
 
 		if (compareHucId) {
 			this.compareHucInsetMapView = new NWC.view.HucInsetMapView({
@@ -113,6 +124,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				gageId : compareGageId,
 				model : self.hucPlotModel
 			});
+
 			readyToLoadComparePlotView = accumulated ? this.compareHucInsetMapView.featureLoadedPromise : $.Deferred().resolve();
 			readyToLoadComparePlotView.done(function(status) {
 				self.comparePlotView = new NWC.view.WaterbudgetPlotView({
@@ -124,6 +136,14 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 					el : self.$('#compare-plotview-div'),
 					model : self.hucPlotModel
 				});
+
+				if (compareHucId.length === 12) {
+					this.compareDownloadUpstreamView = new WaterbudgetDownloadUpstreamView({
+						el : this.$('.huc2-download-container'),
+						hucId : compareHucId,
+						model : this.model.get('compareHucData')
+					});
+				}
 			});
 		}
 

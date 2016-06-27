@@ -16,22 +16,22 @@ NWC.view = NWC.view || {};
 		},
 
 		/*
+		 * @constructs
 		 * @param {Object} options
 		 *      @prop {String} hucId - Id of the huc whose waterbudget data is plotted.
 		 *      @prop {Jquery element} el - Jquery element where this view should be rendered
-		 *      @prop {WaterBudgetHucPlotModel} model - Used to set the units and timeScaled of the plot.t
+		 *      @prop {WaterBudgetHucPlotModel} model - Used to set the units and timeScaled of the plot.
 		 *      @prop {String} gageId (optional)
 		 *      @prop {Boolean} accumulated - false indicates if this is local watershed, true indicates accumulated.
-		 *      @prop {Boolean} compare - True if this plot should use compareWatershedAcres rather than watershedAcres
-		 *      @prop {Boolean} hasModeledStreamflow - True if this huc has modeled streamflow data available.
+		 *      @prop {Boolean} compare - True if this plot represents the compare huc
 		 *		@prop {WaterBudgetHucPlotModel} model - Used to get the watershed acres
-		 * @returns {undefined}
 		 */
 		initialize : function(options) {
 			var self = this;
 			this.hucId = options.hucId;
 			this.gageId = options.gageId ? options.gageId : null;
 			this.accumulated = options.accumulated ? options.accumulated : false;
+			this.dataModel = options.compare ? this.model.get('compareHucData') : this.model.get('hucData');
 
 			if (this.accumulated) {
 				this.watershedVariables = NWC.config.get('accumulated').attributes.variables;
@@ -43,14 +43,16 @@ NWC.view = NWC.view || {};
 			this.compare = options.compare ? options.compare : false;
 
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
-			this.getPlotData(options.hucId, this.gageId, options.hasModeledStreamflow).done(function() {
+			this.getPlotData(options.hucId, this.gageId).done(function() {
 				self.$el.find('.download-btn-container button').prop('disabled', false);
 				self.plotData.bind(self)();
 			});
 
 			// Set up model change events
-			this.listenTo(this.model, 'change', this.plotData);
+			this.listenTo(this.model, 'change:units', this.plotData);
+			this.listenTo(this.model, 'change:timeScale', this.plotData);
 		},
+
 
 		/**
 		* This makes a Web service call to get huc data and transform it into a data series object.
@@ -60,12 +62,13 @@ NWC.view = NWC.view || {};
 		*
 		* @param {String} huc 12 digit identifier for the hydrologic unit
 		* @param {String} gage (optional) identifier for the streamflow gage
-		* @param {Boolean} hasModeledStreamflow
-		* @returns a resolved promise when both ETA and DAYMET data has been retrieved and the dataSeriesStore updated. If
-		*      either call fails the promise will be rejected with either one or two error messages. The datasSeriesStore object will
-		*      contain the data for any successful calls
+		* @returns {Jquery.promise}
+		*		@resolve- when both ETA, daymet, and any streamflow data data has been retrieved.
+		*			The model now contains the property dataSeriesStore which contains the data as a NWC.util.DataSeriesStore
+		*			object.
+		*		@reject - if any of the data fetched can not be retrieved.
 		*/
-		getPlotData: function(huc, gage, hasModeledStreamflow) {
+		getPlotData: function(huc, gage) {
 			var self = this;
 			var deferred = $.Deferred();
 			var dataSeries = {};
@@ -91,8 +94,6 @@ NWC.view = NWC.view || {};
 			};
 			var streamflowDeferred;
 			var modeledStreamflowDeferred;
-
-			this.dataSeriesStore = new NWC.util.DataSeriesStore();
 
 			Object.keys(sosSources, function (sourceId, source) {
 				var d = $.Deferred();
@@ -127,16 +128,10 @@ NWC.view = NWC.view || {};
 			if (gage) {
 				/*
 				 *	Since there is a gage, the value for related acres will be
-				 *	retrieved from the model.  So, set the model variable
-				 *	for acres depending on whether or not the instance is for a
-				 *	comparison type of the WaterBudgetHucDataView.
+				 *	retrieved from the model.
 				 */
-				if (this.compare) {
-					acres = this.model.get('compareWatershedAcres');
-				}
-				else {
-					acres = this.model.get('watershedAcres');
-				}
+				acres = this.dataModel.get('watershedAcres');
+
 				if (0 !== acres) {
 					console.log('acres for measured streamflow is ' + acres);
 					streamflowDeferred = $.Deferred();
@@ -165,8 +160,8 @@ NWC.view = NWC.view || {};
 				}
 			}
 
-			if (hasModeledStreamflow) {
-				acres = this.model.get('modeledWatershedAcres');
+			if (this.dataModel.has('modeledWatershedAcres')) {
+				acres = this.dataModel.get('modeledWatershedAcres');
 
 				if (acres !== 0 ) {
 					console.log('Acres for modeled streamflow is ' + acres);
@@ -195,8 +190,11 @@ NWC.view = NWC.view || {};
 			}
 
 			$.when.apply(null, getDataDeferreds).done(function() {
-				self.dataSeriesStore.updateHucSeries(dataSeries);
-				deferred.resolve(dataSeries);
+				var dataSeriesStore = new NWC.util.DataSeriesStore();
+				dataSeriesStore.updateHucSeries(dataSeries);
+				self.dataModel.set('dataSeriesStore', dataSeriesStore);
+
+				deferred.resolve();
 			}).fail(function() {
 				deferred.reject();
 			});
@@ -214,21 +212,25 @@ NWC.view = NWC.view || {};
 			var plotTimeDensity  = this.model.get('timeScale');
 			var measurementSystem =  this.model.get('units');
 
-			var values = this.dataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
-			var labels = this.dataSeriesStore[plotTimeDensity].getSeriesLabelsAs(measurementSystem, normalization, plotTimeDensity);
-			var ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
-			var title = ((this.accumulated) ? 'Total Accumulated' : 'Local Incremental') + ' HUC ' + this.hucId;
+			var values, labels, ylabel, title;
 
-			NWC.util.Plotter.getPlot(this.$el.find('.waterbudget-plot'), this.$el.find('.waterbudget-legend'), values, labels, ylabel, title);
+			if (this.dataModel.has('dataSeriesStore')) {
+				values = this.dataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
+				labels = this.dataSeriesStore[plotTimeDensity].getSeriesLabelsAs(measurementSystem, normalization, plotTimeDensity);
+				ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
+				title = ((this.accumulated) ? 'Total Accumulated' : 'Local Incremental') + ' HUC ' + this.hucId;
+
+				NWC.util.Plotter.getPlot(this.$el.find('.waterbudget-plot'), this.$el.find('.waterbudget-legend'), values, labels, ylabel, title);
+			}
 		},
 
 		downloadEvapotranspiration : function() {
-			var blob = new Blob([this.dataSeriesStore.eta.toCSV()], {type:'text/csv'});
+			var blob = new Blob([this.dataModel.get('dataSeriesStore').eta.toCSV()], {type:'text/csv'});
 			saveAs(blob, this.getHucFilename('eta'));
 		},
 
 		downloadPrecipitation : function() {
-			var blob = new Blob([this.dataSeriesStore.dayMet.toCSV()], {type:'text/csv'});
+			var blob = new Blob([this.dataModel.get('dataSeriesStore').dayMet.toCSV()], {type:'text/csv'});
 			saveAs(blob, this.getHucFilename('dayMet'));
 		},
 
