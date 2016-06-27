@@ -133,14 +133,6 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		});
 	});
 
-	it('Expects calling rendering to call the map\s render method and to create a StreamflowPlotView', function() {
-		testView = new NWC.view.StreamflowStatsGageDataView(options);
-		testView.render();
-		expect(NWC.view.BaseView.prototype.render).toHaveBeenCalled();
-		expect(renderSpy).toHaveBeenCalled();
-		expect(NWC.view.StreamflowPlotView).toHaveBeenCalled();
-	});
-
 	it('Expects getStats to call getSiteStats and resolves the deferred when data is retrieved', function() {
 			testView = new NWC.view.StreamflowStatsGageDataView(options);
 			spyOn(NWC.util.streamStats, 'getSiteStats');
@@ -172,7 +164,7 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		expect(fname).toMatch(options.gageId)
 	});
 
-	it('Expects a call to plotStreamFlowData', function() {
+	it('Expects a call to plotStreamFlowData to create, render and plot the flow data view, twice', function() {
 		var d = $.Deferred();
 		spyOn(NWC.view.StreamflowStatsGageDataView.prototype, '_retrieveNWISData').andCallFake(function() {
 			return d;
@@ -185,6 +177,7 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		testView.render();
 		testView.plotStreamFlowData(eventSpy);
 		expect(testView.streamflowPlotViewLeft.plotStreamflowData).toHaveBeenCalled();
+		expect(testView.streamflowPlotViewRight.plotStreamflowData).toHaveBeenCalled();
 	});
 
 });

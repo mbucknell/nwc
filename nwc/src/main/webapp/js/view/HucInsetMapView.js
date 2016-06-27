@@ -18,6 +18,13 @@ NWC.view = NWC.view || {};
 		strokeOpacity : 1,
 		fill: false
 	};
+	var MODELED_HUC_STYLE = {
+		strokeWidth : 1,
+		strokeColor : '#000000',
+		strokeOpacity : 0,
+		fillOpacity : .1,
+		fillColor : '#000000'
+	};
 
 
 	NWC.view.HucInsetMapView = NWC.view.BaseView.extend({
@@ -44,10 +51,12 @@ NWC.view = NWC.view || {};
 
 			var watershedConfig = NWC.config.getWatershed(options.hucId);
 			var acWatershedConfig = NWC.config.get('accumulated').attributes;
+			var hucStreamflowConfig = NWC.config.get('streamflow').huc12.attributes;
 			var streamflowGageConfig;
 
 			var hucLoadedDeferred = $.Deferred();
 			var achucLoadedDeferred = $.Deferred();
+			var modeledHucLoadedDeferred = $.Deferred();
 			var gageLoadedDeferred = $.Deferred();
 
 			var baseLayer = NWC.util.mapUtils.createWorldStreetMapLayer();
@@ -68,7 +77,16 @@ NWC.view = NWC.view || {};
 			this.map = NWC.util.mapUtils.createMap([baseLayer], mapControls);
 
 			// Load vector layers
-			this.featureLoadedPromise = $.when(hucLoadedDeferred, achucLoadedDeferred, gageLoadedDeferred);
+			this.featureLoadedPromise = $.Deferred();
+			$.when(hucLoadedDeferred, achucLoadedDeferred, gageLoadedDeferred, modeledHucLoadedDeferred).done(function(d1, d2, d3, d4) {
+				var result = {};
+				$.each(arguments, function(index, arg) {
+					if (arg) {
+						$.extend(result, arg);
+					}
+				});
+				self.featureLoadedPromise.resolve(result);
+			});
 
 			if (gageId) {
 				streamflowGageConfig = NWC.config.get('streamflow').gage.attributes;
@@ -147,12 +165,48 @@ NWC.view = NWC.view || {};
 					},
 					scope : this
 				});
+
+				if (accumulated) {
+					this.modeledHucLayer = NWC.util.mapUtils.createHucSEBasinFeatureLayer(
+						hucStreamflowConfig.namespace,
+						hucStreamflowConfig.accumulatedLayerName,
+						hucId,
+						MODELED_HUC_STYLE);
+					this.modeledHucLayer.events.on({
+						beforefeatureadded : function(event) {
+							if (event.feature.attributes.drain_sqkm > 2000) {
+								console.log('Model results are not valid for watershed this large.');
+								return false;
+							}
+						},
+						featureadded : function(event) {
+							var $modeledLegend = this.$('.modeled-huc-legend');
+							this.model.set('modeledWatershedAcres', NWC.util.Convert.squareKilometersToAcres(event.feature.attributes.drain_sqkm));
+							$modeledLegend.find('div').css({
+								backgroundColor : MODELED_HUC_STYLE.fillColor,
+								opacity : MODELED_HUC_STYLE.fillOpacity
+							});
+							$modeledLegend.show();
+						},
+						loadend : function(event) {
+							modeledHucLoadedDeferred.resolve({hasModeledStreamflow : event.object.features.length > 0});
+						},
+						scope : this
+					});
+				}
+				else {
+					modeledHucLoadedDeferred.resolve();
+				}
 			}
 			else {
 				achucLoadedDeferred.resolve();
+				modeledHucLoadedDeferred.resolve();
 			}
 
 			// Add the layer for the page's watershed last
+			if (this.modeledHucLayer) {
+				this.map.addLayer(this.modeledHucLayer);
+			}
 			if (accumulated && (this.achucLayer)) {
 				this.map.addLayer(this.hucLayer);
 				this.map.addLayer(this.achucLayer);

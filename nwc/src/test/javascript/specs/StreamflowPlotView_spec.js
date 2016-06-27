@@ -5,11 +5,10 @@
 /*global $*/
 
 describe('NWC.view.StreamflowPlotView', function() {
-	var deferred, testView, $testDiv, getPromise;
+	var fetchDeferred, testView, $testDiv, getPromise;
 
 	beforeEach(function() {
-		deferred = $.Deferred();
-		getPromise = jasmine.createSpy('getPromiseSpy').andReturn(deferred.promise());
+		fetchDeferred = $.Deferred();
 
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
 		spyOn(NWC.util.Plotter, 'getPlot');
@@ -21,7 +20,7 @@ describe('NWC.view.StreamflowPlotView', function() {
 		$testDiv.append(html);
 		testView = new NWC.view.StreamflowPlotView({
 			el : $testDiv,
-			getDataSeriesPromise : getPromise
+			fetchDataSeriesPromise : fetchDeferred
 		});
 	});
 
@@ -29,21 +28,20 @@ describe('NWC.view.StreamflowPlotView', function() {
 		$testDiv.remove();
 	});
 
-	it('Expects that when plotStreamflowData is called, the loading indicator is shown and getPromise called', function() {
+	it('Expects that when plotStreamflowData is called, the loading indicator is shown', function() {
 		testView.plotStreamflowData('this is a title');
 		expect($('.plot-loading-indicator').is(':visible')).toBe(true);
 		expect($('.plot-div').is(':visible')).toBe(false);
-		expect(getPromise).toHaveBeenCalled();
 	});
 
-	it('Expects than if the getPromise resolves the plotting function is called and appropriate dom elements are shown/hidden', function() {
+	it('Expects than if the fetchDeferred is resolved the plotting function is called and appropriate dom elements are shown/hidden', function() {
 		var ds = new NWC.util.DataSeries.newSeries();
 		var p = testView.plotStreamflowData('this is a title');
 		var resolveSpy = jasmine.createSpy('resolveSpy');
 		var errorSpy = jasmine.createSpy('errorSpy');
 		p.done(resolveSpy).fail(errorSpy);
 
-		deferred.resolve(ds);
+		fetchDeferred.resolve(ds);
 
 		expect(resolveSpy).toHaveBeenCalledWith(ds);
 		expect(errorSpy).not.toHaveBeenCalled();
@@ -55,13 +53,13 @@ describe('NWC.view.StreamflowPlotView', function() {
 		expect(args[5]).toEqual('this is a title');
 	});
 
-	it('Expects that if the getPromise is rejected the plotting function is not called and the appropriate dom elements are shown/hidden', function() {
+	it('Expects that if the fetchDeferred is rejected the plotting function is not called and the appropriate dom elements are shown/hidden', function() {
 		var p = testView.plotStreamflowData('this is a title');
 		var resolveSpy = jasmine.createSpy('resolveSpy');
 		var errorSpy = jasmine.createSpy('errorSpy');
 		p.done(resolveSpy).fail(errorSpy);
 
-		deferred.reject('An error message');
+		fetchDeferred.reject('An error message');
 		expect(resolveSpy).not.toHaveBeenCalled();
 		expect(errorSpy).toHaveBeenCalledWith(['An error message']);
 

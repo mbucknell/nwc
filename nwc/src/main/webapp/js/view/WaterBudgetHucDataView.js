@@ -30,7 +30,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 	 * @param {Object} options
 	 *     @prop {Jquery.Element} el - Container where this view will be rendered
 	 *     @prop {Backbone.Router} router
-	 *     @prop {Boolean} accumulated - false indicates if this is local watershed, true indicates accumulated.
+	 *     @prop {Boolean} accumulated - false indicates this is local watershed, true indicates accumulated.
 	 *     @prop {String} hucId - Id of the huc for which information should be shown.
 	 *     @prop {String} compareHucId (optional) - Huc Id used for second plot to compare to first.
 	 *     @prop {String} fips (optional) - If specified, water use data for the county with fips will be shown.
@@ -86,12 +86,13 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		});
 
 		readyToLoadPlotView = accumulated ? this.hucInsetMapView.featureLoadedPromise : $.Deferred().resolve();
-		readyToLoadPlotView.done(function() {
+		readyToLoadPlotView.done(function(status) {
 			self.plotView = new NWC.view.WaterbudgetPlotView({
 				accumulated : accumulated,
 				compare : false,
 				hucId : self.hucId,
 				gageId : gageId,
+				hasModeledStreamflow : (Object.has(status, 'hasModeledStreamflow')) ? status.hasModeledStreamflow : false,
 				el : $hucPlotContainer,
 				model : self.hucPlotModel
 			});
@@ -113,10 +114,11 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				model : self.hucPlotModel
 			});
 			readyToLoadComparePlotView = accumulated ? this.compareHucInsetMapView.featureLoadedPromise : $.Deferred().resolve();
-			readyToLoadComparePlotView.done(function() {
+			readyToLoadComparePlotView.done(function(status) {
 				self.comparePlotView = new NWC.view.WaterbudgetPlotView({
 					accumulated : accumulated,
 					compare : true,
+					hasModeledStreamflow : (Object.has(status, 'hasModeledStreamflow')) ? status.hasModeledStreamflow : false,
 					hucId : compareHucId,
 					gageId : compareGageId,
 					el : self.$('#compare-plotview-div'),

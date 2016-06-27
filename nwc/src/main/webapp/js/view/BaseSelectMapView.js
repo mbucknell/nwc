@@ -199,8 +199,9 @@ NWC.view = NWC.view || {};
 		},
 
 		legendUrl : function(layer, style) {
+			var thisStyle = (style) ? style : '';
 			return CONFIG.endpoint.geoserver + 'wms?request=GetLegendGraphic&format=image/png&width=20&height=20' +
-				"&layer=" + layer + "&style=" + style +
+				"&layer=" + layer + "&style=" + thisStyle +
 				"&legend_options=forceLabels:on;fontName:Times New Roman;fontAntiAliasing:true;fontColor:0x000033;fontSize:8px;bgColor:0xFFFFEE;dpi:100";
 		}
 	});

@@ -181,7 +181,7 @@ NWC.util.mapUtils = (function () {
 		return hucLayer;
 	};
 
-	that.createHucSEBasinFeatureLayer = function(namespace, layerName, huc12) {
+	that.createHucSEBasinFeatureLayer = function(namespace, layerName, huc12, style) {
 		var filter = new OpenLayers.Filter.Comparison({
 			type: OpenLayers.Filter.Comparison.EQUAL_TO,
 			property: "huc12",
@@ -197,16 +197,16 @@ NWC.util.mapUtils = (function () {
 			srsName : "EPSG:900913"
 		});
 
+		var layerStyle = style ? style : {
+				strokeWidth: 2,
+				strokeColor: "black",
+				fill : false
+			};
+
 		var hucLayer = new OpenLayers.Layer.Vector("WFS", {
 			strategies: [new OpenLayers.Strategy.Fixed()],
 			protocol: protocol,
-			styleMap: new OpenLayers.StyleMap({
-				strokeWidth: 2,
-				strokeColor: "black",
-				fillOpacity: 0,
-				graphicOpacity: 1,
-				fill: false
-			}),
+			style: layerStyle,
 			filter:filter
 		});
 		return hucLayer;
