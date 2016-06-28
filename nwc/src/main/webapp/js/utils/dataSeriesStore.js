@@ -551,8 +551,8 @@ NWC.util.DataSeriesStore = function () {
 		var result = undefined;
 		if (self.dayMet.data.length > 0) {
 			result =  {
-				start : Date.create(self.dayMet.data[0][0].utc()),
-				end : Date.create(self.dayMet[self.dayMet.data.length - 1][0])
+				start : Date.create(self.dayMet.data[0][0]).utc(),
+				end : Date.create(self.dayMet.data[self.dayMet.data.length - 1][0]).utc()
 			};
 		}
 		return result;

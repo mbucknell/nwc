@@ -14,16 +14,15 @@ NWC.view = NWC.view || {};
 	 * @param {Array of String} upstreamHucs - representing the upstream hucs
 	 * @returns {Jquery Promise} - See NWC.util.executeFeatureTSCollection
 	 */
-	var executeFeatureTSCollection = function(dataModel, observedProperty) {
-		var dateRange = dataModel.get('dataSeriesStore');
+	var executeFeatureTSCollection = function(dataModel, datasetURI, observedProperty) {
+		var dateRange = dataModel.get('dataSeriesStore').dateRange();
 		return NWC.util.executeFeatureTSCollection({
 			startTime : dateRange.start.toISOString(),
 			endTime : dateRange.end.toISOString(),
-			threddsEndpoint : CONFIG.endpoint.thredds,
-			datasetURI : 'HUC12_data',
+			threddsEndpoint : CONFIG.endpoint.direct.thredds,
+			datasetURI : datasetURI,
 			observedProperty : observedProperty,
-			featureAttributesName : 'huc12',
-			featureNamespace : 'http://gov.usgs.cida.WBD',
+			featureNamespace : 'http://gov.usgs.cida/WBD',
 			featureName : 'feature:huc12agg',
 			featureAttributeName : 'huc12',
 			featureValues : dataModel.get('upstreamHucs')
@@ -76,7 +75,7 @@ NWC.view = NWC.view || {};
 			$(ev.target).prop('disabled', true);
 			$loadingIndicator.show();
 			$loadingMsg.html('');
-			executeFeatureTSCollection(this.model, 'et')
+			executeFeatureTSCollection(this.model, 'HUC12_data/HUC12_eta.nc','et')
 				.done(function(downloadUrl, downloadData) {
 					var filename = this.hucId + '_upstreamHucs_eta';
 					var params = downloadData + '&filename=' + filename;
@@ -86,7 +85,7 @@ NWC.view = NWC.view || {};
 				.progress(function(message) {
 					$loadingMsg.html(new Date().toTimeString() + ': ' + message);
 				})
-				.error(function(message) {
+				.fail(function(message) {
 					$loadingMsg.html('Unable to download data: ' + message);
 				})
 				.always(function() {
@@ -102,7 +101,7 @@ NWC.view = NWC.view || {};
 			$(ev.target).prop('disabled', true);
 			$loadingIndicator.show();
 			$loadingMsg.html('');
-			executeFeatureTSCollection(this.dateRange, 'prcp', this.upstreamHucs)
+			executeFeatureTSCollection(this.model, 'HUC12_data/HUC12_daymet.nc', 'prcp')
 				.done(function(downloadUrl, downloadData) {
 					var filename = this.hucId + '_upstreamHucs_daymet';
 					var params = downloadData + '&filename=' + filename;
@@ -112,7 +111,7 @@ NWC.view = NWC.view || {};
 				.progress(function(message) {
 					$loadingMsg.html(new Date().toTimeString() + ': ' + message);
 				})
-				.error(function(message) {
+				.fail(function(message) {
 					$loadingMsg.html('Unable to download data: ' + message);
 				})
 				.always(function() {

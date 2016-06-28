@@ -213,10 +213,12 @@ NWC.view = NWC.view || {};
 			var measurementSystem =  this.model.get('units');
 
 			var values, labels, ylabel, title;
+			var dataSeriesStore;
 
 			if (this.dataModel.has('dataSeriesStore')) {
-				values = this.dataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
-				labels = this.dataSeriesStore[plotTimeDensity].getSeriesLabelsAs(measurementSystem, normalization, plotTimeDensity);
+				dataSeriesStore = this.dataModel.get('dataSeriesStore');
+				values = dataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
+				labels = dataSeriesStore[plotTimeDensity].getSeriesLabelsAs(measurementSystem, normalization, plotTimeDensity);
 				ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
 				title = ((this.accumulated) ? 'Total Accumulated' : 'Local Incremental') + ' HUC ' + this.hucId;
 

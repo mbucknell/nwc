@@ -77,7 +77,7 @@ NWC.view = NWC.view || {};
 
 			this.map = NWC.util.mapUtils.createMap([baseLayer], mapControls);
 
-			 Load vector layers
+			//Load vector layers
 			this.featuresLoadedPromise = $.Deferred();
 			$.when(hucLoadedDeferred, achucLoadedDeferred, gageLoadedDeferred, modeledHucLoadedDeferred).done(function(d1, d2, d3, d4) {
 				var result = {};

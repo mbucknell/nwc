@@ -87,7 +87,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		});
 
 
-		readyToLoadPlotView = accumulated ? this.hucInsetMapView.featureLoadedPromise : $.Deferred().resolve();
+		readyToLoadPlotView = accumulated ? this.hucInsetMapView.featuresLoadedPromise : $.Deferred().resolve();
 		readyToLoadPlotView.done(function(status) {
 			self.plotView = new NWC.view.WaterbudgetPlotView({
 				accumulated : accumulated,
@@ -98,17 +98,17 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				model : self.hucPlotModel
 			});
 
-			if (this.hucId.length === 12) {
-				self.downloadUpstreamView = new WaterbudgetDownloadUpstreamView({
+			if (self.hucId.length === 12) {
+				self.downloadUpstreamView = new NWC.view.WaterbudgetDownloadUpstreamView({
 					el : $hucDownloadContainer,
 					hucdId : self.hucId,
-					model : self.model.get('hucData')
+					model : self.hucPlotModel.get('hucData')
 				});
 		};
 
 		});
 
-		this.hucInsetMapView.featureLoadedPromise.done(function() {
+		this.hucInsetMapView.featuresLoadedPromise.done(function() {
 			self.$('#accumulated-button').prop('disabled', accumulated);
 			self.$('#counties-button').prop('disabled', accumulated);
 			self.$('#compare-hucs-button').prop('disabled', false);
@@ -125,7 +125,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				model : self.hucPlotModel
 			});
 
-			readyToLoadComparePlotView = accumulated ? this.compareHucInsetMapView.featureLoadedPromise : $.Deferred().resolve();
+			readyToLoadComparePlotView = accumulated ? this.compareHucInsetMapView.featuresLoadedPromise : $.Deferred().resolve();
 			readyToLoadComparePlotView.done(function(status) {
 				self.comparePlotView = new NWC.view.WaterbudgetPlotView({
 					accumulated : accumulated,
@@ -138,10 +138,10 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				});
 
 				if (compareHucId.length === 12) {
-					this.compareDownloadUpstreamView = new WaterbudgetDownloadUpstreamView({
+					self.compareDownloadUpstreamView = new NWC.view.WaterbudgetDownloadUpstreamView({
 						el : this.$('.huc2-download-container'),
 						hucId : compareHucId,
-						model : this.model.get('compareHucData')
+						model : self.hucPlotodel.get('compareHucData')
 					});
 				}
 			});

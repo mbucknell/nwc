@@ -160,7 +160,7 @@
 		<script type="text/javascript" src="js/view/HucInsetMapView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/view/WaterbudgetPlotView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetMapView<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/view/WaterbudgetDonwloadUpstreamView<%= resourceSuffic %>.js"></script>
+		<script type="text/javascript" src="js/view/WaterbudgetDownloadUpstreamView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetHucDataView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/controller/NWCRouter<%= resourceSuffix %>.js"></script>
 		

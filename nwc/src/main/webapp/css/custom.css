@@ -199,7 +199,7 @@ textarea[readonly] {
 	height: 55px;
 }
 
-.download-upstream-eta-container span, .download-upstream-daymet-container span {
+.download-loading-indicator {
 	display: none;
 }
 

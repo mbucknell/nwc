@@ -17,7 +17,8 @@ NWC.util = NWC.util || {};
 		dataType : 'text',
 		method : 'GET',
 		success : function(xmlTemplateText) {
-			xmlTemplate = Handlebars.compile(xmlTemplateText);
+			var templateWithoutWhitespace = xmlTemplateText.replace(/[\t\n]/g, '');
+			var xmlTemplate = Handlebars.compile(templateWithoutWhitespace);
 			loadTemplateDeferred.resolve(xmlTemplate);
 		},
 		error : function() {
@@ -42,7 +43,7 @@ NWC.util = NWC.util || {};
 	 *		@notify - A notify message will be sent each time the process status is queried. Argument will be
 	 *			a string indicating the current status of the process.
 	 */
-	NWC.util.executeGdpProcess = function(context) {
+	NWC.util.executeFeatureTSCollection = function(context) {
 		var executeDeferred = $.Deferred();
 		var processId;
 		var intervalId;
@@ -83,6 +84,10 @@ NWC.util = NWC.util || {};
 			}
 		};
 
+		console.log('Trying to load data for ' + context.featureValues.length + ' huc12s');
+
+		context.featureValues = context.featureValues.slice(0, 10);
+
 		loadTemplateDeferred.done(function(xmlTemplate) {
 			$.ajax({
 				url : CONFIG.endpoint.wps,
@@ -92,22 +97,29 @@ NWC.util = NWC.util || {};
 				dataType : 'xml',
 				contentType : 'text/xml'
 			}).done(function(xml) {
+				var $exceptionReport = NWC.util.findXMLNamespaceTags($(xml), 'ns:ExceptionReport');
 				var $statusLocation = NWC.util.findXMLNamespaceTags($(xml), 'wps:ExecuteResponse').attr('statusLocation');
-				processId = $statusLocation.split('?')[1].split('id=')[1];
 
-				// Poll to check the status of the process
-				intervalId = window.setInterval(function() {
-					$.ajax({
-						url : CONFIG.endpoint.wpsBase +'/RetrieveResultServlet',
-						data : {id : processId},
-						success : function(data, textStatus, jqXHR) {
-							processStatusMessage(jqXHR.responseText);
-						},
-						error : function(jqXHR, errorThrown, errorMessage) {
-							executeDeferred.reject('Process status: Status called falled with error ' + errorMessage);
-						}
-					});
-				}, 5000);
+				if ($exceptionReport.length > 0) {
+					executeDeferred.reject('Process initialization failed with exception report');
+				}
+				else {
+					processId = $statusLocation.split('?')[1].split('id=')[1];
+
+					// Poll to check the status of the process
+					intervalId = window.setInterval(function() {
+						$.ajax({
+								url : CONFIG.endpoint.wpsBase +'/RetrieveResultServlet',
+							data : {id : processId},
+							success : function(data, textStatus, jqXHR) {
+								processStatusMessage(jqXHR.responseText);
+							},
+							error : function(jqXHR, errorThrown, errorMessage) {
+								executeDeferred.reject('Process status: Status called falled with error ' + errorMessage);
+							}
+						});
+					}, 5000);
+				}
 			}).fail(function(jqXHR, textStatus) {
 				executeDeferred.reject('Initial WPS request has failed: ' + textStatus);
 			});
