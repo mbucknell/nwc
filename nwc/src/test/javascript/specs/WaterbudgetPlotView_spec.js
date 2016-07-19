@@ -28,15 +28,10 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 		$('body').append(html);
 
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
-		spyOn(NWC.view.WaterbudgetPlotView.prototype, 'plotData').andCallThrough();
+		spyOn(NWC.view.WaterbudgetPlotView.prototype, 'plotData');
 		spyOn(NWC.view.WaterbudgetPlotView.prototype, 'getPlotData').andCallThrough();
 
 		model = new NWC.model.WaterBudgetHucPlotModel();
-
-//		testView = new NWC.view.WaterbudgetPlotView({
-//			hucId : '123456',
-//			model : model
-//		});
 	});
 
 	afterEach(function() {
@@ -50,8 +45,7 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 			model : model
 		});
 		expect(NWC.view.BaseView.prototype.initialize).toHaveBeenCalled();
-		expect(NWC.view.WaterbudgetPlotView.prototype.getPlotData).toHaveBeenCalledWith('123456', null);
-		expect(NWC.view.WaterbudgetPlotView.prototype.plotData).toHaveBeenCalled();
+		expect(NWC.view.WaterbudgetPlotView.prototype.getPlotData).toHaveBeenCalledWith('123456', null, undefined);
 	});
 
 	it('Expects that $.ajax is called for each data source', function() {
@@ -85,16 +79,29 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 		expect(fakeServer.requests.length).toBe(3);
 	});
 
+	it('Expects that $.ajax is called for each data source including measured and modeled streamflow when accumulated and a compare instance', function() {
+		model.set('compareWatershedAcres', 10);
+		testView = new NWC.view.WaterbudgetPlotView({
+			accumulated : true,
+			compare : true,
+			hucId : '123456',
+			gageId : '123456',
+			hasModeledStreamflow : true,
+			model : model
+		});
+		expect(fakeServer.requests.length).toBe(4);
+	});
+
 	it('Expects an update to the model to call plotData', function() {
 		testView = new NWC.view.WaterbudgetPlotView({
 			hucId : '123456',
 			model : model
 		});
-		expect(NWC.view.WaterbudgetPlotView.prototype.plotData.calls.length).toBe(1);
+
 		model.set('units', 'METRIC');
-		expect(NWC.view.WaterbudgetPlotView.prototype.plotData.calls.length).toBe(2);
+		expect(NWC.view.WaterbudgetPlotView.prototype.plotData.calls.length).toBe(1);
 		model.set('timeScale', 'daily');
-		expect(NWC.view.WaterbudgetPlotView.prototype.plotData.calls.length).toBe(3);
+		expect(NWC.view.WaterbudgetPlotView.prototype.plotData.calls.length).toBe(2);
 	});
 
 	it('Expects downloadEvapotranspiration to save to appropriate filename', function() {

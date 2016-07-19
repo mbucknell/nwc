@@ -20,7 +20,8 @@ NWC.view = NWC.view || {};
 
 		events: {
 			'change select' : 'selectHucLayer',
-			'click #toggle-gage-layer' : 'toggleGageVisibility'
+			'click #toggle-gage-layer' : 'toggleGageVisibility',
+			'click #toggle-modeled-huc-layer' : 'toggleModeledHucVisibility'
 		},
 
 		/**
@@ -69,11 +70,31 @@ NWC.view = NWC.view || {};
 				}
 			);
 
-			_.each(this.hucLayers, function(val) {
-				val.layer.addOptions({attribution: '<img src="' + self.legendUrl(val.layer.params.LAYERS, val.layer.params.STYLES[0]) + '"/>'});
-			});
+			var streamflowHuc12Config = NWC.config.get('streamflow').huc12.attributes;
+			this.modeledHucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
+				CONFIG.endpoint.geoserver + 'gwc/service/wms',
+				{
+					layers: streamflowHuc12Config.namespace + ':' + streamflowHuc12Config.localLayerName,
+					transparent: true,
+					styles: ['seOutline']
+				},
+				{
+					opacity: 0.6,
+					displayInLayerSwitcher: false,
+					visibility: false,
+					isBaseLayer: false,
+					tiled: true
+				}
+			);
 
-			this.gageLayer.addOptions({attribution: '<img src="' + self.legendUrl(this.gageLayer.params.LAYERS, 'gagesii_hucComp') + '"/>'});
+			this.hucLayers.forEach(function(val) {
+				val.layer.addOptions({attribution: '<img src="' + this.legendUrl(val.layer.params.LAYERS, val.layer.params.STYLES[0]) + '"/>'});
+			}, this);
+
+			this.gageLayer.addOptions({attribution: '<img src="' + this.legendUrl(this.gageLayer.params.LAYERS, 'gagesii_hucComp') + '"/>'});
+			this.modeledHucLayer.addOptions({
+				attribution : '<img src="' + this.legendUrl(this.modeledHucLayer.params.STYLES[0], '') + '"/>'
+			});
 
 			this.legendControl = new OpenLayers.Control.Attribution();
 
@@ -127,6 +148,7 @@ NWC.view = NWC.view || {};
 			$.extend(this.events, NWC.view.BaseSelectMapView.prototype.events);
 			NWC.view.BaseSelectMapView.prototype.initialize.apply(this, arguments);
 
+			this.map.addLayer(this.modeledHucLayer);
 			this.map.addLayer(this.gageLayer);
 			this.map.addLayers(_.pluck(this.hucLayers, 'layer'));
 
@@ -157,6 +179,7 @@ NWC.view = NWC.view || {};
 
 			this.listenTo(this.model, 'change:watershedLayer', this.updateHucLayerVisibility);
 			this.listenTo(this.model, 'change:gageLayerOn', this.updateGageLayerVisibility);
+			this.listenTo(this.model, 'change:modeledHucLayerOn', this.updateModeledHucLayerVisibility);
 			this.updateHucLayerVisibility();
 		},
 
@@ -189,6 +212,13 @@ NWC.view = NWC.view || {};
 			this.model.set('gageLayerOn', !this.model.get('gageLayerOn'));
 		},
 
+		/*
+		 * Toggles the model's modeledHucLayerOn attribute
+		 */
+		toggleModeledHucVisibility : function() {
+			this.model.set('modeledHucLayerOn', !this.model.get('modeledHucLayerOn'));
+		},
+
 		/**
 		 * Sets the gageLayer visibility to match this.model's gageLayerOn attribute.
 		 */
@@ -196,6 +226,15 @@ NWC.view = NWC.view || {};
 			var isVisible = this.model.get('gageLayerOn');
 			this.$el.find('#toggle-gage-layer-span').html(isVisible ? 'Off' : 'On');
 			this.gageLayer.setVisibility(isVisible);
+		},
+
+		/**
+		 * Sets the modeledHucLayer visibility to match thisModel's modeledHucLayerOn attribute
+		 */
+		updateModeledHucLayerVisibility : function() {
+			var isVisible = this.model.get('modeledHucLayerOn');
+			this.$el.find('#toggle-modeled-huc-layer-span').html(isVisible ? 'Off' : 'On');
+			this.modeledHucLayer.setVisibility(isVisible);
 		}
 	});
 }());

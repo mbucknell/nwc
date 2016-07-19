@@ -27,16 +27,7 @@ NWC.view = NWC.view || {};
 
 		render : function() {
 			NWC.view.BaseView.prototype.render.apply(this, arguments);
-
 			this.map.render(this.insetMapDiv);
-			this.streamflowPlotViewLeft = new NWC.view.StreamflowPlotView({
-				el : this.$el.find('#left-plot'),
-				getDataSeriesPromise : this.getDataSeriesPromise.bind(this)
-			});
-			this.streamflowPlotViewRight = new NWC.view.StreamflowPlotView({
-				el : this.$el.find('#right-plot'),
-				getDataSeriesPromise : this.getDataSeriesPromise.bind(this)
-			});
 			return this;
 		},
 
@@ -86,8 +77,6 @@ NWC.view = NWC.view || {};
 
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 			this.map.zoomToExtent(this.map.getMaxExtent());
-
-			this.dataSeriesLoaded = $.Deferred();
 
 			this.calculateStatsViewLeft = new NWC.view.StreamflowCalculateStatsView({
 				el : $('#left'),
@@ -139,45 +128,26 @@ NWC.view = NWC.view || {};
 			return 'eflowstats_HUC_' + this.context.hucId + '.tsv';
 		},
 
-		/*
-		 * @returns Jquery promise which is resolved if getDataSeries() returns successfully in init.
-		 */
-		getDataSeriesPromise : function() {
-			return this.dataSeriesLoaded.promise();
-		},
 
 		/*
 		 * @returns Jquery promise which is resolved with the data series if it is successfully retrieved. If
 		 * unsuccessful is is rejected and forwards on the text response of the bad request
 		 */
-		getDataSeries : function() {
+		fetchDataSeries : function() {
 			var self = this;
-			var modeledQConfig = this.hucStreamflowConfig.variables.modeledQ;
-
-			var sosUrl = modeledQConfig.getSosUrl(this.context.hucId);
-
-			var strToDate = function(dateStr){
-			  return Date.create(dateStr).utc();
+			var fetchDeferred = $.Deferred();
+			var convertTimeToUTCDate = function(str) {
+				return Date.create(str).utc();
 			};
+			var modeledQConfig = this.hucStreamflowConfig.variables.modeledQ;
+			var additionalSeriesLabels = modeledQConfig.get('propertyLongName').split(',');
 
-			$.ajax({
-				url: sosUrl,
-				success : function(data) {
+			NWC.util.fetchModeledStreamflowData({
+				hucId : this.context.hucId,
+				convertDateStrFnc : convertTimeToUTCDate
+			})
+				.done(function(dataTable) {
 					var dataSeries = NWC.util.DataSeries.newSeries();
-					var parsedTable = NWC.util.SosResponseFormatter.formatSosResponse(data);
-					var convertedTable = parsedTable.map(function(row) {
-						return row.map(function(column, index){
-							var val = column;
-							if (index === 0) {
-								val = strToDate(column);
-							}
-						return val;
-						});
-					});
-					var additionalSeriesLabels = modeledQConfig.get('propertyLongName').split(',');
-
-					dataSeries.data = convertedTable;
-
 					additionalSeriesLabels.each(function(label) {
 						dataSeries.metadata.seriesLabels.push({
 							seriesName: label,
@@ -185,33 +155,41 @@ NWC.view = NWC.view || {};
 						});
 					});
 					dataSeries.metadata.downloadHeader = modeledQConfig.get('downloadMetadata');
+					dataSeries.data = dataTable;
 
-					self.dataSeriesLoaded.resolve(dataSeries);
-				},
-				error : function(jqXHR, textStatus) {
-					self.dataSeriesLoaded.reject(textStatus);
-				}
-			});
-			return self.dataSeriesLoaded.promise();
+					self.dataSeries = dataSeries;
+					self.$('.download-streamflow-btn').show();
+
+					fetchDeferred.resolve(dataSeries);
+				})
+				.fail(function(textStatus) {
+					alert('Retrieving data for the plot failed with error:' + textStatus);
+					fetchDeferred.reject(textStatus);
+				});
+
+			return fetchDeferred.promise();
 		},
 
 		plotStreamFlowData : function(ev) {
 			var self = this;
-			this.getDataSeries();
+			var fetchDataSeriesPromise = this.fetchDataSeries();
 
 			var plotTitle = 'Modeled Streamflow for the ' + this.hucName + ' Watershed';
 
 			ev.preventDefault();
 
-			self.$el.find('.show-plot-btn').hide();
-			$.when(this.streamflowPlotViewLeft.plotStreamflowData(plotTitle),
-					this.streamflowPlotViewRight.plotStreamflowData(plotTitle))
-			.done(function(dataSeries) {
-				self.dataSeries = dataSeries;
-				self.$el.find('.download-streamflow-btn').show();})
-			.fail(function(textStatus) {
-				alert('Retrieving data for this plot failed with error: ' + textStatus);
+			this.streamflowPlotViewLeft = new NWC.view.StreamflowPlotView({
+				el : this.$el.find('#left-plot'),
+				fetchDataSeriesPromise : fetchDataSeriesPromise
 			});
+			this.streamflowPlotViewRight = new NWC.view.StreamflowPlotView({
+				el : this.$el.find('#right-plot'),
+				fetchDataSeriesPromise : fetchDataSeriesPromise
+			});
+
+			self.$el.find('.show-plot-btn').hide();
+			this.streamflowPlotViewLeft.plotStreamflowData(plotTitle);
+			this.streamflowPlotViewRight.plotStreamflowData(plotTitle);
 		},
 
 		downloadData : function(ev) {
