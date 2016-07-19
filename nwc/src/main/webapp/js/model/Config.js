@@ -172,8 +172,8 @@ NWC.model = NWC.model || {};
 					observedProperties : ["LS-WGWFr", "LS-WGWSa", "LS-WSWFr", "LS-WSWSa", "LI-WGWFr", "LI-WSWFr", "LA-WGWFr", "LA-WGWSa", "LA-WSWFr", "LA-WSWSa", "AQ-WGWFr", "AQ-WGWSa", "AQ-WSWFr", "AQ-WSWSa"],
 					color : '#b9cfe6'
 				},{
-					name: 'Industrial',
-					observedProperties : ["IN-WGWFr", "IN-WGWSa", "IN-WSWFr", "IN-WSWSa"],
+					name: 'Industrial and Commercial',
+					observedProperties : ["IN-WGWFr", "IN-WGWSa", "IN-WSWFr", "IN-WSWSa", "CO-WGWFr", "CO-WGWSa", "CO-WSWFr", "CO-WSWSa"],
 					color : '#0080b7'
 				},{
 					name : 'Mining',
