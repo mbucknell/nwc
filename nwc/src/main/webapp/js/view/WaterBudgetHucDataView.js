@@ -233,6 +233,13 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			this.comparePlotView.remove();
 		}
 
+		if (Object.has(this, 'downloadUpstreamView')) {
+			this.downloadUpstreamView.remove();
+		}
+		if (Object.has(this, 'compareDownloadUpstreamView')) {
+			this.compareDownloadUpstreamView.remove();
+		}
+
 		if (Object.has(this, 'countyWaterUseView')) {
 			this.countyWaterUseView.remove();
 		}

@@ -4,6 +4,7 @@
 /*global jasmine*/
 /*global sinon*/
 /*global NWC*/
+/*global saveAs */
 
 describe ('NWC.view.WaterbudgetPlotView', function() {
 	var model;
