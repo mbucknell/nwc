@@ -46,6 +46,14 @@
             <param-value>http://localhost:8080/proxywps</param-value>
         </init-param>
     </servlet>
+	<servlet>
+        <servlet-name>GdpWpsProxy</servlet-name>
+        <servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+        <init-param>
+            <param-name>forward-url-param</param-name>
+            <param-value>nwc.endpoint.gdp.wps</param-value>
+        </init-param>
+	</servlet>
     <servlet-mapping>
         <servlet-name>GeoserverProxy</servlet-name>
         <url-pattern>/proxygeoserver/*</url-pattern>
@@ -57,6 +65,10 @@
     <servlet-mapping>
         <servlet-name>WPSProxy</servlet-name>
         <url-pattern>/proxywps/*</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping>
+        <servlet-name>GdpWpsProxy</servlet-name>
+        <url-pattern>/proxygdpwps/*</url-pattern>
     </servlet-mapping>
     <filter>
         <filter-name>SearchBotUglyUrlFilter</filter-name>

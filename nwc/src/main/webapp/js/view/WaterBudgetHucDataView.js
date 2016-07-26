@@ -74,7 +74,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		$plotContainer = this.$('#huc-plot-container');
 		$hucInsetMapContainer = (compareHucId) ? this.$('.huc-inset-map-div') : this.$('.huc-inset-map-container');
 		$hucPlotContainer = (compareHucId) ? this.$('#huc-plotview-div') : this.$('#huc-plot-container');
-		$hucDownloadContainer = (compareHucId) ? this.$('.download-container') : this.$('.huc1-download-container');
+		$hucDownloadContainer = (compareHucId) ? this.$('.huc1-download-container') : this.$('.download-container');
 
 		// Render the huc inset map view and plotView
 		this.hucInsetMapView = new NWC.view.HucInsetMapView({
@@ -101,7 +101,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			if (self.hucId.length === 12) {
 				self.downloadUpstreamView = new NWC.view.WaterbudgetDownloadUpstreamView({
 					el : $hucDownloadContainer,
-					hucdId : self.hucId,
+					hucId : self.hucId,
 					model : self.hucPlotModel.get('hucData')
 				});
 		};
@@ -139,9 +139,9 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 
 				if (compareHucId.length === 12) {
 					self.compareDownloadUpstreamView = new NWC.view.WaterbudgetDownloadUpstreamView({
-						el : this.$('.huc2-download-container'),
+						el : self.$('.huc2-download-container'),
 						hucId : compareHucId,
-						model : self.hucPlotodel.get('compareHucData')
+						model : self.hucPlotModel.get('compareHucData')
 					});
 				}
 			});

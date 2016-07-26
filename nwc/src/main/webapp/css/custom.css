@@ -199,10 +199,6 @@ textarea[readonly] {
 	height: 55px;
 }
 
-.download-loading-indicator {
-	display: none;
-}
-
 .streamflow-plot-container
 #gageList tr.gage-selected {
     background-color: #FFCC00;

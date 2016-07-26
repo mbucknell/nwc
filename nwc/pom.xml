@@ -44,7 +44,6 @@
 				<configuration>
 					<suffix>-${project.version}-min</suffix>
 					<excludes>
-						<exclude>**/Flowlines*.js</exclude>
 						<exclude>**/FileSaver*.js</exclude>
 						<exclude>**/jquery.flot.*.js</exclude>
 					</excludes>

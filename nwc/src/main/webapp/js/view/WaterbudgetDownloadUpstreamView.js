@@ -39,8 +39,8 @@ NWC.view = NWC.view || {};
 		templateName : 'waterbudgetDownloadUpstream',
 
 		events : {
-			'click .download-upstream-eta-container button' : 'downloadUpstreamEta',
-			'click .download-upstream-daymet-container button' : 'downloadUpstreamDaymet'
+			'click .download-eta-btn' : 'downloadUpstreamEta',
+			'click .download-precip-btn' : 'downloadUpstreamDaymet'
 		},
 
 		initialize : function(options) {
@@ -59,8 +59,7 @@ NWC.view = NWC.view || {};
 		 */
 		enableDownloadButtons : function(dateRange, upstreamHucs) {
 			if (this.model.has('dataSeriesStore') && this.model.has('upstreamHucs')) {
-				this.$('.download-upstream-eta-container button').prop('disabled', false);
-				this.$('.download-upstream-daymet-container button').prop('disabled', false);
+				this.$('.download-upstream-container button').prop('disabled', false);
 			}
 		},
 
@@ -68,19 +67,27 @@ NWC.view = NWC.view || {};
 		 * DOM event handlers
 		 */
 
-		downloadUpstreamEta : function(ev) {
-			var $loadingIndicator = this.$('.download-upstream-eta-container .download-loading-indicator');
-			var $loadingMsg = this.$('.download-upstream-eta-container .download-msg');
+		/*
+		 * Helper function to handle downloading the  upstream huc data
+		 * @param {Object} dateModel - represents the huc data for this view
+		 * @param {String} observedProperty*
+		 */
+		_downloadUpstreamData : function(datasetURI, observedProperty) {
+			var self = this;
+			var $downloadBtns = this.$('.download-upstream-container button');
+			var $loadingAlert = this.$('.download-msg-container');
+			var $loadingMsg = this.$('.download-msg');
 
-			$(ev.target).prop('disabled', true);
-			$loadingIndicator.show();
-			$loadingMsg.html('');
-			executeFeatureTSCollection(this.model, 'HUC12_data/HUC12_eta.nc','et')
+			$downloadBtns.prop('disabled', true);
+			$loadingMsg.html('Starting download');
+			$loadingAlert.removeClass('hidden');
+
+			executeFeatureTSCollection(this.model, datasetURI, observedProperty)
 				.done(function(downloadUrl, downloadData) {
-					var filename = this.hucId + '_upstreamHucs_eta';
+					var filename = self.hucId + '_upstreamHucs_' + observedProperty;
 					var params = downloadData + '&filename=' + filename;
 					$.download(downloadUrl, params, 'get');
-					$loadingMsg.html('File is being downloaded: ' + filename);
+					$loadingAlert.addClass('hidden');
 				})
 				.progress(function(message) {
 					$loadingMsg.html(new Date().toTimeString() + ': ' + message);
@@ -89,35 +96,16 @@ NWC.view = NWC.view || {};
 					$loadingMsg.html('Unable to download data: ' + message);
 				})
 				.always(function() {
-					$loadingIndicator.hide();
-					$(ev.target).prop('disabled', false);
+					$downloadBtns.prop('disabled', false);
 				});
 		},
 
-		downloadUpstreamDaymet : function(ev) {
-			var $loadingIndicator = this.$('.download-upstream-daymet-container .download-loading-indicator');
-			var $loadingMsg = this.$('.download-upstream-daymet-container .download-msg');
+		downloadUpstreamEta : function() {
+			this._downloadUpstreamData('HUC12_data/HUC12_eta.nc', 'et');
+		},
 
-			$(ev.target).prop('disabled', true);
-			$loadingIndicator.show();
-			$loadingMsg.html('');
-			executeFeatureTSCollection(this.model, 'HUC12_data/HUC12_daymet.nc', 'prcp')
-				.done(function(downloadUrl, downloadData) {
-					var filename = this.hucId + '_upstreamHucs_daymet';
-					var params = downloadData + '&filename=' + filename;
-					$.download(downloadUrl, params, 'get');
-					$loadingMsg.html('File is being downloaded: ' + filename);
-				})
-				.progress(function(message) {
-					$loadingMsg.html(new Date().toTimeString() + ': ' + message);
-				})
-				.fail(function(message) {
-					$loadingMsg.html('Unable to download data: ' + message);
-				})
-				.always(function() {
-					$loadingIndicator.hide();
-					$(ev.target).prop('disabled', false);
-				});
+		downloadUpstreamDaymet : function() {
+			this._downloadUpstreamData('HUC12_data/HUC12_daymet.nc', 'prcp');
 		}
 	});
 })();

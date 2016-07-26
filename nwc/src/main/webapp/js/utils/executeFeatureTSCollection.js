@@ -86,11 +86,9 @@ NWC.util = NWC.util || {};
 
 		console.log('Trying to load data for ' + context.featureValues.length + ' huc12s');
 
-		context.featureValues = context.featureValues.slice(0, 10);
-
 		loadTemplateDeferred.done(function(xmlTemplate) {
 			$.ajax({
-				url : CONFIG.endpoint.wps,
+				url : CONFIG.endpoint.gdpWps + 'WebProcessingService',
 				type : 'POST',
 				data : xmlTemplate(context),
 				processData : false,
@@ -109,7 +107,7 @@ NWC.util = NWC.util || {};
 					// Poll to check the status of the process
 					intervalId = window.setInterval(function() {
 						$.ajax({
-								url : CONFIG.endpoint.wpsBase +'/RetrieveResultServlet',
+								url : CONFIG.endpoint.gdpWps +'RetrieveResultServlet',
 							data : {id : processId},
 							success : function(data, textStatus, jqXHR) {
 								processStatusMessage(jqXHR.responseText);
