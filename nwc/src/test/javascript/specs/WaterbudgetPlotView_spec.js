@@ -10,6 +10,7 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 	var model;
 	var testView;
 	var fakeServer;
+	var toCSVSpy;
 
 	beforeEach(function() {
 		CONFIG = {
@@ -32,6 +33,8 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 		spyOn(NWC.view.WaterbudgetPlotView.prototype, 'plotData');
 		spyOn(NWC.view.WaterbudgetPlotView.prototype, 'getPlotData').andCallThrough();
 
+		toCSVSpy = jasmine.createSpy(toCSVSpy);
+
 		model = new NWC.model.WaterBudgetHucPlotModel();
 	});
 
@@ -46,7 +49,7 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 			model : model
 		});
 		expect(NWC.view.BaseView.prototype.initialize).toHaveBeenCalled();
-		expect(NWC.view.WaterbudgetPlotView.prototype.getPlotData).toHaveBeenCalledWith('123456', null, undefined);
+		expect(NWC.view.WaterbudgetPlotView.prototype.getPlotData).toHaveBeenCalledWith('123456', null);
 	});
 
 	it('Expects that $.ajax is called for each data source', function() {
@@ -58,7 +61,10 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 	});
 
 	it('Expects that $.ajax is called for each data source including streamflow when accumulated', function() {
-		model.set('watershedAcres', 10);
+		model.get('hucData').set({
+			watershedAcres: 20,
+			modeledWatershedAcres : 0
+		});
 		testView = new NWC.view.WaterbudgetPlotView({
 			accumulated : true,
 			hucId : '123456',
@@ -69,7 +75,10 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 	});
 
 	it('Expects that $.ajax is called for each data source including streamflow when accumulated and a compare instance', function() {
-		model.set('compareWatershedAcres', 10);
+		model.get('compareHucData').set({
+			watershedAcres: 20,
+			modeledWatershedAcres : 10
+		});
 		testView = new NWC.view.WaterbudgetPlotView({
 			accumulated : true,
 			compare : true,
@@ -77,11 +86,14 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 			gageId : '123456',
 			model : model
 		});
-		expect(fakeServer.requests.length).toBe(3);
+		expect(fakeServer.requests.length).toBe(4);
 	});
 
 	it('Expects that $.ajax is called for each data source including measured and modeled streamflow when accumulated and a compare instance', function() {
-		model.set('compareWatershedAcres', 10);
+		model.get('compareHucData').set({
+			watershedAcres: 20,
+			modeledWatershedAcres : 10
+		});
 		testView = new NWC.view.WaterbudgetPlotView({
 			accumulated : true,
 			compare : true,
@@ -112,17 +124,17 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 		});
 		spyOn(window, 'saveAs');
 		spyOn(window, 'Blob');
-		testView.dataSeriesStore = {
+		model.get('hucData').set('dataSeriesStore',  {
 			eta : {
-			toCSV : jasmine.createSpy('toCSVSpy')
+				toCSV : toCSVSpy
 			}
-		};
+		});
 		testView.downloadEvapotranspiration();
 
 		expect(saveAs).toHaveBeenCalled();
 		expect(saveAs.calls[0].args[1]).toMatch(testView.hucId);
 		expect(saveAs.calls[0].args[1]).toMatch('_eta');
-		expect(testView.dataSeriesStore.eta.toCSV).toHaveBeenCalled();
+		expect(toCSVSpy).toHaveBeenCalled();
 	});
 
 	it('Expects downloadPrecipitation to save to appropriate filename', function() {
@@ -132,16 +144,16 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 		});
 		spyOn(window, 'saveAs');
 		spyOn(window, 'Blob');
-		testView.dataSeriesStore = {
+		model.get('hucData').set('dataSeriesStore', {
 			dayMet : {
-			toCSV : jasmine.createSpy('toCSVSpy')
+				toCSV : toCSVSpy
 			}
-		};
+		});
 		testView.downloadPrecipitation();
 
 		expect(saveAs).toHaveBeenCalled();
 		expect(saveAs.calls[0].args[1]).toMatch(testView.hucId);
 		expect(saveAs.calls[0].args[1]).toMatch('_dayMet');
-		expect(testView.dataSeriesStore.dayMet.toCSV).toHaveBeenCalled();
+		expect(toCSVSpy).toHaveBeenCalled();
 	});
 });
