@@ -14,7 +14,7 @@ NWC.view = NWC.view || {};
 	 * @param {Array of String} upstreamHucs - representing the upstream hucs
 	 * @returns {Jquery Promise} - See NWC.util.executeFeatureTSCollection
 	 */
-	var executeFeatureTSCollection = function(dataModel, datasetURI, observedProperty) {
+	var executeFeatureTSCollection = function(hucId, dataModel, datasetURI, observedProperty) {
 		var dateRange = dataModel.get('dataSeriesStore').dateRange();
 		return NWC.util.executeFeatureTSCollection({
 			startTime : dateRange.start.toISOString(),
@@ -25,7 +25,7 @@ NWC.view = NWC.view || {};
 			featureNamespace : 'http://gov.usgs.cida/WBD',
 			featureName : 'feature:huc12agg',
 			featureAttributeName : 'huc12',
-			featureValues : dataModel.get('upstreamHucs')
+			featureValues : [hucId].concat(dataModel.get('upstreamHucs'))
 		});
 	};
 	/*
@@ -75,14 +75,16 @@ NWC.view = NWC.view || {};
 		_downloadUpstreamData : function(datasetURI, observedProperty) {
 			var self = this;
 			var $downloadBtns = this.$('.download-upstream-container button');
+			var $loadingIndicator = this.$('.download-loading-indicator');
 			var $loadingAlert = this.$('.download-msg-container');
 			var $loadingMsg = this.$('.download-msg');
 
 			$downloadBtns.prop('disabled', true);
+			$loadingIndicator.removeClass('hidden');
 			$loadingMsg.html('Starting download');
 			$loadingAlert.removeClass('hidden');
 
-			executeFeatureTSCollection(this.model, datasetURI, observedProperty)
+			executeFeatureTSCollection(this.hucId, this.model, datasetURI, observedProperty)
 				.done(function(downloadUrl, downloadData) {
 					var filename = self.hucId + '_upstreamHucs_' + observedProperty;
 					var params = downloadData + '&filename=' + filename;
@@ -93,9 +95,11 @@ NWC.view = NWC.view || {};
 					$loadingMsg.html(new Date().toTimeString() + ': ' + message);
 				})
 				.fail(function(message) {
+					$loadingIndicator.addClass('hidden');
 					$loadingMsg.html('Unable to download data: ' + message);
 				})
 				.always(function() {
+					$loadingIndicator.show();
 					$downloadBtns.prop('disabled', false);
 				});
 		},
