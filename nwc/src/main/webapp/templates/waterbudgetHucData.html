@@ -19,7 +19,7 @@
 						</div>
 						{{/if}}
 					{{/if}}
-					<div class="button-div"">
+					<div class="button-div">
 						<button id="compare-hucs-button" class="btn btn-primary" disabled>Select Watershed to Compare <span class="glyphicon glyphicon-arrow-right"></span></button>
 					</div>
 					{{#if showWaterUseButton}}
@@ -33,10 +33,17 @@
 		</div>
 		<div>
 			<div class="huc-inset-map-container spacer spacer_down"></div>
+			<div class="download-container"></div>
 			<div class="compare-huc-inset-map-container space spacer-down col-sm-12">
-				<div class="huc-inset-map-div  col-md-6 col-sm-12" ></div>
-				<div class="comparehuc-inset-map-div col-md-6 col-sm-12"></div>
-			</div>
+				<div class="huc1-container col-md-6 col-sm-12">
+					<div class="huc-inset-map-div  "></div>
+					<div class="huc1-download-container"></div>
+				</div>
+				<div class="huc2-container col-md-6 col-sm-12">
+					<div class="comparehuc-inset-map-div "></div>
+					<div class="huc2-download-container"></div>
+				</div>
+			</div>	
 		</div>
 		<div class="row">
 			<div class="col-sm-12 spacer">

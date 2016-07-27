@@ -123,13 +123,12 @@ NWC.util.DataSeriesStore = function () {
 	 *	on the plot.
 	*/
 	 var trimStreamFlowData = function (dataSeries) {
-		var dayMetSeriesStartDate = Date.create(self.dayMet.data[0][0]).utc();
-		var dayMetSeriesEndDate = Date.create(self.dayMet.data[_.size(self.dayMet.data)-1][0]).utc();
+		var dateRange = self.dateRange();
 
 		dataSeries.data = _.filter(dataSeries.data, function (entry) {
 			var date = Date.create(entry[0]).utc();
-			return ((date >= dayMetSeriesStartDate) &&
-					(date <= dayMetSeriesEndDate));
+			return ((date >= dateRange.start) &&
+					(date <= dateRange.end));
 		});
 	};
 
@@ -542,6 +541,21 @@ NWC.util.DataSeriesStore = function () {
 		this.updateDailyHucSeries(nameToSeriesMap);
 		this.updateMonthlyHucSeries(nameToSeriesMap);
 		this.updateYearlyHucSeries(nameToSeriesMap);
+	};
+
+	/*
+	 * @returns {Object} - start and end properties are Dates, representing the date range of the data series
+	 */
+	self.dateRange = function() {
+		// This assumes that the daymet series represents the extent of the date range.
+		var result = undefined;
+		if (self.dayMet.data.length > 0) {
+			result =  {
+				start : Date.create(self.dayMet.data[0][0]).utc(),
+				end : Date.create(self.dayMet.data[self.dayMet.data.length - 1][0]).utc()
+			};
+		}
+		return result;
 	};
 
 };

@@ -17,6 +17,7 @@
 				CONFIG.endpoint.thredds = CONFIG.contextPath + '/proxythredds/';
 				CONFIG.endpoint.wpsBase = CONFIG.contextPath + '/proxywps/';
 				CONFIG.endpoint.wps = CONFIG.endpoint.wpsBase + 'WebProcessingService'; //TODO inconsistant use of of URL resources
+				CONFIG.endpoint.gdpWps = CONFIG.contextPath + '/proxygdpwps/';
 				CONFIG.endpoint.nwis = '${directNwisEndpoint}';
 				CONFIG.endpoint.nwisStreamflow = '${directNwisStreamflowEndpoint}';
 				
@@ -101,6 +102,7 @@
 		<script type="text/javascript" src="vendorlibs/flot-plugins/jquery.flot.tooltip.js"></script>
 		<script type="text/javascript" src="vendorlibs/flot-plugins/jquery.flot.axislabels.js"></script>
 		<script type="text/javascript" src="vendorlibs/FileSaver.js-master/FileSaver.js"></script>
+		<script type="text/javascript" src="vendorlibs/jquery.download.js"></script>
 		
 		<script type="text/javascript" src="js/utils/templateLoader<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/jqueryUtils<%= resourceSuffix %>.js"></script>
@@ -119,6 +121,7 @@
 		<script type="text/javascript" src="js/utils/numberFormat<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/fetchMeasuredStreamflowData<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/utils/fetchModeledStreamflowData<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/utils/executeFeatureTSCollection<%= resourceSuffix %>.js"></script>
 
 		<script type="text/javascript" src="js/model/Config<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/model/BaseSelectMapModel<%= resourceSuffix %>.js"></script>
@@ -158,6 +161,7 @@
 		<script type="text/javascript" src="js/view/HucInsetMapView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/view/WaterbudgetPlotView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetMapView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/view/WaterbudgetDownloadUpstreamView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/view/WaterBudgetHucDataView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/controller/NWCRouter<%= resourceSuffix %>.js"></script>
 		

@@ -1,3 +1,6 @@
+/* jslint browser: true */
+/* global Backbone */
+
 var NWC = NWC || {};
 
 NWC.model = NWC.model || {};
@@ -10,8 +13,8 @@ NWC.model.WaterBudgetHucPlotModel = Backbone.Model.extend({
 	defaults : {
 		units : 'usCustomary',
 		timeScale : 'monthly',
-		watershedAcres : null,
-		compareWatershedAcres : null
+		hucData : new Backbone.Model(),
+		compareHucData : new Backbone.Model()
 	}
 });
 

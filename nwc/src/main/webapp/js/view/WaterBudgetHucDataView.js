@@ -40,13 +40,13 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		var $plotContainer;
 
 		var accumulated = options.accumulated ? options.accumulated : false;
-		var compareHucId = options.compareHucId ? options.compareHucId :'';
+		var compareHucId = options.compareHucId ? options.compareHucId : '';
 		var fips = options.fips ? options.fips : '';
 
 		var watershedGages = NWC.config.get('watershedGages');
 		var gageId = accumulated ? watershedGages.getGageId(options.hucId) : '';
 		var compareGageId = compareHucId ? watershedGages.getGageId(compareHucId) : '';
-		var $hucInsetMapContainer, $hucPlotContainer;
+		var $hucInsetMapContainer, $hucPlotContainer, $hucDownloadContainer;
 
 		// These will be promises that will be resolved when it's ok to initialize the plot view
 		var readyToLoadPlotView, readyToLoadComparePlotView;
@@ -74,6 +74,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		$plotContainer = this.$('#huc-plot-container');
 		$hucInsetMapContainer = (compareHucId) ? this.$('.huc-inset-map-div') : this.$('.huc-inset-map-container');
 		$hucPlotContainer = (compareHucId) ? this.$('#huc-plotview-div') : this.$('#huc-plot-container');
+		$hucDownloadContainer = (compareHucId) ? this.$('.huc1-download-container') : this.$('.download-container');
 
 		// Render the huc inset map view and plotView
 		this.hucInsetMapView = new NWC.view.HucInsetMapView({
@@ -85,24 +86,34 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			model : this.hucPlotModel
 		});
 
-		readyToLoadPlotView = accumulated ? this.hucInsetMapView.featureLoadedPromise : $.Deferred().resolve();
+
+		readyToLoadPlotView = accumulated ? this.hucInsetMapView.featuresLoadedPromise : $.Deferred().resolve();
 		readyToLoadPlotView.done(function(status) {
 			self.plotView = new NWC.view.WaterbudgetPlotView({
 				accumulated : accumulated,
 				compare : false,
 				hucId : self.hucId,
 				gageId : gageId,
-				hasModeledStreamflow : (Object.has(status, 'hasModeledStreamflow')) ? status.hasModeledStreamflow : false,
 				el : $hucPlotContainer,
 				model : self.hucPlotModel
 			});
+
+			if (self.hucId.length === 12) {
+				self.downloadUpstreamView = new NWC.view.WaterbudgetDownloadUpstreamView({
+					el : $hucDownloadContainer,
+					hucId : self.hucId,
+					model : self.hucPlotModel.get('hucData')
+				});
+		};
+
 		});
 
-		this.hucInsetMapView.featureLoadedPromise.done(function() {
+		this.hucInsetMapView.featuresLoadedPromise.done(function() {
 			self.$('#accumulated-button').prop('disabled', accumulated);
 			self.$('#counties-button').prop('disabled', accumulated);
 			self.$('#compare-hucs-button').prop('disabled', false);
 		});
+
 
 		if (compareHucId) {
 			this.compareHucInsetMapView = new NWC.view.HucInsetMapView({
@@ -113,7 +124,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 				gageId : compareGageId,
 				model : self.hucPlotModel
 			});
-			readyToLoadComparePlotView = accumulated ? this.compareHucInsetMapView.featureLoadedPromise : $.Deferred().resolve();
+
+			readyToLoadComparePlotView = accumulated ? this.compareHucInsetMapView.featuresLoadedPromise : $.Deferred().resolve();
 			readyToLoadComparePlotView.done(function(status) {
 				self.comparePlotView = new NWC.view.WaterbudgetPlotView({
 					accumulated : accumulated,
@@ -124,6 +136,14 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 					el : self.$('#compare-plotview-div'),
 					model : self.hucPlotModel
 				});
+
+				if (compareHucId.length === 12) {
+					self.compareDownloadUpstreamView = new NWC.view.WaterbudgetDownloadUpstreamView({
+						el : self.$('.huc2-download-container'),
+						hucId : compareHucId,
+						model : self.hucPlotModel.get('compareHucData')
+					});
+				}
 			});
 		}
 
@@ -211,6 +231,13 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		this.plotView.remove();
 		if (Object.has(this, 'comparePlotView')) {
 			this.comparePlotView.remove();
+		}
+
+		if (Object.has(this, 'downloadUpstreamView')) {
+			this.downloadUpstreamView.remove();
+		}
+		if (Object.has(this, 'compareDownloadUpstreamView')) {
+			this.compareDownloadUpstreamView.remove();
 		}
 
 		if (Object.has(this, 'countyWaterUseView')) {
