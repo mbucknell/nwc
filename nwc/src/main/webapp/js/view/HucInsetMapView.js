@@ -155,8 +155,8 @@ NWC.view = NWC.view || {};
 					featureadded : function(event) {
 						var hucName = event.feature.attributes[acWatershedConfig.name];
 						var drainage = parseFloat(event.feature.attributes[acWatershedConfig.drainageArea]);
-
-						dataModel.set('upstreamHucs', event.feature.attributes.uphucs.split(','));
+						var upstreamHucs = (event.feature.attributes.uphucs) ? event.feature.attributes.uphucs.split(',') : [];
+						dataModel.set('upstreamHucs', upstreamHucs);
 						this.$('.huc-name').html(hucName);
 						this.$('.total-upstream-drainage-area').html(drainage.toFixed(2));
 					},
