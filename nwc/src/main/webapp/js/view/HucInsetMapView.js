@@ -184,7 +184,7 @@ NWC.view = NWC.view || {};
 						},
 						featureadded : function(event) {
 							var $modeledLegend = this.$('.modeled-huc-legend');
-							this.model.set('modeledWatershedAcres', NWC.util.Convert.squareKilometersToAcres(event.feature.attributes.drain_sqkm));
+							dataModel.set('modeledWatershedAcres', NWC.util.Convert.squareKilometersToAcres(event.feature.attributes.drain_sqkm));
 							$modeledLegend.find('div').css({
 								backgroundColor : MODELED_HUC_STYLE.fillColor,
 								opacity : MODELED_HUC_STYLE.fillOpacity
