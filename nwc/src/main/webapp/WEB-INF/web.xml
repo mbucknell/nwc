@@ -54,6 +54,30 @@
             <param-value>nwc.endpoint.gdp.wps</param-value>
         </init-param>
 	</servlet>
+	<servlet>
+        <servlet-name>NwisSiteProxy</servlet-name>
+        <servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+        <init-param>
+            <param-name>forward-url-param</param-name>
+            <param-value>nwc.endpoint.nwis</param-value>
+        </init-param>
+	</servlet>
+	<servlet>
+        <servlet-name>NwisStreamflowProxy</servlet-name>
+        <servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+        <init-param>
+            <param-name>forward-url-param</param-name>
+            <param-value>nwc.endpoint.nwis.streamflow</param-value>
+        </init-param>
+	</servlet>
+	<servlet>
+        <servlet-name>GeoSearchProxy</servlet-name>
+        <servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+        <init-param>
+            <param-name>forward-url-param</param-name>
+            <param-value>nwc.endpoint.searchService</param-value>
+        </init-param>
+	</servlet>
     <servlet-mapping>
         <servlet-name>GeoserverProxy</servlet-name>
         <url-pattern>/proxygeoserver/*</url-pattern>
@@ -69,6 +93,18 @@
 	<servlet-mapping>
         <servlet-name>GdpWpsProxy</servlet-name>
         <url-pattern>/proxygdpwps/*</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping>
+        <servlet-name>NwisSiteProxy</servlet-name>
+        <url-pattern>/nwissite/*</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping>
+        <servlet-name>NwisStreamflowProxy</servlet-name>
+        <url-pattern>/nwisstreamflow/*</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping>
+        <servlet-name>GeoSearchProxy</servlet-name>
+        <url-pattern>/geosearch/*</url-pattern>
     </servlet-mapping>
     <filter>
         <filter-name>SearchBotUglyUrlFilter</filter-name>

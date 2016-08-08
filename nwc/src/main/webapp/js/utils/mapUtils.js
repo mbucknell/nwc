@@ -29,7 +29,7 @@ NWC.util.mapUtils = (function () {
 	that.createWorldStreetMapLayer = function() {
 		return new OpenLayers.Layer.XYZ(
 			"World Street Map",
-			"http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map" + zyx,
+			"https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map" + zyx,
 			{
 				isBaseLayer: true,
 				units: "m",
@@ -41,7 +41,7 @@ NWC.util.mapUtils = (function () {
 	that.createWorldGrayBaseLayer = function() {
 		return new OpenLayers.Layer.XYZ(
 			"World Light Gray Base",
-			"http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base" + zyx,
+			"https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base" + zyx,
 			Object.merge(EPSG3857Options, {numZoomLevels: 14})
 		);
 	};
@@ -49,7 +49,7 @@ NWC.util.mapUtils = (function () {
 	that.createWorldTopoLayer = function() {
 		return new OpenLayers.Layer.XYZ(
 			"World Topo Map",
-			"http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map" + zyx,
+			"https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map" + zyx,
 			{
 				isBaseLayer: true,
 				units: "m",
@@ -61,7 +61,7 @@ NWC.util.mapUtils = (function () {
 	that.createWorldImageryLayer = function() {
 		return new OpenLayers.Layer.XYZ(
 			"World Imagery",
-			"http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery" + zyx,
+			"https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery" + zyx,
 			{
 				isBaseLayer: true,
 				units: "m",
@@ -73,7 +73,7 @@ NWC.util.mapUtils = (function () {
 	that.createWorldShadedReliefLayer = function() {
 		return new OpenLayers.Layer.XYZ(
 			"World Terrain Base",
-			"http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief" + zyx,
+			"https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief" + zyx,
 			Object.merge(EPSG3857Options, {numZoomLevels: 14})
 		);
 	};
