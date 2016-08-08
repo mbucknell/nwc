@@ -222,6 +222,14 @@ NWC.view = NWC.view || {};
 			}
 
 			this.featuresLoadedPromise.done(function() {
+				var upstreamDrainageArea = self.$('.total-upstream-drainage-area').html();
+				var gageDrainageArea = self.$('#drainage-area').html();
+				var upstreamArea, gageArea;
+				if ((upstreamDrainageArea) && (gageDrainageArea)) {
+					upstreamArea = parseFloat(upstreamDrainageArea);
+					gageArea = parseFloat(gageDrainageArea);
+					self.$('#percent-diff-drainage').html(((upstreamArea / gageArea) * 100.0).toFixed(2) + ' %');
+				}
 				self.$('.huc-loading-indicator').hide();
 			});
 

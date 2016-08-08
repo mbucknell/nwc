@@ -220,7 +220,7 @@ NWC.view = NWC.view || {};
 				values = dataSeriesStore[plotTimeDensity].getDataAs(measurementSystem, normalization);
 				labels = dataSeriesStore[plotTimeDensity].getSeriesLabelsAs(measurementSystem, normalization, plotTimeDensity);
 				ylabel = NWC.util.Units[measurementSystem][normalization][plotTimeDensity];
-				title = ((this.accumulated) ? 'Total Accumulated' : 'Local Incremental') + ' HUC ' + this.hucId;
+				title = ((this.accumulated) ? 'Total Upstream' : 'Local Incremental') + ' HUC ' + this.hucId;
 
 				NWC.util.Plotter.getPlot(this.$el.find('.waterbudget-plot'), this.$el.find('.waterbudget-legend'), values, labels, ylabel, title);
 			}
