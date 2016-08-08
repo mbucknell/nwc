@@ -20,8 +20,7 @@
 				CONFIG.endpoint.gdpWps = CONFIG.contextPath + '/proxygdpwps/';
 				CONFIG.endpoint.nwis = CONFIG.contextPath + '/nwissite/';
 				CONFIG.endpoint.nwisStreamflow = CONFIG.contextPath + '/nwisstreamflow/';
-				CONFIG.endpoint.searchService = CONFIG.contextPath + '/geosearch/'
-				
+				CONFIG.endpoint.searchService = CONFIG.contextPath + '/geosearch/';
 				
 				CONFIG.endpoint.direct.geoserver = '${directGeoserverEndpoint}';
 				CONFIG.endpoint.direct.thredds = '${directThreddsEndpoint}';

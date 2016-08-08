@@ -99,7 +99,7 @@ NWC.view = NWC.view || {};
 				minimumInputLength: 3,
 				containerCssClass : 'col-xs-12 col-sm-6',
 				ajax : {
-					url: CONFIG.endpoint.searchService,
+					url: CONFIG.endpoint.searchService + 'search',
 					dataType: 'json',
 					quietMillis : 500,
 					data : function(term, page, context) {
