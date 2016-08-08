@@ -18,15 +18,14 @@
 				CONFIG.endpoint.wpsBase = CONFIG.contextPath + '/proxywps/';
 				CONFIG.endpoint.wps = CONFIG.endpoint.wpsBase + 'WebProcessingService'; //TODO inconsistant use of of URL resources
 				CONFIG.endpoint.gdpWps = CONFIG.contextPath + '/proxygdpwps/';
-				CONFIG.endpoint.nwis = '${directNwisEndpoint}';
-				CONFIG.endpoint.nwisStreamflow = '${directNwisStreamflowEndpoint}';
+				CONFIG.endpoint.nwis = CONFIG.contextPath + '/nwissite/';
+				CONFIG.endpoint.nwisStreamflow = CONFIG.contextPath + '/nwisstreamflow/';
+				CONFIG.endpoint.searchService = CONFIG.contextPath + '/geosearch/'
 				
-				CONFIG.endpoint.searchService = '${searchServiceEndpoint}';
 				
 				CONFIG.endpoint.direct.geoserver = '${directGeoserverEndpoint}';
 				CONFIG.endpoint.direct.thredds = '${directThreddsEndpoint}';
 				CONFIG.endpoint.direct.wps = '${directWpsEndpoint}';
-				CONFIG.endpoint.direct.nwis = '${directNwisEndpoint}';
 				CONFIG.endpoint.direct.sciencebase = '${directSciencebaseEndpoint}';
 
 				//This is solely to not break IE, TODO: bring in logging lib
