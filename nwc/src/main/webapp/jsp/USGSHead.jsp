@@ -75,7 +75,7 @@
 <%-- https://insight.usgs.gov/web_reengineering/SitePages/Analytics_Instructions.aspx --%>
 <%-- https://insight.usgs.gov/web_reengineering/SitePages/Analytics_FAQs.aspx --%>
 <% if (!development) { %>
-<script type="application/javascript" src="http://www.usgs.gov/scripts/analytics/usgs-analytics.js"></script>
+<script type="application/javascript" src="https://www2.usgs.gov/scripts/analytics/usgs-analytics.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
