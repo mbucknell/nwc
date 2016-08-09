@@ -27,7 +27,7 @@ NWC.view = NWC.view || {};
 			featureAttributeName : 'huc12',
 			featureValues : [hucId].concat(dataModel.get('upstreamHucs'))
 		});
-	};
+		};
 	/*
 	 * @constructs
 	 * @param {Object}
@@ -40,7 +40,8 @@ NWC.view = NWC.view || {};
 
 		events : {
 			'click .download-eta-btn' : 'downloadUpstreamEta',
-			'click .download-precip-btn' : 'downloadUpstreamDaymet'
+			'click .download-precip-btn' : 'downloadUpstreamDaymet',
+			'click .download-shp-btn' : 'downloadShapefile'
 		},
 
 		initialize : function(options) {
@@ -59,7 +60,11 @@ NWC.view = NWC.view || {};
 		 */
 		enableDownloadButtons : function(dateRange, upstreamHucs) {
 			if (this.model.has('dataSeriesStore') && this.model.has('upstreamHucs')) {
-				this.$('.download-upstream-container button').prop('disabled', false);
+				this.$('.download-eta-btn, .download-precip-btn').prop('disabled', false);
+				console.log('Upstream HUC Count is ' + this.model.get('upstreamHucs').length);
+				if (this.model.get('upstreamHucs').length < parseInt(CONFIG.maxUpstreamHucsForShapefileDownload)) {
+					this.$('.download-shp-btn').prop('disabled', false);
+				}
 			}
 		},
 
@@ -110,6 +115,25 @@ NWC.view = NWC.view || {};
 
 		downloadUpstreamDaymet : function() {
 			this._downloadUpstreamData('HUC12_data/HUC12_daymet.nc', 'prcp');
+		},
+
+		downloadShapefile : function() {
+			var hucs = [this.hucId].concat(this.model.get('upstreamHucs'));
+			var hucFilterArray = hucs.map(function(hucId) {
+				return "huc12='" + hucId + "'";
+			});
+			var cqlFilter = hucFilterArray.join(' OR ');
+
+			var params = {
+				service : 'wfs',
+				version : '1.1.0',
+				request : 'GetFeature',
+				typeName : 'WBD:huc12agg',
+				outputFormat : 'shape-zip',
+				cql_filter : cqlFilter
+			};
+
+			$.download(CONFIG.endpoint.geoserver + 'wfs', params, 'get');
 		}
 	});
 })();

@@ -23,7 +23,10 @@
 %>
 <%
     boolean development = Boolean.parseBoolean(props.getProperty("nwc.development"));
+	int maxUpstreamHucsForShapefileDownload = Integer.parseInt(props.getProperty("nwc.maxUpstreamHucsForShapefileDownload"));
     request.setAttribute("development", development);
+	request.setAttribute("maxUpstreamHucsForShapefileDownload", maxUpstreamHucsForShapefileDownload);
+	
     request.setAttribute("jsMin", (development) ? "" : ".min");
     request.setAttribute("sugarMin", (development) ? ".development" : ".min");
     request.setAttribute("openlayersMin", (development) ? ".debug" : "");
