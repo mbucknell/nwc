@@ -230,7 +230,7 @@ NWC.view = NWC.view || {};
 					upstreamArea = parseFloat(upstreamDrainageArea);
 					gageArea = parseFloat(gageDrainageArea);
 					ratio = (upstreamArea - gageArea) / (upstreamArea + gageArea) / 2;
-					self.$('#percent-diff-drainage').html((ratio * 100.0).toFixed(2) + ' %');
+					self.$('#percent-diff-drainage').html(Math.abs(ratio * 100.0).toFixed(2) + ' %');
 				}
 				self.$('.huc-loading-indicator').hide();
 			});
