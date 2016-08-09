@@ -27,7 +27,7 @@ NWC.view = NWC.view || {};
 			featureAttributeName : 'huc12',
 			featureValues : [hucId].concat(dataModel.get('upstreamHucs'))
 		});
-		};
+	};
 	/*
 	 * @constructs
 	 * @param {Object}
