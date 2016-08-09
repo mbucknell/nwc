@@ -225,10 +225,12 @@ NWC.view = NWC.view || {};
 				var upstreamDrainageArea = self.$('.total-upstream-drainage-area').html();
 				var gageDrainageArea = self.$('#drainage-area').html();
 				var upstreamArea, gageArea;
+				var ratio;
 				if ((upstreamDrainageArea) && (gageDrainageArea)) {
 					upstreamArea = parseFloat(upstreamDrainageArea);
 					gageArea = parseFloat(gageDrainageArea);
-					self.$('#percent-diff-drainage').html(((upstreamArea / gageArea) * 100.0).toFixed(2) + ' %');
+					ratio = (upstreamArea - gageArea) / (upstreamArea + gageArea) / 2;
+					self.$('#percent-diff-drainage').html(Math.abs(ratio * 100.0).toFixed(2) + ' %');
 				}
 				self.$('.huc-loading-indicator').hide();
 			});
