@@ -119,8 +119,6 @@ NWC.view = NWC.view || {};
 			var $loadingIndicator = this.$('.download-loading-indicator');
 			var upstreamHucs = this.model.get('upstreamHucs');
 
-			console.log('Upstream HUC Count is ' + upstreamHucs.length);
-
 			if (upstreamHucs.length > CONFIG.maxUpstreamHucsForShapefileDownload) {
 				$loadingAlert.removeClass('hidden');
 				$loadingIndicator.addClass('hidden');
