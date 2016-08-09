@@ -60,11 +60,7 @@ NWC.view = NWC.view || {};
 		 */
 		enableDownloadButtons : function(dateRange, upstreamHucs) {
 			if (this.model.has('dataSeriesStore') && this.model.has('upstreamHucs')) {
-				this.$('.download-eta-btn, .download-precip-btn').prop('disabled', false);
-				console.log('Upstream HUC Count is ' + this.model.get('upstreamHucs').length);
-				if (this.model.get('upstreamHucs').length < parseInt(CONFIG.maxUpstreamHucsForShapefileDownload)) {
-					this.$('.download-shp-btn').prop('disabled', false);
-				}
+				this.$('.download-upstream-container button').prop('disabled', false);
 			}
 		},
 
@@ -118,22 +114,37 @@ NWC.view = NWC.view || {};
 		},
 
 		downloadShapefile : function() {
-			var hucs = [this.hucId].concat(this.model.get('upstreamHucs'));
-			var hucFilterArray = hucs.map(function(hucId) {
-				return "huc12='" + hucId + "'";
-			});
-			var cqlFilter = hucFilterArray.join(' OR ');
+			var $loadingMsg = this.$('.download-msg');
+			var $loadingAlert = this.$('.download-msg-container');
+			var $loadingIndicator = this.$('.download-loading-indicator');
+			var upstreamHucs = this.model.get('upstreamHucs');
 
-			var params = {
-				service : 'wfs',
-				version : '1.1.0',
-				request : 'GetFeature',
-				typeName : 'WBD:huc12agg',
-				outputFormat : 'shape-zip',
-				cql_filter : cqlFilter
-			};
+			console.log('Upstream HUC Count is ' + upstreamHucs.length);
 
-			$.download(CONFIG.endpoint.geoserver + 'wfs', params, 'get');
+			if (upstreamHucs.length > CONFIG.maxUpstreamHucsForShapefileDownload) {
+				$loadingAlert.removeClass('hidden');
+				$loadingIndicator.addClass('hidden');
+				$loadingMsg.html('Too many upstream hucs to download as shapefile');
+			}
+			else {
+				var hucs = [this.hucId].concat(this.model.get('upstreamHucs'));
+				var hucFilterArray = hucs.map(function(hucId) {
+					return "huc12='" + hucId + "'";
+				});
+				var cqlFilter = hucFilterArray.join(' OR ');
+
+				var params = {
+					service : 'wfs',
+					version : '1.1.0',
+					request : 'GetFeature',
+					typeName : 'WBD:huc12agg',
+					outputFormat : 'shape-zip',
+					cql_filter : cqlFilter
+				};
+
+				$loadingAlert.addClass('hidden');
+				$.download(CONFIG.endpoint.geoserver + 'wfs', params, 'get');
+			}
 		}
 	});
 })();
