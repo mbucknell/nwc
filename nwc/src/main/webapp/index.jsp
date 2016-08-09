@@ -26,6 +26,8 @@
 				CONFIG.endpoint.direct.thredds = '${directThreddsEndpoint}';
 				CONFIG.endpoint.direct.wps = '${directWpsEndpoint}';
 				CONFIG.endpoint.direct.sciencebase = '${directSciencebaseEndpoint}';
+				
+				CONFIG.maxUpstreamHucsForShapefileDownload = ${maxUpstreamHucsForShapefileDownload};
 
 				//This is solely to not break IE, TODO: bring in logging lib
 				if(!window.console) {

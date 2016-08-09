@@ -40,7 +40,8 @@ NWC.view = NWC.view || {};
 
 		events : {
 			'click .download-eta-btn' : 'downloadUpstreamEta',
-			'click .download-precip-btn' : 'downloadUpstreamDaymet'
+			'click .download-precip-btn' : 'downloadUpstreamDaymet',
+			'click .download-shp-btn' : 'downloadShapefile'
 		},
 
 		initialize : function(options) {
@@ -110,6 +111,38 @@ NWC.view = NWC.view || {};
 
 		downloadUpstreamDaymet : function() {
 			this._downloadUpstreamData('HUC12_data/HUC12_daymet.nc', 'prcp');
+		},
+
+		downloadShapefile : function() {
+			var $loadingMsg = this.$('.download-msg');
+			var $loadingAlert = this.$('.download-msg-container');
+			var $loadingIndicator = this.$('.download-loading-indicator');
+			var upstreamHucs = this.model.get('upstreamHucs');
+
+			if (upstreamHucs.length > CONFIG.maxUpstreamHucsForShapefileDownload) {
+				$loadingAlert.removeClass('hidden');
+				$loadingIndicator.addClass('hidden');
+				$loadingMsg.html('Too many upstream hucs to download as shapefile');
+			}
+			else {
+				var hucs = [this.hucId].concat(this.model.get('upstreamHucs'));
+				var hucFilterArray = hucs.map(function(hucId) {
+					return "huc12='" + hucId + "'";
+				});
+				var cqlFilter = hucFilterArray.join(' OR ');
+
+				var params = {
+					service : 'wfs',
+					version : '1.1.0',
+					request : 'GetFeature',
+					typeName : 'WBD:huc12agg',
+					outputFormat : 'shape-zip',
+					cql_filter : cqlFilter
+				};
+
+				$loadingAlert.addClass('hidden');
+				$.download(CONFIG.endpoint.geoserver + 'wfs', params, 'get');
+			}
 		}
 	});
 })();
