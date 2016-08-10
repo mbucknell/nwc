@@ -265,8 +265,8 @@ NWC.util.DataSeriesStore = function () {
 		var monthlyAccumulation = 0;
 		var nwisMonthlyAccumulation = 0;
 		var modeledMonthlyAccumulation = 0;
-		var nwisHasMonthly = false;
-		var modeledHasMonthly = false;
+		var nwisHasFullMonth = true;
+		var modeledHasFullMonth = true;
 
 		var monthDateStr = ''; //stored at the beginning of every month, used later once the totals have been accumulated for the month
 		var endOfMonth; //stores the end of the current month of iteration
@@ -294,10 +294,12 @@ NWC.util.DataSeriesStore = function () {
 				var nwisRow = nwisStreamFlowDataSeries.data[nwisDataIndex];
 				if (nwisRow[0] === dayMetDateStr) {
 					if (nwisRow[1]) {
-						nwisHasMonthly = true;
 						nwisMonthlyAccumulation = saferAdd(nwisMonthlyAccumulation, nwisRow[1]);
 					}
 					nwisDataIndex++;
+				}
+				else {
+					nwisHasFullMonth = false;
 				}
 			}
 
@@ -305,10 +307,12 @@ NWC.util.DataSeriesStore = function () {
 				var modeledRow = modeledStreamflowSeries.data[modeledDataIndex];
 				if (modeledRow[0] === dayMetDateStr) {
 					if (modeledRow[1]) {
-						modeledHasMonthly = true;
 						modeledMonthlyAccumulation = saferAdd(modeledMonthlyAccumulation, modeledRow[1]);
 					}
 					modeledDataIndex++;
+				}
+				else {
+					modeledHasFullMonth = false;
 				}
 			}
 
@@ -334,11 +338,11 @@ NWC.util.DataSeriesStore = function () {
 				rowToAdd[columnIndices.eta] = etaForCurrentMonth;
 				var rowIndex = columnIndices.eta + 1;
 				if (nwisStreamFlowDataSeries) {
-					rowToAdd[rowIndex] = nwisHasMonthly ? nwisMonthlyAccumulation : NaN;
+					rowToAdd[rowIndex] = nwisHasFullMonth ? nwisMonthlyAccumulation : NaN;
 					rowIndex ++;
 				}
 				if (modeledStreamflowSeries) {
-					rowToAdd[rowIndex] = modeledHasMonthly ? modeledMonthlyAccumulation : NaN;
+					rowToAdd[rowIndex] = modeledHasFullMonth ? modeledMonthlyAccumulation : NaN;
 					rowIndex++;
 				}
 				monthlyTable.push(rowToAdd);
@@ -347,8 +351,8 @@ NWC.util.DataSeriesStore = function () {
 				monthlyAccumulation = 0;
 				nwisMonthlyAccumulation = 0;
 				modeledMonthlyAccumulation = 0;
-				nwisHasMonthly = false;
-				modeledHasMonthly = false;
+				nwisHasFullMonth = true;
+				modeledHasFullMonth = true;
 				endOfMonth = undefined;
 			}
 		});
@@ -401,8 +405,8 @@ NWC.util.DataSeriesStore = function () {
 		var etaYearlyAccumulation = 0;
 		var nwisYearlyAccumulation = 0;
 		var modeledYearlyAccumulation = 0;
-		var nwisHasYearly = false;
-		var modeledHasYearly = false;
+		var nwisHasFullYear = true;
+		var modeledHasFullYear = true;
 
 		var monthDateStr = ''; //stored at the beginning of every month, used to join monthly values
 		var yearDateStr = ''; //stored at the beginning of every year, used later once the totals have been accumulated for the year
@@ -440,10 +444,12 @@ NWC.util.DataSeriesStore = function () {
 					var nwisRow = nwisStreamFlowDataSeries.data[nwisDataIndex];
 					if (nwisRow[0] === dayMetDateStr) {
 						if (nwisRow[1]) {
-							nwisHasYearly = true;
 							nwisYearlyAccumulation = saferAdd(nwisYearlyAccumulation, nwisRow[1]);
 						}
 						nwisDataIndex++;
+					}
+					else {
+						nwisHasFullYear = false;
 					}
 				}
 
@@ -451,10 +457,12 @@ NWC.util.DataSeriesStore = function () {
 					var modeledRow = modeledStreamflowSeries.data[modeledDataIndex];
 					if (modeledRow[0] === dayMetDateStr) {
 						if (modeledRow[1]) {
-							modeledHasYearly = true;
 							modeledYearlyAccumulation = saferAdd(modeledYearlyAccumulation, modeledRow[1]);
 						}
 						modeledDataIndex++;
+					}
+					else {
+						modeledHasFullYear = false;
 					}
 				}
 
@@ -493,11 +501,11 @@ NWC.util.DataSeriesStore = function () {
 						rowToAdd[columnIndices.eta] = etaYearlyAccumulation;
 						var rowIndex = columnIndices.eta + 1;
 						if (nwisStreamFlowDataSeries) {
-							rowToAdd[rowIndex] = nwisHasYearly ? nwisYearlyAccumulation : NaN;
+							rowToAdd[rowIndex] = nwisHasFullYear ? nwisYearlyAccumulation : NaN;
 							rowIndex++;
 						}
 						if (modeledStreamflowSeries) {
-							rowToAdd[rowIndex] = modeledHasYearly ? modeledYearlyAccumulation : NaN;
+							rowToAdd[rowIndex] = modeledHasFullYear ? modeledYearlyAccumulation : NaN;
 							rowIndex++;
 						}
 						yearlyTable.push(rowToAdd);
@@ -508,8 +516,8 @@ NWC.util.DataSeriesStore = function () {
 						nwisYearlyAccumulation = 0;
 						modeledYearlyAccumulation = 0;
 						etaYearlyAccumulation = 0;
-						nwisHasYearly = false;
-						modeledHasYearly = false;
+						nwisHasFullYear = true;
+						modeledHasFullYear = true;
 					}
 				}
 			}
