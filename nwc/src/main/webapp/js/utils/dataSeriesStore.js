@@ -45,7 +45,7 @@ NWC.util.DataSeries = function () {
 				getDataAs: function(measurementSystem, measure, normalizationFn) {
 					var convert = NWC.util.Units[measurementSystem][measure].conversionFromBase;
 					var normalize = normalizationFn || NWC.util.Convert.noop;
-					return this.data.map(function(arr, index) {
+					return this.data.map(function(arr) {
 						// Assume All series have untouchable date
 						var date = arr[0];
 						return [date].concat(arr.from(1).map(normalize).map(convert));
