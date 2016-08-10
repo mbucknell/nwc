@@ -45,8 +45,11 @@ NWC.util.DataSeries = function () {
 				getDataAs: function(measurementSystem, measure, normalizationFn) {
 					var convert = NWC.util.Units[measurementSystem][measure].conversionFromBase;
 					var normalize = normalizationFn || NWC.util.Convert.noop;
-					return this.data.map(function(arr) {
+					return this.data.map(function(arr, index) {
 						// Assume All series have untouchable date
+						if (index === 200) {
+							console.log('Place to stop');
+						}
 						var date = arr[0];
 						return [date].concat(arr.from(1).map(normalize).map(convert));
 					});
@@ -174,6 +177,9 @@ NWC.util.DataSeriesStore = function () {
 			var modeledRow;
 			var modeledDataValue = NaN;
 
+			if (dayMetDateStr === '1999/01/01') {
+				console.log('Stop here');
+			}
 			if (nwisStreamFlowDataSeries && (nwisStreamFlowDataSeries.data.length > nwisDataIndex)) {
 				nwisRow = nwisStreamFlowDataSeries.data[nwisDataIndex];
 				if (nwisRow[0] === dayMetDateStr) {
