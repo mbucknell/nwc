@@ -135,8 +135,9 @@ NWC.view = NWC.view || {};
 					service : 'wfs',
 					version : '1.1.0',
 					request : 'GetFeature',
-					typeName : 'WBD:huc12agg',
+					typeName : 'WBD:huc12',
 					outputFormat : 'shape-zip',
+					format_options : 'filename:' + this.hucId + '_upstreamHucs_polygons.zip',
 					cql_filter : cqlFilter
 				};
 
