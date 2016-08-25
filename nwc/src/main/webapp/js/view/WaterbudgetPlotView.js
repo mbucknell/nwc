@@ -146,7 +146,7 @@ NWC.view = NWC.view || {};
 							var thisDataSeries = NWC.util.DataSeries.newSeries();
 							thisDataSeries.data = dataTable;
 							thisDataSeries.metadata.seriesLabels.push({
-								seriesName : 'Gaged Streamflow (As Runoff Per Unit Area)',
+								seriesName : 'Runoff (As Streamflow Per Unit Area)',
 								seriesUnits : ''
 							});
 							dataSeries.nwisStreamFlowData = thisDataSeries;
@@ -175,7 +175,7 @@ NWC.view = NWC.view || {};
 							var thisDataSeries = NWC.util.DataSeries.newSeries();
 							thisDataSeries.data = dataTable;
 							thisDataSeries.metadata.seriesLabels.push({
-								seriesName : 'Modeled Streamflow (As Runoff Per Unit Area)',
+								seriesName : 'Runoff (As Streamflow Per Unit Area)',
 								seriesUnits : ''
 							});
 							dataSeries.modeledStreamflowData = thisDataSeries;
