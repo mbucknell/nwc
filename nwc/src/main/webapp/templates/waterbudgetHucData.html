@@ -43,11 +43,20 @@
 			</div>	
 		</div>
 		<div class="row">
-			<div class="col-sm-12 spacer">
-				<div id="units-btn-group" class="col-xs-12 btn-group">
-					<button type="button" class="btn btn-primary" id="customary-button" value="usCustomary">US Customary</button>
-					<button type="button" class="btn btn-primary" id="metric-button" value="metric">Metric</button>
-				</div>			
+			<div class="col-xs-12 spacer">
+				<div class="col-md-4 col-lg-3">
+					<div id="units-btn-group" class="col-xs-12 btn-group">
+						<button type="button" class="btn btn-primary" id="customary-button" value="usCustomary">US Customary</button>
+						<button type="button" class="btn btn-primary" id="metric-button" value="metric">Metric</button>
+					</div>			
+				</div>
+				<div class="col-md-4 col-lg-3">
+					<div id="time-scale-btn-group" class="col-xs-12 btn-group">
+						<button id="annual-button" type="button" class="btn btn-primary" value="yearly">Annual</button>
+						<button id="monthly-button" type="button" class="btn btn-primary" value="monthly">Monthly</button>
+						<button id="daily-button" type="button" class="btn btn-primary" value="daily">Daily</button>
+					</div>
+				</div>
 			</div>
 			<div class="spacer col-xs-12" id="huc-plot-container"></div>
 			<div class="download-container col-xs-12"></div>
@@ -62,13 +71,6 @@
 				</div>
 
 			</div>
-			<div class="big_spacer col-sm-12">
-					<div id="time-scale-btn-group" class="col-xs-12 btn-group">
-						<button id="annual-button" type="button" class="btn btn-primary" value="yearly">Annual</button>
-						<button id="monthly-button" type="button" class="btn btn-primary" value="monthly">Monthly</button>
-						<button id="daily-button" type="button" class="btn btn-primary" value="daily">Daily</button>
-					</div>
-				</div>
 			<div class="spacer col-xs-12">
 				<div class="row col-xs-12 big_spacer">
 				Precipitation and Evapotranspiration data derived from the
