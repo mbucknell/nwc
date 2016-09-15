@@ -19,7 +19,8 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		'click #accumulated-button' : 'goToAccumulatedPage',
 		'click #compare-hucs-button' : 'goToAddHucMapPage',
 		'click #units-btn-group button' : 'changeUnits',
-		'click #time-scale-btn-group button' : 'changeTimeScale'
+		'click #time-scale-btn-group button' : 'changeTimeScale',
+		'click .download-doc-btn' : 'downloadDataDoc'
 	},
 
 	context : {
@@ -218,6 +219,20 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 		this.setButtonActive(this.$('#daily-button'), newTimeScale === 'daily');
 		this.setButtonActive(this.$('#monthly-button'), newTimeScale === 'monthly');
 		this.setButtonActive(this.$('#annual-button'), newTimeScale === 'yearly');
+	},
+
+	downloadDataDoc : function() {
+		$.ajax({
+			url :'metadata/downloadDoc.txt',
+			method : 'GET',
+			success : function(response) {
+				var blob = new Blob([response], {type: 'text/plain'});
+				saveAs(blob, 'dataDownloadDoc.txt');
+			},
+			error : function() {
+				alert('Unable to download documentation');
+			}
+		});
 	},
 
 	remove : function() {
