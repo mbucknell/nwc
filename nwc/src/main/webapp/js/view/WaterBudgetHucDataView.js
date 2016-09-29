@@ -227,7 +227,7 @@ NWC.view.WaterBudgetHucDataView = NWC.view.BaseView.extend({
 			method : 'GET',
 			success : function(response) {
 				var blob = new Blob([response], {type: 'text/plain'});
-				saveAs(blob, 'dataDownloadDoc.txt');
+				saveAs(blob, 'NWC-Download-Documentation.txt');
 			},
 			error : function() {
 				alert('Unable to download documentation');
