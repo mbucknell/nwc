@@ -1,1 +1,9 @@
-Placeholder for documentation to describe data downloads for the water budget pages.
+These data were derived by sampling the precipitation and evapotranspiration datasets to Watershed Boundary Dataset 
+12-digit Hydrologic Unit Code Watersheds (http://nhd.usgs.gov/wbd.html) using the Geo Data Portal (http://cida.usgs.gov/gdp/).
+
+Precipitation and Evapotranspiration data were derived from the Daymet (http://daymet.ornl.gov/) and SSEBop (http://cida.usgs.gov/thredds/catalog.html?dataset=cida.usgs.gov/ssebopeta/monthly) datasets, respectively.
+
+To access custom subsets of these and other data, visit the Geo Data Portal (http://cida.usgs.gov/gdp)
+
+The single watershed file downloads contain data used to generate the plots on the web page. The multiple watershed 
+file downloads contain individual local incremental Hydrologic Unit Code watershed data for the entire area upstream.
