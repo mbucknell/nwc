@@ -42,6 +42,9 @@ NWC.view = NWC.view || {};
 
 			this.compare = options.compare ? options.compare : false;
 
+			options.context = {
+				accumulated: this.accumulated
+			};
 			NWC.view.BaseView.prototype.initialize.apply(this, arguments);
 			this.getPlotData(options.hucId, this.gageId).done(function() {
 				self.$el.find('.download-btn-container button').prop('disabled', false);

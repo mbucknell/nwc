@@ -9,10 +9,18 @@
 		<div class="text-center">
 			<div class="download-btn-container">
 				<button class="btn btn-success download-evapotranspiration-btn" disabled>
-				Download Evapotranspiration
+					{{#if accumulated}}
+						Download Accumulated Evapotranspiration
+					{{else}}
+						Download Local-Incremental Evapotranspiration
+					{{/if}}
 				</button>
 				<button class="btn btn-success download-precipitation-btn" disabled>
-				Download Precipitation
+					{{#if accumulated}}
+						Download Accumulated Precipitation
+					{{else}}
+						Download Local-Incremental Precipitation
+					{{/if}}
 				</button>
 			</div>
 		</div>
