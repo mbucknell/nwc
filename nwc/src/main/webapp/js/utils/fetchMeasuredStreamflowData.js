@@ -37,7 +37,7 @@ NWC.util.fetchMeasuredStreamflowData = function(options) {
 	}
 
 	$.ajax({
-		url : CONFIG.endpoint.nwisStreamflow,
+		url : CONFIG.endpoint.direct.nwisStreamflow,
 		data : params,
 		method : 'GET',
 		success : function(response) {

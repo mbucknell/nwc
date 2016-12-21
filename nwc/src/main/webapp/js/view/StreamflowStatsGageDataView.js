@@ -75,7 +75,7 @@ NWC.view.StreamflowStatsGageDataView = NWC.view.BaseView.extend({
 
 		var deferred = $.Deferred();
 		$.ajax({
-			url: CONFIG.endpoint.nwis,
+			url: CONFIG.endpoint.direct.nwis,
 			data : params,
 			success : function(response) {
 				var dates = gageInfoSuccess(response);
