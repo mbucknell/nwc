@@ -25,7 +25,7 @@ describe('fetchMeasuredStreamflowData', function() {
 		failSpy = jasmine.createSpy('failSpy');
 
 		CONFIG = {};
-		CONFIG.endpoint = {nwisStreamflow: 'http://dummynwisservice.com'};
+		CONFIG.endpoint = {direct : {nwisStreamflow: 'http://dummynwisservice.com'}};
 	});
 
 	afterEach(function() {
@@ -38,7 +38,7 @@ describe('fetchMeasuredStreamflowData', function() {
 		});
 
 		expect(fakeServer.requests.length).toBe(1);
-		expect(fakeServer.requests[0].url).toContain(CONFIG.endpoint.nwisStreamflow);
+		expect(fakeServer.requests[0].url).toContain(CONFIG.endpoint.direct.nwisStreamflow);
 		expect(fakeServer.requests[0].url).toContain('sites=01234567');
 	});
 
