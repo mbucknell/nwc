@@ -18,7 +18,6 @@
 				CONFIG.endpoint.wpsBase = CONFIG.contextPath + '/proxywps/';
 				CONFIG.endpoint.wps = CONFIG.endpoint.wpsBase + 'WebProcessingService'; //TODO inconsistant use of of URL resources
 				CONFIG.endpoint.gdpWps = CONFIG.contextPath + '/proxygdpwps/';
-				CONFIG.endpoint.nwis = CONFIG.contextPath + '/nwissite/';
 				CONFIG.endpoint.nwisStreamflow = CONFIG.contextPath + '/nwisstreamflow/';
 				CONFIG.endpoint.searchService = CONFIG.contextPath + '/geosearch/';
 				
@@ -26,6 +25,8 @@
 				CONFIG.endpoint.direct.thredds = '${directThreddsEndpoint}';
 				CONFIG.endpoint.direct.wps = '${directWpsEndpoint}';
 				CONFIG.endpoint.direct.sciencebase = '${directSciencebaseEndpoint}';
+				CONFIG.endpoint.direct.nwis = '${directNwisEndpoint}';
+				CONFIG.endpoint.direct.nwisStreamflow = '${directNwisStreamflowEndpoint}'
 				
 				CONFIG.maxUpstreamHucsForShapefileDownload = ${maxUpstreamHucsForShapefileDownload};
 
