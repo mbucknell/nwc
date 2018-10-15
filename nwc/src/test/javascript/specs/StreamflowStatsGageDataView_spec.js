@@ -28,10 +28,10 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		spyOn(NWC.view.BaseView.prototype, 'render');
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
 		plotStreamflowDataDeferred = $.Deferred();
-		spyOn(NWC.view, 'StreamflowPlotView').andReturn({
-			plotStreamflowData : jasmine.createSpy('plotStreamflowDataSpy').andReturn(plotStreamflowDataDeferred)
+		spyOn(NWC.view, 'StreamflowPlotView').and.returnValue({
+			plotStreamflowData : jasmine.createSpy('plotStreamflowDataSpy').and.returnValue(plotStreamflowDataDeferred)
 		});
-		spyOn(NWC.util.mapUtils, 'createMap').andCallFake(function() {
+		spyOn(NWC.util.mapUtils, 'createMap').and.callFake(function() {
 			return {
 				addLayers : addLayersSpy,
 				zoomToExtent : jasmine.createSpy('zoomToExtentSpy'),
@@ -70,13 +70,13 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		expect(testView.gageMarkerLayer).toBeDefined();
 
 		expect(addLayersSpy).toHaveBeenCalled();
-		expect(addLayersSpy.calls[0].args[0]).toContain(testView.gageLayer);
-		expect(addLayersSpy.calls[0].args[0]).toContain(testView.gageMarkerLayer);
+		expect(addLayersSpy.calls.argsFor(0)[0]).toContain(testView.gageLayer);
+		expect(addLayersSpy.calls.argsFor(0)[0]).toContain(testView.gageMarkerLayer);
 	});
 
 	it('Expects nwis data to be retrieved to fill in the start and end wateryear selects during initialization', function() {
 		var d = $.Deferred();
-		spyOn(NWC.view.StreamflowStatsGageDataView.prototype, '_retrieveNWISData').andCallFake(function() {
+		spyOn(NWC.view.StreamflowStatsGageDataView.prototype, '_retrieveNWISData').and.callFake(function() {
 			return d;
 		});
 		testView = new NWC.view.StreamflowStatsGageDataView(options);
@@ -139,13 +139,13 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 			var doneSpy = jasmine.createSpy('doneSpy')
 			var d = testView.getStats(['s1', 's2'], '1990', '1991').done(doneSpy);
 			expect(NWC.util.streamStats.getSiteStats).toHaveBeenCalled();
-			expect(NWC.util.streamStats.getSiteStats.calls[0].args[0]).toEqual([options.gageId]);
-			expect(NWC.util.streamStats.getSiteStats.calls[0].args[1]).toEqual(['s1', 's2']);
-			expect(NWC.util.streamStats.getSiteStats.calls[0].args[2]).toEqual('1990');
-			expect(NWC.util.streamStats.getSiteStats.calls[0].args[3]).toEqual('1991');
+			expect(NWC.util.streamStats.getSiteStats.calls.argsFor(0)[0]).toEqual([options.gageId]);
+			expect(NWC.util.streamStats.getSiteStats.calls.argsFor(0)[1]).toEqual(['s1', 's2']);
+			expect(NWC.util.streamStats.getSiteStats.calls.argsFor(0)[2]).toEqual('1990');
+			expect(NWC.util.streamStats.getSiteStats.calls.argsFor(0)[3]).toEqual('1991');
 			expect(doneSpy).not.toHaveBeenCalled();
 
-			var callback = NWC.util.streamStats.getSiteStats.calls[0].args[4];
+			var callback = NWC.util.streamStats.getSiteStats.calls.argsFor(0)[4];
 			callback(['1', '2']);
 
 			expect(doneSpy).toHaveBeenCalledWith(['1', '2']);
@@ -166,7 +166,7 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 
 	it('Expects a call to plotStreamFlowData to create, render and plot the flow data view, twice', function() {
 		var d = $.Deferred();
-		spyOn(NWC.view.StreamflowStatsGageDataView.prototype, '_retrieveNWISData').andCallFake(function() {
+		spyOn(NWC.view.StreamflowStatsGageDataView.prototype, '_retrieveNWISData').and.callFake(function() {
 			return d;
 		});
 		d.resolve({

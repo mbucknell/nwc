@@ -49,8 +49,8 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 		};
 
 		//mock methods that are used from NWC.util.mapUtils
-		spyOn(NWC.util.mapUtils, 'createMap').andReturn(mapSpy);
-		spyOn(NWC.util.mapUtils, 'createAllBaseLayers').andReturn([]);
+		spyOn(NWC.util.mapUtils, 'createMap').and.returnValue(mapSpy);
+		spyOn(NWC.util.mapUtils, 'createAllBaseLayers').and.returnValue([]);
 
 		spyOn($.fn, 'select2');
 
@@ -103,8 +103,8 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 			view.model.set('control', 'zoom');
 			expect(view.zoomBoxControl.activate).toHaveBeenCalled();
 			expect(view.zoomBoxControl.deactivate).not.toHaveBeenCalled();
-			expect(view.selectControl.activate.calls.length).toBe(1);
-			expect(view.selectControl.deactivate.calls.length).toBe(1);
+			expect(view.selectControl.activate.calls.count()).toBe(1);
+			expect(view.selectControl.deactivate.calls.count()).toBe(1);
 
 			expect($zoomButton.hasClass('active')).toBe(true);
 			expect($selectButton.hasClass('active')).toBe(false);
@@ -114,10 +114,10 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 		it('Expects the select box control to be activated when the model\'s control attribute is set to select', function() {
 			view.model.set('control', 'zoom');
 			view.model.set('control', 'select');
-			expect(view.zoomBoxControl.activate.calls.length).toBe(1);
-			expect(view.zoomBoxControl.deactivate.calls.length).toBe(1);
-			expect(view.selectControl.activate.calls.length).toBe(2);
-			expect(view.selectControl.deactivate.calls.length).toBe(1);
+			expect(view.zoomBoxControl.activate.calls.count()).toBe(1);
+			expect(view.zoomBoxControl.deactivate.calls.count()).toBe(1);
+			expect(view.selectControl.activate.calls.count()).toBe(2);
+			expect(view.selectControl.deactivate.calls.count()).toBe(1);
 
 			expect($zoomButton.hasClass('active')).toBe(false);
 			expect($selectButton.hasClass('active')).toBe(true);
@@ -128,8 +128,8 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 			view.model.set('control', 'pan');
 			expect(view.zoomBoxControl.activate).not.toHaveBeenCalled();
 			expect(view.zoomBoxControl.deactivate).toHaveBeenCalled();
-			expect(view.selectControl.activate.calls.length).toBe(1);
-			expect(view.selectControl.deactivate.calls.length).toBe(1);
+			expect(view.selectControl.activate.calls.count()).toBe(1);
+			expect(view.selectControl.deactivate.calls.count()).toBe(1);
 
 			expect($zoomButton.hasClass('active')).toBe(false);
 			expect($selectButton.hasClass('active')).toBe(false);

@@ -32,7 +32,7 @@ describe('NWC.view.BaseDiscoveryTabView', function() {
 
 		templateSpy = jasmine.createSpy('templateSpy');
 		NWC.templates = {
-			getTemplate : jasmine.createSpy('getTemplateSpy').andReturn(templateSpy)
+			getTemplate : jasmine.createSpy('getTemplateSpy').and.returnValue(templateSpy)
 		};
 
 		spyOn(window, 'alert');
@@ -61,11 +61,11 @@ describe('NWC.view.BaseDiscoveryTabView', function() {
 	it('Expects the template to be rendered when a successful call is made using the data as the list property', function() {
 		server.respond([200, {'Content-Type' : 'application/json'}, testListResponse]);
 		expect(templateSpy).toHaveBeenCalled();
-		var args = templateSpy.calls[0].args[0];
-		expect(args.showSummary).toBe(true);
-		expect(args.toggleTitle).toBe(testView.SHOW_TITLE);
-		expect(args.toggleIcon).toBe(testView.SHOW_ICON);
-		expect(args.list).toEqual($.parseJSON(testListResponse).items);
+		var args = templateSpy.calls.argsFor(0);
+		expect(args[0].showSummary).toBe(true);
+		expect(args[0].toggleTitle).toBe(testView.SHOW_TITLE);
+		expect(args[0].toggleIcon).toBe(testView.SHOW_ICON);
+		expect(args[0].list).toEqual($.parseJSON(testListResponse).items);
 	});
 
 	it ('Expects that when the list request fails, the template is not rendered', function() {
@@ -108,22 +108,22 @@ describe('NWC.view.BaseDiscoveryTabView', function() {
 
 			expect(server.requests.length).toBe(2);
 			expect(server.requests[1].url).toEqual(testView.detailsUrl('1234'));
-			expect(NWC.templates.getTemplate.calls.length).toBe(1);
-			expect(templateSpy.calls.length).toBe(1);
+			expect(NWC.templates.getTemplate.calls.count()).toBe(1);
+			expect(templateSpy.calls.count()).toBe(1);
 
 			server.respond([200, {'Content-type' : 'application/json'}, testDetailResponse]);
-			expect(NWC.templates.getTemplate.calls.length).toBe(2);
-			expect(NWC.templates.getTemplate.calls[1].args).toEqual([testView.detailsTemplateName]);
-			expect(templateSpy.calls.length).toBe(2);
-			expect(templateSpy.calls[1].args).toEqual([$.parseJSON(testDetailResponse)]);
+			expect(NWC.templates.getTemplate.calls.count()).toBe(2);
+			expect(NWC.templates.getTemplate.calls.argsFor(1)).toEqual([testView.detailsTemplateName]);
+			expect(templateSpy.calls.count()).toBe(2);
+			expect(templateSpy.calls.argsFor(1)).toEqual([$.parseJSON(testDetailResponse)]);
 		});
 
 		it('Expects when the ajax call fails the template does not get rendered', function() {
 			testView.toggleDetails(ev);
 			server.respond([500, {'Content-type' : 'text/plain'}, "Server error"]);
 
-			expect(NWC.templates.getTemplate.calls.length).toBe(1);
-			expect(templateSpy.calls.length).toBe(1);
+			expect(NWC.templates.getTemplate.calls.count()).toBe(1);
+			expect(templateSpy.calls.count()).toBe(1);
 		});
 	});
 });

@@ -30,11 +30,11 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 		renderSpy = jasmine.createSpy('renderSpy');
 		spyOn(NWC.view.BaseView.prototype, 'render');
 		plotStreamflowDataDeferred = $.Deferred();
-		spyOn(NWC.view, 'StreamflowPlotView').andReturn({
-			plotStreamflowData : jasmine.createSpy('plotStreamflowDataSpy').andReturn(plotStreamflowDataDeferred)
+		spyOn(NWC.view, 'StreamflowPlotView').and.returnValue({
+			plotStreamflowData : jasmine.createSpy('plotStreamflowDataSpy').and.returnValue(plotStreamflowDataDeferred)
 		});
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
-		spyOn(NWC.util.mapUtils, 'createMap').andCallFake(function() {
+		spyOn(NWC.util.mapUtils, 'createMap').and.callFake(function() {
 			return {
 				addLayer : addLayerSpy,
 				zoomToExtent : jasmine.createSpy('zoomToExtentSpy'),
@@ -83,13 +83,13 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 			var doneSpy = jasmine.createSpy('doneSpy');
 			var d = testView.getStats(['s1', 's2'], '1990', '1991').done(doneSpy);
 			expect(NWC.util.streamStats.getHucStats).toHaveBeenCalled();
-			expect(NWC.util.streamStats.getHucStats.calls[0].args[0]).toEqual(['123456789012']);
-			expect(NWC.util.streamStats.getHucStats.calls[0].args[1]).toEqual(['s1', 's2']);
-			expect(NWC.util.streamStats.getHucStats.calls[0].args[2]).toEqual('1990');
-			expect(NWC.util.streamStats.getHucStats.calls[0].args[3]).toEqual('1991');
+			expect(NWC.util.streamStats.getHucStats.calls.argsFor(0)[0]).toEqual(['123456789012']);
+			expect(NWC.util.streamStats.getHucStats.calls.argsFor(0)[1]).toEqual(['s1', 's2']);
+			expect(NWC.util.streamStats.getHucStats.calls.argsFor(0)[2]).toEqual('1990');
+			expect(NWC.util.streamStats.getHucStats.calls.argsFor(0)[3]).toEqual('1991');
 			expect(doneSpy).not.toHaveBeenCalled();
 
-			var callback = NWC.util.streamStats.getHucStats.calls[0].args[4];
+			var callback = NWC.util.streamStats.getHucStats.calls.argsFor(0)[4];
 			callback(['1', '2']);
 
 			expect(doneSpy).toHaveBeenCalledWith(['1', '2']);
@@ -115,8 +115,8 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 		testView.downloadData(eventSpy);
 
 		expect(saveAs).toHaveBeenCalled();
-		expect(saveAs.calls[0].args[1]).toMatch(testView.hucName);
-		expect(saveAs.calls[0].args[1]).toMatch(testView.context.hucId);
+		expect(saveAs.calls.argsFor(0)[1]).toMatch(testView.hucName);
+		expect(saveAs.calls.argsFor(0)[1]).toMatch(testView.context.hucId);
 		expect(testView.dataSeries.toCSV).toHaveBeenCalled();
 	});
 
@@ -148,7 +148,7 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 
 			testView.plotStreamFlowData(ev);
 			expect(testView.streamflowPlotViewLeft.plotStreamflowData).toHaveBeenCalled();
-			expect(testView.streamflowPlotViewLeft.plotStreamflowData.calls[0].args[0]).toMatch('Huc 12');
+			expect(testView.streamflowPlotViewLeft.plotStreamflowData.calls.argsFor(0)[0]).toMatch('Huc 12');
 		});
 	});
 });

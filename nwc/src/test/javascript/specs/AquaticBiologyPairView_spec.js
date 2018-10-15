@@ -60,7 +60,7 @@ describe('Tests for AquaticBiologyPairView', function() {
 	beforeEach(function() {
 		templateSpy = jasmine.createSpy('templateSpy');
 		NWC.templates = {
-			getTemplate : jasmine.createSpy('getTemplateSpy').andReturn(templateSpy)
+			getTemplate : jasmine.createSpy('getTemplateSpy').and.returnValue(templateSpy)
 		};
 		
 		$('body').append('<div id="test-div"></div>');

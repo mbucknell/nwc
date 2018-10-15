@@ -74,7 +74,7 @@ describe('Tests for AquaticBiologySelectFeaturesView', function() {
 		
 		templateSpy = jasmine.createSpy('templateSpy');
 		NWC.templates = {
-			getTemplate : jasmine.createSpy('getTemplateSpy').andReturn(templateSpy)
+			getTemplate : jasmine.createSpy('getTemplateSpy').and.returnValue(templateSpy)
 		};
 		
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
@@ -152,8 +152,8 @@ describe('Tests for AquaticBiologySelectFeaturesView', function() {
 	});
 	it('Expects AquaticBiologySelectFeaturesView.displayPairList to create AquaticBiologyPairViews', function(){	
 		var elSpy = jasmine.createSpy('elSpy');
-		renderSpy = jasmine.createSpy('renderSpy').andReturn(elSpy);		
-		spyOn(NWC.view,'AquaticBiologyPairView').andReturn({
+		renderSpy = jasmine.createSpy('renderSpy').and.returnValue(elSpy);		
+		spyOn(NWC.view,'AquaticBiologyPairView').and.returnValue({
 			render: renderSpy
 		});
 		

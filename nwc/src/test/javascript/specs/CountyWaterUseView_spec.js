@@ -33,7 +33,7 @@ describe('Tests for CountyWaterUseView', function() {
 		$normalizedButton = $('#normalized-county-button');
 
 		// Stubbing the createMap call so OpenLayers does not try to make any ajax calls
-		spyOn(NWC.util.mapUtils, 'createMap').andCallFake(function() {
+		spyOn(NWC.util.mapUtils, 'createMap').and.callFake(function() {
 			return {
 				addLayer : jasmine.createSpy('addLayerSpy'),
 				zoomToExtent : jasmine.createSpy('zoomToExtentSpy'),
@@ -150,8 +150,8 @@ describe('Tests for CountyWaterUseView', function() {
 		testView.downloadWaterUse();
 
 		expect(saveAs).toHaveBeenCalled();
-		expect(saveAs.calls[0].args[1]).toMatch(testView.fileName);
-		expect(saveAs.calls[0].args[1]).toMatch(testView.fips);
+		expect(saveAs.calls.argsFor(0)[1]).toMatch(testView.fileName);
+		expect(saveAs.calls.argsFor(0)[1]).toMatch(testView.fips);
 		expect(testView.waterUseDataSeries.toCSV).toHaveBeenCalled();
 	});
 

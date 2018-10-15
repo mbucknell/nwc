@@ -21,11 +21,11 @@ describe('Tests for templateLoader', function() {
 
 	it('Expects loadTemplate to return a deferred', function() {
 		var loadSpy = jasmine.createSpy('loadSpy');
-		spyOn($, 'ajax').andCallThrough();
+		spyOn($, 'ajax').and.callThrough();
 		loader.loadTemplates(['home', 'next']).always(loadSpy);
-		expect($.ajax.calls.length).toBe(2);
-		expect($.ajax.calls[0].args[0].url).toMatch('home.html');
-		expect($.ajax.calls[1].args[0].url).toMatch('next.html');
+		expect($.ajax.calls.count()).toBe(2);
+		expect($.ajax.calls.argsFor(0)[0].url).toMatch('home.html');
+		expect($.ajax.calls.argsFor(1)[0].url).toMatch('next.html');
 		expect(loadSpy).not.toHaveBeenCalled();
 	});
 

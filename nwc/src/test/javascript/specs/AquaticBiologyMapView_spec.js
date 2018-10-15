@@ -34,7 +34,7 @@ describe('Tests for NWC.view.AquaticBiologyMapView', function() {
 		addLayersSpy = jasmine.createSpy('addLayerSpy');
 		addLayerSpy = jasmine.createSpy('addLayerSpy');
 		spyOn(NWC.util.mapUtils, 'createFlowlinesLayer');
-		spyOn(NWC.view.BaseSelectMapView.prototype, 'initialize').andCallFake(function() {
+		spyOn(NWC.view.BaseSelectMapView.prototype, 'initialize').and.callFake(function() {
 			this.map = {
 				addLayers : addLayersSpy,
 				addLayer : addLayerSpy,

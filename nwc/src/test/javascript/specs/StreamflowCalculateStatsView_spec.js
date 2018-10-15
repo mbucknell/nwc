@@ -23,13 +23,13 @@ describe('NWC.view.StreamflowCalculateStatsView', function() {
 
 		eventSpy = jasmine.createSpyObj('eventSpy', ['preventDefault']);
 		getStatsDeferred = $.Deferred();
-		getStatsSpy = jasmine.createSpy('getStatsSpy').andCallFake(function() {
+		getStatsSpy = jasmine.createSpy('getStatsSpy').and.callFake(function() {
 			return getStatsDeferred;
 		});
-		getStatsTsvHeaderSpy = jasmine.createSpy('getStatsHeaderSpy').andCallFake(function() {
+		getStatsTsvHeaderSpy = jasmine.createSpy('getStatsHeaderSpy').and.callFake(function() {
 			return "Fake Header";
 		});
-		getStatsFileNameSpy = jasmine.createSpy('getStatsFileNameSpy').andCallFake(function() {
+		getStatsFileNameSpy = jasmine.createSpy('getStatsFileNameSpy').and.callFake(function() {
 			return "stats.tsv";
 		});			
 		testView = new NWC.view.StreamflowCalculateStatsView({
@@ -81,16 +81,16 @@ describe('NWC.view.StreamflowCalculateStatsView', function() {
 			testView.calculateStats(eventSpy);
 
 			expect(testView.getStats).toHaveBeenCalled();
-			expect(testView.getStats.calls[0].args[0]).toEqual(['as1']);
-			expect(testView.getStats.calls[0].args[1]).toEqual(NWC.util.WaterYearUtil.waterYearStart('1991'));
-			expect(testView.getStats.calls[0].args[2]).toEqual(NWC.util.WaterYearUtil.waterYearEnd('1992'));
+			expect(testView.getStats.calls.argsFor(0)[0]).toEqual(['as1']);
+			expect(testView.getStats.calls.argsFor(0)[1]).toEqual(NWC.util.WaterYearUtil.waterYearStart('1991'));
+			expect(testView.getStats.calls.argsFor(0)[2]).toEqual(NWC.util.WaterYearUtil.waterYearEnd('1992'));
 		});
 
 		it('Expects the template to be rendered after the view\'s getStats function has been resolved', function() {
 			var templateSpy = jasmine.createSpy('templateSpy');
 			var statsResults = ['1', '2'];
 
-			getTemplateSpy.andReturn(templateSpy);
+			getTemplateSpy.and.returnValue(templateSpy);
 
 			testView.calculateStats(eventSpy);
 			expect(templateSpy).not.toHaveBeenCalled();
@@ -111,6 +111,6 @@ describe('NWC.view.StreamflowCalculateStatsView', function() {
 
 		expect(testView.getStatsTsv).toHaveBeenCalledWith("Fake Header");
 		expect(saveAs).toHaveBeenCalled();
-		expect(saveAs.calls[0].args[1]).toMatch('stats.tsv');
+		expect(saveAs.calls.argsFor(0)[1]).toMatch('stats.tsv');
 	});
 });

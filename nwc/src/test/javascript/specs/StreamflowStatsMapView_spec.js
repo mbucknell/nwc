@@ -29,7 +29,7 @@ describe('Test for NWC.view.StreamflowStatsMapView', function() {
 		addLayerSpy = jasmine.createSpy('addLayerSpy');
 		addControlSpy = jasmine.createSpy('addControlSpy');
 		spyOn(NWC.util.mapUtils, 'createFlowlinesLayer');
-		spyOn(NWC.view.BaseSelectMapView.prototype, 'initialize').andCallFake(function() {
+		spyOn(NWC.view.BaseSelectMapView.prototype, 'initialize').and.callFake(function() {
 			this.map = {
 				addLayers : addLayersSpy,
 				addLayer : addLayerSpy,
@@ -61,7 +61,7 @@ describe('Test for NWC.view.StreamflowStatsMapView', function() {
 
 		view.model.set('gageFilter', 'active');
 		expect($('#filter-label').html()).toEqual('Active');
-		expect(view.gagesLayer.addOptions.mostRecentCall.args[0].attribution).toMatch(view.model.getFilterStyle());
-		expect(view.gagesLayer.mergeNewParams.mostRecentCall.args[0].STYLES).toMatch(view.model.getFilterStyle());
+		expect(view.gagesLayer.addOptions.calls.mostRecent().args[0].attribution).toMatch(view.model.getFilterStyle());
+		expect(view.gagesLayer.mergeNewParams.calls.mostRecent().args[0].STYLES).toMatch(view.model.getFilterStyle());
 	});
 });

@@ -31,7 +31,7 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 
 		spyOn(NWC.view.BaseView.prototype, 'initialize');
 		spyOn(NWC.view.WaterbudgetPlotView.prototype, 'plotData');
-		spyOn(NWC.view.WaterbudgetPlotView.prototype, 'getPlotData').andCallThrough();
+		spyOn(NWC.view.WaterbudgetPlotView.prototype, 'getPlotData').and.callThrough();
 
 		toCSVSpy = jasmine.createSpy(toCSVSpy);
 
@@ -112,9 +112,9 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 		});
 
 		model.set('units', 'METRIC');
-		expect(NWC.view.WaterbudgetPlotView.prototype.plotData.calls.length).toBe(1);
+		expect(NWC.view.WaterbudgetPlotView.prototype.plotData.calls.count()).toBe(1);
 		model.set('timeScale', 'daily');
-		expect(NWC.view.WaterbudgetPlotView.prototype.plotData.calls.length).toBe(2);
+		expect(NWC.view.WaterbudgetPlotView.prototype.plotData.calls.count()).toBe(2);
 	});
 
 	it('Expects downloadEvapotranspiration to save to appropriate filename', function() {
@@ -132,8 +132,8 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 		testView.downloadEvapotranspiration();
 
 		expect(saveAs).toHaveBeenCalled();
-		expect(saveAs.calls[0].args[1]).toMatch(testView.hucId);
-		expect(saveAs.calls[0].args[1]).toMatch('_eta');
+		expect(saveAs.calls.argsFor(0)[1]).toMatch(testView.hucId);
+		expect(saveAs.calls.argsFor(0)[1]).toMatch('_eta');
 		expect(toCSVSpy).toHaveBeenCalled();
 	});
 
@@ -152,8 +152,8 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 		testView.downloadPrecipitation();
 
 		expect(saveAs).toHaveBeenCalled();
-		expect(saveAs.calls[0].args[1]).toMatch(testView.hucId);
-		expect(saveAs.calls[0].args[1]).toMatch('_dayMet');
+		expect(saveAs.calls.argsFor(0)[1]).toMatch(testView.hucId);
+		expect(saveAs.calls.argsFor(0)[1]).toMatch('_dayMet');
 		expect(toCSVSpy).toHaveBeenCalled();
 	});
 });

@@ -49,7 +49,7 @@ describe('NWC.view.StreamflowPlotView', function() {
 		expect($('.plot-loading-indicator').is(':visible')).toBe(false);
 		expect($('.plot-container').is(':visible')).toBe(true);
 		expect(NWC.util.Plotter.getPlot).toHaveBeenCalled();
-		var args = NWC.util.Plotter.getPlot.calls[0].args;
+		var args = NWC.util.Plotter.getPlot.calls.argsFor(0);
 		expect(args[5]).toEqual('this is a title');
 	});
 
@@ -61,7 +61,7 @@ describe('NWC.view.StreamflowPlotView', function() {
 
 		fetchDeferred.reject('An error message');
 		expect(resolveSpy).not.toHaveBeenCalled();
-		expect(errorSpy).toHaveBeenCalledWith(['An error message']);
+		expect(errorSpy.calls.argsFor(0)[0][0]).toEqual('An error message');
 
 		expect($('.plot-loading-indicator').is(':visible')).toBe(false);
 		expect($('.plot-container').is(':visible')).toBe(false);

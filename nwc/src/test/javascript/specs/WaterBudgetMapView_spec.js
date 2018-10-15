@@ -18,7 +18,7 @@ describe('Tests for NWC.view.WaterBudgetMapView', function() {
 		addLayersSpy = jasmine.createSpy('addLayersSpy');
 		addControlSpy = jasmine.createSpy('addControlSpy');
 		spyOn(NWC.util.mapUtils, 'createFlowlinesLayer');
-		spyOn(NWC.view.BaseSelectMapView.prototype, 'initialize').andCallFake(function() {
+		spyOn(NWC.view.BaseSelectMapView.prototype, 'initialize').and.callFake(function() {
 			this.map = {
 				addLayer : addLayerSpy,
 				addLayers : addLayersSpy,
