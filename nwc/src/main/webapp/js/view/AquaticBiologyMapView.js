@@ -31,7 +31,7 @@ NWC.view = NWC.view || {};
 
 			this.bioDataSitesLayer = new OpenLayers.Layer.WMS(
 				"BioData Sites",
-					CONFIG.endpoint.geoserver + 'wms',
+					CONFIG.endpoint.direct.geoserver + 'wms',
 					{
 						layers: 'BioData:SiteInfo',
 						transparent: true
@@ -40,7 +40,7 @@ NWC.view = NWC.view || {};
 			);
 			this.gageFeatureLayer = new OpenLayers.Layer.WMS(
 				"Gage Location",
-				CONFIG.endpoint.geoserver + 'gwc/service/wms',
+				CONFIG.endpoint.direct.geoserver + 'gwc/service/wms',
 				{
 					LAYERS: "NWC:gagesII",
 					STYLES: 'blue_circle',
@@ -56,7 +56,7 @@ NWC.view = NWC.view || {};
 			);
 			this.hucLayer = new OpenLayers.Layer.WMS(
 				"National WBD Snapshot",
-				CONFIG.endpoint.geoserver + 'gwc/service/wms',
+				CONFIG.endpoint.direct.geoserver + 'gwc/service/wms',
 				{
 					layers: 'NWC:huc12_se_basins_v2_local',
 					transparent: true,
@@ -73,7 +73,7 @@ NWC.view = NWC.view || {};
 
 			var biodataProtocol  = new OpenLayers.Protocol.WFS({
 				version: "1.1.0",
-				url: CONFIG.endpoint.geoserver + 'wfs',
+				url: CONFIG.endpoint.direct.geoserver + 'wfs',
 				featureType: 'SiteInfo',
 				featureNS: 'http://gov.usgs.cida/BioData',
 				srsName: 'EPSG:900913',
@@ -81,13 +81,13 @@ NWC.view = NWC.view || {};
 			});
 
 			var gageProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(this.gageFeatureLayer, {
-				url : CONFIG.endpoint.geoserver + "wfs",
+				url : CONFIG.endpoint.direct.geoserver + "wfs",
 				srsName : "EPSG:3857",
 				propertyNames: ["STAID","STANAME","DRAIN_SQKM","the_geom"]
 			});
 
 			var hucProtocol = OpenLayers.Protocol.WFS.fromWMSLayer(this.hucLayer, {
-				url : CONFIG.endpoint.geoserver + "wfs",
+				url : CONFIG.endpoint.direct.geoserver + "wfs",
 				srsName : "EPSG:3857",
 				propertyNames : ["huc12","drain_sqkm", "hu_12_name"]
 			});

@@ -37,7 +37,7 @@ NWC.view = NWC.view || {};
 
 			this.gagesLayer = new OpenLayers.Layer.WMS(
 				"Gage Location",
-				CONFIG.endpoint.geoserver + 'NWC/wms',
+				CONFIG.endpoint.direct.geoserver + 'NWC/wms',
 				{
 					LAYERS: gageConfig.namespace + ':' + gageConfig.layerName,
 					STYLES: 'blue_circle',
@@ -53,7 +53,7 @@ NWC.view = NWC.view || {};
 			);
 
 			this.hucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
-				CONFIG.endpoint.geoserver + 'gwc/service/wms',
+				CONFIG.endpoint.direct.geoserver + 'gwc/service/wms',
 				{
 					layers: huc12Config.namespace + ':' + huc12Config.localLayerName,
 					transparent: true,

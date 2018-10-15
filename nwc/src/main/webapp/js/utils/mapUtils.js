@@ -118,7 +118,7 @@ NWC.util.mapUtils = (function () {
 
 	that.createHucLayer = function(namespace, layerName, config) {
 		return new OpenLayers.Layer.WMS('National WBD Snapshot',
-			CONFIG.endpoint.geoserver + 'gwc/service/wms',
+			CONFIG.endpoint.direct.geoserver + 'gwc/service/wms',
 			{
 				layers: namespace + ':' + layerName,
 				transparent: true,
@@ -138,7 +138,7 @@ NWC.util.mapUtils = (function () {
 		var hucFilters = [];
 		var hucLayer;
 		var protocol = new OpenLayers.Protocol.WFS({
-			url : CONFIG.endpoint.geoserver + 'wfs',
+			url : CONFIG.endpoint.direct.geoserver + 'wfs',
 			featureType: layerName,
 			featureNS: "http://gov.usgs.cida/" + namespace,
 			version: "1.1.0",
@@ -189,7 +189,7 @@ NWC.util.mapUtils = (function () {
 		});
 
 		var protocol = new OpenLayers.Protocol.WFS({
-			url : CONFIG.endpoint.geoserver + 'wfs',
+			url : CONFIG.endpoint.direct.geoserver + 'wfs',
 			featureType: layerName,
 			featureNS: "http://gov.usgs.cida/" + namespace,
 			version: "1.1.0",
@@ -220,7 +220,7 @@ NWC.util.mapUtils = (function () {
 		});
 
 		var protocol = new OpenLayers.Protocol.WFS({
-			url : CONFIG.endpoint.geoserver + 'wfs',
+			url : CONFIG.endpoint.direct.geoserver + 'wfs',
 			featureType: layerName,
 			featureNS: "http://gov.usgs.cida/" + namespace,
 			version: "1.1.0",
@@ -244,7 +244,7 @@ NWC.util.mapUtils = (function () {
 		});
 
 		var protocol = new OpenLayers.Protocol.WFS({
-			url : CONFIG.endpoint.geoserver + 'wfs',
+			url : CONFIG.endpoint.direct.geoserver + 'wfs',
 			featureType: layerName,
 			featureNS: "http://gov.usgs.cida/" + namespace,
 			version: "1.1.0",
@@ -269,7 +269,7 @@ NWC.util.mapUtils = (function () {
 
 		var protocol = new OpenLayers.Protocol.WFS({
 			version: '1.1.0',
-			url: CONFIG.endpoint.geoserver + 'wfs',
+			url: CONFIG.endpoint.direct.geoserver + 'wfs',
 			featureType: layerName,
 			featureNS: 'http://gov.usgs.cida/' + namespace,
 			geometryName: 'the_geom',
@@ -304,7 +304,7 @@ NWC.util.mapUtils = (function () {
 
 	that.createFlowlinesLayer = function() {
 		return new OpenLayers.Layer.WMS('NHDPlus Flowlines',
-			CONFIG.endpoint.geoserver + 'gwc/service/wms',
+			CONFIG.endpoint.direct.geoserver + 'gwc/service/wms',
 			{
 				layers : 'nhdplus:nhdflowline_network',
 				transparent : true,

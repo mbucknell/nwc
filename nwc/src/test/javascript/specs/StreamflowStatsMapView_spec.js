@@ -12,7 +12,9 @@ describe('Test for NWC.view.StreamflowStatsMapView', function() {
 	beforeEach(function() {
 		window.CONFIG = {
 			endpoint : {
-				geoserver : 'http://fakeserver.com'
+				direct: {
+					geoserver : 'http://fakeserver.com'
+				}
 			}
 		};
 

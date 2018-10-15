@@ -17,7 +17,9 @@ describe("Tests for NWC.view.StreamflowStatsHucDataView", function() {
 	beforeEach(function() {
 		CONFIG = {
 			endpoint : {
-				geoserver : 'http://fakeserver.com',
+				direct: {
+					geoserver : 'http://fakeserver.com'
+				},
 				thredds : 'http://fakesos.org/'
 			}
 		};

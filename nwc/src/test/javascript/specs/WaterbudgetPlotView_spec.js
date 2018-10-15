@@ -15,7 +15,9 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 	beforeEach(function() {
 		CONFIG = {
 			endpoint: {
-				geoserver : 'http:fakegeoserver.com',
+				geoserver : {
+					direct: 'http:fakegeoserver.com'
+				},
 				thredds : 'http://fakeservice'
 			}
 		};

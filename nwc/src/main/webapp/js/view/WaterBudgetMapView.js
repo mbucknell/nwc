@@ -56,7 +56,7 @@ NWC.view = NWC.view || {};
 			var gageConfig = NWC.config.get('streamflow').gage.attributes;
 			this.gageLayer = new OpenLayers.Layer.WMS(
 				"Gage Location",
-				CONFIG.endpoint.geoserver + 'gwc/service/wms',
+				CONFIG.endpoint.direct.geoserver + 'gwc/service/wms',
 				{
 					LAYERS: gageConfig.namespace + ':' + gageConfig.layerName,
 					format: 'image/png',
@@ -72,7 +72,7 @@ NWC.view = NWC.view || {};
 
 			var streamflowHuc12Config = NWC.config.get('streamflow').huc12.attributes;
 			this.modeledHucLayer = new OpenLayers.Layer.WMS("National WBD Snapshot",
-				CONFIG.endpoint.geoserver + 'gwc/service/wms',
+				CONFIG.endpoint.direct.geoserver + 'gwc/service/wms',
 				{
 					layers: streamflowHuc12Config.namespace + ':' + streamflowHuc12Config.localLayerName,
 					transparent: true,

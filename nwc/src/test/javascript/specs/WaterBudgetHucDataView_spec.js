@@ -17,7 +17,9 @@ describe('Tests for NWC.WaterBudgetHucDataView', function() {
 	beforeEach(function() {
 		CONFIG = {
 				endpoint : {
-					geoserver : 'http://fakeserver.com'
+					direct: {
+						geoserver : 'http://fakeserver.com'
+					}
 				}
 			};
 

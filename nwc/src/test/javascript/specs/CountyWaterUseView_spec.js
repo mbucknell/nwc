@@ -15,10 +15,12 @@ describe('Tests for CountyWaterUseView', function() {
 
 	beforeEach(function() {
 		CONFIG = {
-				endpoint : {
+			endpoint : {
+				direct: {
 					geoserver : 'http://fakeserver.com'
 				}
-			};
+			}
+		};
 		$('body').append('<div id="test-div"></div>');
 		$testDiv = $('#test-div');
 		$testDiv.append('<div id="county-inset-map-div"></div>');

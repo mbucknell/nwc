@@ -142,7 +142,7 @@ NWC.view = NWC.view || {};
 				};
 
 				$loadingAlert.addClass('hidden');
-				$.download(CONFIG.endpoint.geoserver + 'wfs', params, 'get');
+				$.download(CONFIG.endpoint.direct.geoserver + 'wfs', params, 'get');
 			}
 		}
 	});

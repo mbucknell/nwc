@@ -12,7 +12,9 @@ describe('Tests for NWC.view.BaseSelectMapView', function() {
 	beforeEach(function() {
 		window.CONFIG = {
 			endpoint : {
-				geoserver : 'http://fakeserver.com'
+				direct: {
+					geoserver : 'http://fakeserver.com'
+				}
 			}
 		};
 
