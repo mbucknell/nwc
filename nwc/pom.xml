@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>nwc</artifactId>
-	<parent>
-		<artifactId>nwc-parent</artifactId>
-		<groupId>gov.usgs.cida.nwc</groupId>
-		<version>1.0.21-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <artifactId>nwc-parent</artifactId>
+        <groupId>gov.usgs.cida.nwc</groupId>
+        <version>1.0.21-SNAPSHOT</version>
+    </parent>
     <packaging>war</packaging>
 	
     <name>NWCUI</name>
@@ -31,24 +31,24 @@
                     <goal>process-resources</goal>
                 </configuration>
             </plugin>
-			<plugin>
-				<groupId>net.alchim31.maven</groupId>
-				<artifactId>yuicompressor-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compress</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<suffix>-${project.version}-min</suffix>
-					<excludes>
-						<exclude>**/FileSaver*.js</exclude>
-						<exclude>**/jquery.flot.*.js</exclude>
-					</excludes>
-				</configuration>  
-			</plugin>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>yuicompressor-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compress</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <suffix>-${project.version}-min</suffix>
+                    <excludes>
+                        <exclude>**/FileSaver*.js</exclude>
+                        <exclude>**/jquery.flot.*.js</exclude>
+                    </excludes>
+                </configuration>  
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -85,10 +85,10 @@
                 </executions>
             </plugin>
 			
-			<plugin>
-				<groupId>com.github.searls</groupId>
-				<artifactId>jasmine-maven-plugin</artifactId>
-				<executions>
+            <plugin>
+                <groupId>com.github.searls</groupId>
+                <artifactId>jasmine-maven-plugin</artifactId>
+                <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
@@ -101,108 +101,108 @@
                     <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
                     <jsSrcDir>${basedir}/src/main/webapp/js</jsSrcDir>
                     <jsTestSrcDir>${basedir}/src/test/javascript</jsTestSrcDir>
-					<preloadSources>
-						<source>webjars/jquery.js</source>
-						<source>webjars/bootstrap.js</source>
-						<source>webjars/select2.js</source>
-						<source>webjars/sugar.min.js</source>
-						<source>webjars/underscore.js</source>
-						<source>webjars/backbone.js</source>
-						<source>webjars/handlebars.js</source>
-						<source>webjars/OpenLayers.js</source>
-						<source>webjars/javascript.util.js</source>	
-						<source>webjars/jsts.js</source>
-						<source>${basedir}/src/main/webapp/vendorlibs/FileSaver.js-master/FileSaver.js</source>
-					</preloadSources>
-					<sourceIncludes>
-						<include>utils/*.js</include>
-						<include>model/BaseSelectMapModel.js</include>
-						<include>model/*.js</include>
-						<include>view/BaseView.js</include>
-						<include>view/BaseSelectMapView.js</include>
-						<include>view/BaseDiscoveryTabView.js</include>
-						<include>view/WaterbudgetPlotView.js</include>
-						<include>view/CountyWaterUseView.js</include>
-						<include>view/WaterBudgetHucDataView.js</include>
-						<include>view/ProjectTabView.js</include>
-						<include>view/DataTabView.js</include>
-						<include>view/PublicationsTabView.js</include>
-						<include>view/StreamflowPlotView.js</include>
-						<include>**/*.js</include>
-					</sourceIncludes>
-					<sourceExcludes>
-						<include>utils/openLayersExtensions/**/*.js</include>
-						<include>init.js</include>
-					</sourceExcludes>
-					<specExcludes>
-						<include>old_specs/*.js</include>
-					</specExcludes>
-				</configuration>		
-			</plugin>
-			<plugin>
+                    <preloadSources>
+                        <source>webjars/jquery.js</source>
+                        <source>webjars/bootstrap.js</source>
+                        <source>webjars/select2.js</source>
+                        <source>webjars/sugar.min.js</source>
+                        <source>webjars/underscore.js</source>
+                        <source>webjars/backbone.js</source>
+                        <source>webjars/handlebars.js</source>
+                        <source>webjars/OpenLayers.js</source>
+                        <source>webjars/javascript.util.js</source>	
+                        <source>webjars/jsts.js</source>
+                        <source>${basedir}/src/main/webapp/vendorlibs/FileSaver.js-master/FileSaver.js</source>
+                    </preloadSources>
+                    <sourceIncludes>
+                        <include>utils/*.js</include>
+                        <include>model/BaseSelectMapModel.js</include>
+                        <include>model/*.js</include>
+                        <include>view/BaseView.js</include>
+                        <include>view/BaseSelectMapView.js</include>
+                        <include>view/BaseDiscoveryTabView.js</include>
+                        <include>view/WaterbudgetPlotView.js</include>
+                        <include>view/CountyWaterUseView.js</include>
+                        <include>view/WaterBudgetHucDataView.js</include>
+                        <include>view/ProjectTabView.js</include>
+                        <include>view/DataTabView.js</include>
+                        <include>view/PublicationsTabView.js</include>
+                        <include>view/StreamflowPlotView.js</include>
+                        <include>**/*.js</include>
+                    </sourceIncludes>
+                    <sourceExcludes>
+                        <include>utils/openLayersExtensions/**/*.js</include>
+                        <include>init.js</include>
+                    </sourceExcludes>
+                    <specExcludes>
+                        <include>old_specs/*.js</include>
+                    </specExcludes>
+                </configuration>		
+            </plugin>
+            <plugin>
                 <groupId>com.github.timurstrekalov</groupId>
                 <artifactId>saga-maven-plugin</artifactId>
                 <version>1.5.3</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>coverage</goal>
-						</goals>
-					</execution>
-				</executions> 
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>coverage</goal>
+                        </goals>
+                    </execution>
+                </executions> 
                 <configuration>
                     <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
                     <outputDir>${project.build.directory}/coverage</outputDir>
                     <noInstrumentPatterns>
                         <pattern>.*/.+_spec\.js</pattern>
-						<pattern>.*/client/*\.js</pattern>
-						<pattern>.*/openLayersExtensions/*/*\.js</pattern>
-						<pattern>.*/sinon.+\.js</pattern>
-						<!-- couldn't figure out how to exclude all webjars so doing them individually -->
-						<pattern>.*/jquery.js</pattern>
-						<pattern>.*/bootstrap.js</pattern>
-						<pattern>.*/select2.js</pattern>
-						<pattern>.*/sugar.min.js</pattern>
-						<pattern>.*/underscore.js</pattern>
-						<pattern>.*/backbone.js</pattern>
-						<pattern>.*/handlebars.js</pattern>
-						<pattern>.*/OpenLayers.js</pattern>
-						<pattern>.*/FileSaver.js</pattern>
-						<pattern>.*/javascript.util.js</pattern>
-						<pattern>.*/jsts.js</pattern>
-						<!-- Add patterns for files that don't need to be analyzed such as library files -->
+                        <pattern>.*/client/*\.js</pattern>
+                        <pattern>.*/openLayersExtensions/*/*\.js</pattern>
+                        <pattern>.*/sinon.+\.js</pattern>
+                        <!-- couldn't figure out how to exclude all webjars so doing them individually -->
+                        <pattern>.*/jquery.js</pattern>
+                        <pattern>.*/bootstrap.js</pattern>
+                        <pattern>.*/select2.js</pattern>
+                        <pattern>.*/sugar.min.js</pattern>
+                        <pattern>.*/underscore.js</pattern>
+                        <pattern>.*/backbone.js</pattern>
+                        <pattern>.*/handlebars.js</pattern>
+                        <pattern>.*/OpenLayers.js</pattern>
+                        <pattern>.*/FileSaver.js</pattern>
+                        <pattern>.*/javascript.util.js</pattern>
+                        <pattern>.*/jsts.js</pattern>
+                        <!-- Add patterns for files that don't need to be analyzed such as library files -->
                     </noInstrumentPatterns>
                 </configuration>
             </plugin>
-			<plugin>
-				<groupId>com.google.code.maven-replacer-plugin</groupId>
-				<artifactId>replacer</artifactId>
-				<version>1.5.3</version>
-				<executions>
-					<execution>
-						<phase>verify</phase>
-						<goals>
-							<goal>replace</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<file>${project.build.directory}/coverage/total-coverage.dat</file>
-					<outputFile>${project.build.directory}/jasmine/total-coverage.dat</outputFile>
-					<regex>false</regex>
-					<token>src/</token>
-					<value>${project.basedir}/src/main/webapp/js/</value>
-				</configuration>
-			</plugin> 
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.3</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <file>${project.build.directory}/coverage/total-coverage.dat</file>
+                    <outputFile>${project.build.directory}/jasmine/total-coverage.dat</outputFile>
+                    <regex>false</regex>
+                    <token>src/</token>
+                    <value>${project.basedir}/src/main/webapp/js/</value>
+                </configuration>
+            </plugin> 
         </plugins>
         <finalName>${warName}</finalName>
     </build>
     <dependencies>
-		<dependency>
-			<groupId>gov.usgs.cida.nwc</groupId>
-			<artifactId>search-engine-files</artifactId>
-			<version>1.0.8</version>
-		</dependency>
+        <dependency>
+            <groupId>gov.usgs.cida.nwc</groupId>
+            <artifactId>search-engine-files</artifactId>
+            <version>1.0.8</version>
+        </dependency>
         <dependency>
             <groupId>gov.usgs.cida</groupId>
             <artifactId>dynamicProperties</artifactId>
@@ -240,26 +240,26 @@
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
         </dependency>
-	<dependency>
-		<groupId>org.mockito</groupId>
-		<artifactId>mockito-core</artifactId>
-		<version>1.10.19</version>
-		<scope>test</scope>
-	</dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.10.19</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>gov.usgs.cida</groupId>
             <artifactId>proxy-utils</artifactId>
         </dependency>
-	<dependency>
-		<groupId>commons-codec</groupId>
-		<artifactId>commons-codec</artifactId>
-		<version>1.9</version>
-	</dependency>
-	<dependency>
-		<groupId>gov.usgs.cida.ajax_search_crawler_tools</groupId>
-		<artifactId>ajax_search_crawler_tools</artifactId>
-		<version>0.1.3</version>
-	</dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.9</version>
+        </dependency>
+        <dependency>
+            <groupId>gov.usgs.cida.ajax_search_crawler_tools</groupId>
+            <artifactId>ajax_search_crawler_tools</artifactId>
+            <version>0.1.3</version>
+        </dependency>
         <!-- ================================================================== -->
                 
         <!-- <webjars> -->
@@ -275,23 +275,23 @@
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>select2</artifactId>
         </dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>backbonejs</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>underscorejs</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>handlebars</artifactId>
-		</dependency>
-		<dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>backbonejs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>underscorejs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>handlebars</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>openlayers</artifactId>
         </dependency>
@@ -307,10 +307,10 @@
             <groupId>org.webjars</groupId>
             <artifactId>jsts</artifactId>
         </dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>dygraphs</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>dygraphs</artifactId>
+        </dependency>
         <!-- </webjars> -->
     </dependencies>
 </project>
