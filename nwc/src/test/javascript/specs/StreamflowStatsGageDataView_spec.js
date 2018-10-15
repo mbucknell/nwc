@@ -103,7 +103,7 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		testView._retrieveNWISData();
 		expect(server.requests.length).toBe(requestCount + 1);
 		var thisRequest = server.requests.last();
-		expect(thisRequest.url).toMatch(CONFIG.endpoint.nwis);
+		expect(thisRequest.url).toMatch(CONFIG.endpoint.direct.nwis);
 		expect(thisRequest.url).toMatch(options.gageId);
 	});
 
