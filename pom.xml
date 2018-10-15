@@ -3,7 +3,7 @@
 
 	<groupId>gov.usgs.cida.nwc</groupId>
 	<artifactId>nwc-parent</artifactId>
-	<version>1.0.20-SNAPSHOT</version>
+	<version>1.0.21-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>NWC</name>

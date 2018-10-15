@@ -14,11 +14,12 @@ describe ('NWC.view.WaterbudgetPlotView', function() {
 
 	beforeEach(function() {
 		CONFIG = {
-			endpoint: {
-				geoserver : {
-					direct: 'http:fakegeoserver.com'
-				},
-				thredds : 'http://fakeservice'
+			endpoint:  {
+				thredds : 'http://fakeservice',
+				direct : {
+					nwis : 'http://fakenwisservice',
+					geoserver : 'http:fakegeoserver.com',
+				}
 			}
 		};
 		fakeServer = sinon.fakeServer.create();

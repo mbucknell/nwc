@@ -11,9 +11,9 @@ describe('Tests for StreamflowStatsGageDataView', function() {
 		CONFIG = {
 			endpoint : {
 				direct: {
-					geoserver : 'http://fakeserver.com'
-				},
-				nwis : 'http://fakenwis.org'
+					geoserver : 'http://fakeserver.com',
+					nwis : 'http://fakenwis.org'
+				}
 			}
 		};
 
