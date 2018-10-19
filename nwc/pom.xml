@@ -97,6 +97,14 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <phantomjs>
+                        <version>2.1.1</version>
+                        <checkSystemPath>true</checkSystemPath>
+                        <enforceVersion>true</enforceVersion>
+                        <source>REPOSITORY</source>
+                        <baseUrl></baseUrl>
+                        <outputDirectory>target/phantomjs</outputDirectory>
+                    </phantomjs>
                     <keepServerAlive>true</keepServerAlive>
                     <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
                     <jsSrcDir>${basedir}/src/main/webapp/js</jsSrcDir>
